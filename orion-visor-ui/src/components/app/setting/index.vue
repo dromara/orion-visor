@@ -42,6 +42,8 @@
   import { isStandaloneMode } from '@/utils/env';
   import Block from './block.vue';
 
+  const cardOptions = [{ value: 'table', label: '表格' }, { value: 'card', label: '卡片' }];
+
   const appStore = useAppStore();
   const { visible, setVisible } = useVisible();
 
@@ -130,7 +132,7 @@
       margin: '0 0 4px 0',
       permission: ['asset:host:query'],
       defaultVal: appStore.hostView,
-      options: [{ value: 'table', label: '表格' }, { value: 'card', label: '卡片' }]
+      options: cardOptions,
     },
     {
       name: '主机密钥',
@@ -139,7 +141,7 @@
       margin: '0 0 4px 0',
       permission: ['asset:host-key:query'],
       defaultVal: appStore.hostKeyView,
-      options: [{ value: 'table', label: '表格' }, { value: 'card', label: '卡片' }]
+      options: cardOptions,
     },
     {
       name: '主机身份',
@@ -148,7 +150,7 @@
       margin: '0 0 4px 0',
       permission: ['asset:host-identity:query'],
       defaultVal: appStore.hostIdentityView,
-      options: [{ value: 'table', label: '表格' }, { value: 'card', label: '卡片' }]
+      options: cardOptions,
     },
   ]);
 

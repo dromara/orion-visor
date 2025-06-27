@@ -46,10 +46,14 @@ import org.dromara.visor.module.asset.entity.domain.HostDO;
 import org.dromara.visor.module.asset.entity.dto.HostCacheDTO;
 import org.dromara.visor.module.asset.entity.request.host.*;
 import org.dromara.visor.module.asset.entity.vo.HostVO;
-import org.dromara.visor.module.asset.enums.HostExtraItemEnum;
 import org.dromara.visor.module.asset.enums.HostStatusEnum;
+import org.dromara.visor.module.asset.handler.host.extra.HostExtraItemEnum;
 import org.dromara.visor.module.asset.handler.host.extra.model.HostSpecExtraModel;
-import org.dromara.visor.module.asset.service.*;
+import org.dromara.visor.module.asset.service.HostConfigService;
+import org.dromara.visor.module.asset.service.HostExtraService;
+import org.dromara.visor.module.asset.service.HostService;
+import org.dromara.visor.module.exec.api.ExecJobApi;
+import org.dromara.visor.module.exec.api.ExecTemplateApi;
 import org.dromara.visor.module.infra.api.DataExtraApi;
 import org.dromara.visor.module.infra.api.DataGroupRelApi;
 import org.dromara.visor.module.infra.api.FavoriteApi;
@@ -95,10 +99,10 @@ public class HostServiceImpl implements HostService {
     private HostExtraService hostExtraService;
 
     @Resource
-    private ExecJobHostService execJobHostService;
+    private ExecJobApi execJobApi;
 
     @Resource
-    private ExecTemplateHostService execTemplateHostService;
+    private ExecTemplateApi execTemplateApi;
 
     @Resource
     private TagRelApi tagRelApi;
@@ -324,9 +328,9 @@ public class HostServiceImpl implements HostService {
         // 删除主机配置
         hostConfigDAO.deleteByHostIdList(idList);
         // 删除计划任务主机
-        execJobHostService.deleteByHostIdList(idList);
+        execJobApi.deleteByHostIdList(idList);
         // 删除执行模板主机
-        execTemplateHostService.deleteByHostIdList(idList);
+        execTemplateApi.deleteByHostIdList(idList);
         // 删除分组
         dataGroupRelApi.deleteByRelIdList(DataGroupTypeEnum.HOST, idList);
         // 删除 tag 引用

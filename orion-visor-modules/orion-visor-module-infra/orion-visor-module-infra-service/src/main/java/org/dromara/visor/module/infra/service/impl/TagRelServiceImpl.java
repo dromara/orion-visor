@@ -41,6 +41,8 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -78,6 +80,33 @@ public class TagRelServiceImpl implements TagRelService {
                         .relId(relId)
                         .build())
                 .collect(Collectors.toList());
+        tagRelDAO.insertBatch(tagRelList);
+    }
+
+    @Override
+    public void addTagRel(String type, Map<Long, List<Long>> relTagIdList) {
+        // 查询 tag
+        List<Long> allTagIdList = relTagIdList.values()
+                .stream()
+                .flatMap(Collection::stream)
+                .distinct()
+                .collect(Collectors.toList());
+        List<TagDO> tagList = tagDAO.selectBatchIds(allTagIdList);
+        Map<Long, String> tagNameMap = tagList.stream()
+                .collect(Collectors.toMap(TagDO::getId, TagDO::getName));
+        // 设置新增的引用
+        List<TagRelDO> tagRelList = new ArrayList<>();
+        relTagIdList.forEach((relId, tagIdList) -> {
+            for (Long tagId : tagIdList) {
+                tagRelList.add(TagRelDO.builder()
+                        .tagId(tagId)
+                        .tagName(tagNameMap.get(tagId))
+                        .tagType(type)
+                        .relId(relId)
+                        .build());
+            }
+        });
+        // 新增
         tagRelDAO.insertBatch(tagRelList);
     }
 

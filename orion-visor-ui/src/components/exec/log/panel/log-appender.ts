@@ -34,7 +34,7 @@ export default class LogAppender implements ILogAppender {
     this.config = config;
     this.current = undefined as unknown as LogAppenderView;
     this.appenderViews = {};
-    this.fitAllFn = useDebounceFn(this.fitAll).bind(this);
+    this.fitAllFn = useDebounceFn(this.fitAll, 300).bind(this);
   }
 
   // 初始化

@@ -28,7 +28,7 @@ import org.dromara.visor.common.utils.Valid;
 import org.dromara.visor.framework.security.core.utils.SecurityUtils;
 import org.dromara.visor.module.asset.dao.HostIdentityDAO;
 import org.dromara.visor.module.asset.dao.HostKeyDAO;
-import org.dromara.visor.module.asset.enums.HostExtraSshAuthTypeEnum;
+import org.dromara.visor.module.asset.enums.HostExtraAuthTypeEnum;
 import org.dromara.visor.module.asset.handler.host.extra.model.HostSshExtraModel;
 import org.dromara.visor.module.infra.api.DataPermissionApi;
 import org.dromara.visor.module.infra.enums.DataPermissionTypeEnum;
@@ -62,20 +62,20 @@ public class HostSshExtraStrategy extends AbstractGenericsDataStrategy<HostSshEx
     @Override
     public HostSshExtraModel getDefault() {
         return HostSshExtraModel.builder()
-                .authType(HostExtraSshAuthTypeEnum.DEFAULT.name())
+                .authType(HostExtraAuthTypeEnum.DEFAULT.name())
                 .build();
     }
 
     @Override
     public void preValid(HostSshExtraModel model) {
-        HostExtraSshAuthTypeEnum authType = Valid.valid(HostExtraSshAuthTypeEnum::of, model.getAuthType());
+        HostExtraAuthTypeEnum authType = Valid.valid(HostExtraAuthTypeEnum::of, model.getAuthType());
         model.setAuthType(authType.name());
         Long keyId = model.getKeyId();
         Long identityId = model.getIdentityId();
         // 必填验证
-        if (HostExtraSshAuthTypeEnum.CUSTOM_KEY.equals(authType)) {
+        if (HostExtraAuthTypeEnum.CUSTOM_KEY.equals(authType)) {
             Valid.notNull(keyId);
-        } else if (HostExtraSshAuthTypeEnum.CUSTOM_IDENTITY.equals(authType)) {
+        } else if (HostExtraAuthTypeEnum.CUSTOM_IDENTITY.equals(authType)) {
             Valid.notNull(identityId);
         }
         // 验证主机密钥是否存在

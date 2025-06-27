@@ -26,15 +26,15 @@
         UPDATE data_group
         SET sort = sort + #{addition}
         WHERE parent_id = #{parentId}
-        AND sort ${condition} #{referSort}
+          AND sort ${condition} #{referSort}
     </update>
 
     <select id="selectMaxSort" resultType="java.lang.Integer">
         SELECT IFNULL(MAX(sort), 0)
         FROM data_group
         WHERE deleted = 0
-        AND type = #{type}
-        AND parent_id = #{parentId}
+          AND type = #{type}
+          AND parent_id = #{parentId}
     </select>
 
 </mapper>

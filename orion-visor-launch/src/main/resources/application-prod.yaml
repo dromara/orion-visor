@@ -41,6 +41,11 @@ spring:
       server:
         enabled: true
 
+guacd:
+  host: ${GUACD_HOST:127.0.0.1}
+  port: ${GUACD_PORT:4822}
+  drive-path: ${GUACD_DRIVE_PATH:/usr/share/guacd/drive}
+
 management:
   endpoints:
     enabled-by-default: true

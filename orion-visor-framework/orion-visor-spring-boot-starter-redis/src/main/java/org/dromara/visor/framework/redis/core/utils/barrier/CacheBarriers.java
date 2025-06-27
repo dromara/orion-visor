@@ -49,6 +49,8 @@ public class CacheBarriers {
 
     public static final GenericsBarrier<Map<?, ?>> MAP = GenericsAnonymousMapBarrier.create(Const.NONE_ID, Const.NONE_ID);
 
+    public static final GenericsBarrier<Map<?, ?>> STRING_MAP = GenericsAnonymousMapBarrier.create(Const.NONE_ID.toString(), Const.NONE_ID);
+
     /**
      * 创建屏障对象 防止穿透
      *

@@ -214,7 +214,7 @@ public class HostKeyServiceImpl implements HostKeyService {
         OperatorLogs.add(OperatorLogs.NAME, name);
         // 删除数据库
         int effect = hostKeyDAO.deleteBatchIds(idList);
-        // 删除关联
+        // 删除身份关联
         hostIdentityDAO.setKeyWithNull(idList);
         // 删除主机配置
         hostConfigDAO.setKeyIdWithNull(idList);

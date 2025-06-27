@@ -40,6 +40,7 @@ import org.dromara.visor.module.asset.entity.request.host.HostConfigQueryRequest
 import org.dromara.visor.module.asset.entity.request.host.HostConfigUpdateRequest;
 import org.dromara.visor.module.asset.enums.HostStatusEnum;
 import org.dromara.visor.module.asset.enums.HostTypeEnum;
+import org.dromara.visor.module.asset.handler.host.config.HostConfigStrategyEnum;
 import org.dromara.visor.module.asset.service.HostConfigService;
 import org.springframework.stereotype.Service;
 
@@ -78,7 +79,7 @@ public class HostConfigServiceImpl implements HostConfigService {
         Valid.notNull(host, ErrorMessage.HOST_ABSENT);
         OperatorLogs.add(OperatorLogs.NAME, host.getName());
         // 获取处理策略
-        HostTypeEnum strategy = HostTypeEnum.of(type);
+        HostConfigStrategyEnum strategy = HostConfigStrategyEnum.of(type);
         GenericsDataModel newConfig = strategy.parse(request.getConfig());
         // 查询配置
         HostConfigDO record = hostConfigDAO.selectByHostIdType(hostId, type);
@@ -123,7 +124,7 @@ public class HostConfigServiceImpl implements HostConfigService {
             String configValue = originHostConfigMap.get(type);
             if (Strings.isBlank(configValue)) {
                 // 获取默认值
-                configValue = HostTypeEnum.of(type).getDefault().serial();
+                configValue = HostConfigStrategyEnum.of(type).getDefault().serial();
             }
             HostConfigDO newConfig = HostConfigDO.builder()
                     .hostId(newId)
@@ -152,7 +153,7 @@ public class HostConfigServiceImpl implements HostConfigService {
     @Override
     public <T extends GenericsDataModel> T getHostConfigView(HostConfigQueryRequest request) {
         String type = request.getType();
-        HostTypeEnum strategy = HostTypeEnum.of(type);
+        HostConfigStrategyEnum strategy = HostConfigStrategyEnum.of(type);
         // 查询配置
         HostConfigDO record = hostConfigDAO.selectByHostIdType(request.getHostId(), type);
         if (record == null) {

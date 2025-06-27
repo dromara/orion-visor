@@ -28,7 +28,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
@@ -50,7 +49,6 @@ public class SystemMessageDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @NotBlank
     @Size(max = 64)
     @Schema(description = "消息关联")
     private String relKey;

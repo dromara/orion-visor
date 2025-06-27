@@ -172,11 +172,11 @@
   };
 
   // 从执行模板设置
-  const setWithTemplate = async ({ id }: ExecTemplateQueryResponse) => {
+  const setWithTemplate = async (record: ExecTemplateQueryResponse) => {
     setLoading(true);
     try {
       // 查询模板信息
-      const { data } = await getExecTemplateWithAuthorized(id);
+      const { data } = await getExecTemplateWithAuthorized(record.id);
       formModel.value = {
         ...formModel.value,
         description: data.name,

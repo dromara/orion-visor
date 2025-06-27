@@ -48,10 +48,10 @@ public class DataPermissionUpdateRequest implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Schema(description = "用户id")
-    private Long userId;
+    private List<Long> userIdList;
 
     @Schema(description = "角色id")
-    private Long roleId;
+    private List<Long> roleIdList;
 
     @Schema(description = "引用id")
     private List<Long> relIdList;

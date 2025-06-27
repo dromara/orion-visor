@@ -87,7 +87,11 @@
       return props.fileList;
     },
     set(e) {
-      emits('update:fileList', e);
+      if (e) {
+        emits('update:fileList', e);
+      } else {
+        emits('update:fileList', []);
+      }
     }
   });
 

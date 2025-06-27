@@ -20,6 +20,10 @@ export const HostType = {
     value: 'SSH',
     port: 22,
   },
+  RDP: {
+    value: 'RDP',
+    port: 3389,
+  },
 };
 
 // 系统类型
@@ -68,5 +72,25 @@ export const hostStatusKey = 'hostStatus';
 // 主机 SSH 认证方式 字典项
 export const sshAuthTypeKey = 'hostSshAuthType';
 
+// 主机密码认证方式 字典项
+export const passwordAuthTypeKey = 'hostPasswordAuthType';
+
+// 时区
+export const timezoneKey = 'timezone';
+
+// 键盘布局
+export const keyboardLayoutKey = 'keyboardLayout';
+
+// 剪切板标准
+export const clipboardNormalizeKey = 'clipboardNormalize';
+
+// 剪切板编码
+export const clipboardEncodingKey = 'clipboardEncoding';
+
 // 加载的字典值
-export const dictKeys = [hostTypeKey, hostOsTypeKey, hostArchTypeKey, hostStatusKey, sshAuthTypeKey];
+export const dictKeys = [
+  hostTypeKey, hostOsTypeKey, hostArchTypeKey, hostStatusKey,
+  sshAuthTypeKey, passwordAuthTypeKey,
+  keyboardLayoutKey, timezoneKey, clipboardNormalizeKey,
+  clipboardEncodingKey,
+];

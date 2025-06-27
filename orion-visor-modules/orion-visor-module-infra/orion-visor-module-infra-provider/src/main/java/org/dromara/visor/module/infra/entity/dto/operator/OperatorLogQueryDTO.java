@@ -27,6 +27,7 @@ import lombok.*;
 import org.dromara.visor.common.entity.BaseQueryRequest;
 
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -43,12 +44,15 @@ import java.util.List;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @Schema(name = "OperatorLogQueryDTO", description = "操作日志 查询对象")
-public class OperatorLogQueryDTO extends BaseQueryRequest {
+public class OperatorLogQueryDTO extends BaseQueryRequest implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @Schema(description = "id")
     private Long id;
+
+    @Schema(description = "id less than")
+    private Long idLt;
 
     @Schema(description = "用户id")
     private Long userId;

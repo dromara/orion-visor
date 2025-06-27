@@ -31,6 +31,10 @@ export interface PostData {
   url: string;
 }
 
+export interface FavoriteItem {
+  favorite: boolean;
+}
+
 export interface OrderDirection {
   order?: number;
 }
@@ -57,7 +61,25 @@ export interface DataGrid<T> {
 
 export type TimeRanger = [string, string];
 
+export interface StatisticsRangeRequest {
+  range: string;
+  startTime: number;
+}
+
 export interface LineSingleChartData {
   x: string[];
   data: Array<number>;
+}
+
+export interface LineChartData {
+  x: string[];
+  data: Record<string, Array<number>>;
+}
+
+export interface PieChartData {
+  data: Record<string, number>;
+}
+
+export interface BarSingleChartData {
+  data: Record<string, number>;
 }

@@ -18,6 +18,7 @@
   import ConnectSessionTable from './components/connect-session-table.vue';
 
   const render = ref(false);
+  const eventDrawer = ref();
 
   // 加载字典配置
   onBeforeMount(async () => {

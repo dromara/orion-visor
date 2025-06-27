@@ -81,63 +81,70 @@ export interface ExecJobQueryResponse extends TableData {
  * 创建计划任务
  */
 export function createExecJob(request: ExecJobCreateRequest) {
-  return axios.post('/asset/exec-job/create', request);
+  return axios.post('/exec/exec-job/create', request);
 }
 
 /**
  * 更新计划任务
  */
 export function updateExecJob(request: ExecJobUpdateRequest) {
-  return axios.put('/asset/exec-job/update', request);
+  return axios.put('/exec/exec-job/update', request);
 }
 
 /**
  * 更新计划任务状态
  */
 export function updateExecJobStatus(request: ExecJobUpdateStatusRequest) {
-  return axios.put('/asset/exec-job/update-status', request);
+  return axios.put('/exec/exec-job/update-status', request);
 }
 
 /**
  * 更新计划任务执行用户
  */
 export function updateExecJobExecUser(request: ExecJobUpdateExecUserRequest) {
-  return axios.put<number>('/asset/exec-job/update-exec-user', request);
+  return axios.put<number>('/exec/exec-job/update-exec-user', request);
 }
 
 /**
  * 查询计划任务
  */
 export function getExecJob(id: number) {
-  return axios.get<ExecJobQueryResponse>('/asset/exec-job/get', { params: { id } });
+  return axios.get<ExecJobQueryResponse>('/exec/exec-job/get', { params: { id } });
 }
 
 /**
  * 查询全部计划任务
  */
 export function getExecJobList() {
-  return axios.get<Array<ExecJobQueryResponse>>('/asset/exec-job/list');
+  return axios.get<Array<ExecJobQueryResponse>>('/exec/exec-job/list');
 }
 
 /**
  * 分页查询计划任务
  */
 export function getExecJobPage(request: ExecJobQueryRequest) {
-  return axios.post<DataGrid<ExecJobQueryResponse>>('/asset/exec-job/query', request);
+  return axios.post<DataGrid<ExecJobQueryResponse>>('/exec/exec-job/query', request);
+}
+
+/**
+ * 查询计划任务数量
+ */
+export function getExecJobCount(request: ExecJobQueryRequest) {
+  return axios.post<number>('/exec/exec-job/count', request);
 }
 
 /**
  * 删除计划任务
  */
 export function deleteExecJob(id: number) {
-  return axios.delete('/asset/exec-job/delete', { params: { id } });
+  return axios.delete('/exec/exec-job/delete', { params: { id } });
 }
 
 /**
  * 批量删除计划任务
  */
 export function batchDeleteExecJob(idList: Array<number>) {
-  return axios.delete('/asset/exec-job/batch-delete', {
+  return axios.delete('/exec/exec-job/batch-delete', {
     params: { idList },
     paramsSerializer: params => {
       return qs.stringify(params, { arrayFormat: 'comma' });
@@ -149,5 +156,5 @@ export function batchDeleteExecJob(idList: Array<number>) {
  * 手动触发计划任务
  */
 export function triggerExecJob(id: number) {
-  return axios.post('/asset/exec-job/trigger', { id });
+  return axios.post('/exec/exec-job/trigger', { id });
 }

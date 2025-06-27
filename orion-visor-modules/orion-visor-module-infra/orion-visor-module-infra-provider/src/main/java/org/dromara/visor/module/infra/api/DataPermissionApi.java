@@ -22,6 +22,7 @@
  */
 package org.dromara.visor.module.infra.api;
 
+import org.dromara.visor.module.infra.entity.dto.data.DataPermissionBatchUpdateDTO;
 import org.dromara.visor.module.infra.entity.dto.data.DataPermissionUpdateDTO;
 import org.dromara.visor.module.infra.enums.DataPermissionTypeEnum;
 
@@ -37,12 +38,12 @@ import java.util.List;
 public interface DataPermissionApi {
 
     /**
-     * 添加数据权限
+     * 更新数据权限
      *
      * @param type type
      * @param dto  dto
      */
-    void addDataPermission(DataPermissionTypeEnum type, DataPermissionUpdateDTO dto);
+    void updateDataPermission(DataPermissionTypeEnum type, DataPermissionUpdateDTO dto);
 
     /**
      * 更新数据权限
@@ -50,7 +51,7 @@ public interface DataPermissionApi {
      * @param type type
      * @param dto  dto
      */
-    void updateDataPermission(DataPermissionTypeEnum type, DataPermissionUpdateDTO dto);
+    void updateDataPermission(DataPermissionTypeEnum type, DataPermissionBatchUpdateDTO dto);
 
     /**
      * 检查用户是否有权限
@@ -61,6 +62,24 @@ public interface DataPermissionApi {
      * @return effect
      */
     boolean hasPermission(DataPermissionTypeEnum type, Long userId, Long relId);
+
+    /**
+     * 通过 relId 查询 userId
+     *
+     * @param type  type
+     * @param relId relId
+     * @return relId
+     */
+    List<Long> getUserIdListByRelId(DataPermissionTypeEnum type, Long relId);
+
+    /**
+     * 通过 relId 查询 roleId
+     *
+     * @param type  type
+     * @param relId relId
+     * @return relId
+     */
+    List<Long> getRoleIdListByRelId(DataPermissionTypeEnum type, Long relId);
 
     /**
      * 通过 userId 查询数据权限 (不包含角色 不走缓存)

@@ -25,6 +25,7 @@ package org.dromara.visor.module.infra.service;
 import org.dromara.visor.module.infra.entity.dto.TagCacheDTO;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 标签引用 服务类
@@ -43,6 +44,14 @@ public interface TagRelService {
      * @param tagIdList tagIdList
      */
     void addTagRel(String type, Long relId, List<Long> tagIdList);
+
+    /**
+     * 创建标签引用
+     *
+     * @param type         type
+     * @param relTagIdList relTagIdList
+     */
+    void addTagRel(String type, Map<Long, List<Long>> relTagIdList);
 
     /**
      * 设置标签引用

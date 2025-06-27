@@ -1,6 +1,6 @@
 import type { HostExtraUpdateRequest, HostSpecExtraModel } from './host-extra';
 import type { TableData } from '@arco-design/web-vue';
-import type { DataGrid, OrderDirection, Pagination } from '@/types/global';
+import type { DataGrid, FavoriteItem, OrderDirection, Pagination } from '@/types/global';
 import axios from 'axios';
 import qs from 'query-string';
 
@@ -58,9 +58,9 @@ export interface HostQueryRequest extends Pagination, OrderDirection {
 }
 
 /**
- * 主机查询响应
+ * 主机查询基础响应
  */
-export interface HostQueryResponse extends TableData, HostQueryResponseExtra {
+export interface HostQueryBaseResponse {
   id: number;
   types: Array<string>;
   osType: string;
@@ -74,7 +74,12 @@ export interface HostQueryResponse extends TableData, HostQueryResponseExtra {
   updateTime: number;
   creator: string;
   updater: string;
-  favorite: boolean;
+}
+
+/**
+ * 主机查询响应
+ */
+export interface HostQueryResponse extends HostQueryBaseResponse, TableData, FavoriteItem, HostQueryResponseExtra {
   alias: string;
   color: string;
   tags: Array<{ id: number, name: string }>;

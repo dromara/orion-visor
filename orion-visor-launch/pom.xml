@@ -23,13 +23,26 @@
             <optional>true</optional>
         </dependency>
 
-        <!-- starter -->
+        <!-- spring boot starter -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
         </dependency>
 
-        <!-- modules -->
+        <!-- common -->
+        <dependency>
+            <groupId>org.dromara.visor</groupId>
+            <artifactId>orion-visor-common</artifactId>
+        </dependency>
+
+        <!-- module common -->
+        <dependency>
+            <groupId>org.dromara.visor</groupId>
+            <artifactId>orion-visor-module-common</artifactId>
+            <version>${revision}</version>
+        </dependency>
+
+        <!-- module service -->
         <dependency>
             <groupId>org.dromara.visor</groupId>
             <artifactId>orion-visor-module-infra-service</artifactId>
@@ -38,6 +51,16 @@
         <dependency>
             <groupId>org.dromara.visor</groupId>
             <artifactId>orion-visor-module-asset-service</artifactId>
+            <version>${revision}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.dromara.visor</groupId>
+            <artifactId>orion-visor-module-exec-service</artifactId>
+            <version>${revision}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.dromara.visor</groupId>
+            <artifactId>orion-visor-module-terminal-service</artifactId>
             <version>${revision}</version>
         </dependency>
 

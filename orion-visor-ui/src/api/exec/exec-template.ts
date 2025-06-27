@@ -52,49 +52,56 @@ export interface ExecTemplateQueryResponse extends TableData {
  * 创建执行模板
  */
 export function createExecTemplate(request: ExecTemplateCreateRequest) {
-  return axios.post('/asset/exec-template/create', request);
+  return axios.post('/exec/exec-template/create', request);
 }
 
 /**
  * 更新执行模板
  */
 export function updateExecTemplate(request: ExecTemplateUpdateRequest) {
-  return axios.put('/asset/exec-template/update', request);
+  return axios.put('/exec/exec-template/update', request);
 }
 
 /**
  * 查询执行模板
  */
 export function getExecTemplate(id: number) {
-  return axios.get<ExecTemplateQueryResponse>('/asset/exec-template/get', { params: { id } });
+  return axios.get<ExecTemplateQueryResponse>('/exec/exec-template/get', { params: { id } });
 }
 
 /**
  * 查询执行模板
  */
 export function getExecTemplateWithAuthorized(id: number) {
-  return axios.get<ExecTemplateQueryResponse>('/asset/exec-template/get-with-authorized', { params: { id } });
+  return axios.get<ExecTemplateQueryResponse>('/exec/exec-template/get-with-authorized', { params: { id } });
 }
 
 /**
  * 分页查询执行模板
  */
 export function getExecTemplatePage(request: ExecTemplateQueryRequest) {
-  return axios.post<DataGrid<ExecTemplateQueryResponse>>('/asset/exec-template/query', request);
+  return axios.post<DataGrid<ExecTemplateQueryResponse>>('/exec/exec-template/query', request);
+}
+
+/**
+ * 查询执行模板数量
+ */
+export function getExecTemplateCount(request: ExecTemplateQueryRequest) {
+  return axios.post<number>('/exec/exec-template/count', request);
 }
 
 /**
  * 删除执行模板
  */
 export function deleteExecTemplate(id: number) {
-  return axios.delete('/asset/exec-template/delete', { params: { id } });
+  return axios.delete('/exec/exec-template/delete', { params: { id } });
 }
 
 /**
  * 批量删除执行模板
  */
 export function batchDeleteExecTemplate(idList: Array<number>) {
-  return axios.delete('/asset/exec-template/batch-delete', {
+  return axios.delete('/exec/exec-template/batch-delete', {
     params: { idList },
     paramsSerializer: params => {
       return qs.stringify(params, { arrayFormat: 'comma' });

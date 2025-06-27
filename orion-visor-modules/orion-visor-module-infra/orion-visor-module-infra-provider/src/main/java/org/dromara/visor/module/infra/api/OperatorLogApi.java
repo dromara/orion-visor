@@ -46,6 +46,22 @@ public interface OperatorLogApi {
     DataGrid<OperatorLogDTO> getOperatorLogPage(OperatorLogQueryDTO request);
 
     /**
+     * 查询操作日志列表
+     *
+     * @param request request
+     * @return rows
+     */
+    List<OperatorLogDTO> getOperatorLogList(OperatorLogQueryDTO request);
+
+    /**
+     * 获取操作日志数量
+     *
+     * @param request request
+     * @return count
+     */
+    Long getOperatorLogCount(OperatorLogQueryDTO request);
+
+    /**
      * 删除操作日志
      *
      * @param idList idList

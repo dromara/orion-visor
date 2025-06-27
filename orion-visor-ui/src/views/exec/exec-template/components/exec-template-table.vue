@@ -41,7 +41,7 @@
       <div class="table-right-bar-handle">
         <a-space>
           <!-- 新增 -->
-          <a-button v-permission="['asset:exec-template:create']"
+          <a-button v-permission="['exec:exec-template:create']"
                     type="primary"
                     @click="emits('openAdd')">
             新增
@@ -54,7 +54,7 @@
                         position="br"
                         type="warning"
                         @ok="deleteSelectedRows">
-            <a-button v-permission="['asset:exec-template:delete']"
+            <a-button v-permission="['exec:exec-template:delete']"
                       type="primary"
                       status="danger"
                       :disabled="selectedKeys.length === 0">
@@ -96,14 +96,14 @@
       <!-- 操作 -->
       <template #handle="{ record }">
         <div class="table-handle-wrapper">
-          <a-button v-permission="['asset:exec-command:exec']"
+          <a-button v-permission="['exec:exec-command:exec']"
                     type="text"
                     size="mini"
                     @click="emits('openExec', record.id)">
             执行
           </a-button>
           <!-- 修改 -->
-          <a-button v-permission="['asset:exec-template:update']"
+          <a-button v-permission="['exec:exec-template:update']"
                     type="text"
                     size="mini"
                     @click="emits('openUpdate', record.id)">
@@ -114,7 +114,7 @@
                         position="left"
                         type="warning"
                         @ok="deleteRow(record)">
-            <a-button v-permission="['asset:exec-template:delete']"
+            <a-button v-permission="['exec:exec-template:delete']"
                       type="text"
                       size="mini"
                       status="danger">
@@ -140,10 +140,10 @@
   import { Message } from '@arco-design/web-vue';
   import useLoading from '@/hooks/loading';
   import columns from '../types/table.columns';
-  import { TableName } from '../types/const';
   import { useTablePagination, useRowSelection, useTableColumns } from '@/hooks/table';
+  import { TableName } from '../types/const';
+  import { useQueryOrder, DESC } from '@/hooks/query-order';
   import { copy } from '@/hooks/copy';
-  import { DESC, useQueryOrder } from '@/hooks/query-order';
   import TableAdjust from '@/components/app/table-adjust/index.vue';
 
   const emits = defineEmits(['openAdd', 'openUpdate', 'openExec']);
@@ -154,8 +154,8 @@
   const { tableColumns, columnsHook } = useTableColumns(TableName, columns);
   const { loading, setLoading } = useLoading();
 
-  const selectedKeys = ref<number[]>([]);
-  const tableRenderData = ref<ExecTemplateQueryResponse[]>([]);
+  const selectedKeys = ref<Array<number>>([]);
+  const tableRenderData = ref<Array<ExecTemplateQueryResponse>>([]);
   const formModel = reactive<ExecTemplateQueryRequest>({
     id: undefined,
     name: undefined,

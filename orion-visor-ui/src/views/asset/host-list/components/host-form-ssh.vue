@@ -18,8 +18,7 @@
       <a-form-item field="username"
                    label="用户名"
                    :rules="usernameRules"
-                   :help="HostAuthType.IDENTITY === formModel.authType ? '将使用主机身份的用户名' : undefined"
-                   hide-asterisk>
+                   :help="HostAuthType.IDENTITY === formModel.authType ? '将使用主机身份的用户名' : undefined">
         <a-input v-model="formModel.username"
                  :disabled="HostAuthType.IDENTITY === formModel.authType"
                  placeholder="请输入用户名" />
@@ -37,8 +36,7 @@
       <a-form-item v-if="HostAuthType.PASSWORD === formModel.authType"
                    field="password"
                    label="主机密码"
-                   :rules="passwordRules"
-                   hide-asterisk>
+                   :rules="passwordRules">
         <a-input-password v-model="formModel.password"
                           :disabled="!formModel.useNewPassword && formModel.hasPassword"
                           placeholder="主机密码" />
@@ -256,6 +254,11 @@
     width: 100%;
     display: flex;
     justify-content: space-between;
+
+    :deep(.arco-radio-button) {
+      width: 33%;
+      text-align: center;
+    }
   }
 
   .password-switch {

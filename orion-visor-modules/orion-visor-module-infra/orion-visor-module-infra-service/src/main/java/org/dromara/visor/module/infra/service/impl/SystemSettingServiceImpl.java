@@ -30,6 +30,7 @@ import cn.orionsec.kit.lang.utils.crypto.Keys;
 import cn.orionsec.kit.lang.utils.crypto.RSA;
 import cn.orionsec.kit.spring.SpringHolder;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import lombok.extern.slf4j.Slf4j;
 import org.dromara.visor.common.constant.AppConst;
 import org.dromara.visor.common.constant.ConfigKeys;
 import org.dromara.visor.framework.config.core.event.ConfigUpdateEvent;
@@ -55,12 +56,13 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * 系统服务 实现类
+ * 系统设置服务 服务实现类
  *
  * @author Jiahang Li
  * @version 1.0.0
- * @since 2024/6/17 18:10
+ * @since 2024/6/16 0:19
  */
+@Slf4j
 @Service
 public class SystemSettingServiceImpl implements SystemSettingService {
 

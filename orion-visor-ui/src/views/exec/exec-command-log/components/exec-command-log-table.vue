@@ -62,7 +62,7 @@
       <div class="table-right-bar-handle">
         <a-space>
           <!-- 执行命令 -->
-          <a-button v-permission="['asset:exec-command:exec']"
+          <a-button v-permission="['exec:exec-command:exec']"
                     type="primary"
                     @click="router.push({ name: 'execCommand' })">
             执行命令
@@ -71,7 +71,7 @@
             </template>
           </a-button>
           <!-- 清空 -->
-          <a-button v-permission="['asset:exec-command-log:management:clear']"
+          <a-button v-permission="['exec:exec-command-log:management:clear']"
                     status="danger"
                     @click="openClear">
             清空
@@ -84,7 +84,7 @@
                         position="br"
                         type="warning"
                         @ok="deleteSelectedRows">
-            <a-button v-permission="['asset:exec-command-log:delete']"
+            <a-button v-permission="['exec:exec-command-log:delete']"
                       type="primary"
                       status="danger"
                       :disabled="selectedKeys.length === 0">
@@ -153,7 +153,7 @@
                         position="left"
                         type="warning"
                         @ok="doReExecCommand(record)">
-            <a-button v-permission="['asset:exec-command:exec']"
+            <a-button v-permission="['exec:exec-command:exec']"
                       type="text"
                       size="mini">
               重新执行
@@ -166,7 +166,7 @@
             命令
           </a-button>
           <!-- 日志 -->
-          <a-button v-permission="['asset:exec-command-log:query', 'asset:exec-command:exec']"
+          <a-button v-permission="['exec:exec-command-log:query', 'exec:exec-command:exec']"
                     type="text"
                     size="mini"
                     title="ctrl + 左键新页面打开"
@@ -178,7 +178,7 @@
                         position="left"
                         type="warning"
                         @ok="doInterruptExecCommand(record)">
-            <a-button v-permission="['asset:exec-command-log:interrupt']"
+            <a-button v-permission="['exec:exec-command-log:interrupt']"
                       type="text"
                       size="mini"
                       status="danger"
@@ -191,7 +191,7 @@
                         position="left"
                         type="warning"
                         @ok="deleteRow(record)">
-            <a-button v-permission="['asset:exec-command-log:delete']"
+            <a-button v-permission="['exec:exec-command-log:delete']"
                       type="text"
                       size="mini"
                       status="danger">

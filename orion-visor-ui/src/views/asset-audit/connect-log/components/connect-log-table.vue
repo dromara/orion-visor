@@ -64,7 +64,7 @@
       <div class="table-right-bar-handle">
         <a-space>
           <!-- 清空 -->
-          <a-button v-permission="['asset:terminal-connect-log:management:clear']"
+          <a-button v-permission="['terminal:terminal-connect-log:management:clear']"
                     status="danger"
                     @click="openClear">
             清空
@@ -77,7 +77,7 @@
                         position="br"
                         type="warning"
                         @ok="deleteSelectedRows">
-            <a-button v-permission="['asset:terminal-connect-log:management:delete']"
+            <a-button v-permission="['terminal:terminal-connect-log:management:delete']"
                       type="primary"
                       status="danger"
                       :disabled="selectedKeys.length === 0">
@@ -88,7 +88,7 @@
             </a-button>
           </a-popconfirm>
           <!-- 调整 -->
-          <table-adjust :columns="columns"
+          <table-adjust :columns="logColumns"
                         :columns-hook="columnsHook"
                         :query-order="queryOrder"
                         @query="fetchTableData" />
@@ -161,19 +161,19 @@
       <template #handle="{ record }">
         <div class="table-handle-wrapper">
           <!-- 连接 -->
-          <a-button v-permission="['asset:terminal:access']"
+          <a-button v-permission="['terminal:terminal:access']"
                     type="text"
                     size="mini"
                     @click="openNewRoute({ name: 'terminal', query: { connect: record.hostId, type: record.type } })">
             连接
           </a-button>
           <!-- 下线 -->
-          <a-popconfirm v-if="record.status === TerminalConnectStatus.CONNECTING"
+          <a-popconfirm v-if="record.status === HostConnectStatus.CONNECTING"
                         content="确认要强制下线吗?"
                         position="left"
                         type="warning"
                         @ok="forceOffline(record)">
-            <a-button v-permission="['asset:terminal-connect-log:management:force-offline', 'asset:terminal-connect-session:management:force-offline']"
+            <a-button v-permission="['terminal:terminal-connect-log:management:force-offline', 'terminal:terminal-connect-session:management:force-offline']"
                       type="text"
                       size="mini"
                       status="danger">
@@ -191,7 +191,7 @@
                         position="left"
                         type="warning"
                         @ok="deleteRow(record)">
-            <a-button v-permission="['asset:terminal-connect-log:management:delete']"
+            <a-button v-permission="['terminal:terminal-connect-log:management:delete']"
                       type="text"
                       size="mini"
                       status="danger">
@@ -211,20 +211,20 @@
 </script>
 
 <script lang="ts" setup>
-  import type { TerminalConnectLogQueryRequest, TerminalConnectLogQueryResponse } from '@/api/asset/terminal-connect-log';
+  import type { TerminalConnectLogQueryRequest, TerminalConnectLogQueryResponse } from '@/api/terminal/terminal-connect-log';
   import { reactive, ref, onMounted } from 'vue';
-  import { deleteTerminalConnectLog, getTerminalConnectLogPage, hostForceOffline } from '@/api/asset/terminal-connect-log';
-  import { TableName, connectStatusKey, connectTypeKey, TerminalConnectStatus } from '../types/const';
+  import { deleteTerminalConnectLog, getTerminalConnectLogPage, hostForceOffline } from '@/api/terminal/terminal-connect-log';
+  import { TableName, connectStatusKey, connectTypeKey, HostConnectStatus } from '../types/const';
   import { useTablePagination, useRowSelection, useTableColumns } from '@/hooks/table';
   import { useDictStore, useUserStore } from '@/store';
   import { Message } from '@arco-design/web-vue';
-  import columns from '../types/table.columns';
+  import { logColumns } from '../types/table.columns';
   import useLoading from '@/hooks/loading';
   import { copy } from '@/hooks/copy';
   import { useRoute } from 'vue-router';
   import { dateFormat } from '@/utils';
   import { openNewRoute } from '@/router';
-  import { DESC, useQueryOrder } from '@/hooks/query-order';
+  import { useQueryOrder, DESC } from '@/hooks/query-order';
   import UserSelector from '@/components/user/user/selector/index.vue';
   import HostSelector from '@/components/asset/host/selector/index.vue';
   import TableAdjust from '@/components/app/table-adjust/index.vue';
@@ -235,7 +235,7 @@
   const rowSelection = useRowSelection();
   const pagination = useTablePagination();
   const queryOrder = useQueryOrder(TableName, DESC);
-  const { tableColumns, columnsHook } = useTableColumns(TableName, columns);
+  const { tableColumns, columnsHook } = useTableColumns(TableName, logColumns);
   const { loading, setLoading } = useLoading();
   const { toOptions, getDictValue } = useDictStore();
 
@@ -251,46 +251,6 @@
     status: undefined,
     startTimeRange: undefined,
   });
-
-  // 加载数据
-  const doFetchTableData = async (request: TerminalConnectLogQueryRequest) => {
-    try {
-      setLoading(true);
-      const { data } = await getTerminalConnectLogPage(queryOrder.markOrderly(request));
-      tableRenderData.value = data.rows;
-      pagination.total = data.total;
-      pagination.current = request.page;
-      pagination.pageSize = request.limit;
-      selectedKeys.value = [];
-    } catch (e) {
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // 切换页码
-  const fetchTableData = (page = 1, limit = pagination.pageSize, form = formModel) => {
-    doFetchTableData({ page, limit, ...form });
-  };
-
-  // 打开清空
-  const openClear = () => {
-    emits('openClear', { ...formModel, id: undefined });
-  };
-
-  // 强制下线
-  const forceOffline = async (record: TerminalConnectLogQueryResponse) => {
-    try {
-      setLoading(true);
-      await hostForceOffline({ id: record.id });
-      record.status = TerminalConnectStatus.FORCE_OFFLINE;
-      record.endTime = Date.now();
-      Message.success('已下线');
-    } catch (e) {
-    } finally {
-      setLoading(false);
-    }
-  };
 
   // 删除选中行
   const deleteSelectedRows = async () => {
@@ -331,6 +291,46 @@
   };
 
   defineExpose({ reload });
+
+  // 加载数据
+  const doFetchTableData = async (request: TerminalConnectLogQueryRequest) => {
+    try {
+      setLoading(true);
+      const { data } = await getTerminalConnectLogPage(queryOrder.markOrderly(request));
+      tableRenderData.value = data.rows;
+      pagination.total = data.total;
+      pagination.current = request.page;
+      pagination.pageSize = request.limit;
+      selectedKeys.value = [];
+    } catch (e) {
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // 切换页码
+  const fetchTableData = (page = 1, limit = pagination.pageSize, form = formModel) => {
+    doFetchTableData({ page, limit, ...form });
+  };
+
+  // 打开清空
+  const openClear = () => {
+    emits('openClear', { ...formModel, id: undefined });
+  };
+
+  // 强制下线
+  const forceOffline = async (record: TerminalConnectLogQueryResponse) => {
+    try {
+      setLoading(true);
+      await hostForceOffline({ id: record.id });
+      record.status = HostConnectStatus.FORCE_OFFLINE;
+      record.endTime = Date.now();
+      Message.success('已下线');
+    } catch (e) {
+    } finally {
+      setLoading(false);
+    }
+  };
 
   onMounted(() => {
     // 当前用户

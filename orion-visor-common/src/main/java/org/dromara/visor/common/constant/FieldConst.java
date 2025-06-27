@@ -103,7 +103,19 @@ public interface FieldConst {
 
     String FILTER = "filter";
 
+    String LICENSE = "license";
+
+    String SESSION = "session";
+
+    String CONNECT = "connect";
+
     String ALL = "all";
+
+    String PROPS = "props";
+
+    String SENDER = "sender";
+
+    String RESULT = "result";
 
     String CONFIG = "config";
 

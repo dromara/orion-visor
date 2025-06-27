@@ -76,6 +76,7 @@
       </template>
       <!-- 类型 -->
       <template #type="{ record }">
+        <!-- 类型 -->
         <a-tag :color="getDictValue(connectTypeKey, record.type, 'color')">
           {{ getDictValue(connectTypeKey, record.type) }}
         </a-tag>
@@ -96,7 +97,7 @@
       <template #handle="{ record }">
         <div class="table-handle-wrapper">
           <!-- 连接 -->
-          <a-button v-permission="['asset:terminal:access']"
+          <a-button v-permission="['terminal:terminal:access']"
                     type="text"
                     size="mini"
                     @click="openNewRoute({ name: 'terminal', query: { connect: record.hostId, type: record.type } })">
@@ -107,7 +108,7 @@
                         position="left"
                         type="warning"
                         @ok="forceOffline(record)">
-            <a-button v-permission="['asset:terminal-connect-log:management:force-offline', 'asset:terminal-connect-session:management:force-offline']"
+            <a-button v-permission="['terminal:terminal-connect-log:management:force-offline', 'terminal:terminal-connect-session:management:force-offline']"
                       type="text"
                       size="mini"
                       status="danger">
@@ -127,9 +128,9 @@
 </script>
 
 <script lang="ts" setup>
-  import type { TerminalConnectLogQueryRequest, TerminalConnectLogQueryResponse } from '@/api/asset/terminal-connect-log';
+  import type { TerminalConnectLogQueryRequest, TerminalConnectLogQueryResponse } from '@/api/terminal/terminal-connect-log';
   import { reactive, ref, onMounted } from 'vue';
-  import { getTerminalConnectSessions, hostForceOffline } from '@/api/asset/terminal-connect-log';
+  import { getTerminalConnectSessions, hostForceOffline } from '@/api/terminal/terminal-connect-log';
   import { connectTypeKey } from '../types/const';
   import { useDictStore } from '@/store';
   import { Message } from '@arco-design/web-vue';

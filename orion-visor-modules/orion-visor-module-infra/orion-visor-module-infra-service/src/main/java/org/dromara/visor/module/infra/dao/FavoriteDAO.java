@@ -98,7 +98,6 @@ public interface FavoriteDAO extends IMapper<FavoriteDO> {
     /**
      * 通过 userId 删除收藏
      *
-     * @param type       type
      * @param userIdList userIdList
      * @return effect
      */

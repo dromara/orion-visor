@@ -32,6 +32,11 @@
             <artifactId>orion-visor-module-asset-provider</artifactId>
             <version>${revision}</version>
         </dependency>
+        <dependency>
+            <groupId>org.dromara.visor</groupId>
+            <artifactId>orion-visor-module-exec-provider</artifactId>
+            <version>${revision}</version>
+        </dependency>
 
         <!-- framework starter -->
         <dependency>

@@ -1,6 +1,6 @@
-// 添加事件监听器
 import type { Ref } from 'vue';
 
+// 添加事件监听器
 export function addEventListen(
   target: Window | HTMLElement,
   event: string,

@@ -112,4 +112,24 @@ export const sshFormRules = {
   }],
 } as Record<string, FieldRule | FieldRule[]>;
 
+// rdp 表单规则
+export const rdpFormRules = {
+  port: [{
+    required: true,
+    message: '请输入 RDP 端口'
+  }, {
+    min: 1,
+    max: 65535,
+    message: 'RDP 端口不合法'
+  }],
+  authType: [{
+    required: true,
+    message: '请选择认证方式'
+  }],
+  identityId: [{
+    required: true,
+    message: '请选择主机身份'
+  }],
+} as Record<string, FieldRule | FieldRule[]>;
+
 export default null;

@@ -52,14 +52,26 @@ public enum EnableStatus {
 
     public static EnableStatus of(Integer value) {
         if (value == null) {
-            return null;
+            return DISABLED;
         }
         for (EnableStatus e : values()) {
             if (e.value.equals(value)) {
                 return e;
             }
         }
-        return null;
+        return DISABLED;
+    }
+
+    public static EnableStatus of(String value) {
+        if (value == null) {
+            return DISABLED;
+        }
+        for (EnableStatus e : values()) {
+            if (e.name().equals(value)) {
+                return e;
+            }
+        }
+        return DISABLED;
     }
 
 }

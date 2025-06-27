@@ -56,14 +56,24 @@ public class TerminalPreferenceModel implements GenericsDataModel {
     private JSONObject theme;
 
     /**
-     * 显示设置
+     * ssh 显示设置
      */
-    private JSONObject displaySetting;
+    private JSONObject sshDisplaySetting;
 
     /**
-     * 操作栏设置
+     * rdp 图形化设置
      */
-    private JSONObject actionBarSetting;
+    private JSONObject rdpGraphSetting;
+
+    /**
+     * ssh 操作栏设置
+     */
+    private JSONObject sshActionBarSetting;
+
+    /**
+     * rdp 操作栏设置
+     */
+    private JSONObject rdpActionBarSetting;
 
     /**
      * 右键菜单设置
@@ -94,7 +104,7 @@ public class TerminalPreferenceModel implements GenericsDataModel {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class DisplaySettingModel implements IJsonObject {
+    public static class SshDisplaySettingModel implements IJsonObject {
 
         /**
          * 字体样式
@@ -135,6 +145,225 @@ public class TerminalPreferenceModel implements GenericsDataModel {
          * 光标闪烁
          */
         private Boolean cursorBlink;
+
+    }
+
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class RdpGraphSettingModel implements IJsonObject {
+
+        /**
+         * 显示大小
+         */
+        private String displaySize;
+
+        /**
+         * 显示宽度
+         */
+        private Integer displayWidth;
+
+        /**
+         * 显示高度
+         */
+        private Integer displayHeight;
+
+        /**
+         * 启用音频输入
+         */
+        private Boolean enableAudioInput;
+
+        /**
+         * 启用音频输出
+         */
+        private Boolean enableAudioOutput;
+
+        /**
+         * 颜色深度
+         */
+        private Integer colorDepth;
+
+        /**
+         * 无损压缩
+         */
+        private Boolean forceLossless;
+
+        /**
+         * 启用壁纸
+         */
+        private Boolean enableWallpaper;
+
+        /**
+         * 启用主题
+         */
+        private Boolean enableTheming;
+
+        /**
+         * 启动平滑字体
+         */
+        private Boolean enableFontSmoothing;
+
+        /**
+         * 启用窗口拖动
+         */
+        private Boolean enableFullWindowDrag;
+
+        /**
+         * 启用桌面合成
+         */
+        private Boolean enableDesktopComposition;
+
+        /**
+         * 启用菜单动画
+         */
+        private Boolean enableMenuAnimations;
+
+        /**
+         * 禁用位图缓存
+         */
+        private Boolean disableBitmapCaching;
+
+        /**
+         * 禁用离屏缓存
+         */
+        private Boolean disableOffscreenCaching;
+
+        /**
+         * 禁用字形缓存
+         */
+        private Boolean disableGlyphCaching;
+
+    }
+
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class SshActionBarSettingModel implements IJsonObject {
+
+        /**
+         * 连接状态
+         */
+        private Boolean connectStatus;
+
+        /**
+         * 去顶部
+         */
+        private Boolean toTop;
+
+        /**
+         * 去底部
+         */
+        private Boolean toBottom;
+
+        /**
+         * 全选
+         */
+        private Boolean selectAll;
+
+        /**
+         * 搜索
+         */
+        private Boolean search;
+
+        /**
+         * 复制
+         */
+        private Boolean copy;
+
+        /**
+         * 粘贴
+         */
+        private Boolean paste;
+
+        /**
+         * 中断
+         */
+        private Boolean interrupt;
+
+        /**
+         * 回车
+         */
+        private Boolean enter;
+
+        /**
+         * 增大字号
+         */
+        private Boolean fontSizePlus;
+
+        /**
+         * 减小字号
+         */
+        private Boolean fontSizeSubtract;
+
+        /**
+         * 打开 SFTP
+         */
+        private Boolean openSftp;
+
+        /**
+         * 上传文件
+         */
+        private Boolean uploadFile;
+
+        /**
+         * 清空
+         */
+        private Boolean clear;
+
+        /**
+         * 断开连接
+         */
+        private Boolean disconnect;
+
+    }
+
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class RdpActionBarSettingModel implements IJsonObject {
+
+        /**
+         * 位置
+         */
+        private String position;
+
+        /**
+         * 显示设置
+         */
+        private Boolean display;
+
+        /**
+         * 组合键
+         */
+        private Boolean combinationKey;
+
+        /**
+         * 剪切板
+         */
+        private Boolean clipboard;
+
+        /**
+         * 上传
+         */
+        private Boolean upload;
+
+        /**
+         * 保存为 rdp 文件
+         */
+        private Boolean saveRdp;
+
+        /**
+         * 断开连接
+         */
+        private Boolean disconnect;
+
+        /**
+         * 关闭
+         */
+        private Boolean close;
 
     }
 
@@ -257,94 +486,6 @@ public class TerminalPreferenceModel implements GenericsDataModel {
          * 快捷键定义
          */
         private List<ShortcutKeysModel> keys;
-
-    }
-
-    @Data
-    @Builder
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class ActionBarSettingModel implements IJsonObject {
-
-        /**
-         * 连接状态
-         */
-        private Boolean connectStatus;
-
-        /**
-         * 去顶部
-         */
-        private Boolean toTop;
-
-        /**
-         * 去底部
-         */
-        private Boolean toBottom;
-
-        /**
-         * 全选
-         */
-        private Boolean selectAll;
-
-        /**
-         * 搜索
-         */
-        private Boolean search;
-
-        /**
-         * 复制
-         */
-        private Boolean copy;
-
-        /**
-         * 粘贴
-         */
-        private Boolean paste;
-
-        /**
-         * 中断
-         */
-        private Boolean interrupt;
-
-        /**
-         * 回车
-         */
-        private Boolean enter;
-
-        /**
-         * 增大字号
-         */
-        private Boolean fontSizePlus;
-
-        /**
-         * 减小字号
-         */
-        private Boolean fontSizeSubtract;
-
-        /**
-         * 命令编辑器
-         */
-        private Boolean commandEditor;
-
-        /**
-         * 打开 SFTP
-         */
-        private Boolean openSftp;
-
-        /**
-         * 上传文件
-         */
-        private Boolean uploadFile;
-
-        /**
-         * 清空
-         */
-        private Boolean clear;
-
-        /**
-         * 断开连接
-         */
-        private Boolean disconnect;
 
     }
 

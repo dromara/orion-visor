@@ -31,8 +31,8 @@ import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
-import redis.clients.jedis.JedisPoolConfig;
 
 import java.net.InetAddress;
 import java.util.function.Supplier;
@@ -68,12 +68,10 @@ public class OrionNoRedisAutoConfiguration {
      */
     @Bean
     public JedisConnectionFactory jedisConnectionFactory(RedisServer redisServer) {
-        JedisConnectionFactory factory = new JedisConnectionFactory();
-        factory.setHostName(redisServer.getHost());
-        factory.setPort(redisServer.getBindPort());
-        factory.setUsePool(true);
-        factory.setPoolConfig(new JedisPoolConfig());
-        return factory;
+        RedisStandaloneConfiguration config = new RedisStandaloneConfiguration();
+        config.setHostName(redisServer.getHost());
+        config.setPort(redisServer.getBindPort());
+        return new JedisConnectionFactory(config);
     }
 
     /**

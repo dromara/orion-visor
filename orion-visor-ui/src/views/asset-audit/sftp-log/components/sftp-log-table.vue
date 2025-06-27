@@ -61,7 +61,7 @@
                         position="br"
                         type="warning"
                         @ok="deleteSelectedRows">
-            <a-button v-permission="['infra:operator-log:delete', 'asset:terminal-sftp-log:management:delete']"
+            <a-button v-permission="['infra:operator-log:delete', 'terminal:terminal-sftp-log:management:delete']"
                       type="primary"
                       status="danger"
                       :disabled="selectedKeys.length === 0">
@@ -169,7 +169,7 @@
                         position="left"
                         type="warning"
                         @ok="deleteRow(record)">
-            <a-button v-permission="['infra:operator-log:delete', 'asset:terminal-sftp-log:management:delete']"
+            <a-button v-permission="['infra:operator-log:delete', 'terminal:terminal-sftp-log:management:delete']"
                       type="text"
                       size="mini"
                       status="danger">
@@ -189,10 +189,10 @@
 </script>
 
 <script lang="ts" setup>
-  import type { TerminalSftpLogQueryRequest, TerminalSftpLogQueryResponse } from '@/api/asset/terminal-sftp';
+  import type { TerminalSftpLogQueryRequest, TerminalSftpLogQueryResponse } from '@/api/terminal/terminal-sftp';
   import { reactive, ref, onMounted } from 'vue';
-  import { getTerminalSftpLogPage, deleteTerminalSftpLog } from '@/api/asset/terminal-sftp';
-  import { sftpOperatorTypeKey, sftpOperatorResultKey, SftpOperatorType, showPathMaxCount, TableName } from '../types/const';
+  import { getTerminalSftpLogPage, deleteTerminalSftpLog } from '@/api/terminal/terminal-sftp';
+  import { TableName, sftpOperatorTypeKey, sftpOperatorResultKey, SftpOperatorType, showPathMaxCount } from '../types/const';
   import { useTablePagination, useRowSelection, useTableColumns } from '@/hooks/table';
   import { useDictStore } from '@/store';
   import { Message } from '@arco-design/web-vue';
@@ -200,7 +200,7 @@
   import useLoading from '@/hooks/loading';
   import { copy } from '@/hooks/copy';
   import { permission10toString } from '@/utils/file';
-  import { DESC, useQueryOrder } from '@/hooks/query-order';
+  import { useQueryOrder, DESC } from '@/hooks/query-order';
   import UserSelector from '@/components/user/user/selector/index.vue';
   import HostSelector from '@/components/asset/host/selector/index.vue';
   import TableAdjust from '@/components/app/table-adjust/index.vue';

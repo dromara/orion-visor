@@ -89,7 +89,7 @@
   import useLoading from '@/hooks/loading';
   import useVisible from '@/hooks/visible';
   import { getAuthorizedHostOptions } from '@/types/options';
-  import { getLatestConnectHostId } from '@/api/asset/terminal-connect-log';
+  import { getLatestConnectHostId } from '@/api/terminal/terminal-connect-log';
   import HostTable from './components/host-table.vue';
   import HostGroup from './components/host-group.vue';
 

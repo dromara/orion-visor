@@ -1,7 +1,7 @@
 {
   "name": "orion-visor-ui",
   "description": "Orion Visor UI",
-  "version": "2.3.9",
+  "version": "2.4.0",
   "private": true,
   "author": "Jiahang Li",
   "license": "Apache 2.0",
@@ -67,6 +67,7 @@
     "@commitlint/cli": "^17.1.2",
     "@commitlint/config-conventional": "^17.1.0",
     "@types/file-saver": "^2.0.7",
+    "@types/guacamole-common-js": "^1.5.3",
     "@types/lodash": "^4.14.186",
     "@types/mockjs": "^1.0.7",
     "@types/nprogress": "^0.2.0",

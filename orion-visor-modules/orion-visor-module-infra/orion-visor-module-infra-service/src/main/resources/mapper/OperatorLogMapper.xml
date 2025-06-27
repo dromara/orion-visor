@@ -38,6 +38,15 @@
         id, user_id, username, trace_id, address, location, user_agent, risk_level, module, type, log_info, extra, result, error_message, return_value, duration, start_time, end_time, create_time, deleted
     </sql>
 
+    <select id="selectOperatorLogTypeResultCount" resultMap="CountResultMap">
+        SELECT DATE(create_time) operator_date, result, COUNT(1) total_count
+        FROM operator_log
+        WHERE deleted = 0
+          AND type = #{type}
+          AND create_time BETWEEN #{startTime} AND #{endTime}
+        GROUP BY operator_date, result
+    </select>
+
     <select id="selectOperatorLogCount" resultMap="CountResultMap">
         SELECT DATE(create_time) operator_date, COUNT(1) total_count
         FROM operator_log

@@ -47,7 +47,7 @@
     <template #handle="{ record }">
       <div class="table-handle-wrapper">
         <!-- 命令 -->
-        <a-button v-permission="['asset:exec-command-log:query']"
+        <a-button v-permission="['exec:exec-command-log:query']"
                   type="text"
                   size="mini"
                   :disabled="record.status === ExecHostStatus.WAITING"
@@ -56,7 +56,7 @@
           命令
         </a-button>
         <!-- 参数 -->
-        <a-button v-permission="['asset:exec-command-log:query']"
+        <a-button v-permission="['exec:exec-command-log:query']"
                   type="text"
                   size="mini"
                   :disabled="record.status === ExecHostStatus.WAITING"
@@ -75,7 +75,7 @@
                       position="left"
                       type="warning"
                       @ok="interruptedHost(record)">
-          <a-button v-permission="['asset:exec-command-log:interrupt']"
+          <a-button v-permission="['exec:exec-command-log:interrupt']"
                     type="text"
                     size="mini"
                     status="danger"
@@ -88,7 +88,7 @@
                       position="left"
                       type="warning"
                       @ok="deleteRow(record)">
-          <a-button v-permission="['asset:exec-command-log:delete']"
+          <a-button v-permission="['exec:exec-command-log:delete']"
                     type="text"
                     size="mini"
                     status="danger">

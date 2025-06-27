@@ -44,7 +44,6 @@ public interface GenericsDataModel {
         return JSON.toJSONString(this);
     }
 
-
     /**
      * 转为 map
      *

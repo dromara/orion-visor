@@ -32,6 +32,10 @@ export default defineConfig({
         find: 'vue',
         replacement: 'vue/dist/vue.esm-bundler.js', // compile template
       },
+      {
+        find: 'guacamole-common-js',
+        replacement: resolve(__dirname, '../libs/guacamole-common-js')
+      },
     ],
     extensions: ['.ts', '.js'],
   },

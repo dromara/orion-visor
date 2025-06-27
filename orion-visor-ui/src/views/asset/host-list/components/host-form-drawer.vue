@@ -42,6 +42,15 @@
                          class="form-panel"
                          :hostId="hostId" />
         </a-tab-pane>
+        <!-- RDP 配置 -->
+        <a-tab-pane v-permission="['asset:host:update-config']"
+                    key="rdp"
+                    title="RDP"
+                    :disabled="!hostId || !types.includes(HostType.RDP.value)">
+          <host-form-rdp v-if="hostId"
+                         class="form-panel"
+                         :hostId="hostId" />
+        </a-tab-pane>
       </a-tabs>
     </div>
   </a-drawer>
@@ -62,6 +71,7 @@
   import HostFormInfo from './host-form-info.vue';
   import HostFormSpec from './host-form-spec.vue';
   import HostFormSsh from './host-form-ssh.vue';
+  import HostFormRdp from './host-form-rdp.vue';
 
   const { visible, setVisible } = useVisible();
 

@@ -88,7 +88,7 @@ public enum ErrorCode implements CodeInfo {
 
     EXCEL_PASSWORD_ERROR(905, "文档密码错误"),
 
-    PASER_FAILED(906, "解析失败"),
+    PASER_FAILED(906, "表达式解析失败"),
 
     ENCRYPT_ERROR(907, "数据加密异常"),
 
@@ -134,9 +134,10 @@ public enum ErrorCode implements CodeInfo {
      * 获取 wapper
      *
      * @param data data
+     * @param <T>  T
      * @return HttpWrapper
      */
-    public HttpWrapper<?> wrapper() {
+    public <T> HttpWrapper<T> wrapper() {
         return HttpWrapper.of(this);
     }
 

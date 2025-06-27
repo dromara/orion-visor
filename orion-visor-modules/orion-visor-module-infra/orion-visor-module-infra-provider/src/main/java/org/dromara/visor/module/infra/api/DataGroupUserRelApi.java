@@ -98,6 +98,16 @@ public interface DataGroupUserRelApi {
     Future<Set<Long>> getGroupIdByRelIdAsync(DataGroupTypeEnum type, Long userId, Long relId);
 
     /**
+     * 通过 relIdList 查询 groupRel
+     *
+     * @param type      type
+     * @param userId    userId
+     * @param relIdList relIdList
+     * @return rows
+     */
+    Map<Long, Set<Long>> getGroupIdByRelIdList(DataGroupTypeEnum type, Long userId, List<Long> relIdList);
+
+    /**
      * 删除数据分组关联
      *
      * @param type   type

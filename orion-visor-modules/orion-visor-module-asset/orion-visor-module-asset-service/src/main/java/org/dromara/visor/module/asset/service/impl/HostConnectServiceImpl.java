@@ -27,6 +27,10 @@ import cn.orionsec.kit.lang.utils.io.Streams;
 import cn.orionsec.kit.net.host.SessionStore;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.visor.common.constant.ErrorMessage;
+import org.dromara.visor.common.session.config.BaseConnectConfig;
+import org.dromara.visor.common.session.config.RdpConnectConfig;
+import org.dromara.visor.common.session.config.SshConnectConfig;
+import org.dromara.visor.common.session.ssh.SessionStores;
 import org.dromara.visor.common.utils.Valid;
 import org.dromara.visor.module.asset.dao.HostDAO;
 import org.dromara.visor.module.asset.dao.HostIdentityDAO;
@@ -34,12 +38,16 @@ import org.dromara.visor.module.asset.dao.HostKeyDAO;
 import org.dromara.visor.module.asset.entity.domain.HostDO;
 import org.dromara.visor.module.asset.entity.domain.HostIdentityDO;
 import org.dromara.visor.module.asset.entity.domain.HostKeyDO;
-import org.dromara.visor.module.asset.entity.dto.TerminalConnectDTO;
+import org.dromara.visor.module.asset.entity.dto.host.HostRdpConfigDTO;
+import org.dromara.visor.module.asset.entity.dto.host.HostSshConfigDTO;
 import org.dromara.visor.module.asset.entity.request.host.HostTestConnectRequest;
-import org.dromara.visor.module.asset.enums.*;
-import org.dromara.visor.module.asset.handler.host.config.model.HostSshConfigModel;
+import org.dromara.visor.module.asset.enums.HostAuthTypeEnum;
+import org.dromara.visor.module.asset.enums.HostExtraAuthTypeEnum;
+import org.dromara.visor.module.asset.enums.HostIdentityTypeEnum;
+import org.dromara.visor.module.asset.enums.HostTypeEnum;
+import org.dromara.visor.module.asset.handler.host.extra.HostExtraItemEnum;
+import org.dromara.visor.module.asset.handler.host.extra.model.HostRdpExtraModel;
 import org.dromara.visor.module.asset.handler.host.extra.model.HostSshExtraModel;
-import org.dromara.visor.module.asset.handler.host.jsch.SessionStores;
 import org.dromara.visor.module.asset.service.AssetAuthorizedDataService;
 import org.dromara.visor.module.asset.service.HostConfigService;
 import org.dromara.visor.module.asset.service.HostConnectService;
@@ -92,68 +100,93 @@ public class HostConnectServiceImpl implements HostConnectService {
             // SSH 连接测试
             SessionStore sessionStore = null;
             try {
-                TerminalConnectDTO info = this.getSshConnectInfo(id);
-                sessionStore = SessionStores.openSessionStore(info);
+                SshConnectConfig config = this.getSshConnectConfig(id);
+                sessionStore = SessionStores.openSessionStore(config);
             } catch (Exception e) {
                 throw Exceptions.app(e.getMessage(), e);
             } finally {
                 Streams.close(sessionStore);
             }
         }
+        // TODO: 其他连接方式
     }
 
     @Override
-    public TerminalConnectDTO getSshConnectInfo(Long hostId) {
-        log.info("HostConnectService.getSshConnectInfo-withHost hostId: {}", hostId);
+    public SshConnectConfig getSshConnectConfig(Long hostId) {
+        log.info("HostConnectService.getSshConnectConfig-withHost hostId: {}", hostId);
         // 查询主机
         HostDO host = hostDAO.selectById(hostId);
         // 查询主机配置
-        HostSshConfigModel config = hostConfigService.getHostConfig(hostId, HostTypeEnum.SSH.name());
+        HostSshConfigDTO config = hostConfigService.getHostConfig(hostId, HostTypeEnum.SSH.name());
         // 获取配置
-        return this.getHostConnectInfo(host, config, null);
+        return this.getSshConnectConfig(host, config, null);
     }
 
     @Override
-    public TerminalConnectDTO getSshConnectInfo(Long hostId, Long userId) {
+    public SshConnectConfig getSshConnectConfig(Long hostId, Long userId) {
         // 查询主机
         HostDO host = hostDAO.selectById(hostId);
         Valid.notNull(host, ErrorMessage.HOST_ABSENT);
         // 获取配置
-        return this.getSshConnectInfo(host, userId);
+        return this.getSshConnectConfig(host, userId);
     }
 
     @Override
-    public TerminalConnectDTO getSshConnectInfo(HostDO host, Long userId) {
+    public SshConnectConfig getSshConnectConfig(HostDO host, Long userId) {
         Long hostId = host.getId();
-        log.info("HostConnectService.getSshConnectInfo hostId: {}, userId: {}", hostId, userId);
-        // 验证主机是否有权限
-        List<Long> hostIdList = assetAuthorizedDataService.getUserAuthorizedHostId(userId);
-        Valid.isTrue(hostIdList.contains(hostId),
-                ErrorMessage.ANY_NO_PERMISSION,
-                DataPermissionTypeEnum.HOST_GROUP.getPermissionName());
+        log.info("HostConnectService.getSshConnectConfig hostId: {}, userId: {}", hostId, userId);
+        // 验证权限
+        this.validHostAuthorized(userId, hostId);
         // 获取主机配置
-        HostSshConfigModel config = hostConfigService.getHostConfig(hostId, HostTypeEnum.SSH.name());
+        HostSshConfigDTO config = hostConfigService.getHostConfig(hostId, HostTypeEnum.SSH.name());
         Valid.notNull(config, ErrorMessage.CONFIG_ABSENT);
         // 查询主机额外配置
         HostSshExtraModel extra = hostExtraService.getHostExtra(userId, hostId, HostExtraItemEnum.SSH);
         if (extra != null) {
-            HostExtraSshAuthTypeEnum extraAuthType = HostExtraSshAuthTypeEnum.of(extra.getAuthType());
-            if (HostExtraSshAuthTypeEnum.CUSTOM_KEY.equals(extraAuthType)) {
-                // 验证主机密钥是否有权限
-                Valid.notNull(extra.getKeyId(), ErrorMessage.KEY_ABSENT);
-                Valid.isTrue(dataPermissionApi.hasPermission(DataPermissionTypeEnum.HOST_KEY, userId, extra.getKeyId()),
-                        ErrorMessage.ANY_NO_PERMISSION,
-                        DataPermissionTypeEnum.HOST_KEY.getPermissionName());
-            } else if (HostExtraSshAuthTypeEnum.CUSTOM_IDENTITY.equals(extraAuthType)) {
-                // 验证主机身份是否有权限
-                Valid.notNull(extra.getIdentityId(), ErrorMessage.IDENTITY_ABSENT);
-                Valid.isTrue(dataPermissionApi.hasPermission(DataPermissionTypeEnum.HOST_IDENTITY, userId, extra.getIdentityId()),
-                        ErrorMessage.ANY_NO_PERMISSION,
-                        DataPermissionTypeEnum.HOST_IDENTITY.getPermissionName());
-            }
+            // 验证额外认证方式
+            this.validExtraAuthentication(userId, extra.getAuthType(), extra.getKeyId(), extra.getIdentityId());
         }
         // 获取连接配置
-        return this.getHostConnectInfo(host, config, extra);
+        return this.getSshConnectConfig(host, config, extra);
+    }
+
+    @Override
+    public RdpConnectConfig getRdpConnectConfig(Long hostId) {
+        log.info("HostConnectService.getRdpConnectConfig-withHost hostId: {}", hostId);
+        // 查询主机
+        HostDO host = hostDAO.selectById(hostId);
+        // 查询主机配置
+        HostRdpConfigDTO config = hostConfigService.getHostConfig(hostId, HostTypeEnum.RDP.name());
+        // 获取配置
+        return this.getRdpConnectConfig(host, config, null);
+    }
+
+    @Override
+    public RdpConnectConfig getRdpConnectConfig(Long hostId, Long userId) {
+        // 查询主机
+        HostDO host = hostDAO.selectById(hostId);
+        Valid.notNull(host, ErrorMessage.HOST_ABSENT);
+        // 获取配置
+        return this.getRdpConnectConfig(host, userId);
+    }
+
+    @Override
+    public RdpConnectConfig getRdpConnectConfig(HostDO host, Long userId) {
+        Long hostId = host.getId();
+        log.info("HostConnectService.getRdpConnectConfig hostId: {}, userId: {}", hostId, userId);
+        // 验证权限
+        this.validHostAuthorized(userId, hostId);
+        // 获取主机配置
+        HostRdpConfigDTO config = hostConfigService.getHostConfig(hostId, HostTypeEnum.RDP.name());
+        Valid.notNull(config, ErrorMessage.CONFIG_ABSENT);
+        // 查询主机额外配置
+        HostRdpExtraModel extra = hostExtraService.getHostExtra(userId, hostId, HostExtraItemEnum.RDP);
+        if (extra != null) {
+            // 验证额外认证方式
+            this.validExtraAuthentication(userId, extra.getAuthType(), null, extra.getIdentityId());
+        }
+        // 获取连接配置
+        return this.getRdpConnectConfig(host, config, extra);
     }
 
     /**
@@ -162,46 +195,41 @@ public class HostConnectServiceImpl implements HostConnectService {
      * @param host   host
      * @param config config
      * @param extra  extra
-     * @return session
+     * @return info
      */
-    private TerminalConnectDTO getHostConnectInfo(HostDO host,
-                                                  HostSshConfigModel config,
-                                                  HostSshExtraModel extra) {
-        // 填充认证信息
-        TerminalConnectDTO conn = new TerminalConnectDTO();
-        conn.setOsType(host.getOsType());
-        conn.setArchType(host.getArchType());
-        conn.setHostId(host.getId());
-        conn.setHostName(host.getName());
-        conn.setHostCode(host.getCode());
-        conn.setHostAddress(host.getAddress());
-        conn.setHostPort(config.getPort());
-        conn.setTimeout(config.getConnectTimeout());
-        conn.setCharset(config.getCharset());
-        conn.setFileNameCharset(config.getFileNameCharset());
-        conn.setFileContentCharset(config.getFileContentCharset());
-
+    private SshConnectConfig getSshConnectConfig(HostDO host,
+                                                 HostSshConfigDTO config,
+                                                 HostSshExtraModel extra) {
+        SshConnectConfig connectConfig = SshConnectConfig.builder()
+                .hostPort(config.getPort())
+                .timeout(config.getConnectTimeout())
+                .charset(config.getCharset())
+                .fileNameCharset(config.getFileNameCharset())
+                .fileContentCharset(config.getFileContentCharset())
+                .build();
+        // 填充基础主机信息
+        this.setBaseConnectConfig(connectConfig, host);
         // 获取自定义认证方式
-        HostExtraSshAuthTypeEnum extraAuthType = Optional.ofNullable(extra)
+        HostExtraAuthTypeEnum extraAuthType = Optional.ofNullable(extra)
                 .map(HostSshExtraModel::getAuthType)
-                .map(HostExtraSshAuthTypeEnum::of)
+                .map(HostExtraAuthTypeEnum::of)
                 .orElse(null);
-        if (HostExtraSshAuthTypeEnum.CUSTOM_KEY.equals(extraAuthType)) {
+        if (HostExtraAuthTypeEnum.CUSTOM_KEY.equals(extraAuthType)) {
             // 自定义密钥
-            config.setAuthType(HostSshAuthTypeEnum.KEY.name());
+            config.setAuthType(HostAuthTypeEnum.KEY.name());
             config.setKeyId(extra.getKeyId());
             if (extra.getUsername() != null) {
                 config.setUsername(extra.getUsername());
             }
-        } else if (HostExtraSshAuthTypeEnum.CUSTOM_IDENTITY.equals(extraAuthType)) {
+        } else if (HostExtraAuthTypeEnum.CUSTOM_IDENTITY.equals(extraAuthType)) {
             // 自定义身份
-            config.setAuthType(HostSshAuthTypeEnum.IDENTITY.name());
+            config.setAuthType(HostAuthTypeEnum.IDENTITY.name());
             config.setIdentityId(extra.getIdentityId());
         }
 
         // 身份认证
-        HostSshAuthTypeEnum authType = HostSshAuthTypeEnum.of(config.getAuthType());
-        if (HostSshAuthTypeEnum.IDENTITY.equals(authType)) {
+        HostAuthTypeEnum authType = HostAuthTypeEnum.of(config.getAuthType());
+        if (HostAuthTypeEnum.IDENTITY.equals(authType)) {
             // 身份认证
             Valid.notNull(config.getIdentityId(), ErrorMessage.IDENTITY_ABSENT);
             HostIdentityDO identity = hostIdentityDAO.selectById(config.getIdentityId());
@@ -210,32 +238,146 @@ public class HostConnectServiceImpl implements HostConnectService {
             HostIdentityTypeEnum identityType = HostIdentityTypeEnum.of(identity.getType());
             if (HostIdentityTypeEnum.PASSWORD.equals(identityType)) {
                 // 密码类型
-                authType = HostSshAuthTypeEnum.PASSWORD;
+                authType = HostAuthTypeEnum.PASSWORD;
                 config.setPassword(identity.getPassword());
             } else if (HostIdentityTypeEnum.KEY.equals(identityType)) {
                 // 密钥类型
-                authType = HostSshAuthTypeEnum.KEY;
+                authType = HostAuthTypeEnum.KEY;
                 config.setKeyId(identity.getKeyId());
             }
         }
 
         // 填充认证信息
-        conn.setUsername(config.getUsername());
-        if (HostSshAuthTypeEnum.PASSWORD.equals(authType)) {
+        connectConfig.setUsername(config.getUsername());
+        if (HostAuthTypeEnum.PASSWORD.equals(authType)) {
             // 密码认证
-            conn.setPassword(config.getPassword());
-        } else if (HostSshAuthTypeEnum.KEY.equals(authType)) {
+            connectConfig.setPassword(config.getPassword());
+        } else if (HostAuthTypeEnum.KEY.equals(authType)) {
             // 密钥认证
             Long keyId = config.getKeyId();
             Valid.notNull(keyId, ErrorMessage.KEY_ABSENT);
             HostKeyDO key = hostKeyDAO.selectById(keyId);
             Valid.notNull(key, ErrorMessage.KEY_ABSENT);
-            conn.setKeyId(keyId);
-            conn.setPublicKey(key.getPublicKey());
-            conn.setPrivateKey(key.getPrivateKey());
-            conn.setPrivateKeyPassword(key.getPassword());
+            connectConfig.setKeyId(keyId);
+            connectConfig.setPublicKey(key.getPublicKey());
+            connectConfig.setPrivateKey(key.getPrivateKey());
+            connectConfig.setPrivateKeyPassword(key.getPassword());
         }
-        return conn;
+        return connectConfig;
+    }
+
+    /**
+     * 获取 RDP 连接信息
+     *
+     * @param host   host
+     * @param config config
+     * @return info
+     */
+    private RdpConnectConfig getRdpConnectConfig(HostDO host,
+                                                 HostRdpConfigDTO config,
+                                                 HostRdpExtraModel extra) {
+        // 填充认证信息
+        RdpConnectConfig connectConfig = RdpConnectConfig.builder()
+                .hostPort(config.getPort())
+                .versionGt81(config.getVersionGt81())
+                .timezone(config.getTimezone())
+                .keyboardLayout(config.getKeyboardLayout())
+                .clipboardNormalize(config.getClipboardNormalize())
+                .domain(config.getDomain())
+                .preConnectionId(config.getPreConnectionId())
+                .preConnectionBlob(config.getPreConnectionBlob())
+                .remoteApp(config.getRemoteApp())
+                .remoteAppDir(config.getRemoteAppDir())
+                .remoteAppArgs(config.getRemoteAppArgs())
+                .build();
+        // 填充基础主机信息
+        this.setBaseConnectConfig(connectConfig, host);
+        if (extra != null) {
+            // 设置低带宽模式
+            connectConfig.setLowBandwidthMode(extra.getLowBandwidthMode());
+            // 获取自定义认证方式
+            HostExtraAuthTypeEnum extraAuthType = HostExtraAuthTypeEnum.of(extra.getAuthType());
+            if (HostExtraAuthTypeEnum.CUSTOM_IDENTITY.equals(extraAuthType)) {
+                // 自定义身份
+                config.setAuthType(HostAuthTypeEnum.IDENTITY.name());
+                config.setIdentityId(extra.getIdentityId());
+            }
+        }
+
+        // 身份认证
+        HostAuthTypeEnum authType = HostAuthTypeEnum.of(config.getAuthType());
+        if (HostAuthTypeEnum.IDENTITY.equals(authType)) {
+            // 身份认证 - 仅密码
+            authType = HostAuthTypeEnum.PASSWORD;
+            Valid.notNull(config.getIdentityId(), ErrorMessage.IDENTITY_ABSENT);
+            HostIdentityDO identity = hostIdentityDAO.selectById(config.getIdentityId());
+            Valid.notNull(identity, ErrorMessage.IDENTITY_ABSENT);
+            // 设置身份信息
+            config.setUsername(identity.getUsername());
+            config.setPassword(identity.getPassword());
+        }
+
+        // 填充认证信息
+        connectConfig.setUsername(config.getUsername());
+        if (HostAuthTypeEnum.PASSWORD.equals(authType)) {
+            // 密码认证
+            connectConfig.setPassword(config.getPassword());
+        }
+        return connectConfig;
+    }
+
+    /**
+     * 验证主机权限
+     *
+     * @param userId userId
+     * @param hostId hostId
+     */
+    private void validHostAuthorized(Long userId, Long hostId) {
+        // 验证主机是否有权限
+        List<Long> hostIdList = assetAuthorizedDataService.getUserAuthorizedHostId(userId);
+        Valid.isTrue(hostIdList.contains(hostId),
+                ErrorMessage.ANY_NO_PERMISSION,
+                DataPermissionTypeEnum.HOST_GROUP.getPermissionName());
+    }
+
+    /**
+     * 验证额外认证方式
+     *
+     * @param userId     userId
+     * @param authType   authType
+     * @param keyId      keyId
+     * @param identityId identityId
+     */
+    private void validExtraAuthentication(Long userId, String authType, Long keyId, Long identityId) {
+        HostExtraAuthTypeEnum extraAuthType = HostExtraAuthTypeEnum.of(authType);
+        if (HostExtraAuthTypeEnum.CUSTOM_KEY.equals(extraAuthType)) {
+            // 验证主机密钥是否有权限
+            Valid.notNull(keyId, ErrorMessage.KEY_ABSENT);
+            Valid.isTrue(dataPermissionApi.hasPermission(DataPermissionTypeEnum.HOST_KEY, userId, keyId),
+                    ErrorMessage.ANY_NO_PERMISSION,
+                    DataPermissionTypeEnum.HOST_KEY.getPermissionName());
+        } else if (HostExtraAuthTypeEnum.CUSTOM_IDENTITY.equals(extraAuthType)) {
+            // 验证主机身份是否有权限
+            Valid.notNull(identityId, ErrorMessage.IDENTITY_ABSENT);
+            Valid.isTrue(dataPermissionApi.hasPermission(DataPermissionTypeEnum.HOST_IDENTITY, userId, identityId),
+                    ErrorMessage.ANY_NO_PERMISSION,
+                    DataPermissionTypeEnum.HOST_IDENTITY.getPermissionName());
+        }
+    }
+
+    /**
+     * 设置基础主机信息
+     *
+     * @param config config
+     * @param host   host
+     */
+    private void setBaseConnectConfig(BaseConnectConfig config, HostDO host) {
+        config.setOsType(host.getOsType());
+        config.setArchType(host.getArchType());
+        config.setHostId(host.getId());
+        config.setHostName(host.getName());
+        config.setHostCode(host.getCode());
+        config.setHostAddress(host.getAddress());
     }
 
 }

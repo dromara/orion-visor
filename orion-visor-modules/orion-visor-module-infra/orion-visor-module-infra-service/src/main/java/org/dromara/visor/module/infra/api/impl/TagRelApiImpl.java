@@ -23,6 +23,7 @@
 package org.dromara.visor.module.infra.api.impl;
 
 import cn.orionsec.kit.lang.utils.collect.Lists;
+import cn.orionsec.kit.lang.utils.collect.Maps;
 import org.dromara.visor.common.utils.Valid;
 import org.dromara.visor.module.infra.api.TagRelApi;
 import org.dromara.visor.module.infra.convert.TagProviderConvert;
@@ -35,6 +36,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 import java.util.stream.Collectors;
@@ -59,6 +61,14 @@ public class TagRelApiImpl implements TagRelApi {
             return;
         }
         tagRelService.addTagRel(type.name(), relId, tagIdList);
+    }
+
+    @Override
+    public void addTagRel(TagTypeEnum type, Map<Long, List<Long>> relTagIdList) {
+        if (Maps.isEmpty(relTagIdList)) {
+            return;
+        }
+        tagRelService.addTagRel(type.name(), relTagIdList);
     }
 
     @Override

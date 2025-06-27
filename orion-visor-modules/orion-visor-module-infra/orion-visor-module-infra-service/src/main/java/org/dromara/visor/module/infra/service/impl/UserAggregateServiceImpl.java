@@ -22,7 +22,6 @@
  */
 package org.dromara.visor.module.infra.service.impl;
 
-
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.visor.framework.security.core.utils.SecurityUtils;

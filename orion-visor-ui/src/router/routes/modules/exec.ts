@@ -43,7 +43,8 @@ const EXEC: Array<AppRouteRecordRaw> = [
         component: () => import('@/views/exec/exec-template/index.vue'),
       },
     ],
-  }, {
+  },
+  {
     name: 'execFullModule',
     path: '/exec-full-module',
     component: FULL_LAYOUT,

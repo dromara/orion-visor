@@ -36,6 +36,21 @@ export interface HostSshConfig extends HostBaseConfig {
   fileContentCharset?: string;
 }
 
+// 主机 RDP 配置
+export interface HostRdpConfig extends HostBaseConfig {
+  identityId?: number;
+  versionGt81?: boolean;
+  timezone?: string;
+  keyboardLayout?: string;
+  clipboardNormalize?: string;
+  domain?: string;
+  preConnectionId?: string;
+  preConnectionBlob?: string;
+  remoteApp?: string;
+  remoteAppDir?: string;
+  remoteAppArgs?: string;
+}
+
 /**
  * 更新主机配置
  */

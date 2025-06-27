@@ -188,9 +188,7 @@
                :wrap="true">
         <template v-for="groupId in record.groupIdList"
                   :key="groupId">
-          <a-tag color="green">
-            {{ hostGroupList.find(s => s.key === groupId)?.title || groupId }}
-          </a-tag>
+          <a-tag>{{ hostGroupList.find(s => s.key === groupId)?.title || groupId }}</a-tag>
         </template>
       </a-space>
     </template>
@@ -240,15 +238,15 @@
             </a-doption>
             <!-- SSH -->
             <a-doption v-if="record.types.includes(HostType.SSH.value)"
-                       v-permission="['asset:terminal:access']"
+                       v-permission="['terminal:terminal:access']"
                        @click="openNewRoute({ name: 'terminal', query: { connect: record.id, type: 'SSH' } })">
               <span class="more-doption normal">SSH</span>
             </a-doption>
-            <!-- SFTP -->
-            <a-doption v-if="record.types.includes(HostType.SSH.value)"
-                       v-permission="['asset:terminal:access']"
-                       @click="openNewRoute({ name: 'terminal', query: { connect: record.id, type: 'SFTP' } })">
-              <span class="more-doption normal">SFTP</span>
+            <!-- RDP -->
+            <a-doption v-if="record.types.includes(HostType.RDP.value)"
+                       v-permission="['terminal:terminal:access']"
+                       @click="openNewRoute({ name: 'terminal', query: { connect: record.id, type: 'RDP' } })">
+              <span class="more-doption normal">RDP</span>
             </a-doption>
           </template>
         </a-dropdown>

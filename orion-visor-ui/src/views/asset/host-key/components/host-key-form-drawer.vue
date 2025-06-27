@@ -116,7 +116,7 @@
       privateKey: undefined,
       password: undefined,
       description: undefined,
-      useNewPassword: false,
+      useNewPassword: false
     };
   };
 

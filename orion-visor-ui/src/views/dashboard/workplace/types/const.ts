@@ -1,11 +1,13 @@
 import type { InfraWorkplaceStatisticsResponse } from '@/api/statistics/infra-statistics';
-import type { AssetWorkplaceStatisticsResponse } from '@/api/statistics/asset-statistics';
+import type { ExecWorkplaceStatisticsResponse } from '@/api/statistics/exec-statistics';
+import type { TerminalWorkplaceStatisticsResponse } from '@/api/statistics/terminal-statistics';
 import { execHostStatusKey } from '@/components/exec/log/const';
 
 // 工作台统计数据
 export interface WorkplaceStatisticsData {
   infra: InfraWorkplaceStatisticsResponse;
-  asset: AssetWorkplaceStatisticsResponse;
+  exec: ExecWorkplaceStatisticsResponse;
+  terminal: TerminalWorkplaceStatisticsResponse;
 }
 
 // 终端连接类型 字典项

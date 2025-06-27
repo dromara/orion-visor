@@ -76,12 +76,12 @@
 </script>
 
 <script lang="ts" setup>
-  import type { TerminalConnectLogQueryRequest } from '@/api/asset/terminal-connect-log';
+  import type { TerminalConnectLogQueryRequest } from '@/api/terminal/terminal-connect-log';
   import { ref } from 'vue';
   import useLoading from '@/hooks/loading';
   import useVisible from '@/hooks/visible';
   import { connectStatusKey, connectTypeKey, maxClearLimit } from '../types/const';
-  import { getTerminalConnectLogCount, clearTerminalConnectLog } from '@/api/asset/terminal-connect-log';
+  import { getTerminalConnectLogCount, clearTerminalConnectLog } from '@/api/terminal/terminal-connect-log';
   import { Message, Modal } from '@arco-design/web-vue';
   import { useDictStore } from '@/store';
   import UserSelector from '@/components/user/user/selector/index.vue';

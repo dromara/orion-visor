@@ -62,7 +62,7 @@
       <div class="table-right-bar-handle">
         <a-space>
           <!-- 清空 -->
-          <a-button v-permission="['asset:exec-job-log:management:clear']"
+          <a-button v-permission="['exec:exec-job-log:management:clear']"
                     status="danger"
                     @click="openClear">
             清空
@@ -75,7 +75,7 @@
                         position="br"
                         type="warning"
                         @ok="deleteSelectedRows">
-            <a-button v-permission="['asset:exec-job-log:delete']"
+            <a-button v-permission="['exec:exec-job-log:delete']"
                       type="primary"
                       status="danger"
                       :disabled="selectedKeys.length === 0">
@@ -116,14 +116,14 @@
       </template>
       <!-- 任务名称 -->
       <template #description="{ record }">
-        <span>
+        <div>
           <span class="span-blue mr4 usn">
             #{{ record.execSeq }}
           </span>
           <span :title="record.description">
             {{ record.description }}
           </span>
-        </span>
+        </div>
       </template>
       <!-- 执行命令 -->
       <template #command="{ record }">
@@ -179,7 +179,7 @@
             命令
           </a-button>
           <!-- 日志 -->
-          <a-button v-permission="['asset:exec-job-log:query']"
+          <a-button v-permission="['exec:exec-job-log:query']"
                     type="text"
                     size="mini"
                     title="ctrl + 左键新页面打开"
@@ -191,7 +191,7 @@
                         position="left"
                         type="warning"
                         @ok="doInterruptExecJob(record)">
-            <a-button v-permission="['asset:exec-job-log:interrupt']"
+            <a-button v-permission="['exec:exec-job-log:interrupt']"
                       type="text"
                       size="mini"
                       status="danger"
@@ -204,7 +204,7 @@
                         position="left"
                         type="warning"
                         @ok="deleteRow(record)">
-            <a-button v-permission="['asset:exec-job-log:delete']"
+            <a-button v-permission="['exec:exec-job-log:delete']"
                       type="text"
                       size="mini"
                       status="danger">
@@ -238,20 +238,20 @@
   import { Message } from '@arco-design/web-vue';
   import useLoading from '@/hooks/loading';
   import columns from '../types/table.columns';
-  import { DESC, useQueryOrder } from '@/hooks/query-order';
   import { ExecStatus, execStatusKey, ExecMode } from '@/components/exec/log/const';
-  import { useExpandable, useTablePagination, useRowSelection, useTableColumns } from '@/hooks/table';
   import { TableName } from '../types/const';
+  import { useExpandable, useTablePagination, useRowSelection, useTableColumns } from '@/hooks/table';
   import { useDictStore } from '@/store';
   import { dateFormat, formatDuration } from '@/utils';
+  import { useQueryOrder, DESC } from '@/hooks/query-order';
   import ExecJobHostLogTable from './exec-job-host-log-table.vue';
   import UserSelector from '@/components/user/user/selector/index.vue';
   import TableAdjust from '@/components/app/table-adjust/index.vue';
 
   const emits = defineEmits(['viewCommand', 'viewParams', 'viewLog', 'openClear']);
 
-  const rowSelection = useRowSelection();
   const expandable = useExpandable();
+  const rowSelection = useRowSelection();
   const pagination = useTablePagination();
   const queryOrder = useQueryOrder(TableName, DESC);
   const { tableColumns, columnsHook } = useTableColumns(TableName, columns);
@@ -275,45 +275,6 @@
   const openClear = () => {
     emits('openClear', { ...formModel, id: undefined, description: undefined });
   };
-
-  // 删除当前行
-  const deleteRow = async (record: ExecLogQueryResponse) => {
-    try {
-      setLoading(true);
-      // 调用删除接口
-      await deleteExecJobLog(record.id);
-      Message.success('删除成功');
-      // 重新加载
-      reload();
-    } catch (e) {
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // 删除选中行
-  const deleteSelectedRows = async () => {
-    try {
-      setLoading(true);
-      // 调用删除接口
-      await batchDeleteExecJobLog(selectedKeys.value);
-      Message.success(`成功删除 ${selectedKeys.value.length} 条数据`);
-      selectedKeys.value = [];
-      // 重新加载
-      reload();
-    } catch (e) {
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // 重新加载
-  const reload = () => {
-    // 重新加载数据
-    fetchTableData();
-  };
-
-  defineExpose({ reload });
 
   // 中断执行
   const doInterruptExecJob = async (record: ExecLogQueryResponse) => {
@@ -390,6 +351,45 @@
       host.errorMessage = s.errorMessage;
     });
   };
+
+  // 删除当前行
+  const deleteRow = async (record: ExecLogQueryResponse) => {
+    try {
+      setLoading(true);
+      // 调用删除接口
+      await deleteExecJobLog(record.id);
+      Message.success('删除成功');
+      // 重新加载
+      reload();
+    } catch (e) {
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // 删除选中行
+  const deleteSelectedRows = async () => {
+    try {
+      setLoading(true);
+      // 调用删除接口
+      await batchDeleteExecJobLog(selectedKeys.value);
+      Message.success(`成功删除 ${selectedKeys.value.length} 条数据`);
+      selectedKeys.value = [];
+      // 重新加载
+      reload();
+    } catch (e) {
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // 重新加载
+  const reload = () => {
+    // 重新加载数据
+    fetchTableData();
+  };
+
+  defineExpose({ reload });
 
   // 加载数据
   const doFetchTableData = async (request: ExecLogQueryRequest) => {

@@ -1,0 +1,26 @@
+{
+  "groups": [
+    {
+      "name": "guacd",
+      "type": "org.dromara.visor.module.common.config.GuacdConfig",
+      "sourceType": "org.dromara.visor.module.common.config.GuacdConfig"
+    }
+  ],
+  "properties": [
+    {
+      "name": "guacd.host",
+      "type": "java.lang.String",
+      "description": "guacd 主机."
+    },
+    {
+      "name": "guacd.port",
+      "type": "java.lang.Integer",
+      "description": "guacd 端口."
+    },
+    {
+      "name": "guacd.drive-path",
+      "type": "java.lang.String",
+      "description": "guacd 驱动路径."
+    }
+  ]
+}

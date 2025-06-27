@@ -1,6 +1,6 @@
 import type { TableColumnData } from '@arco-design/web-vue';
 
-const columns = [
+export const logColumns = [
   {
     title: 'id',
     dataIndex: 'id',
@@ -62,5 +62,3 @@ const columns = [
     default: true,
   },
 ] as TableColumnData[];
-
-export default columns;

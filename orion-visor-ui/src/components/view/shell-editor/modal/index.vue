@@ -32,6 +32,8 @@
   import { ref } from 'vue';
   import useVisible from '@/hooks/visible';
 
+  const emits = defineEmits(['close']);
+
   const props = withDefaults(defineProps<Partial<{
     width: string | number;
     height: string;
@@ -66,6 +68,7 @@
   // 关闭
   const handleClose = () => {
     setVisible(false);
+    emits('close', value.value);
   };
 
 </script>

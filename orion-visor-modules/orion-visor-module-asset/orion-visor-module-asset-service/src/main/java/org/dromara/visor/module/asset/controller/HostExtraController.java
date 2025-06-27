@@ -32,7 +32,7 @@ import org.dromara.visor.framework.log.core.annotation.IgnoreLog;
 import org.dromara.visor.framework.log.core.enums.IgnoreLogMode;
 import org.dromara.visor.framework.web.core.annotation.RestWrapper;
 import org.dromara.visor.module.asset.entity.request.host.HostExtraUpdateRequest;
-import org.dromara.visor.module.asset.enums.HostExtraItemEnum;
+import org.dromara.visor.module.asset.handler.host.extra.HostExtraItemEnum;
 import org.dromara.visor.module.asset.service.HostExtraService;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;

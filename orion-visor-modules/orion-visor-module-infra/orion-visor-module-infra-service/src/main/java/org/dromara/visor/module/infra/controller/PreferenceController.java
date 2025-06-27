@@ -62,7 +62,7 @@ public class PreferenceController {
         return true;
     }
 
-    @PutMapping("/update-update")
+    @PutMapping("/update-batch")
     @Operation(summary = "更新用户偏好-多个")
     public Boolean updatePreferenceBatch(@Validated @RequestBody PreferenceUpdateBatchRequest request) {
         preferenceService.updatePreferenceBatch(request);

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.dromara.visor.module.exec.dao.ExecHostLogDAO">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="org.dromara.visor.module.exec.entity.domain.ExecHostLogDO">
+        <id column="id" property="id"/>
+        <result column="log_id" property="logId"/>
+        <result column="host_id" property="hostId"/>
+        <result column="host_name" property="hostName"/>
+        <result column="host_address" property="hostAddress"/>
+        <result column="status" property="status"/>
+        <result column="command" property="command"/>
+        <result column="parameter" property="parameter"/>
+        <result column="exit_code" property="exitCode"/>
+        <result column="log_path" property="logPath"/>
+        <result column="script_path" property="scriptPath"/>
+        <result column="error_message" property="errorMessage"/>
+        <result column="start_time" property="startTime"/>
+        <result column="finish_time" property="finishTime"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="creator" property="creator"/>
+        <result column="updater" property="updater"/>
+        <result column="deleted" property="deleted"/>
+    </resultMap>
+
+    <!-- 数量询映射结果 -->
+    <resultMap id="CountResultMap" type="org.dromara.visor.module.exec.entity.po.ExecHostLogCountPO">
+        <result column="status" property="status"/>
+        <result column="total_count" property="count"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, log_id, host_id, host_name, host_address, status, command, parameter, exit_code, log_path, script_path, error_message, start_time, finish_time, create_time, update_time, creator, updater, deleted
+    </sql>
+
+    <select id="selectExecHostLogCount" resultMap="CountResultMap">
+        SELECT h.status, COUNT(1) total_count
+        FROM exec_host_log h
+                 LEFT JOIN exec_log l ON h.log_id = l.id
+        WHERE h.deleted = 0
+          AND l.deleted = 0
+          AND l.source = #{source}
+          AND h.create_time BETWEEN #{startTime} AND #{endTime}
+        GROUP BY h.status
+    </select>
+
+</mapper>

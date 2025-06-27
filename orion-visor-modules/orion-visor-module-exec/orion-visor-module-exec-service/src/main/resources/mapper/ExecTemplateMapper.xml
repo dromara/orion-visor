@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.dromara.visor.module.exec.dao.ExecTemplateDAO">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="org.dromara.visor.module.exec.entity.domain.ExecTemplateDO">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="command" property="command"/>
+        <result column="timeout" property="timeout"/>
+        <result column="script_exec" property="scriptExec"/>
+        <result column="parameter_schema" property="parameterSchema"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="creator" property="creator"/>
+        <result column="updater" property="updater"/>
+        <result column="deleted" property="deleted"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, name, command, timeout, script_exec,parameter_schema, create_time, update_time, creator, updater, deleted
+    </sql>
+
+</mapper>

@@ -16,8 +16,11 @@
     <url>https://github.com/dromara/orion-visor</url>
 
     <modules>
+        <module>orion-visor-module-common</module>
         <module>orion-visor-module-infra</module>
         <module>orion-visor-module-asset</module>
+        <module>orion-visor-module-exec</module>
+        <module>orion-visor-module-terminal</module>
     </modules>
 
 </project>

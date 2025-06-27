@@ -22,27 +22,36 @@
  */
 package org.dromara.visor.framework.websocket.core.constant;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
 /**
- * ws 服务端关闭 code
+ * ws 关闭码
+ * <p>
+ * > 2999 && < 5000
  *
  * @author Jiahang Li
  * @version 1.0.0
- * @since 2021/6/16 15:18
+ * @since 2024/7/31 17:41
  */
-public interface WsCloseCode {
+@Getter
+@AllArgsConstructor
+public enum WsCloseCode implements CloseCode {
 
     /**
-     * code
-     *
-     * @return code
+     * 初始化失败
      */
-    int getCode();
+    INIT_ERROR(3000, "init error"),
 
     /**
-     * reason
-     *
-     * @return reason
+     * 会话已关闭
      */
-    String getReason();
+    SESSION_CLOSED(3100, "session closed"),
+
+    ;
+
+    private final int code;
+
+    private final String reason;
 
 }

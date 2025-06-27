@@ -14,7 +14,7 @@
     <url>https://github.com/dromara/orion-visor</url>
 
     <properties>
-        <revision>2.3.9</revision>
+        <revision>2.4.0</revision>
         <spring.boot.version>2.7.17</spring.boot.version>
         <spring.boot.admin.version>2.7.15</spring.boot.admin.version>
         <flatten.maven.plugin.version>1.5.0</flatten.maven.plugin.version>
@@ -34,6 +34,7 @@
         <mockito.inline.version>4.11.0</mockito.inline.version>
         <jedis.mock.version>1.0.7</jedis.mock.version>
         <podam.version>7.2.11.RELEASE</podam.version>
+        <guacd.version>1.5.5</guacd.version>
     </properties>
 
     <dependencyManagement>
@@ -311,6 +312,13 @@
                 <groupId>uk.co.jemos.podam</groupId>
                 <artifactId>podam</artifactId>
                 <version>${podam.version}</version>
+            </dependency>
+
+            <!-- guacd -->
+            <dependency>
+                <groupId>org.apache.guacamole</groupId>
+                <artifactId>guacamole-common</artifactId>
+                <version>${guacd.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

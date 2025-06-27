@@ -29,6 +29,8 @@ import org.dromara.visor.common.handler.data.strategy.AbstractGenericsDataStrate
 import org.dromara.visor.module.infra.handler.preference.model.TerminalPreferenceModel;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 /**
  * 终端偏好处理策略
  *
@@ -45,8 +47,39 @@ public class TerminalPreferenceStrategy extends AbstractGenericsDataStrategy<Ter
 
     @Override
     public TerminalPreferenceModel getDefault() {
-        // 默认显示设置
-        String defaultDisplaySetting = TerminalPreferenceModel.DisplaySettingModel
+        return TerminalPreferenceModel.builder()
+                // 连接类型
+                .newConnectionType("group")
+                // ssh 主题
+                .theme(new JSONObject())
+                // ssh 显示设置
+                .sshDisplaySetting(JSONObject.parseObject(this.getDefaultSshDisplaySetting()))
+                // rdp 图形化设置
+                .rdpGraphSetting(JSONObject.parseObject(this.getDefaultRdpGraphSetting()))
+                // ssh 操作栏设置
+                .sshActionBarSetting(JSONObject.parseObject(this.getDefaultSshActionBarSetting()))
+                // rdp 操作栏设置
+                .rdpActionBarSetting(JSONObject.parseObject(this.getDefaultRdpActionBarSetting()))
+                // ssh 右键菜单设置
+                .rightMenuSetting(this.getDefaultRightMenuSetting())
+                // 交互设置
+                .interactSetting(JSONObject.parseObject(this.getDefaultInteractSetting()))
+                // 插件设置
+                .pluginsSetting(JSONObject.parseObject(this.getDefaultPluginsSetting()))
+                // 会话设置
+                .sessionSetting(JSONObject.parseObject(this.getDefaultSessionSetting()))
+                // 快捷键设置
+                .shortcutSetting(JSONObject.parseObject(this.getDefaultShortcutSetting()))
+                .build();
+    }
+
+    /**
+     * 获取 ssh 显示默认设置
+     *
+     * @return setting
+     */
+    private String getDefaultSshDisplaySetting() {
+        return TerminalPreferenceModel.SshDisplaySettingModel
                 .builder()
                 .fontFamily("_")
                 .fontSize(14)
@@ -58,8 +91,97 @@ public class TerminalPreferenceStrategy extends AbstractGenericsDataStrategy<Ter
                 .cursorBlink(true)
                 .build()
                 .toJsonString();
-        // 默认交互设置
-        String defaultInteractSetting = TerminalPreferenceModel.InteractSettingModel.builder()
+    }
+
+    /**
+     * 获取 rdp 图形化默认设置
+     *
+     * @return setting
+     */
+    private String getDefaultRdpGraphSetting() {
+        return TerminalPreferenceModel.RdpGraphSettingModel.builder()
+                .displaySize("fit")
+                .displayWidth(0)
+                .displayHeight(0)
+                .colorDepth(24)
+                .enableAudioInput(false)
+                .enableAudioOutput(true)
+                .forceLossless(true)
+                .enableWallpaper(true)
+                .enableTheming(true)
+                .enableFontSmoothing(true)
+                .enableFullWindowDrag(true)
+                .enableDesktopComposition(true)
+                .enableMenuAnimations(false)
+                .disableBitmapCaching(false)
+                .disableOffscreenCaching(false)
+                .disableGlyphCaching(false)
+                .build()
+                .toJsonString();
+    }
+
+    /**
+     * 获取 ssh 操作栏默认设置
+     *
+     * @return setting
+     */
+    private String getDefaultSshActionBarSetting() {
+        // 操作栏设置
+        return TerminalPreferenceModel.SshActionBarSettingModel.builder()
+                .connectStatus(true)
+                .toTop(false)
+                .toBottom(false)
+                .selectAll(false)
+                .search(true)
+                .copy(true)
+                .paste(true)
+                .interrupt(false)
+                .enter(false)
+                .fontSizePlus(false)
+                .fontSizeSubtract(false)
+                .openSftp(true)
+                .uploadFile(true)
+                .clear(true)
+                .disconnect(false)
+                .build()
+                .toJsonString();
+    }
+
+    /**
+     * 获取 rdp 操作栏默认设置
+     *
+     * @return setting
+     */
+    private String getDefaultRdpActionBarSetting() {
+        return TerminalPreferenceModel.RdpActionBarSettingModel.builder()
+                .position("top")
+                .display(true)
+                .combinationKey(true)
+                .clipboard(true)
+                .upload(true)
+                .saveRdp(true)
+                .disconnect(true)
+                .close(true)
+                .build()
+                .toJsonString();
+    }
+
+    /**
+     * 获取 ssh 右键菜单默认设置
+     *
+     * @return setting
+     */
+    private List<String> getDefaultRightMenuSetting() {
+        return Lists.of("selectAll", "copy", "paste", "search", "clear");
+    }
+
+    /**
+     * 获取默认交互设置
+     *
+     * @return setting
+     */
+    private String getDefaultInteractSetting() {
+        return TerminalPreferenceModel.InteractSettingModel.builder()
                 .fastScrollModifier(true)
                 .altClickMovesCursor(true)
                 .rightClickSelectsWord(false)
@@ -72,22 +194,43 @@ public class TerminalPreferenceStrategy extends AbstractGenericsDataStrategy<Ter
                 .wordSeparator("/\\()\"'` -.,:;<>~!@#$%^&*|+=[]{}~?│")
                 .build()
                 .toJsonString();
-        // 默认插件设置
-        String defaultPluginsSetting = TerminalPreferenceModel.PluginsSettingModel.builder()
+    }
+
+    /**
+     * 获取默认插件设置
+     *
+     * @return setting
+     */
+    private String getDefaultPluginsSetting() {
+        return TerminalPreferenceModel.PluginsSettingModel.builder()
                 .enableWeblinkPlugin(true)
                 .enableWebglPlugin(true)
                 .enableUnicodePlugin(true)
                 .enableImagePlugin(false)
                 .build()
                 .toJsonString();
-        // 默认会话设置
-        String defaultSessionSetting = TerminalPreferenceModel.SessionSettingModel.builder()
+    }
+
+    /**
+     * 获取默认会话设置
+     *
+     * @return setting
+     */
+    private String getDefaultSessionSetting() {
+        return TerminalPreferenceModel.SessionSettingModel.builder()
                 .terminalEmulationType(TerminalType.XTERM.getType())
                 .scrollBackLine(1000)
                 .build()
                 .toJsonString();
-        // 默认快捷键设置
-        String shortcutSetting = TerminalPreferenceModel.ShortcutSettingModel.builder()
+    }
+
+    /**
+     * 获取默认快捷键设置
+     *
+     * @return setting
+     */
+    private String getDefaultShortcutSetting() {
+        return TerminalPreferenceModel.ShortcutSettingModel.builder()
                 .enabled(true)
                 .keys(Lists.of(
                         // 全局快捷键
@@ -114,46 +257,11 @@ public class TerminalPreferenceStrategy extends AbstractGenericsDataStrategy<Ter
                         new TerminalPreferenceModel.ShortcutKeysModel("selectAll", true, true, false, "KeyA", true),
                         new TerminalPreferenceModel.ShortcutKeysModel("search", true, true, false, "KeyF", true),
                         new TerminalPreferenceModel.ShortcutKeysModel("uploadFile", true, true, false, "KeyU", true),
-                        new TerminalPreferenceModel.ShortcutKeysModel("commandEditor", true, false, true, "KeyE", true),
                         new TerminalPreferenceModel.ShortcutKeysModel("fontSizePlus", true, false, true, "Equal", true),
                         new TerminalPreferenceModel.ShortcutKeysModel("fontSizeSubtract", true, false, true, "Minus", true)
                 ))
                 .build()
                 .toJsonString();
-        // 操作栏设置
-        String actionBarSetting = TerminalPreferenceModel.ActionBarSettingModel.builder()
-                .connectStatus(true)
-                .toTop(false)
-                .toBottom(false)
-                .selectAll(false)
-                .search(true)
-                .copy(true)
-                .paste(true)
-                .interrupt(false)
-                .enter(false)
-                .fontSizePlus(false)
-                .fontSizeSubtract(false)
-                .commandEditor(true)
-                .fontSizePlus(false)
-                .fontSizeSubtract(false)
-                .openSftp(true)
-                .uploadFile(true)
-                .clear(true)
-                .disconnect(false)
-                .build()
-                .toJsonString();
-        // 默认配置
-        return TerminalPreferenceModel.builder()
-                .newConnectionType("group")
-                .theme(new JSONObject())
-                .displaySetting(JSONObject.parseObject(defaultDisplaySetting))
-                .actionBarSetting(JSONObject.parseObject(actionBarSetting))
-                .rightMenuSetting(Lists.of("selectAll", "copy", "paste", "search", "clear"))
-                .interactSetting(JSONObject.parseObject(defaultInteractSetting))
-                .pluginsSetting(JSONObject.parseObject(defaultPluginsSetting))
-                .sessionSetting(JSONObject.parseObject(defaultSessionSetting))
-                .shortcutSetting(JSONObject.parseObject(shortcutSetting))
-                .build();
     }
 
 }

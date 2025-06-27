@@ -1,5 +1,6 @@
 version: '3.3'
 
+# latest = 2.4.0
 services:
   ui:
     image: registry.cn-hangzhou.aliyuncs.com/orionsec/orion-visor-ui:latest
@@ -18,16 +19,19 @@ services:
     ports:
       - 9200:9200
     environment:
-      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE:-prod}
-      - MYSQL_HOST=${MYSQL_HOST:-mysql}
-      - MYSQL_PORT=${MYSQL_PORT:-3306}
-      - MYSQL_DATABASE=${MYSQL_DATABASE:-orion_visor}
-      - MYSQL_USER=${MYSQL_USER:-root}
-      - MYSQL_PASSWORD=${MYSQL_PASSWORD:-Data@123456}
-      - REDIS_HOST=${REDIS_HOST:-redis}
-      - REDIS_PASSWORD=${REDIS_PASSWORD:-Data@123456}
-      - SECRET_KEY=${SECRET_KEY:-uQeacXV8b3isvKLK}
-      - DEMO_MODE=${DEMO_MODE:-false}
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-prod}
+      MYSQL_HOST: ${MYSQL_HOST:-mysql}
+      MYSQL_PORT: ${MYSQL_PORT:-3306}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-orion_visor}
+      MYSQL_USER: ${MYSQL_USER:-root}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-Data@123456}
+      REDIS_HOST: ${REDIS_HOST:-redis}
+      REDIS_PASSWORD: ${REDIS_PASSWORD:-Data@123456}
+      GUACD_HOST: ${GUACD_HOST:-guacd}
+      GUACD_PORT: ${GUACD_PORT:-4822}
+      GUACD_DRIVE_PATH: ${GUACD_DRIVE_PATH:-/drive}
+      SECRET_KEY: ${SECRET_KEY:-uQeacXV8b3isvKLK}
+      DEMO_MODE: ${DEMO_MODE:-false}
     volumes:
       - ${VOLUME_BASE:-/data/orion-visor-space/docker-volumes}/service/root-orion:/root/orion
     restart: unless-stopped
@@ -51,10 +55,10 @@ services:
     ports:
       - 3307:3306
     environment:
-      - MYSQL_DATABASE=${MYSQL_DATABASE:-orion_visor}
-      - MYSQL_USER=${MYSQL_USER:-orion}
-      - MYSQL_PASSWORD=${MYSQL_PASSWORD:-Data@123456}
-      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD:-Data@123456}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-orion_visor}
+      MYSQL_USER: ${MYSQL_USER:-orion}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-Data@123456}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-Data@123456}
     volumes:
       - ${VOLUME_BASE:-/data/orion-visor-space/docker-volumes}/mysql/var-lib-mysql:/var/lib/mysql
       - ${VOLUME_BASE:-/data/orion-visor-space/docker-volumes}/mysql/var-lib-mysql-files:/var/lib/mysql-files
@@ -74,7 +78,7 @@ services:
     ports:
       - 6380:6379
     environment:
-      - REDIS_PASSWORD=${REDIS_PASSWORD:-Data@123456}
+      REDIS_PASSWORD: ${REDIS_PASSWORD:-Data@123456}
     volumes:
       - ${VOLUME_BASE:-/data/orion-visor-space/docker-volumes}/redis/data:/data
     command: sh -c "redis-server /usr/local/redis.conf --requirepass $${REDIS_PASSWORD}"
@@ -88,12 +92,34 @@ services:
     networks:
       - orion-visor-net
 
+  guacd:
+    image: registry.cn-hangzhou.aliyuncs.com/orionsec/orion-visor-guacd:latest
+    ports:
+      - 4822:4822
+    environment:
+      GUACD_LOG_LEVEL: info
+      GUACD_LOG_FILE: /var/log/guacd.log
+    volumes:
+      - ${VOLUME_BASE:-/data/orion-visor-space/docker-volumes}/guacd/drive:${GUACD_DRIVE_PATH:-/drive}
+      - ${VOLUME_BASE:-/data/orion-visor-space/docker-volumes}/guacd/var-logs:/var/log
+      - ${VOLUME_BASE:-/data/orion-visor-space/docker-volumes}/guacd/local-guacamole-lib:/usr/local/guacamole/lib
+      - ${VOLUME_BASE:-/data/orion-visor-space/docker-volumes}/guacd/local-guacamole-extensions:/usr/local/guacamole/extensions
+    restart: unless-stopped
+    healthcheck:
+      test: [ "CMD", "nc", "-vz", "localhost", "4822" ]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    networks:
+      - orion-visor-net
+
   adminer:
     image: registry.cn-hangzhou.aliyuncs.com/orionsec/orion-visor-adminer:latest
     ports:
       - 8081:8080
     environment:
-      - ADMINER_DEFAULT_SERVER=${MYSQL_HOST:-mysql}
+      ADMINER_DEFAULT_SERVER: ${MYSQL_HOST:-mysql}
     depends_on:
       mysql:
         condition: service_healthy

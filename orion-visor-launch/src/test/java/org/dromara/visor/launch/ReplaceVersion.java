@@ -39,9 +39,9 @@ import java.util.function.Function;
  */
 public class ReplaceVersion {
 
-    private static final String TARGET_VERSION = "2.3.8";
+    private static final String TARGET_VERSION = "2.3.9";
 
-    private static final String REPLACE_VERSION = "2.3.9";
+    private static final String REPLACE_VERSION = "2.4.0";
 
     private static final String PATH = new File("").getAbsolutePath();
 
@@ -50,6 +50,7 @@ public class ReplaceVersion {
             "docker/adminer/build.sh",
             "docker/mysql/build.sh",
             "docker/redis/build.sh",
+            "docker/guacd/build.sh",
             "docker/service/build.sh",
             "docker/ui/build.sh",
             "docker-compose.yml",
