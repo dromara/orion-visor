@@ -1,4 +1,4 @@
-<div align="center"><img src="https://oss.orionsec.cn/orion-visor/logo_horizontal.png" alt="logo" width="520" /></div>
+<div align="center"><img src="docs/assets/logo_horizontal.png?time=20250627" alt="logo" width="520" /></div>
 <p style="margin-top: 12px" align="center"><b>【Dromara】 一款高颜值、现代化的自动化运维&轻量堡垒机平台。</b></p>
 <p align="center">
     <a target="_blank"
@@ -97,32 +97,32 @@ docker compose up -d
 
 #### 工作台
 
-![工作台](https://oss.orionsec.cn/orion-visor/screenshot/workplace.png "工作台")
+![工作台](docs/assets/screenshot/workplace.png?time=20250627 "工作台")
 
 #### 主机终端
 
-![新建连接](https://oss.orionsec.cn/orion-visor/screenshot/terminal-hosts.png "新建连接")
-![ssh](https://oss.orionsec.cn/orion-visor/screenshot/terminal-ssh.png "ssh")
-![sftp](https://oss.orionsec.cn/orion-visor/screenshot/terminal-sftp.png "sftp")
-![rdp](https://oss.orionsec.cn/orion-visor/screenshot/terminal-rdp.png "rdp")
-![主题设置](https://oss.orionsec.cn/orion-visor/screenshot/terminal-theme.png "主题设置")
+![新建连接](docs/assets/screenshot/terminal-hosts.png?time=20250627 "新建连接")
+![ssh](docs/assets/screenshot/terminal-ssh.png?time=20250627 "ssh")
+![sftp](docs/assets/screenshot/terminal-sftp.png?time=20250627 "sftp")
+![rdp](docs/assets/screenshot/terminal-rdp.png?time=20250627 "rdp")
+![主题设置](docs/assets/screenshot/terminal-theme.png?time=20250627 "主题设置")
 
 #### 主机列表
 
-![主机列表](https://oss.orionsec.cn/orion-visor/screenshot/host-list.png "主机列表")
+![主机列表](docs/assets/screenshot/host-list.png?time=20250627 "主机列表")
 
 #### 批量执行
 
-![批量执行](https://oss.orionsec.cn/orion-visor/screenshot/exec-command.png "批量执行")
-![执行日志](https://oss.orionsec.cn/orion-visor/screenshot/exec-log.png "执行日志")
+![批量执行](docs/assets/screenshot/exec-command.png?time=20250627 "批量执行")
+![执行日志](docs/assets/screenshot/exec-log.png?time=20250627 "执行日志")
 
 #### 批量上传
 
-![批量上传任务](https://oss.orionsec.cn/orion-visor/screenshot/batch-upload.png "批量上传任务")
+![批量上传任务](docs/assets/screenshot/batch-upload.png?time=20250627 "批量上传任务")
 
 #### 计划任务
 
-![计划任务详情](https://oss.orionsec.cn/orion-visor/screenshot/exec-job.png "计划任务详情")
+![计划任务详情](docs/assets/screenshot/exec-job.png?time=20250627 "计划任务详情")
 
 ## Star History
 
@@ -134,7 +134,7 @@ docker compose up -d
 
 ## 联系我
 
-<img src="https://oss.orionsec.cn/orion-visor/vx.jpg" alt="vx" width="628px"/>  
+<img src="docs/assets/vx.jpg?time=20250627" alt="vx" width="628px"/>  
 
 微信: ljh1553488  
 QQ群: 755242157
@@ -144,7 +144,7 @@ QQ群: 755242157
 
 ## 支持一下
 
-<img src="https://oss.orionsec.cn/orion-visor/pay.jpg" alt="收款码" width="540px"/>  
+<img src="docs/assets/pay.jpg?time=20250627" alt="收款码" width="540px"/>  
 
 🎁 为了项目能健康持续的发展, 我期望获得相应的资金支持, 你们的支持是我不断更新前进的动力!
 
@@ -158,8 +158,8 @@ QQ群: 755242157
 
 ## Gitee 最有价值的开源项目 GVP
 
-![GVP](https://oss.orionsec.cn/orion-visor/gvp.jpg "GVP")
+![GVP](docs/assets/gvp.jpg?time=20250627 "GVP")
 
 ## GitCode 最有影响力的开源项目 G-Star
 
-![GSTAR](https://oss.orionsec.cn/orion-visor/gstar.jpg "GSTAR")
+![GSTAR](docs/assets/gstar.jpg?time=20250627 "GSTAR")
