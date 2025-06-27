@@ -1,105 +1,89 @@
-import type { ISftpTransferHandler, ISftpTransferManager, SftpFile, SftpTransferItem, TransferOperatorResponse } from '@/views/terminal/interfaces';
+import type {
+  FileTransferTaskType,
+  ISetTransferClient,
+  ISftpTransferManager,
+  MaybeFileTransferTask,
+  SftpFile,
+  TransferOperatorResponse
+} from '@/views/terminal/interfaces';
 import { TerminalMessages, TransferReceiver, TransferStatus, TransferType } from '../../types/const';
 import { Message } from '@arco-design/web-vue';
 import { getTerminalTransferToken, openTerminalTransferChannel } from '@/api/terminal/terminal';
-import { nextId } from '@/utils';
-import SftpTransferUploader from './sftp-transfer-uploader';
-import SftpTransferDownloader from './sftp-transfer-downloader';
+import BaseTransferManager from './base-transfer-manager';
+import SftpFileUploadTask from './sftp-file-upload-task';
+import SftpFileDownloadTask from './sftp-file-download-task';
 
 // sftp 传输管理器实现
-export default class SftpTransferManager implements ISftpTransferManager {
+export default class SftpTransferManager extends BaseTransferManager implements ISftpTransferManager {
 
   private client?: WebSocket;
 
   private run: boolean;
 
-  private progressIntervalId?: any;
-
-  private currentItem?: SftpTransferItem;
-
-  private currentTransfer?: ISftpTransferHandler;
-
-  public transferList: Array<SftpTransferItem>;
+  private currentTask?: FileTransferTaskType;
 
   constructor() {
+    super();
     this.run = false;
-    this.transferList = [];
   }
 
   // 添加上传任务
-  addUpload(hostId: number, parentPath: string, files: Array<File>) {
-    // 转为上传任务
-    const items = files.map(s => {
-      return {
-        fileId: nextId(10),
-        type: TransferType.UPLOAD,
-        hostId: hostId,
-        name: s.webkitRelativePath || s.name,
-        currentSize: 0,
-        totalSize: s.size,
-        progress: 0,
-        status: TransferStatus.WAITING,
+  async addUpload(hostId: number, parentPath: string, files: Array<File>) {
+    Message.info(TerminalMessages.fileUploading);
+    // 创建任务
+    for (let file of files) {
+      const task = new SftpFileUploadTask(TransferType.UPLOAD, hostId, {
+        name: file.webkitRelativePath || file.name,
         parentPath: parentPath,
-        file: s
-      };
-    });
+        size: file.size,
+        file,
+      });
+      this.tasks.push(task);
+    }
     // 开始传输
-    this.startTransfer(items);
+    await this.startTransfer();
   }
 
   // 添加下载任务
-  addDownload(hostId: number, currentPath: string, files: Array<SftpFile>) {
+  async addDownload(hostId: number, currentPath: string, files: Array<SftpFile>) {
+    Message.info(TerminalMessages.fileDownloading);
     let pathIndex = currentPath === '/' ? 1 : currentPath.length + 1;
-    // 转为下载文件
-    const items = files.map(s => {
-      return {
-        fileId: nextId(10),
-        type: TransferType.DOWNLOAD,
-        hostId: hostId,
-        name: s.path.substring(pathIndex),
+    for (let file of files) {
+      // 创建任务
+      const task = new SftpFileDownloadTask(TransferType.DOWNLOAD, hostId, {
+        name: file.path.substring(pathIndex),
         parentPath: currentPath,
-        currentSize: 0,
-        totalSize: s.size,
-        progress: 0,
-        status: TransferStatus.WAITING,
-      };
-    }) as Array<SftpTransferItem>;
+        size: file.size,
+      });
+      this.tasks.push(task);
+    }
     // 开始传输
-    this.startTransfer(items);
+    await this.startTransfer();
   }
 
   // 开始传输
-  private startTransfer(items: Array<SftpTransferItem>) {
-    this.transferList.push(...items);
+  private async startTransfer() {
     // 开始传输
     if (!this.run) {
-      this.openClient();
+      await this.openClient();
     }
+    // 开始计算进度
+    this.resetProgressTimer();
   }
 
   // 取消传输
   cancelTransfer(fileId: string): void {
-    const index = this.transferList.findIndex(s => s.fileId === fileId);
+    const index = this.tasks.findIndex(s => s.fileId === fileId);
     if (index === -1) {
       return;
     }
-    const item = this.transferList[index];
-    if (item.status === TransferStatus.TRANSFERRING) {
+    const task = this.tasks[index];
+    if (task.state.status === TransferStatus.TRANSFERRING) {
       // 传输中则中断传输
-      this.currentTransfer?.abort();
+      this.currentTask?.abort();
     }
     // 从列表中移除
-    this.transferList.splice(index, 1);
-  }
-
-  // 取消全部传输
-  cancelAllTransfer(): void {
-    // 从列表中移除非传输中的元素
-    this.transferList.reduceRight((_, value: SftpTransferItem, index: number) => {
-      if (value.status !== TransferStatus.TRANSFERRING) {
-        this.transferList.splice(index, 1);
-      }
-    }, null as any);
+    this.tasks.splice(index, 1);
   }
 
   // 打开会话
@@ -115,11 +99,10 @@ export default class SftpTransferManager implements ISftpTransferManager {
       Message.error('会话打开失败');
       console.error('transfer error', e);
       // 将等待中和传输中任务修改为失败状态
-      this.transferList.filter(s => {
-        return s.status === TransferStatus.WAITING
-          || s.status === TransferStatus.TRANSFERRING;
+      this.tasks.filter(s => {
+        return s.state.status === TransferStatus.WAITING || s.state.status === TransferStatus.TRANSFERRING;
       }).forEach(s => {
-        s.status = TransferStatus.ERROR;
+        s.state.status = TransferStatus.ERROR;
       });
       // 关闭会话
       this.close();
@@ -132,52 +115,22 @@ export default class SftpTransferManager implements ISftpTransferManager {
     };
     // 处理消息
     this.client.onmessage = this.resolveMessage.bind(this);
-    // 计算传输进度
-    this.progressIntervalId = setInterval(this.calcProgress.bind(this), 500);
     // 打开后自动传输下一个任务
     this.transferNextItem();
   }
 
-  // 计算传输进度
-  private calcProgress() {
-    this.transferList.forEach(item => {
-      if (item.totalSize != 0) {
-        item.progress = (item.currentSize / item.totalSize * 100).toFixed(2);
-      }
-    });
-  }
-
   // 传输下一条任务
   private transferNextItem() {
-    this.currentTransfer = undefined;
-    // 释放内存
-    if (this.currentItem) {
-      this.currentItem.file = null as unknown as File;
-    }
     // 获取任务
-    this.currentItem = this.transferList.find(s => s.status === TransferStatus.WAITING);
-    if (this.currentItem) {
-      // 创建传输器
-      this.currentTransfer = this.createTransfer();
+    this.currentTask = this.tasks.find(s => s.state.status === TransferStatus.WAITING);
+    if (this.currentTask) {
+      // 设置 client
+      (this.currentTask as unknown as ISetTransferClient<WebSocket>).setClient(this.client as WebSocket);
       // 开始
-      this.currentTransfer?.start();
+      this.currentTask?.start();
     } else {
       // 无任务关闭会话
       this.client?.close();
-    }
-  }
-
-  // 创建传输器
-  private createTransfer(): ISftpTransferHandler | undefined {
-    if (!this.currentItem) {
-      return undefined;
-    }
-    if (this.currentItem.type === TransferType.UPLOAD) {
-      // 上传
-      return new SftpTransferUploader(TransferType.UPLOAD, this.currentItem, this.client as WebSocket);
-    } else if (this.currentItem.type === TransferType.DOWNLOAD) {
-      // 下载
-      return new SftpTransferDownloader(TransferType.DOWNLOAD, this.currentItem, this.client as WebSocket);
     }
   }
 
@@ -187,45 +140,37 @@ export default class SftpTransferManager implements ISftpTransferManager {
     const data = JSON.parse(message.data) as TransferOperatorResponse;
     if (data.type === TransferReceiver.NEXT_PART) {
       // 接收下一块数据回调
-      await this.currentTransfer?.onNextPart();
+      await (this.currentTask as MaybeFileTransferTask)?.onNextPart?.();
     } else if (data.type === TransferReceiver.START) {
-      // 开始回调
-      this.currentTransfer?.onStart(data.channelId as string, data.transferToken as string);
+      // 开始下载回调
+      (this.currentTask as MaybeFileTransferTask)?.onStart?.(data.channelId as string, data.transferToken as string);
     } else if (data.type === TransferReceiver.PROGRESS) {
-      // 进度回调
-      this.currentTransfer?.onProgress(data.totalSize, data.currentSize);
+      // 下载进度回调
+      (this.currentTask as MaybeFileTransferTask)?.onProgress?.(data.totalSize, data.currentSize);
     } else if (data.type === TransferReceiver.FINISH) {
       // 完成回调
-      this.currentTransfer?.onFinish();
+      this.currentTask?.onFinish();
       // 开始下一个传输任务
       this.transferNextItem();
     } else if (data.type === TransferReceiver.ERROR) {
       // 失败回调
-      this.currentTransfer?.onError(data.msg);
+      this.currentTask?.onError(data.msg);
       // 开始下一个传输任务
       this.transferNextItem();
     } else if (data.type === TransferReceiver.ABORT) {
       // 中断回调
-      this.currentTransfer?.onAbort();
+      this.currentTask?.onAbort();
       // 开始下一个传输任务
       this.transferNextItem();
     }
   }
 
   // 关闭 释放资源
-  private close() {
+  protected close() {
     // 重置 run
     this.run = false;
-    // 关闭传输进度
-    clearInterval(this.progressIntervalId);
-    // 进行中和等待中的文件改为失败
-    this.transferList.forEach(s => {
-      if (s.status === TransferStatus.WAITING ||
-        s.status === TransferStatus.TRANSFERRING) {
-        s.status = TransferStatus.ERROR;
-        s.errorMessage = TerminalMessages.sessionClosed;
-      }
-    });
+    // 关闭
+    super.close();
   }
 
 }

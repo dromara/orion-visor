@@ -37,7 +37,7 @@
             <component :is="option.icon" />
             <!-- 数量 -->
             <span class="status-count">
-              {{ transferManager.transferList.filter(s => s.status === option.value).length }}
+              {{ transferTasks.filter(s => s.state.status === option.value).length }}
             </span>
           </a-tag>
         </a-space>
@@ -48,15 +48,15 @@
               max-height="100%"
               :hoverable="true"
               :bordered="false"
-              :data="transferManager.transferList">
+              :data="transferTasks">
         <!-- 空数据 -->
         <template #empty>
           <a-empty class="list-empty" description="无传输文件" />
         </template>
         <!-- 数据 -->
         <template #item="{ item }">
-          <!-- 传输 item -->
-          <transfer-item v-show="filterItem(item)" :item="item" />
+          <!-- 传输任务 -->
+          <transfer-task v-show="filterItem(item)" :task="item" />
         </template>
       </a-list>
     </a-spin>
@@ -70,13 +70,13 @@
 </script>
 
 <script lang="ts" setup>
-  import type { SftpTransferItem } from '@/views/terminal/interfaces';
-  import { ref } from 'vue';
+  import type { IFileTransferTask } from '@/views/terminal/interfaces';
+  import { ref, computed } from 'vue';
   import useLoading from '@/hooks/loading';
   import useVisible from '@/hooks/visible';
   import { useDictStore, useTerminalStore } from '@/store';
   import { transferStatusKey } from '../../types/const';
-  import TransferItem from './transfer-item.vue';
+  import TransferTask from './transfer-task.vue';
 
   const emits = defineEmits(['closed']);
 
@@ -86,6 +86,10 @@
   const { loading, setLoading } = useLoading();
 
   const filterStatus = ref<string>();
+
+  const transferTasks = computed(() => {
+    return [...transferManager.sftp.tasks, ...transferManager.rdp.tasks];
+  });
 
   // 打开
   const open = () => {
@@ -105,13 +109,14 @@
   };
 
   // 过滤传输行
-  const filterItem = (item: SftpTransferItem) => {
-    return !filterStatus.value || item.status === filterStatus.value;
+  const filterItem = (task: IFileTransferTask) => {
+    return !filterStatus.value || task.state.status === filterStatus.value;
   };
 
   // 移除全部任务
   const removeAllTask = () => {
-    transferManager.cancelAllTransfer();
+    transferManager.sftp.cancelAllTransfer();
+    transferManager.rdp.cancelAllTransfer();
   };
 
 </script>

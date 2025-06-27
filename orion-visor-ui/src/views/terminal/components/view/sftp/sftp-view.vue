@@ -160,7 +160,7 @@
   };
 
   // 下载文件
-  const downloadFiles = (paths: Array<string>, clear: boolean) => {
+  const downloadFiles = async (paths: Array<string>, clear: boolean) => {
     if (!paths.length) {
       return;
     }
@@ -172,10 +172,9 @@
     if (clear) {
       selectFiles.value = [];
     }
-    Message.success('已开始下载, 点击右侧传输列表查看进度');
     // 添加普通文件到下载队列
     const normalFiles = files.filter(s => !s.isDir);
-    transferManager.addDownload(props.item.hostId as number, currentPath.value, normalFiles);
+    await transferManager.sftp.addDownload(props.item.hostId as number, currentPath.value, normalFiles);
     // 将文件夹展开普通文件
     const directoryPaths = files.filter(s => s.isDir).map(s => s.path);
     if (directoryPaths.length) {
@@ -283,7 +282,7 @@
     if (!checkResult(result, msg)) {
       return;
     }
-    transferManager.addDownload(props.item.hostId as number, currentPath, list);
+    transferManager.sftp.addDownload(props.item.hostId as number, currentPath, list);
   };
 
   // 初始化会话

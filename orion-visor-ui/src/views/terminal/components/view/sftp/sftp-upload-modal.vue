@@ -121,8 +121,7 @@
     // 获取上传的文件
     const files = fileList.value.map(s => s.file as File);
     // 普通上传
-    transferManager.addUpload(hostId.value, parentPath.value, files);
-    Message.success('已开始上传, 点击右侧传输列表查看进度');
+    await transferManager.sftp.addUpload(hostId.value, parentPath.value, files);
     // 清空
     handlerClear();
     return true;

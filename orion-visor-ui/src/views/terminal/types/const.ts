@@ -98,6 +98,10 @@ export const TerminalMessages = {
   waitingReconnect: '输入回车重新连接...',
   loggedElsewhere: '该账号已在另一台设备登录',
   rdpConnectTimeout: '请检查远程计算机网络及其他配置是否正常',
+  fileTransferError: '传输失败',
+  fileSaveError: '保存失败',
+  fileUploading: '已开始上传, 点击右侧传输列表查看进度',
+  fileDownloading: '已开始下载, 点击右侧传输列表查看进度',
 };
 
 // 文件类型
@@ -455,6 +459,12 @@ export const TransferStatus = {
 export const TransferType = {
   UPLOAD: 'upload',
   DOWNLOAD: 'download',
+};
+
+// 传输来源
+export const TransferSource = {
+  SFTP: 'sftp',
+  RDP: 'rdp',
 };
 
 // 传输操作

@@ -113,7 +113,7 @@ export interface ITerminalSession<Status extends ReactiveSessionStatus = Reactiv
 export interface ISshSession extends ITerminalSession, IDomViewportHandler {
   // terminal 实例
   inst: Terminal;
-  // 元素对象
+  // 会话配置
   config: SshInitConfig;
   // 处理器
   handler: ISshSessionHandler;
@@ -164,7 +164,8 @@ export interface IGuacdSession extends ITerminalSession<GuacdReactiveSessionStat
 
 // RDP 会话定义
 export interface IRdpSession extends IGuacdSession {
-  // 元素对象
+  fileSystemName: string;
+  // 会话配置
   config: GuacdInitConfig;
   // 视图处理器
   displayHandler: IRdpSessionDisplayHandler;
