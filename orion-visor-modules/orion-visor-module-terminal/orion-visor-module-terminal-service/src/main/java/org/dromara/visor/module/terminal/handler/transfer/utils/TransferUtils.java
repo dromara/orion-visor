@@ -34,6 +34,8 @@ import org.springframework.web.socket.WebSocketSession;
 import java.util.function.Consumer;
 
 /**
+ * 传输工具类
+ *
  * @author Jiahang Li
  * @version 1.0.0
  * @since 2024/7/12 15:06

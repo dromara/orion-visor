@@ -24,7 +24,6 @@ package org.dromara.visor.module.exec.convert;
 
 import org.dromara.visor.module.exec.entity.domain.ExecJobDO;
 import org.dromara.visor.module.exec.entity.request.exec.ExecJobCreateRequest;
-import org.dromara.visor.module.exec.entity.request.exec.ExecJobParseRequest;
 import org.dromara.visor.module.exec.entity.request.exec.ExecJobQueryRequest;
 import org.dromara.visor.module.exec.entity.request.exec.ExecJobUpdateRequest;
 import org.dromara.visor.module.exec.entity.vo.ExecJobVO;
@@ -50,8 +49,6 @@ public interface ExecJobConvert {
     ExecJobDO to(ExecJobUpdateRequest request);
 
     ExecJobDO to(ExecJobQueryRequest request);
-
-    ExecJobDO to(ExecJobParseRequest request);
 
     ExecJobVO to(ExecJobDO domain);
 
