@@ -32,7 +32,7 @@ export default class SftpChannel extends BaseTerminalChannel<ISftpSession> imple
     }
     const codeNumber = Number.parseInt(code);
     this.triggerClosed = true;
-    this.session.status.canReconnect = TerminalCloseCode.FORCE !== codeNumber;
+    this.session.state.canReconnect = TerminalCloseCode.FORCE !== codeNumber;
     // 设置已关闭
     this.session.setClosed();
     // sftp 设置状态

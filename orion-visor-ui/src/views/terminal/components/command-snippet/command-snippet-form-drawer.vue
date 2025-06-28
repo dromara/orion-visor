@@ -13,7 +13,7 @@
               ref="formRef"
               label-align="right"
               :auto-label-width="true"
-              :rules="formRules">
+              :rules="commandSnippetFormRules">
         <!-- 名称 -->
         <a-form-item field="name" label="名称">
           <a-input v-model="formModel.name"
@@ -52,8 +52,8 @@
   import { createCommandSnippet, updateCommandSnippet } from '@/api/terminal/command-snippet';
   import useLoading from '@/hooks/loading';
   import useVisible from '@/hooks/visible';
-  import formRules from './types/form.rules';
   import { Message } from '@arco-design/web-vue';
+  import { commandSnippetFormRules } from '../../types/form.rules';
   import CommandSnippetGroupSelector from '@/components/terminal/command-snippet/gruop/selector/index.vue';
 
   const { visible, setVisible } = useVisible();

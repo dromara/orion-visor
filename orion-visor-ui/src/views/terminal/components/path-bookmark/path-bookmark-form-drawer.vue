@@ -13,7 +13,7 @@
               ref="formRef"
               label-align="right"
               :auto-label-width="true"
-              :rules="formRules">
+              :rules="bookmarkFormRules">
         <!-- 名称 -->
         <a-form-item field="name" label="名称">
           <a-input v-model="formModel.name"
@@ -54,12 +54,11 @@
   import { ref } from 'vue';
   import useLoading from '@/hooks/loading';
   import useVisible from '@/hooks/visible';
-  import formRules from './types/form.rules';
   import { createPathBookmark, updatePathBookmark } from '@/api/terminal/path-bookmark';
-  import { PathBookmarkType } from './types/const';
+  import { bookmarkFormRules } from '../../types/form.rules';
+  import { pathBookmarkTypeKey, PathBookmarkType } from '../../types/const';
   import { useDictStore } from '@/store';
   import { Message } from '@arco-design/web-vue';
-  import { pathBookmarkTypeKey } from '../../types/const';
   import PathBookmarkGroupSelector from '@/components/terminal/bookmark-path/group/selector/index.vue';
 
   const { visible, setVisible } = useVisible();

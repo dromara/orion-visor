@@ -117,7 +117,7 @@ export default class RdpFileUploadTask extends BaseFileTransferTask implements I
     }
     this.state.aborted = true;
     try {
-      if (this.session.status.connected) {
+      if (this.session.state.connected) {
         // 关闭流
         if (this.stream) {
           this.stream.sendEnd();

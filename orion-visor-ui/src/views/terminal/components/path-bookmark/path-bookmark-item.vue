@@ -117,8 +117,7 @@
   import { useTerminalStore } from '@/store';
   import { useDebounceFn } from '@vueuse/core';
   import { getParentPath } from '@/utils/file';
-  import { PathBookmarkType } from './types/const';
-  import { TerminalSessionTypes } from '../../types/const';
+  import { TerminalSessionTypes, PathBookmarkType } from '../../types/const';
 
   const props = defineProps<{
     item: PathBookmarkQueryResponse;

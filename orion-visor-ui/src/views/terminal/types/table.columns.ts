@@ -1,8 +1,8 @@
 import type { TableColumnData } from '@arco-design/web-vue';
 import { getFileSize } from '@/utils/file';
 
-// 表格列
-const columns = [
+// SFTP 表格列
+export const sftpColumns = [
   {
     title: '名称',
     dataIndex: 'name',
@@ -45,4 +45,4 @@ const columns = [
   },
 ] as TableColumnData[];
 
-export default columns;
+export default sftpColumns;

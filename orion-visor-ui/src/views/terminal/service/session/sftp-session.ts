@@ -1,4 +1,4 @@
-import type { ISftpChannel, ISftpSession, ISftpSessionHandler, ReactiveSessionStatus, TerminalSessionTabItem } from '@/views/terminal/interfaces';
+import type { ISftpChannel, ISftpSession, ISftpSessionHandler, ReactiveSessionState, TerminalSessionTabItem } from '@/views/terminal/interfaces';
 import { h } from 'vue';
 import { InputProtocol } from '@/views/terminal/types/protocol';
 import { Modal } from '@arco-design/web-vue';
@@ -6,7 +6,7 @@ import BaseSession from './base-session';
 import SftpChannel from '../channel/sftp-channel';
 
 // SFTP 会话实现
-export default class SftpSession extends BaseSession<ReactiveSessionStatus, ISftpChannel> implements ISftpSession {
+export default class SftpSession extends BaseSession<ReactiveSessionState, ISftpChannel> implements ISftpSession {
 
   public handler: ISftpSessionHandler;
 

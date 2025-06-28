@@ -82,9 +82,9 @@ export default class SshSessionHandler implements ISshSessionHandler {
       case 'openSftp':
       case 'uploadFile':
       case 'checkAppendMissing':
-        return this.session.status.canWrite;
+        return this.session.state.canWrite;
       case 'disconnect':
-        return this.session.status.connected;
+        return this.session.state.connected;
       default:
         return true;
     }
@@ -193,7 +193,7 @@ export default class SshSessionHandler implements ISshSessionHandler {
   // 字号增加
   private fontSizeAdd(addSize: number) {
     this.inst.options['fontSize'] = this.inst.options['fontSize'] as number + addSize;
-    if (this.session.status.connected) {
+    if (this.session.state.connected) {
       this.session.fit();
       this.inst.focus();
     }

@@ -1,4 +1,4 @@
-import type { ISshChannel, ISshSession, ISshSessionHandler, ReactiveSessionStatus, SshInitConfig, TerminalSessionTabItem } from '@/views/terminal/interfaces';
+import type { ISshChannel, ISshSession, ISshSessionHandler, ReactiveSessionState, SshInitConfig, TerminalSessionTabItem } from '@/views/terminal/interfaces';
 import type { UnwrapRef } from 'vue';
 import type { ISearchOptions } from '@xterm/addon-search';
 import { SearchAddon } from '@xterm/addon-search';
@@ -23,7 +23,7 @@ import SshChannel from '../channel/ssh-channel';
 import SshSessionHandler from '../handler/ssh-session-handler';
 
 // SSH 会话实现
-export default class SshSession extends BaseSession<ReactiveSessionStatus, ISshChannel> implements ISshSession {
+export default class SshSession extends BaseSession<ReactiveSessionState, ISshChannel> implements ISshSession {
 
   public inst: Terminal;
 
@@ -102,9 +102,9 @@ export default class SshSession extends BaseSession<ReactiveSessionStatus, ISshC
         e.preventDefault();
       }
       // 检查重新连接
-      if (!this.status.connected && this.status.canReconnect && e.key === 'Enter') {
+      if (!this.state.connected && this.state.canReconnect && e.key === 'Enter') {
         // 防止重复回车
-        this.status.canReconnect = false;
+        this.state.canReconnect = false;
         // 异步作用域重新连接
         setTimeout(async () => {
           await useTerminalStore().reOpenSession(this.sessionKey);
@@ -129,7 +129,7 @@ export default class SshSession extends BaseSession<ReactiveSessionStatus, ISshC
   private registerEvent(dom: HTMLElement, preference: UnwrapRef<TerminalPreference>) {
     // 注册输入事件
     this.inst.onData(s => {
-      if (!this.status.canWrite || !this.status.connected) {
+      if (!this.state.canWrite || !this.state.connected) {
         return;
       }
       // 输入
@@ -153,7 +153,7 @@ export default class SshSession extends BaseSession<ReactiveSessionStatus, ISshC
     }
     // 注册 resize 事件
     this.inst.onResize(({ cols, rows }) => {
-      if (!this.status.connected) {
+      if (!this.state.connected) {
         return;
       }
       this.channel.send(InputProtocol.RESIZE, {
@@ -165,7 +165,7 @@ export default class SshSession extends BaseSession<ReactiveSessionStatus, ISshC
     addEventListen(dom, 'contextmenu', async () => {
       // 右键粘贴逻辑
       if (preference.interactSetting.rightClickPaste) {
-        if (!this.status.canWrite || !this.status.connected) {
+        if (!this.state.canWrite || !this.state.connected) {
           return;
         }
         // 未开启右键选中 || 开启并无选中的内容则粘贴

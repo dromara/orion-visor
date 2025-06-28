@@ -42,7 +42,7 @@ export interface SessionHostInfo {
 }
 
 // 会话状态
-export interface ReactiveSessionStatus {
+export interface ReactiveSessionState {
   // 连接状态
   connectStatus: number;
   // 是否已连接
@@ -54,7 +54,7 @@ export interface ReactiveSessionStatus {
 }
 
 // guacd 会话状态
-export interface GuacdReactiveSessionStatus extends ReactiveSessionStatus {
+export interface GuacdReactiveSessionStatus extends ReactiveSessionState {
   // 关闭码
   closeCode: number;
   // 关闭信息
@@ -76,7 +76,7 @@ export interface IDomViewportHandler {
 }
 
 // 终端会话定义
-export interface ITerminalSession<Status extends ReactiveSessionStatus = ReactiveSessionStatus> {
+export interface ITerminalSession<State extends ReactiveSessionState = ReactiveSessionState> {
   readonly type: string;
 
   // 会话主机信息
@@ -88,7 +88,7 @@ export interface ITerminalSession<Status extends ReactiveSessionStatus = Reactiv
   // 后端交互的唯一值 后端的 sessionId
   sessionId: string;
   // 会话状态
-  readonly status: Reactive<Status>;
+  readonly state: Reactive<State>;
 
   // 重新初始化
   reInit: () => Promise<void>;

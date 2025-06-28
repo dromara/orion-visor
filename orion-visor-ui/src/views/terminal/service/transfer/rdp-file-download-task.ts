@@ -89,7 +89,7 @@ export default class RdpFileDownloadTask extends BaseFileTransferTask implements
     }
     this.state.aborted = true;
     try {
-      if (this.session.status.connected) {
+      if (this.session.state.connected) {
         if (this.stream) {
           // 发送 ACK
           this.stream.sendAck('Aborted', Guacamole.Status.Code.RESOURCE_CLOSED);

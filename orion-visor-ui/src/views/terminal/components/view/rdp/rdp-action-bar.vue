@@ -1,5 +1,5 @@
 <template>
-  <div v-if="session.status.connectStatus === TerminalStatus.CONNECTED">
+  <div v-if="session.state.connectStatus === TerminalStatus.CONNECTED">
     <!-- 工具栏 -->
     <a-popover v-model:popup-visible="visible"
                :title="undefined"

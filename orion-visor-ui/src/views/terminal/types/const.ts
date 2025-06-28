@@ -485,6 +485,12 @@ export const TransferReceiver = {
   ABORT: 'abort',
 };
 
+// 路径书签类型
+export const PathBookmarkType = {
+  FILE: 'FILE',
+  DIR: 'DIR',
+};
+
 // 打开 extraModal key
 export const openExtraModalKey = Symbol();
 

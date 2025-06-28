@@ -23,8 +23,8 @@
       <!-- 连接状态 -->
       <a-badge v-if="preference.sshActionBarSetting.connectStatus !== false"
                class="status-bridge"
-               :status="getDictValue(connectStatusKey, session ? session.status.connectStatus : TerminalStatus.CONNECTING, 'status')"
-               :text="getDictValue(connectStatusKey, session ? session.status.connectStatus : TerminalStatus.CONNECTING)" />
+               :status="getDictValue(connectStatusKey, session ? session.state.connectStatus : TerminalStatus.CONNECTING, 'status')"
+               :text="getDictValue(connectStatusKey, session ? session.state.connectStatus : TerminalStatus.CONNECTING)" />
     </div>
   </div>
 </template>

@@ -128,7 +128,7 @@ export default class RdpSession extends BaseSession<GuacdReactiveSessionStatus, 
     // 定时检查是否连接成功
     this.connectTimeoutId = window.setTimeout(() => {
       // 未连接上证明连接超时
-      if (!this.status.connected) {
+      if (!this.state.connected) {
         this.channel.closeTunnel(TerminalCloseCode.CONNECT_TIMEOUT, TerminalMessages.rdpConnectTimeout);
       }
     }, CONNECT_TIMEOUT);
@@ -217,7 +217,7 @@ export default class RdpSession extends BaseSession<GuacdReactiveSessionStatus, 
 
   // 是否可写
   isWriteable(): boolean {
-    return this.status.connected && this.status.canWrite;
+    return this.state.connected && this.state.canWrite;
   }
 
   // 设置为已关闭
