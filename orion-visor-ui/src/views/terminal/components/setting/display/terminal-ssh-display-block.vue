@@ -3,7 +3,7 @@
     <!-- 顶部 -->
     <div class="terminal-setting-subtitle-wrapper">
       <h3 class="terminal-setting-subtitle">
-        显示偏好
+        SSH 显示偏好
       </h3>
     </div>
     <!-- 内容区域 -->
@@ -99,7 +99,7 @@
         <span class="vertical-form-label">预览效果</span>
         <div class="terminal-example-wrapper"
              :style="{ background: background }">
-          <terminal-example :schema="preference.theme.schema"
+          <terminal-example :schema="preference.sshTheme.schema"
                             ref="previewTerminal" />
         </div>
       </div>
@@ -127,7 +127,7 @@
   const { toOptions, toRadioOptions } = useDictStore();
   const { preference, updateTerminalPreference, sessionManager } = useTerminalStore();
 
-  const background = preference.theme.schema.background;
+  const background = preference.sshTheme.schema.background;
   const previewTerminal = ref();
   const formModel = ref<TerminalSshDisplaySetting>({});
 

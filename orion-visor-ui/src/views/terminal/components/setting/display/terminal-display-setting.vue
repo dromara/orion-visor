@@ -9,8 +9,8 @@
       <terminal-ssh-action-bar-block />
       <!-- RDP 工具栏 -->
       <terminal-rdp-action-bar-block />
-      <!-- 右键菜单 -->
-      <terminal-right-menu-block />
+      <!-- SSH 右键菜单 -->
+      <terminal-ssh-right-menu-block />
     </div>
   </div>
 </template>
@@ -24,8 +24,8 @@
 <script lang="ts" setup>
   import TerminalSshDisplayBlock from './terminal-ssh-display-block.vue';
   import TerminalSshActionBarBlock from './terminal-ssh-action-bar-block.vue';
+  import TerminalSshRightMenuBlock from './terminal-ssh-right-menu-block.vue';
   import TerminalRdpActionBarBlock from './terminal-rdp-action-bar-block.vue';
-  import TerminalRightMenuBlock from './terminal-right-menu-block.vue';
 
 </script>
 

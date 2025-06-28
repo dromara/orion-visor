@@ -101,9 +101,10 @@ public class RdpSession extends AbstractGuacdSession<TerminalSessionRdpConfig> i
         tunnel.setParameter(GuacdConst.ENABLE_FULL_WINDOW_DRAG, extra.getEnableFullWindowDrag());
         tunnel.setParameter(GuacdConst.ENABLE_DESKTOP_COMPOSITION, extra.getEnableDesktopComposition());
         tunnel.setParameter(GuacdConst.ENABLE_MENU_ANIMATIONS, extra.getEnableMenuAnimations());
+        tunnel.setParameter(GuacdConst.DISABLE_BITMAP_CACHING, extra.getDisableBitmapCaching());
         tunnel.setParameter(GuacdConst.DISABLE_OFFSCREEN_CACHING, extra.getDisableOffscreenCaching());
         tunnel.setParameter(GuacdConst.DISABLE_GLYPH_CACHING, extra.getDisableGlyphCaching());
-        tunnel.setParameter(GuacdConst.DISABLE_BITMAP_CACHING, extra.getDisableBitmapCaching());
+        tunnel.setParameter(GuacdConst.DISABLE_GFX, extra.getDisableGfx());
         // 音频
         tunnel.setAudioMimeTypes(GuacdConst.AUDIO_MIMETYPES);
         tunnel.setParameter(GuacdConst.ENABLE_AUDIO_INPUT, extra.getEnableAudioInput());
@@ -153,8 +154,9 @@ public class RdpSession extends AbstractGuacdSession<TerminalSessionRdpConfig> i
         extra.setEnableDesktopComposition(false);
         extra.setEnableMenuAnimations(false);
         extra.setDisableBitmapCaching(false);
+        extra.setDisableOffscreenCaching(false);
         extra.setDisableGlyphCaching(false);
-        extra.setDisableBitmapCaching(false);
+        extra.setDisableGfx(false);
         extra.setEnableAudioInput(false);
         extra.setEnableAudioOutput(false);
     }

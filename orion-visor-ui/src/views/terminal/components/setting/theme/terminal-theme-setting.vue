@@ -3,8 +3,8 @@
     <div class="terminal-setting-wrapper">
       <!-- 主标题 -->
       <h2 class="terminal-setting-title">主题设置</h2>
-      <!-- 主题设置 -->
-      <terminal-theme-block />
+      <!-- SSH 主题设置 -->
+      <terminal-ssh-theme-block />
     </div>
   </div>
 </template>
@@ -16,7 +16,7 @@
 </script>
 
 <script lang="ts" setup>
-  import TerminalThemeBlock from './terminal-theme-block.vue';
+  import TerminalSshThemeBlock from './terminal-ssh-theme-block.vue';
 
 </script>
 

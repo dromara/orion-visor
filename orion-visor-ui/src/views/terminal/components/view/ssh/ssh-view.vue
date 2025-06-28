@@ -6,7 +6,7 @@
     <ssh-context-menu :session="session" @handle="doTerminalHandle">
       <!-- 终端容器 -->
       <div class="ssh-wrapper"
-           :style="{ background: preference.theme.schema.background }">
+           :style="{ background: preference.sshTheme.schema.background }">
         <!-- 终端实例 -->
         <div class="ssh-viewport" ref="viewport" />
         <!-- 搜索模态框 -->

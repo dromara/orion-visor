@@ -3,14 +3,14 @@
     <div class="terminal-setting-wrapper">
       <!-- 主标题 -->
       <h2 class="terminal-setting-title">终端设置</h2>
-      <!-- 交互设置 -->
-      <terminal-interact-block />
-      <!-- 插件设置 -->
-      <terminal-plugins-block />
-      <!-- 会话设置 -->
-      <terminal-session-block />
+      <!-- SSH 交互设置 -->
+      <terminal-ssh-interact-block />
+      <!-- SSH 插件设置 -->
+      <terminal-ssh-plugins-block />
       <!-- RDP 图形化设置 -->
       <terminal-rdp-graph-block />
+      <!-- RDP 会话设置 -->
+      <terminal-rdp-session-block />
     </div>
   </div>
 </template>
@@ -22,10 +22,10 @@
 </script>
 
 <script lang="ts" setup>
-  import TerminalInteractBlock from './terminal-interact-block.vue';
-  import TerminalPluginsBlock from './terminal-plugins-block.vue';
-  import TerminalSessionBlock from './terminal-session-block.vue';
+  import TerminalSshInteractBlock from './terminal-ssh-interact-block.vue';
+  import TerminalSshPluginsBlock from './terminal-ssh-plugins-block.vue';
   import TerminalRdpGraphBlock from './terminal-rdp-graph-block.vue';
+  import TerminalRdpSessionBlock from './terminal-rdp-session-block.vue';
 
 </script>
 

@@ -530,6 +530,9 @@ export const screenResolutionKey = 'screenResolution';
 // 图形化色彩深度
 export const graphColorDepthKey = 'graphColorDepth';
 
+// 驱动挂载模式
+export const driveMountModeKey = 'driveMountMode';
+
 // vnc光标
 export const vcnCursorKey = 'vcnCursor';
 
@@ -557,7 +560,7 @@ export const pathBookmarkTypeKey = 'pathBookmarkType';
 // 加载的字典值
 export const dictKeys = [
   fontFamilyKey, fontSizeKey, fontWeightKey, cursorStyleKey, emulationTypeKey,
-  graphActionBarPositionKey, graphColorDepthKey, screenResolutionKey, vcnCursorKey,
+  graphActionBarPositionKey, graphColorDepthKey, screenResolutionKey, driveMountModeKey, vcnCursorKey,
   newConnectionTypeKey, connectStatusKey, tabColorKey,
   extraSshAuthTypeKey, extraPasswordAuthTypeKey,
   transferStatusKey,

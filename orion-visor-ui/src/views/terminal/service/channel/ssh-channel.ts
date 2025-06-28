@@ -16,7 +16,7 @@ export default class SshChannel extends BaseTerminalChannel<ISshSession> impleme
       hostId: this.session.info.hostId,
       connectType: TerminalSessionTypes.SSH.type,
       extra: {
-        terminalType: preference.sessionSetting.terminalEmulationType ?? 'xterm',
+        terminalType: preference.sshInteractSetting.terminalEmulationType ?? 'xterm',
       }
     });
     // 打开 channel

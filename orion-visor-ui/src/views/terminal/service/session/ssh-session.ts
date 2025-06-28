@@ -50,13 +50,13 @@ export default class SshSession extends BaseSession<ReactiveSessionState, ISshCh
     // 初始化实例
     this.inst.options = {
       ...(preference.sshDisplaySetting as any),
-      theme: preference.theme.schema,
-      fastScrollModifier: !!preference.interactSetting.fastScrollModifier ? 'alt' : 'none',
-      altClickMovesCursor: !!preference.interactSetting.altClickMovesCursor,
-      rightClickSelectsWord: !!preference.interactSetting.rightClickSelectsWord,
-      wordSeparator: preference.interactSetting.wordSeparator,
+      theme: preference.sshTheme.schema,
+      fastScrollModifier: !!preference.sshInteractSetting.fastScrollModifier ? 'alt' : 'none',
+      altClickMovesCursor: !!preference.sshInteractSetting.altClickMovesCursor,
+      rightClickSelectsWord: !!preference.sshInteractSetting.rightClickSelectsWord,
+      wordSeparator: preference.sshInteractSetting.wordSeparator,
+      scrollback: preference.sshInteractSetting.scrollBackLine,
       fontFamily: fontFamily === '_' ? defaultFontFamily : `${fontFamily}, ${defaultFontFamily}`,
-      scrollback: preference.sessionSetting.scrollBackLine,
       allowProposedApi: true,
     };
     // 初始化 channel
@@ -138,14 +138,14 @@ export default class SshSession extends BaseSession<ReactiveSessionState, ISshCh
       });
     });
     // 启用响铃
-    if (preference.interactSetting.enableBell) {
+    if (preference.sshInteractSetting.enableBell) {
       this.inst.onBell(() => {
         // 播放响铃
         playBell();
       });
     }
     // 选中复制
-    if (preference.interactSetting.selectionChangeCopy) {
+    if (preference.sshInteractSetting.selectionChangeCopy) {
       this.inst.onSelectionChange(() => {
         // 复制选中内容
         this.handler.copy();
@@ -164,12 +164,12 @@ export default class SshSession extends BaseSession<ReactiveSessionState, ISshCh
     // 设置右键选项
     addEventListen(dom, 'contextmenu', async () => {
       // 右键粘贴逻辑
-      if (preference.interactSetting.rightClickPaste) {
+      if (preference.sshInteractSetting.rightClickPaste) {
         if (!this.state.canWrite || !this.state.connected) {
           return;
         }
         // 未开启右键选中 || 开启并无选中的内容则粘贴
-        if (!preference.interactSetting.rightClickSelectsWord || !this.inst.hasSelection()) {
+        if (!preference.sshInteractSetting.rightClickSelectsWord || !this.inst.hasSelection()) {
           this.handler.paste();
         }
       }
@@ -181,10 +181,10 @@ export default class SshSession extends BaseSession<ReactiveSessionState, ISshCh
     this.addons.fit = new FitAddon();
     this.addons.search = new SearchAddon();
     // 超链接插件
-    if (preference.pluginsSetting.enableWeblinkPlugin) {
+    if (preference.sshPluginsSetting.enableWeblinkPlugin) {
       this.addons.weblink = new WebLinksAddon();
     }
-    if (preference.pluginsSetting.enableWebglPlugin && this.config.webglAvailable) {
+    if (preference.sshPluginsSetting.enableWebglPlugin && this.config.webglAvailable) {
       // WebGL 渲染插件
       this.addons.webgl = new WebglAddon(true);
     } else {
@@ -192,11 +192,11 @@ export default class SshSession extends BaseSession<ReactiveSessionState, ISshCh
       this.addons.canvas = new CanvasAddon();
     }
     // 图片渲染插件
-    if (preference.pluginsSetting.enableImagePlugin) {
+    if (preference.sshPluginsSetting.enableImagePlugin) {
       this.addons.image = new ImageAddon();
     }
     // unicode11 插件
-    if (preference.pluginsSetting.enableUnicodePlugin) {
+    if (preference.sshPluginsSetting.enableUnicodePlugin) {
       this.addons.unicode = new Unicode11Addon();
     }
     // 加载插件

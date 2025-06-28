@@ -3,7 +3,7 @@
     <!-- 顶部 -->
     <div class="terminal-setting-subtitle-wrapper">
       <h3 class="terminal-setting-subtitle">
-        主题设置
+        SSH 主题设置
       </h3>
     </div>
     <!-- 加载中 -->
@@ -49,7 +49,7 @@
 
 <script lang="ts">
   export default {
-    name: 'terminalThemeBlock'
+    name: 'terminalSshThemeBlock'
   };
 </script>
 
@@ -86,14 +86,14 @@
       });
     // 同步
     currentThemeName.value = theme.name;
-    await updateTerminalPreference(TerminalPreferenceItem.THEME, theme, true);
+    await updateTerminalPreference(TerminalPreferenceItem.SSH_THEME, theme, true);
   };
 
   // 加载用户主题
   onMounted(async () => {
     try {
-      const { data } = await getPreference<Record<string, any>>('TERMINAL', [TerminalPreferenceItem.THEME]);
-      currentThemeName.value = data[TerminalPreferenceItem.THEME]?.name;
+      const { data } = await getPreference<Record<string, any>>('TERMINAL', [TerminalPreferenceItem.SSH_THEME]);
+      currentThemeName.value = data[TerminalPreferenceItem.SSH_THEME]?.name;
     } catch (e) {
     }
   });

@@ -3,7 +3,7 @@
     <!-- 顶部 -->
     <div class="terminal-setting-subtitle-wrapper">
       <h3 class="terminal-setting-subtitle">
-        右键菜单设置
+        SSH 右键菜单设置
       </h3>
     </div>
     <!-- 提示 -->
@@ -80,7 +80,7 @@
 
 <script lang="ts">
   export default {
-    name: 'terminalRightMenuBlock'
+    name: 'terminalSshRightMenuBlock'
   };
 </script>
 
@@ -95,12 +95,12 @@
   const { preference, updateTerminalPreference } = useTerminalStore();
 
   const popupContainer = ref();
-  const rightActionItems = ref<Array<string>>([...preference.rightMenuSetting]);
+  const rightActionItems = ref<Array<string>>([...preference.sshRightMenuSetting]);
 
   // // 监听同步
   watch(rightActionItems, (v) => {
     // 同步
-    updateTerminalPreference(TerminalPreferenceItem.RIGHT_MENU_SETTING, JSON.stringify(v), true);
+    updateTerminalPreference(TerminalPreferenceItem.SSH_RIGHT_MENU_SETTING, JSON.stringify(v), true);
   }, { deep: true });
 
   // 实际操作项

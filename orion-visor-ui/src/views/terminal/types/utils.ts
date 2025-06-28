@@ -34,7 +34,7 @@ export const screenshot = async (el: HTMLElement) => {
     const w = Number.parseInt(wPx.substring(0, wPx.length - 2));
     const h = Number.parseInt(hPx.substring(0, hPx.length - 2));
     const fontSize = 14;
-    ctx.fillStyle = useTerminalStore().preference.theme.dark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
+    ctx.fillStyle = useTerminalStore().preference.sshTheme.dark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
     ctx.font = `${fontSize}px Arial`;
     ctx.rotate(-24 * Math.PI / 180);
     // 水印内容

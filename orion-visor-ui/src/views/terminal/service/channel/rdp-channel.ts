@@ -10,24 +10,28 @@ export default class RdpChannel extends BaseGuacdChannel<IRdpSession> {
 
   // 打开 channel
   protected async openChannel(): Promise<void> {
-    const setting = useTerminalStore().preference.rdpGraphSetting;
+    const preference = useTerminalStore().preference;
+    const graphSetting = preference.rdpGraphSetting;
+    const sessionSetting = preference.rdpSessionSetting;
     const { data } = await getTerminalAccessToken({
       hostId: this.session.info.hostId,
       connectType: TerminalSessionTypes.RDP.type,
       extra: {
-        enableAudioInput: setting.enableAudioInput,
-        enableAudioOutput: setting.enableAudioOutput,
-        colorDepth: setting.colorDepth || 16,
-        forceLossless: setting.forceLossless,
-        enableWallpaper: setting.enableWallpaper,
-        enableTheming: setting.enableTheming,
-        enableFontSmoothing: setting.enableFontSmoothing,
-        enableFullWindowDrag: setting.enableFullWindowDrag,
-        enableDesktopComposition: setting.enableDesktopComposition,
-        enableMenuAnimations: setting.enableMenuAnimations,
-        disableBitmapCaching: setting.disableBitmapCaching,
-        disableOffscreenCaching: setting.disableOffscreenCaching,
-        disableGlyphCaching: setting.disableGlyphCaching,
+        enableAudioInput: sessionSetting.enableAudioInput,
+        enableAudioOutput: sessionSetting.enableAudioOutput,
+        driveMountMode: sessionSetting.driveMountMode,
+        colorDepth: graphSetting.colorDepth || 16,
+        forceLossless: graphSetting.forceLossless,
+        enableWallpaper: graphSetting.enableWallpaper,
+        enableTheming: graphSetting.enableTheming,
+        enableFontSmoothing: graphSetting.enableFontSmoothing,
+        enableFullWindowDrag: graphSetting.enableFullWindowDrag,
+        enableDesktopComposition: graphSetting.enableDesktopComposition,
+        enableMenuAnimations: graphSetting.enableMenuAnimations,
+        disableBitmapCaching: graphSetting.disableBitmapCaching,
+        disableOffscreenCaching: graphSetting.disableOffscreenCaching,
+        disableGlyphCaching: graphSetting.disableGlyphCaching,
+        disableGfx: graphSetting.disableGfx,
       }
     });
     // 打开 channel

@@ -139,7 +139,7 @@ export default class RdpSession extends BaseSession<GuacdReactiveSessionStatus, 
     // 手动触发管道已连接
     this.channel.processConnected({} as unknown as OutputPayload);
     // 监听音频输入
-    if (useTerminalStore().preference.rdpGraphSetting?.enableAudioInput) {
+    if (useTerminalStore().preference.rdpSessionSetting?.enableAudioInput) {
       const requestAudioStream = (client: Guacamole.Client) => {
         const stream = client.createAudioStream(AUDIO_INPUT_MIMETYPE);
         let recorder;

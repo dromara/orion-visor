@@ -3,7 +3,7 @@
     <!-- 顶部 -->
     <div class="terminal-setting-subtitle-wrapper">
       <h3 class="terminal-setting-subtitle">
-        交互设置
+        SSH 交互设置
       </h3>
     </div>
     <!-- 提示 -->
@@ -56,9 +56,6 @@
         <block-setting-item label="粘贴去除空格"
                             desc="粘贴文本前自动删除尾部空格 如: 命令输入框, 命令编辑器, 右键粘贴, 粘贴按钮, 右键菜单粘贴, 自定义粘贴快捷键. 默认粘贴快捷键无法去除空格">
           <a-switch v-model="formModel.pasteAutoTrim" type="round" />
-          <template #desc>
-
-          </template>
         </block-setting-item>
       </a-row>
       <a-row class="mb16" align="stretch" :gutter="16">
@@ -75,27 +72,49 @@
                    allow-clear />
         </block-setting-item>
       </a-row>
+      <a-row class="mb16" align="stretch" :gutter="16">
+        <!-- 终端类型 -->
+        <block-setting-item label="终端类型" desc="若显示异常请尝试切换此选项 兼容性 vt100 > xterm > 16color > 256color">
+          <a-select v-model="formModel.terminalEmulationType"
+                    style="width: 198px;"
+                    size="small"
+                    :options="toOptions(emulationTypeKey)" />
+        </block-setting-item>
+        <!-- 缓冲区行数 -->
+        <block-setting-item label="缓冲区行数" desc="保存在缓冲区的行数, 多出的行数会被忽略, 此值越大占用内存的内存会更多">
+          <a-input-number v-model="formModel.scrollBackLine"
+                          style="width: 198px"
+                          size="small"
+                          :min="1"
+                          :max="100000"
+                          placeholder="缓冲区行数 默认 1000 行"
+                          allow-clear
+                          hide-button />
+        </block-setting-item>
+      </a-row>
     </div>
   </div>
 </template>
 
 <script lang="ts">
   export default {
-    name: 'terminalInteractBlock'
+    name: 'terminalSshInteractBlock'
   };
 </script>
 
 <script lang="ts" setup>
-  import type { TerminalInteractSetting } from '@/store/modules/terminal/types';
+  import type { TerminalSshInteractSetting } from '@/store/modules/terminal/types';
   import { ref, watch } from 'vue';
-  import { useTerminalStore } from '@/store';
+  import { useTerminalStore, useDictStore } from '@/store';
   import { TerminalPreferenceItem } from '@/store/modules/terminal';
+  import { emulationTypeKey } from '@/views/terminal/types/const';
   import { isSecureEnvironment } from '@/utils/env';
   import BlockSettingItem from '../block-setting-item.vue';
 
+  const { toOptions } = useDictStore();
   const { preference, updateTerminalPreference } = useTerminalStore();
 
-  const formModel = ref<TerminalInteractSetting>({ ...preference.interactSetting });
+  const formModel = ref<TerminalSshInteractSetting>({ ...preference.sshInteractSetting });
 
   // 监听内容变化
   watch(formModel, (v) => {
@@ -103,7 +122,7 @@
       return;
     }
     // 同步
-    updateTerminalPreference(TerminalPreferenceItem.INTERACT_SETTING, formModel.value);
+    updateTerminalPreference(TerminalPreferenceItem.SSH_INTERACT_SETTING, formModel.value);
   }, { deep: true });
 
 </script>

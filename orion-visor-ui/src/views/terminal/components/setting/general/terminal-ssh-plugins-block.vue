@@ -3,7 +3,7 @@
     <!-- 顶部 -->
     <div class="terminal-setting-subtitle-wrapper">
       <h3 class="terminal-setting-subtitle">
-        插件设置
+        SSH 插件设置
       </h3>
     </div>
     <!-- 内容区域 -->
@@ -34,12 +34,12 @@
 
 <script lang="ts">
   export default {
-    name: 'terminalPluginsBlock'
+    name: 'terminalSshPluginsBlock'
   };
 </script>
 
 <script lang="ts" setup>
-  import type { TerminalPluginsSetting } from '@/store/modules/terminal/types';
+  import type { TerminalSshPluginsSetting } from '@/store/modules/terminal/types';
   import { ref, watch } from 'vue';
   import { useTerminalStore } from '@/store';
   import { TerminalPreferenceItem } from '@/store/modules/terminal';
@@ -47,7 +47,7 @@
 
   const { preference, updateTerminalPreference } = useTerminalStore();
 
-  const formModel = ref<TerminalPluginsSetting>({ ...preference.pluginsSetting });
+  const formModel = ref<TerminalSshPluginsSetting>({ ...preference.sshPluginsSetting });
 
   // 监听内容变化
   watch(formModel, (v) => {
@@ -55,7 +55,7 @@
       return;
     }
     // 同步
-    updateTerminalPreference(TerminalPreferenceItem.PLUGINS_SETTING, formModel.value);
+    updateTerminalPreference(TerminalPreferenceItem.SSH_PLUGINS_SETTING, formModel.value);
   }, { deep: true });
 
 </script>

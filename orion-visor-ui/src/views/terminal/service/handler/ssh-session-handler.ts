@@ -1,4 +1,4 @@
-import type { ShortcutKey, TerminalInteractSetting, TerminalShortcutKey } from '@/store/modules/terminal/types';
+import type { ShortcutKey, TerminalShortcutKey, TerminalSshInteractSetting } from '@/store/modules/terminal/types';
 import type { ISshSession, ISshSessionHandler } from '@/views/terminal/interfaces';
 import type { Terminal } from '@xterm/xterm';
 import useCopy from '@/hooks/copy';
@@ -39,7 +39,7 @@ export default class SshSessionHandler implements ISshSessionHandler {
 
   private readonly session: ISshSession;
 
-  private readonly interactSetting: TerminalInteractSetting;
+  private readonly interactSetting: TerminalSshInteractSetting;
 
   private readonly shortcutKeys: Array<TerminalShortcutKey>;
 
@@ -47,7 +47,7 @@ export default class SshSessionHandler implements ISshSessionHandler {
     this.session = session;
     this.inst = session.inst;
     const { preference } = useTerminalStore();
-    this.interactSetting = preference.interactSetting;
+    this.interactSetting = preference.sshInteractSetting;
     this.shortcutKeys = preference.shortcutSetting.keys;
   }
 
