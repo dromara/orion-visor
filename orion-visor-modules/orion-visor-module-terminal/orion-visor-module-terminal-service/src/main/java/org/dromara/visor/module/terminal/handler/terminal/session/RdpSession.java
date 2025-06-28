@@ -25,11 +25,11 @@ package org.dromara.visor.module.terminal.handler.terminal.session;
 import cn.orionsec.kit.lang.utils.Booleans;
 import cn.orionsec.kit.lang.utils.Strings;
 import cn.orionsec.kit.lang.utils.io.Files1;
-import cn.orionsec.kit.lang.utils.time.Dates;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.visor.common.constant.AppConst;
 import org.dromara.visor.common.utils.AesEncryptUtils;
 import org.dromara.visor.module.common.config.GuacdConfig;
+import org.dromara.visor.module.terminal.enums.DriveMountModeEnum;
 import org.dromara.visor.module.terminal.handler.guacd.GuacdTunnel;
 import org.dromara.visor.module.terminal.handler.guacd.IGuacdTunnel;
 import org.dromara.visor.module.terminal.handler.guacd.constant.GuacdConst;
@@ -114,8 +114,10 @@ public class RdpSession extends AbstractGuacdSession<TerminalSessionRdpConfig> i
         tunnel.setParameter(GuacdConst.ENABLE_DRIVE, true);
         tunnel.setParameter(GuacdConst.CREATE_DRIVE_PATH, true);
         tunnel.setParameter(GuacdConst.DRIVE_NAME, GuacdConst.DRIVE_DRIVE_NAME);
-        // 父文件夹必须存在 所以只能用 _ 分
-        tunnel.setParameter(GuacdConst.DRIVE_PATH, Files1.getPath(guacdConfig.getDrivePath() + "/" + Dates.current(Dates.YMD2) + "_" + props.getUserId() + "_" + props.getHostId()));
+        // 父文件夹必须存在 否则会报错 所以不能分层
+        String driveMountPath = DriveMountModeEnum.of(extra.getDriveMountMode())
+                .getDriveMountPath(props.getUserId(), props.getHostId(), props.getId());
+        tunnel.setParameter(GuacdConst.DRIVE_PATH, Files1.getPath(guacdConfig.getDrivePath() + "/" + driveMountPath));
         // 预连接
         String preConnectionId = config.getPreConnectionId();
         if (!Strings.isBlank(preConnectionId)) {

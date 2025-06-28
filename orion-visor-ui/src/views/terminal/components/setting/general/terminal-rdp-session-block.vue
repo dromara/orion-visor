@@ -53,7 +53,7 @@
       return;
     }
     // 同步
-    updateTerminalPreference(TerminalPreferenceItem.RDP_SESSION_SETTING, formModel.value);
+    updateTerminalPreference(TerminalPreferenceItem.RDP_SESSION_SETTING, formModel.value, true);
   }, { deep: true });
 
 </script>

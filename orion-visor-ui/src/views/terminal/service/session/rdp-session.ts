@@ -20,7 +20,7 @@ import RdpSessionClipboardHandler from '../handler/rdp-session-clipboard-handler
 
 export const AUDIO_INPUT_MIMETYPE = 'audio/L16;rate=44100,channels=2';
 
-export const CONNECT_TIMEOUT = 10000;
+export const CONNECT_TIMEOUT = 30000;
 
 // RDP 会话实现
 export default class RdpSession extends BaseSession<GuacdReactiveSessionStatus, IGuacdChannel> implements IRdpSession {
