@@ -278,7 +278,7 @@
 
   // 设置轮询状态
   onMounted(() => {
-    pullIntervalId.value = setInterval(pullTaskStatus, 5000);
+    pullIntervalId.value = window.setInterval(pullTaskStatus, 5000);
   });
 
   // 卸载状态查询
