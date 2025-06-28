@@ -47,6 +47,9 @@ public class RdpConnectConfig extends BaseConnectConfig {
     @Schema(description = "低带宽模式")
     private Boolean lowBandwidthMode;
 
+    @Schema(description = "初始化程序")
+    private String initialProgram;
+
     @Schema(description = "RDP 版本是否大于8.1")
     private Boolean versionGt81;
 

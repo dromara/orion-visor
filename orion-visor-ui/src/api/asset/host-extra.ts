@@ -30,6 +30,7 @@ export interface HostRdpExtraSettingModel {
   authType: string;
   identityId: number;
   lowBandwidthMode: boolean;
+  initialProgram: string;
 }
 
 // 标签额外配置

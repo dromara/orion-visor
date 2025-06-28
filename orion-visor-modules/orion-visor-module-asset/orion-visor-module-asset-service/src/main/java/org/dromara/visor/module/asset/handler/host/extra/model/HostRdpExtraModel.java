@@ -56,4 +56,9 @@ public class HostRdpExtraModel implements GenericsDataModel {
      */
     private Boolean lowBandwidthMode;
 
+    /**
+     * 初始化程序
+     */
+    private String initialProgram;
+
 }

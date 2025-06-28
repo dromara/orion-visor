@@ -118,6 +118,11 @@ public class RdpSession extends AbstractGuacdSession<TerminalSessionRdpConfig> i
         String driveMountPath = DriveMountModeEnum.of(extra.getDriveMountMode())
                 .getDriveMountPath(props.getUserId(), props.getHostId(), props.getId());
         tunnel.setParameter(GuacdConst.DRIVE_PATH, Files1.getPath(guacdConfig.getDrivePath() + "/" + driveMountPath));
+        // 初始化程序
+        String initialProgram = config.getInitialProgram();
+        if (!Strings.isBlank(initialProgram)) {
+            tunnel.setParameter(GuacdConst.INITIAL_PROGRAM, initialProgram);
+        }
         // 预连接
         String preConnectionId = config.getPreConnectionId();
         if (!Strings.isBlank(preConnectionId)) {

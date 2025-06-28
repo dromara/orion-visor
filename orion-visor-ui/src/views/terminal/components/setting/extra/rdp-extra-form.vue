@@ -21,9 +21,18 @@
     </a-form-item>
     <!-- 低带宽模式 -->
     <a-form-item field="lowBandwidthMode"
+                 style="margin-bottom: 8px;"
                  label="低带宽模式"
                  help="调整图形化配置以及禁用音频, 提升慢速网络下的响应速度">
       <a-switch v-model="formModel.lowBandwidthMode" type="round" />
+    </a-form-item>
+    <!-- 初始化程序 -->
+    <a-form-item field="initialProgram"
+                 label="初始化程序"
+                 help="会话启动后自动执行的程序 (若支持)">
+      <a-input v-model="formModel.initialProgram"
+               placeholder="程序的完整路径"
+               allow-clear />
     </a-form-item>
   </a-form>
 </template>
