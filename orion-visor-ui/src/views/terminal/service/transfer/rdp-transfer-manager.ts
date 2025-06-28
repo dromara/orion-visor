@@ -1,6 +1,6 @@
 import type { IRdpTransferManager, IRdpSession } from '@/views/terminal/interfaces';
 import type Guacamole from 'guacamole-common-js';
-import { TerminalMessages } from '../../types/const';
+import { TerminalMessages, TransferStatus } from '../../types/const';
 import { Message } from '@arco-design/web-vue';
 import BaseTransferManager from './base-transfer-manager';
 import RdpFileDownloadTask from './rdp-file-download-task';
@@ -62,6 +62,7 @@ export default class RdpTransferManager extends BaseTransferManager implements I
   // 通过 sessionKey 关闭
   closeBySessionKey(sessionKey: string): void {
     this.tasks.filter(s => s.sessionKey === sessionKey)
+      .filter(s => s.state.status === TransferStatus.WAITING || s.state.status === TransferStatus.TRANSFERRING)
       .forEach(s => s.onError(TerminalMessages.sessionClosed));
   }
 

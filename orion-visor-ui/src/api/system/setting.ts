@@ -15,7 +15,6 @@ export interface SystemSettingUpdateRequest {
  */
 export interface AppInfoResponse {
   version: string;
-  uuid: string;
 }
 
 /**

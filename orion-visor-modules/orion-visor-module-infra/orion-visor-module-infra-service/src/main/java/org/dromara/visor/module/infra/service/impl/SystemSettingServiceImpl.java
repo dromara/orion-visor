@@ -45,7 +45,6 @@ import org.dromara.visor.module.infra.entity.request.system.SystemSettingUpdateR
 import org.dromara.visor.module.infra.entity.vo.AppInfoVO;
 import org.dromara.visor.module.infra.entity.vo.RsaKeyPairVO;
 import org.dromara.visor.module.infra.service.SystemSettingService;
-import org.dromara.visor.module.infra.utils.SystemUuidUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -73,7 +72,6 @@ public class SystemSettingServiceImpl implements SystemSettingService {
     public AppInfoVO getAppInfo() {
         return AppInfoVO.builder()
                 .version(AppConst.VERSION)
-                .uuid(SystemUuidUtils.getSystemUuid())
                 .build();
     }
 

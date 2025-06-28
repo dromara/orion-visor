@@ -61,6 +61,7 @@
       <!-- RDP版本 -->
       <a-form-item field="versionGt81"
                    label="RDP版本"
+                   tooltip="RDP 8.1 及以上版本支持动态调整分辨率"
                    hide-asterisk>
         <a-switch v-model="formModel.versionGt81"
                   type="round"
