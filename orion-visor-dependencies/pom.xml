@@ -34,7 +34,7 @@
         <mockito.inline.version>4.11.0</mockito.inline.version>
         <jedis.mock.version>1.0.7</jedis.mock.version>
         <podam.version>7.2.11.RELEASE</podam.version>
-        <guacd.version>1.5.5</guacd.version>
+        <guacd.version>1.6.0</guacd.version>
     </properties>
 
     <dependencyManagement>
