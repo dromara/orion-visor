@@ -46,7 +46,7 @@
       <div class="table-left-bar-handle">
         <!-- 标题 -->
         <div class="table-title">
-          主机在线会话
+          终端在线会话
         </div>
       </div>
     </template>

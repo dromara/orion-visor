@@ -30,7 +30,7 @@ const columns = [
     title: '操作类型',
     dataIndex: 'type',
     slotName: 'type',
-    width: 116,
+    width: 146,
     align: 'left',
     default: true,
   }, {

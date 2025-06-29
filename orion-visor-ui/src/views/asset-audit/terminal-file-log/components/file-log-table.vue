@@ -24,14 +24,14 @@
       <a-form-item field="type" label="操作类型">
         <a-select v-model="formModel.type"
                   placeholder="请选择类型"
-                  :options="toOptions(sftpOperatorTypeKey)"
+                  :options="toOptions(terminalFileOperatorTypeKey)"
                   allow-clear />
       </a-form-item>
       <!-- 执行结果 -->
       <a-form-item field="result" label="执行结果">
         <a-select v-model="formModel.result"
                   placeholder="请选择执行结果"
-                  :options="toOptions(sftpOperatorResultKey)"
+                  :options="toOptions(operatorResultKey)"
                   allow-clear />
       </a-form-item>
       <!-- 开始时间 -->
@@ -50,7 +50,7 @@
       <div class="table-left-bar-handle">
         <!-- 标题 -->
         <div class="table-title">
-          文件操作日志
+          终端文件日志
         </div>
       </div>
       <!-- 右侧操作 -->
@@ -61,7 +61,7 @@
                         position="br"
                         type="warning"
                         @ok="deleteSelectedRows">
-            <a-button v-permission="['infra:operator-log:delete', 'terminal:terminal-sftp-log:management:delete']"
+            <a-button v-permission="['infra:operator-log:delete', 'terminal:terminal-file-log:management:delete']"
                       type="primary"
                       status="danger"
                       :disabled="selectedKeys.length === 0">
@@ -110,7 +110,7 @@
       <!-- 操作类型 -->
       <template #type="{ record }">
         <a-tag color="arcoblue">
-          {{ getDictValue(sftpOperatorTypeKey, record.type) }}
+          {{ getDictValue(terminalFileOperatorTypeKey, record.type) }}
         </a-tag>
       </template>
       <!-- 文件数量 -->
@@ -127,11 +127,11 @@
             {{ path }}
           </span>
           <!-- 移动目标路径 -->
-          <span class="table-cell-sub-value" v-if="SftpOperatorType.SFTP_MOVE === record.type">
+          <span class="table-cell-sub-value" v-if="TerminalFileOperatorType.SFTP_MOVE === record.type">
             移动到 {{ record.extra?.target }}
           </span>
           <!-- 提权信息 -->
-          <span class="table-cell-sub-value" v-if="SftpOperatorType.SFTP_CHMOD === record.type">
+          <span class="table-cell-sub-value" v-if="TerminalFileOperatorType.SFTP_CHMOD === record.type">
             提权 {{ record.extra?.mod }} {{ permission10toString(record.extra?.mod as number) }}
           </span>
         </div>
@@ -145,8 +145,8 @@
       </template>
       <!-- 执行结果 -->
       <template #result="{ record }">
-        <a-tag :color="getDictValue(sftpOperatorResultKey, record.result, 'color')">
-          {{ getDictValue(sftpOperatorResultKey, record.result) }}
+        <a-tag :color="getDictValue(operatorResultKey, record.result, 'color')">
+          {{ getDictValue(operatorResultKey, record.result) }}
         </a-tag>
       </template>
       <!-- 留痕地址 -->
@@ -169,7 +169,7 @@
                         position="left"
                         type="warning"
                         @ok="deleteRow(record)">
-            <a-button v-permission="['infra:operator-log:delete', 'terminal:terminal-sftp-log:management:delete']"
+            <a-button v-permission="['infra:operator-log:delete', 'terminal:terminal-file-log:management:delete']"
                       type="text"
                       size="mini"
                       status="danger">
@@ -184,15 +184,15 @@
 
 <script lang="ts">
   export default {
-    name: 'sftpLogTable'
+    name: 'fileLogTable'
   };
 </script>
 
 <script lang="ts" setup>
-  import type { TerminalSftpLogQueryRequest, TerminalSftpLogQueryResponse } from '@/api/terminal/terminal-sftp';
+  import type { TerminalFileLogQueryRequest, TerminalFileLogQueryResponse } from '@/api/terminal/terminal-file-log';
   import { reactive, ref, onMounted } from 'vue';
-  import { getTerminalSftpLogPage, deleteTerminalSftpLog } from '@/api/terminal/terminal-sftp';
-  import { TableName, sftpOperatorTypeKey, sftpOperatorResultKey, SftpOperatorType, showPathMaxCount } from '../types/const';
+  import { getTerminalFileLogPage, deleteTerminalFileLog } from '@/api/terminal/terminal-file-log';
+  import { TableName, terminalFileOperatorTypeKey, operatorResultKey, TerminalFileOperatorType, showPathMaxCount } from '../types/const';
   import { useTablePagination, useRowSelection, useTableColumns } from '@/hooks/table';
   import { useDictStore } from '@/store';
   import { Message } from '@arco-design/web-vue';
@@ -212,9 +212,9 @@
   const { loading, setLoading } = useLoading();
   const { toOptions, getDictValue } = useDictStore();
 
-  const tableRenderData = ref<Array<TerminalSftpLogQueryResponse>>([]);
+  const tableRenderData = ref<Array<TerminalFileLogQueryResponse>>([]);
   const selectedKeys = ref<Array<number>>([]);
-  const formModel = reactive<TerminalSftpLogQueryRequest>({
+  const formModel = reactive<TerminalFileLogQueryRequest>({
     userId: undefined,
     hostId: undefined,
     type: undefined,
@@ -223,11 +223,11 @@
   });
 
   // 加载数据
-  const doFetchTableData = async (request: TerminalSftpLogQueryRequest) => {
+  const doFetchTableData = async (request: TerminalFileLogQueryRequest) => {
     try {
       setLoading(true);
       // 查询
-      const { data } = await getTerminalSftpLogPage(queryOrder.markOrderly(request));
+      const { data } = await getTerminalFileLogPage(queryOrder.markOrderly(request));
       // 设置最大数量
       data.rows.forEach(s => {
         s.extra.maxCount = showPathMaxCount;
@@ -253,7 +253,7 @@
     try {
       setLoading(true);
       // 调用删除接口
-      await deleteTerminalSftpLog(selectedKeys.value);
+      await deleteTerminalFileLog(selectedKeys.value);
       Message.success(`成功删除 ${selectedKeys.value.length} 条数据`);
       selectedKeys.value = [];
       // 重新加载
@@ -265,11 +265,11 @@
   };
 
   // 删除当前行
-  const deleteRow = async (record: TerminalSftpLogQueryResponse) => {
+  const deleteRow = async (record: TerminalFileLogQueryResponse) => {
     try {
       setLoading(true);
       // 调用删除接口
-      await deleteTerminalSftpLog([record.id]);
+      await deleteTerminalFileLog([record.id]);
       Message.success('删除成功');
       selectedKeys.value = [];
       // 重新加载
