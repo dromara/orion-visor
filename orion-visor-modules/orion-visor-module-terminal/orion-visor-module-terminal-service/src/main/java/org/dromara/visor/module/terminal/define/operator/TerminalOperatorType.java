@@ -22,13 +22,10 @@
  */
 package org.dromara.visor.module.terminal.define.operator;
 
-import cn.orionsec.kit.lang.utils.collect.Lists;
 import org.dromara.visor.framework.biz.operator.log.core.annotation.Module;
 import org.dromara.visor.framework.biz.operator.log.core.enums.OperatorRiskLevel;
 import org.dromara.visor.framework.biz.operator.log.core.factory.InitializingOperatorTypes;
 import org.dromara.visor.framework.biz.operator.log.core.model.OperatorType;
-
-import java.util.List;
 
 /**
  * 终端 操作日志类型
@@ -41,8 +38,6 @@ import java.util.List;
 public class TerminalOperatorType extends InitializingOperatorTypes {
 
     public static final String CONNECT = "terminal:connect";
-
-    public static final String DELETE_SFTP_LOG = "terminal:delete-sftp-log";
 
     public static final String SFTP_MKDIR = "terminal:sftp-mkdir";
 
@@ -68,26 +63,14 @@ public class TerminalOperatorType extends InitializingOperatorTypes {
 
     public static final String SFTP_DOWNLOAD = "terminal:sftp-download";
 
-    public static final List<String> SFTP_TYPES = Lists.of(
-            SFTP_MKDIR,
-            SFTP_TOUCH,
-            SFTP_MOVE,
-            SFTP_REMOVE,
-            SFTP_TRUNCATE,
-            SFTP_CHMOD,
-            SFTP_CHOWN,
-            SFTP_CHGRP,
-            SFTP_GET_CONTENT,
-            SFTP_SET_CONTENT,
-            SFTP_UPLOAD,
-            SFTP_DOWNLOAD
-    );
+    public static final String RDP_UPLOAD = "terminal:rdp-upload";
+
+    public static final String RDP_DOWNLOAD = "terminal:rdp-download";
 
     @Override
     public OperatorType[] types() {
         return new OperatorType[]{
                 new OperatorType(OperatorRiskLevel.L, CONNECT, "连接主机 ${connectType} <sb>${hostName}</sb>"),
-                new OperatorType(OperatorRiskLevel.H, DELETE_SFTP_LOG, "删除 SFTP 操作日志 <sb>${count}</sb> 条"),
                 new OperatorType(OperatorRiskLevel.L, SFTP_MKDIR, "创建文件夹 ${hostName} <sb>${path}</sb>"),
                 new OperatorType(OperatorRiskLevel.L, SFTP_TOUCH, "创建文件 ${hostName} <sb>${path}</sb>"),
                 new OperatorType(OperatorRiskLevel.M, SFTP_MOVE, "移动文件 ${hostName} <sb>${path}</sb> 至 <sb>${target}</sb>"),
@@ -100,6 +83,8 @@ public class TerminalOperatorType extends InitializingOperatorTypes {
                 new OperatorType(OperatorRiskLevel.M, SFTP_SET_CONTENT, "修改文件内容 ${hostName} <sb>${path}</sb>"),
                 new OperatorType(OperatorRiskLevel.M, SFTP_UPLOAD, "上传文件 ${hostName} <sb>${path}</sb>"),
                 new OperatorType(OperatorRiskLevel.M, SFTP_DOWNLOAD, "下载文件 ${hostName} <sb>${path}</sb>"),
+                new OperatorType(OperatorRiskLevel.M, RDP_UPLOAD, "上传文件 ${hostName} <sb>${path}</sb>"),
+                new OperatorType(OperatorRiskLevel.M, RDP_DOWNLOAD, "下载文件 ${hostName} <sb>${path}</sb>"),
         };
     }
 
