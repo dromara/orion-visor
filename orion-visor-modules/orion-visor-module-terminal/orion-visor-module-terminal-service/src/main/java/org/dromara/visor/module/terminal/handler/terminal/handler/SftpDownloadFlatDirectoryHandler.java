@@ -29,6 +29,7 @@ import org.dromara.visor.module.terminal.handler.terminal.model.request.SftpDown
 import org.dromara.visor.module.terminal.handler.terminal.model.response.SftpFileVO;
 import org.dromara.visor.module.terminal.handler.terminal.sender.ISftpTerminalSender;
 import org.dromara.visor.module.terminal.handler.terminal.session.ISftpSession;
+import org.dromara.visor.module.terminal.utils.SftpFileUtils;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
@@ -50,7 +51,7 @@ public class SftpDownloadFlatDirectoryHandler extends AbstractTerminalHandler<IS
         // 获取会话
         String sessionId = props.getId();
         ISftpSession session = terminalManager.getSession(props.getId());
-        String[] paths = payload.getPath().split("\\|");
+        String[] paths = SftpFileUtils.fromMultiPaths(payload.getPath());
         log.info("SftpDownloadFlatDirectoryHandler-handle start sessionId: {}, paths: {}", sessionId, Arrays.toString(paths));
         Exception ex = null;
         List<SftpFileVO> files = Lists.empty();

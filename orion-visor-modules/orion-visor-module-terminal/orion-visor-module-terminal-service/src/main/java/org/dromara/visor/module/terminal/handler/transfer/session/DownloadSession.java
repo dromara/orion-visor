@@ -25,6 +25,7 @@ package org.dromara.visor.module.terminal.handler.transfer.session;
 import cn.orionsec.kit.lang.define.wrapper.Ref;
 import cn.orionsec.kit.lang.utils.Threads;
 import cn.orionsec.kit.lang.utils.Valid;
+import cn.orionsec.kit.lang.utils.collect.Lists;
 import cn.orionsec.kit.lang.utils.io.Streams;
 import cn.orionsec.kit.net.host.SessionStore;
 import cn.orionsec.kit.net.host.sftp.SftpFile;
@@ -72,7 +73,7 @@ public class DownloadSession extends TransferSession implements StreamingRespons
             super.onStart(request);
             log.info("DownloadSession.startDownload open start channelId: {}, path: {}", channelId, path);
             // 保存操作日志
-            this.saveOperatorLog(TerminalOperatorType.SFTP_DOWNLOAD, path);
+            this.saveOperatorLog(request.getLogId(), TerminalOperatorType.SFTP_DOWNLOAD, Lists.singleton(path));
             // 检查连接
             this.init();
             // 检查文件是否存在

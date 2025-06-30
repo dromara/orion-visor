@@ -22,10 +22,8 @@
  */
 package org.dromara.visor.module.common.utils;
 
-import cn.orionsec.kit.lang.constant.Letters;
 import cn.orionsec.kit.lang.utils.Booleans;
 import cn.orionsec.kit.lang.utils.Strings;
-import cn.orionsec.kit.lang.utils.io.Files1;
 import cn.orionsec.kit.net.host.sftp.SftpExecutor;
 import cn.orionsec.kit.net.host.sftp.SftpFile;
 import cn.orionsec.kit.spring.SpringHolder;
@@ -66,23 +64,6 @@ public class SftpUtils {
             String target = Strings.format(appSftpConfig.getUploadBackupFileName(), JSON.parseObject(JSON.toJSONString(backupParams)));
             // 移动
             executor.move(path, target);
-        }
-    }
-
-    /**
-     * 获取移动目标路径
-     *
-     * @param source source
-     * @param target target
-     * @return absolute target
-     */
-    public static String getAbsoluteTargetPath(String source, String target) {
-        if (target.charAt(0) == Letters.SLASH) {
-            // 绝对路径
-            return Files1.getPath(Files1.normalize(target));
-        } else {
-            // 相对路径
-            return Files1.getPath(Files1.normalize(Files1.getPath(source + "/../" + target)));
         }
     }
 

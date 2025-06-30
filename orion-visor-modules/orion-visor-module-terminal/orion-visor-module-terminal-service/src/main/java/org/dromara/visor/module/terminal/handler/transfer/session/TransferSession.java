@@ -23,27 +23,24 @@
 package org.dromara.visor.module.terminal.handler.transfer.session;
 
 import cn.orionsec.kit.lang.exception.argument.InvalidArgumentException;
-import cn.orionsec.kit.lang.utils.collect.Maps;
 import cn.orionsec.kit.lang.utils.io.Streams;
 import cn.orionsec.kit.net.host.SessionStore;
 import cn.orionsec.kit.net.host.sftp.SftpExecutor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.dromara.visor.common.constant.Const;
 import org.dromara.visor.common.constant.FieldConst;
 import org.dromara.visor.common.session.config.SshConnectConfig;
 import org.dromara.visor.framework.biz.operator.log.core.model.OperatorLogModel;
-import org.dromara.visor.framework.biz.operator.log.core.utils.OperatorLogs;
 import org.dromara.visor.framework.websocket.core.utils.WebSockets;
-import org.dromara.visor.module.terminal.handler.terminal.model.TerminalChannelProps;
 import org.dromara.visor.module.terminal.handler.terminal.record.TerminalAsyncSaver;
-import org.dromara.visor.module.terminal.handler.terminal.utils.TerminalUtils;
 import org.dromara.visor.module.terminal.handler.transfer.enums.TransferReceiver;
 import org.dromara.visor.module.terminal.handler.transfer.model.TransferOperatorRequest;
 import org.dromara.visor.module.terminal.handler.transfer.utils.TransferUtils;
 import org.springframework.web.socket.WebSocketSession;
 
-import java.util.Map;
+import java.util.List;
 
 /**
  * 主机传输会话实现
@@ -147,20 +144,16 @@ public abstract class TransferSession implements ITransferSession {
     /**
      * 保存操作日志
      *
-     * @param type type
-     * @param path path
+     * @param logId logId
+     * @param type  type
+     * @param paths paths
      */
-    protected void saveOperatorLog(String type, String path) {
-        // 设置参数
-        Map<String, Object> extra = Maps.newMap();
-        extra.put(OperatorLogs.PATH, path);
-        extra.put(OperatorLogs.HOST_ID, connectConfig.getHostId());
-        extra.put(OperatorLogs.HOST_NAME, connectConfig.getHostName());
-        extra.put(OperatorLogs.ADDRESS, connectConfig.getHostAddress());
-        // 获取日志
-        TerminalChannelProps props = WebSockets.getAttr(channel, FieldConst.PROPS);
-        OperatorLogModel model = TerminalUtils.getOperatorLogModel(props, extra, type, System.currentTimeMillis(), null);
-        // 保存
+    protected void saveOperatorLog(Long logId, String type, List<String> paths) {
+        String path = String.join(Const.LF, paths);
+        int count = paths.size();
+        // 获取操作日志
+        OperatorLogModel model = TransferUtils.getOperatorLogModel(type, path, count, connectConfig, WebSockets.getAttr(channel, FieldConst.PROPS));
+        // 保存操作日志
         TerminalAsyncSaver.saveOperatorLog(model);
     }
 

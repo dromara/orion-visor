@@ -41,6 +41,11 @@ import lombok.NoArgsConstructor;
 public class TransferOperatorRequest {
 
     /**
+     * 日志id
+     */
+    private Long logId;
+
+    /**
      * 文件路径
      */
     private String path;

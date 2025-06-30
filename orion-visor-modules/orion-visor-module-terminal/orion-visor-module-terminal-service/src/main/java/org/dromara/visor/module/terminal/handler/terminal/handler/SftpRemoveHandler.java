@@ -24,12 +24,14 @@ package org.dromara.visor.module.terminal.handler.terminal.handler;
 
 import cn.orionsec.kit.lang.utils.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
+import org.dromara.visor.common.constant.Const;
 import org.dromara.visor.framework.biz.operator.log.core.utils.OperatorLogs;
 import org.dromara.visor.module.terminal.define.operator.TerminalOperatorType;
 import org.dromara.visor.module.terminal.handler.terminal.model.TerminalChannelProps;
 import org.dromara.visor.module.terminal.handler.terminal.model.request.SftpBaseRequest;
 import org.dromara.visor.module.terminal.handler.terminal.sender.ISftpTerminalSender;
 import org.dromara.visor.module.terminal.handler.terminal.session.ISftpSession;
+import org.dromara.visor.module.terminal.utils.SftpFileUtils;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
@@ -49,11 +51,11 @@ public class SftpRemoveHandler extends AbstractTerminalHandler<ISftpTerminalSend
     @Override
     public void handle(TerminalChannelProps props, ISftpTerminalSender sender, SftpBaseRequest payload) {
         long startTime = System.currentTimeMillis();
-        String path = payload.getPath();
+        String[] paths = SftpFileUtils.fromMultiPaths(payload.getPath());
+        String path = String.join(Const.LF, paths);
         String sessionId = props.getId();
         // 获取会话
         ISftpSession session = terminalManager.getSession(sessionId);
-        String[] paths = path.split("\\|");
         log.info("SftpRemoveHandler-handle start sessionId: {}, path: {}", sessionId, Arrays.toString(paths));
         Exception ex = null;
         // 删除
@@ -69,6 +71,7 @@ public class SftpRemoveHandler extends AbstractTerminalHandler<ISftpTerminalSend
         // 保存操作日志
         Map<String, Object> extra = Maps.newMap();
         extra.put(OperatorLogs.PATH, path);
+        extra.put(OperatorLogs.COUNT, paths.length);
         this.saveOperatorLog(props,
                 extra, TerminalOperatorType.SFTP_REMOVE,
                 startTime, ex);

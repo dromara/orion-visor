@@ -34,7 +34,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.dromara.visor.common.constant.Const;
 import org.dromara.visor.common.constant.ErrorMessage;
 import org.dromara.visor.common.utils.Valid;
-import org.dromara.visor.module.common.utils.SftpUtils;
 import org.dromara.visor.module.terminal.handler.terminal.model.TerminalChannelProps;
 import org.dromara.visor.module.terminal.handler.terminal.model.config.TerminalSessionSftpConfig;
 import org.dromara.visor.module.terminal.handler.terminal.model.response.SftpFileVO;
@@ -117,7 +116,7 @@ public class SftpSession extends AbstractTerminalSession<ISftpTerminalSender, Te
     public void move(String source, String target) {
         // 计算路径
         source = Valid.checkNormalize(source);
-        target = SftpUtils.getAbsoluteTargetPath(source, target);
+        target = SftpFileUtils.getAbsoluteTargetPath(source, target);
         // 移动
         executor.move(source, target);
     }
