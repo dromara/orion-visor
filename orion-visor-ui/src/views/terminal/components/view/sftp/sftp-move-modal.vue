@@ -41,11 +41,12 @@
   import type { ISftpSession } from '@/views/terminal/interfaces';
   import useVisible from '@/hooks/visible';
   import { nextTick, ref } from 'vue';
-  import { useTerminalStore } from '@/store';
-  import { TerminalSessionTypes } from '@/views/terminal/types/const';
+
+  const props = defineProps<{
+    session?: ISftpSession;
+  }>();
 
   const { visible, setVisible } = useVisible();
-  const { sessionManager } = useTerminalStore();
 
   const sessionKey = ref();
   const targetRef = ref();
@@ -77,10 +78,9 @@
       if (error) {
         return false;
       }
-      // 获取会话
-      const session = sessionManager.getSession<ISftpSession>(sessionKey.value);
-      if (session?.type === TerminalSessionTypes.SFTP.type) {
-        session.move(formModel.value.path, formModel.value.target);
+      // 移动文件
+      if (props.session) {
+        props.session.move(formModel.value.path, formModel.value.target);
       }
     } catch (e) {
       return false;

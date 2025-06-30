@@ -33,13 +33,13 @@
   import type { ISftpSession } from '@/views/terminal/interfaces';
   import useVisible from '@/hooks/visible';
   import { nextTick, ref } from 'vue';
-  import { useTerminalStore } from '@/store';
-  import { TerminalSessionTypes } from '@/views/terminal/types/const';
+
+  const props = defineProps<{
+    session?: ISftpSession;
+  }>();
 
   const { visible, setVisible } = useVisible();
-  const { sessionManager } = useTerminalStore();
 
-  const sessionKey = ref();
   const touch = ref(false);
   const pathRef = ref();
   const formRef = ref();
@@ -48,8 +48,7 @@
   });
 
   // 打开新增
-  const open = (key: string, path: string, isTouch: boolean) => {
-    sessionKey.value = key;
+  const open = (path: string, isTouch: boolean) => {
     if (path === '/') {
       formModel.value.path = path;
     } else {
@@ -73,15 +72,13 @@
       if (error) {
         return false;
       }
-      // 获取会话
-      const session = sessionManager.getSession<ISftpSession>(sessionKey.value);
-      if (session?.type === TerminalSessionTypes.SFTP.type) {
+      if (props.session) {
         if (touch.value) {
           // 创建文件
-          session.touch(formModel.value.path);
+          props.session.touch(formModel.value.path);
         } else {
           // 创建文件夹
-          session.mkdir(formModel.value.path);
+          props.session.mkdir(formModel.value.path);
         }
       }
     } catch (e) {

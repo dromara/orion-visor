@@ -35,6 +35,7 @@ export interface GuacdInitConfig {
 export interface SessionHostInfo {
   title: string;
   name: string;
+  logId: number;
   hostId: number;
   address: string;
   port: number;

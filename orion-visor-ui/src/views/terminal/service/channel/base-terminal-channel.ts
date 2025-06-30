@@ -1,4 +1,4 @@
-import type { ITerminalChannel, ITerminalSession } from '@/views/terminal/interfaces';
+import type { ITerminalChannel, ITerminalSession, SessionHostInfo } from '@/views/terminal/interfaces';
 import type { InputPayload, OutputPayload, Protocol } from '@/views/terminal/types/protocol';
 import { format, InputProtocol, OutputProtocol, parse } from '@/views/terminal/types/protocol';
 import { TerminalCloseCode, TerminalMessages } from '../../types/const';
@@ -66,11 +66,11 @@ export default abstract class BaseTerminalChannel<T extends ITerminalSession> im
 
   // 处理设置信息
   processSetInfo({ info }: OutputPayload) {
-    const data = JSON.parse(info);
+    const data = JSON.parse(info) as SessionHostInfo;
     if (data) {
-      this.session.info.address = data.address;
-      this.session.info.port = data.port;
-      this.session.info.username = data.username;
+      Object.keys(data).forEach(k => {
+        (this.session.info[k as keyof SessionHostInfo] as any) = data[k as keyof SessionHostInfo];
+      });
     }
   };
 

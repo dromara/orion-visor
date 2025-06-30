@@ -18,9 +18,9 @@ export default abstract class BaseSession<State extends ReactiveSessionState, Ch
   protected constructor(item: TerminalSessionTabItem, state: Partial<State>) {
     this.type = item.type;
     this.info = {
-      hostId: item.hostId,
       title: item.title,
       name: item.name,
+      hostId: item.hostId,
       address: item.address,
     } as SessionHostInfo;
     this.panelIndex = item.panelIndex;

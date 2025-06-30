@@ -1,4 +1,4 @@
-import type { FileTransferItem, IFileUploadTask } from '@/views/terminal/interfaces';
+import type { FileTransferItem, IFileUploadTask, ITerminalSession } from '@/views/terminal/interfaces';
 import { closeFileReader } from '@/utils/file';
 import SftpBaseTransferTask from './sftp-base-transfer-task';
 
@@ -11,8 +11,8 @@ export default class SftpFileUploadTask extends SftpBaseTransferTask implements 
   private currentPart: number;
   private readonly totalPart: number;
 
-  constructor(type: string, hostId: number, fileItem: FileTransferItem) {
-    super(type, hostId, fileItem);
+  constructor(type: string, session: ITerminalSession, fileItem: FileTransferItem) {
+    super(type, session, fileItem);
     this.currentPart = 0;
     this.totalPart = Math.ceil(fileItem.size / PART_SIZE);
   }

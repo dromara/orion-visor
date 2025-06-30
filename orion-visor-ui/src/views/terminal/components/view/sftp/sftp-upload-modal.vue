@@ -80,6 +80,7 @@
 
 <script lang="ts" setup>
   import type { FileItem } from '@arco-design/web-vue';
+  import type { ITerminalSession } from '@/views/terminal/interfaces';
   import { ref } from 'vue';
   import { useTerminalStore } from '@/store';
   import { Message } from '@arco-design/web-vue';
@@ -87,22 +88,21 @@
   import useVisible from '@/hooks/visible';
   import useLoading from '@/hooks/loading';
 
+  const props = defineProps<{
+    session?: ITerminalSession;
+  }>();
   const emits = defineEmits(['closed']);
 
   const { visible, setVisible } = useVisible();
   const { loading, setLoading } = useLoading();
   const { transferManager } = useTerminalStore();
 
-  const hostId = ref();
   const parentPath = ref('');
-  const compressUpload = ref(false);
   const fileList = ref<FileItem[]>([]);
 
   // 打开
-  const open = (host: number, parent: string) => {
-    hostId.value = host;
+  const open = (parent: string) => {
     parentPath.value = parent;
-    compressUpload.value = false;
     setVisible(true);
   };
 
@@ -121,7 +121,7 @@
     // 获取上传的文件
     const files = fileList.value.map(s => s.file as File);
     // 普通上传
-    await transferManager.sftp.addUpload(hostId.value, parentPath.value, files);
+    await transferManager.sftp.addUpload(props.session as ITerminalSession, parentPath.value, files);
     // 清空
     handlerClear();
     return true;

@@ -1,17 +1,20 @@
-import type { ISetTransferClient, FileTransferItem } from '@/views/terminal/interfaces';
-import { TransferOperator, TransferStatus, TerminalMessages, TransferSource } from '../../types/const';
+import type { FileTransferItem, ISetTransferClient, ITerminalSession } from '@/views/terminal/interfaces';
+import { TerminalMessages, TransferOperator, TransferSource, TransferStatus } from '../../types/const';
 import { getPath } from '@/utils/file';
 import BaseFileTransferTask from './base-file-transfer-task';
 
-// sftp 传输任务一定义
+// sftp 传输任务基类
 export default abstract class SftpBaseTransferTask extends BaseFileTransferTask implements ISetTransferClient<WebSocket> {
 
   protected client?: WebSocket;
 
+  protected logId: number;
+
   protected constructor(type: string,
-                        hostId: number,
+                        session: ITerminalSession,
                         fileItem: FileTransferItem) {
-    super(type, TransferSource.SFTP, hostId, undefined as unknown as string, fileItem, {});
+    super(type, TransferSource.SFTP, session.info.hostId, session.sessionKey, fileItem, {});
+    this.logId = session.info.logId;
   }
 
   // 设置传输客户端
@@ -25,6 +28,7 @@ export default abstract class SftpBaseTransferTask extends BaseFileTransferTask 
     // 发送开始信息
     this.client?.send(JSON.stringify({
       operator: TransferOperator.START,
+      logId: this.logId,
       type: this.type,
       hostId: this.hostId,
       path: getPath(this.fileItem.parentPath + '/' + this.fileItem.name),

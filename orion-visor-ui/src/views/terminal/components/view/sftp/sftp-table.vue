@@ -144,13 +144,13 @@
 <script lang="ts" setup>
   import type { TableData } from '@arco-design/web-vue';
   import type { SftpFile, ISftpSession } from '@/views/terminal/interfaces';
-  import { ref, computed, watch, inject } from 'vue';
+  import { ref, computed, watch } from 'vue';
   import { useRowSelection } from '@/hooks/table';
   import { dateFormat } from '@/utils';
   import { setAutoFocus } from '@/utils/dom';
   import { copy } from '@/hooks/copy';
   import { sftpColumns } from '@/views/terminal/types/table.columns';
-  import { FILE_TYPE, openSftpChmodModalKey, openSftpMoveModalKey } from '@/views/terminal/types/const';
+  import { FILE_TYPE } from '@/views/terminal/types/const';
 
   const props = defineProps<{
     session?: ISftpSession;
@@ -160,10 +160,7 @@
     selectedFiles: Array<string>;
   }>();
 
-  const emits = defineEmits(['update:selectedFiles', 'loadFile', 'editFile', 'deleteFile', 'download']);
-
-  const openSftpMoveModal = inject(openSftpMoveModalKey) as (sessionKey: string, path: string) => void;
-  const openSftpChmodModal = inject(openSftpChmodModalKey) as (sessionKey: string, path: string, permission: number) => void;
+  const emits = defineEmits(['update:selectedFiles', 'loadFile', 'moveFile', 'chmodFile', 'editFile', 'deleteFile', 'download']);
 
   const rowSelection = useRowSelection({ width: 40 });
 
@@ -249,7 +246,7 @@
     if (!props.session?.state.connected) {
       return;
     }
-    openSftpMoveModal(props.session?.sessionKey as string, path);
+    emits('moveFile', path);
   };
 
   // 文件提权
@@ -258,7 +255,7 @@
     if (!props.session?.state.connected) {
       return;
     }
-    openSftpChmodModal(props.session?.sessionKey as string, path, permission);
+    emits('chmodFile', path, permission);
   };
 
   // 格式化文件类型

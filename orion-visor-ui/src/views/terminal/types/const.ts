@@ -494,18 +494,6 @@ export const PathBookmarkType = {
 // 打开 extraModal key
 export const openExtraModalKey = Symbol();
 
-// 打开 sftpCreateModal key
-export const openSftpCreateModalKey = Symbol();
-
-// 打开 sftpMoveModal key
-export const openSftpMoveModalKey = Symbol();
-
-// 打开 sftpChmodModal key
-export const openSftpChmodModalKey = Symbol();
-
-// 打开 sftpUploadModal key
-export const openSftpUploadModalKey = Symbol();
-
 // 终端字体样式
 export const fontFamilyKey = 'terminalFontFamily';
 

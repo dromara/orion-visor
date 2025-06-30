@@ -1,4 +1,4 @@
-import type { FileTransferItem, IFileDownloadTask } from '@/views/terminal/interfaces';
+import type { FileTransferItem, IFileDownloadTask, ITerminalSession } from '@/views/terminal/interfaces';
 import { TransferStatus, TerminalMessages } from '../../types/const';
 import { getFileName, openDownloadFile } from '@/utils/file';
 import { saveAs } from 'file-saver';
@@ -8,8 +8,8 @@ import SftpBaseTransferTask from './sftp-base-transfer-task';
 // sftp 下载任务实现
 export default class SftpFileDownloadTask extends SftpBaseTransferTask implements IFileDownloadTask {
 
-  constructor(type: string, hostId: number, fileItem: FileTransferItem) {
-    super(type, hostId, fileItem);
+  constructor(type: string, session: ITerminalSession, fileItem: FileTransferItem) {
+    super(type, session, fileItem);
   }
 
   // 开始回调

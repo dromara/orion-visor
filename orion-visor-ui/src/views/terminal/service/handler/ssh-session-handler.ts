@@ -211,7 +211,7 @@ export default class SshSessionHandler implements ISshSessionHandler {
 
   // 上传文件
   uploadFile(): void {
-    this.session.config.uploadModal.open(this.session.info.hostId, '/');
+    this.session.config.uploadModal.open('/');
   }
 
   // ctrl + c

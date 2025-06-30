@@ -2,6 +2,7 @@ import type {
   FileTransferTaskType,
   ISetTransferClient,
   ISftpTransferManager,
+  ITerminalSession,
   MaybeFileTransferTask,
   SftpFile,
   TransferOperatorResponse
@@ -28,11 +29,11 @@ export default class SftpTransferManager extends BaseTransferManager implements 
   }
 
   // 添加上传任务
-  async addUpload(hostId: number, parentPath: string, files: Array<File>) {
+  async addUpload(session: ITerminalSession, parentPath: string, files: Array<File>) {
     Message.info(TerminalMessages.fileUploading);
     // 创建任务
     for (let file of files) {
-      const task = new SftpFileUploadTask(TransferType.UPLOAD, hostId, {
+      const task = new SftpFileUploadTask(TransferType.UPLOAD, session, {
         name: file.webkitRelativePath || file.name,
         parentPath: parentPath,
         size: file.size,
@@ -45,12 +46,12 @@ export default class SftpTransferManager extends BaseTransferManager implements 
   }
 
   // 添加下载任务
-  async addDownload(hostId: number, currentPath: string, files: Array<SftpFile>) {
+  async addDownload(session: ITerminalSession, currentPath: string, files: Array<SftpFile>) {
     Message.info(TerminalMessages.fileDownloading);
     let pathIndex = currentPath === '/' ? 1 : currentPath.length + 1;
     for (let file of files) {
       // 创建任务
-      const task = new SftpFileDownloadTask(TransferType.DOWNLOAD, hostId, {
+      const task = new SftpFileDownloadTask(TransferType.DOWNLOAD, session, {
         name: file.path.substring(pathIndex),
         parentPath: currentPath,
         size: file.size,

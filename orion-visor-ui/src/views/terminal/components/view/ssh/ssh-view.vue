@@ -17,7 +17,9 @@
       </div>
     </ssh-context-menu>
     <!-- 上传文件模态框 -->
-    <sftp-upload-modal ref="uploadModal" @closed="focus" />
+    <sftp-upload-modal ref="uploadModal"
+                       :session="session"
+                       @closed="focus" />
   </div>
 </template>
 

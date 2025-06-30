@@ -1,4 +1,4 @@
-import type { IRdpSession, SftpFile } from '@/views/terminal/interfaces';
+import type { IRdpSession, ITerminalSession, SftpFile } from '@/views/terminal/interfaces';
 import type { Reactive } from 'vue';
 import type Guacamole from 'guacamole-common-js';
 
@@ -43,9 +43,9 @@ export interface ITransferManager {
 // SFTP 文件传输管理器定义
 export interface ISftpTransferManager extends ITransferManager {
   // 添加上传任务
-  addUpload: (hostId: number, parentPath: string, files: Array<File>) => Promise<void>;
+  addUpload: (session: ITerminalSession, parentPath: string, files: Array<File>) => Promise<void>;
   // 添加下载任务
-  addDownload: (hostId: number, currentPath: string, files: Array<SftpFile>) => Promise<void>;
+  addDownload: (session: ITerminalSession, currentPath: string, files: Array<SftpFile>) => Promise<void>;
 }
 
 // RDP 文件传输管理器定义
