@@ -275,7 +275,11 @@
 
   // 上传文件
   const uploadFile = () => {
-    transferManager.rdp.addUpload(props.session, fileList.value[0].file as File);
+    const file = fileList.value[0].file as File;
+    // 记录事件
+    props.session.onFileSystemEvent({ event: 'terminal:rdp-upload', path: file.name });
+    // 上传文件
+    transferManager.rdp.addUpload(props.session, file);
     fileList.value = [];
   };
 

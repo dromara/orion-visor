@@ -175,6 +175,8 @@ export interface IRdpSession extends IGuacdSession {
 
   // 初始化
   init: (config: GuacdInitConfig) => Promise<void>;
+  // 文件系统事件
+  onFileSystemEvent: (event: Record<string, any>) => void;
   // 发送键
   sendKeys: (keys: Array<number>) => void;
   // 粘贴

@@ -11,6 +11,7 @@ import type { OutputPayload } from '@/views/terminal/types/protocol';
 import { InputProtocol } from '@/views/terminal/types/protocol';
 import { TerminalMessages, fitDisplayValue, TerminalCloseCode } from '@/views/terminal/types/const';
 import { screenshot } from '@/views/terminal/types/utils';
+import { Message } from '@arco-design/web-vue';
 import { useTerminalStore } from '@/store';
 import Guacamole from 'guacamole-common-js';
 import BaseSession from './base-session';
@@ -105,6 +106,13 @@ export default class RdpSession extends BaseSession<GuacdReactiveSessionStatus, 
     };
     // 下载文件回调
     this.client.onfile = (stream, mimetype, filename) => {
+      if (!this.isWriteable()) {
+        Message.error('无写入权限');
+        return;
+      }
+      // 记录事件
+      this.onFileSystemEvent({ event: 'terminal:rdp-download', path: filename });
+      // 下载文件
       useTerminalStore().transferManager.rdp.addDownload(this, stream, mimetype, filename);
     };
   }
@@ -158,6 +166,11 @@ export default class RdpSession extends BaseSession<GuacdReactiveSessionStatus, 
       };
       requestAudioStream(this.client);
     }
+  }
+
+  // 文件系统事件
+  onFileSystemEvent(event: Record<string, any>): void {
+    this.channel.send(InputProtocol.RDP_FILE_SYSTEM_EVENT, { event: JSON.stringify(event) });
   }
 
   // 发送键

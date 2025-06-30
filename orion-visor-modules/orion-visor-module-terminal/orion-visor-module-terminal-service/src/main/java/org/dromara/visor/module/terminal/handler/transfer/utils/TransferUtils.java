@@ -23,21 +23,14 @@
 package org.dromara.visor.module.terminal.handler.transfer.utils;
 
 import cn.orionsec.kit.lang.utils.Strings;
-import cn.orionsec.kit.lang.utils.collect.Maps;
 import com.alibaba.fastjson.JSON;
 import org.apache.catalina.connector.ClientAbortException;
 import org.dromara.visor.common.constant.ErrorMessage;
-import org.dromara.visor.common.session.config.BaseConnectConfig;
-import org.dromara.visor.framework.biz.operator.log.core.model.OperatorLogModel;
-import org.dromara.visor.framework.biz.operator.log.core.utils.OperatorLogs;
 import org.dromara.visor.framework.websocket.core.utils.WebSockets;
-import org.dromara.visor.module.terminal.handler.terminal.model.TerminalChannelProps;
-import org.dromara.visor.module.terminal.handler.terminal.utils.TerminalUtils;
 import org.dromara.visor.module.terminal.handler.transfer.enums.TransferReceiver;
 import org.dromara.visor.module.terminal.handler.transfer.model.TransferOperatorResponse;
 import org.springframework.web.socket.WebSocketSession;
 
-import java.util.Map;
 import java.util.function.Consumer;
 
 /**
@@ -50,30 +43,6 @@ import java.util.function.Consumer;
 public class TransferUtils {
 
     private TransferUtils() {
-    }
-
-    /**
-     * 获取传输操作日志
-     *
-     * @param type   type
-     * @param path   path
-     * @param count  count
-     * @param config config
-     * @param props  props
-     */
-    public static OperatorLogModel getOperatorLogModel(String type,
-                                                       String path, Integer count,
-                                                       BaseConnectConfig config,
-                                                       TerminalChannelProps props) {
-        // 设置参数
-        Map<String, Object> extra = Maps.newMap();
-        extra.put(OperatorLogs.PATH, path);
-        extra.put(OperatorLogs.COUNT, count);
-        extra.put(OperatorLogs.HOST_ID, config.getHostId());
-        extra.put(OperatorLogs.HOST_NAME, config.getHostName());
-        extra.put(OperatorLogs.ADDRESS, config.getHostAddress());
-        // 获取操作日志
-        return TerminalUtils.getOperatorLogModel(props, extra, type, System.currentTimeMillis(), null);
     }
 
     /**
