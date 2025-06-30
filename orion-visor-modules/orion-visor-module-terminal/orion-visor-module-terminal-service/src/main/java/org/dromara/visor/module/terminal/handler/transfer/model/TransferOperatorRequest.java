@@ -27,8 +27,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 /**
  * 文件操作请求 实体对象
  *
@@ -61,11 +59,6 @@ public class TransferOperatorRequest {
      * 主机id
      */
     private Long hostId;
-
-    /**
-     * 被压缩文件路径
-     */
-    private List<String> paths;
 
     /**
      * 错误信息 后端赋值

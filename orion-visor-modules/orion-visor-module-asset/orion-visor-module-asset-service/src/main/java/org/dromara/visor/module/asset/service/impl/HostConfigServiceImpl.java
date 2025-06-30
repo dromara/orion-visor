@@ -68,6 +68,34 @@ public class HostConfigServiceImpl implements HostConfigService {
     private HostConfigDAO hostConfigDAO;
 
     @Override
+    public void initHostConfig(Long hostId, List<String> types) {
+        // 查询主机配置类型
+        List<String> hostConfigTypes = hostConfigDAO.selectByHostId(hostId)
+                .stream()
+                .map(HostConfigDO::getType)
+                .collect(Collectors.toList());
+        List<HostConfigDO> configs = new ArrayList<>();
+        for (String type : types) {
+            // 配置存在则跳过
+            if (hostConfigTypes.contains(type)) {
+                continue;
+            }
+            // 配置不存在则初始化
+            HostConfigDO config = HostConfigDO.builder()
+                    .hostId(hostId)
+                    .type(type)
+                    .status(EnableStatus.ENABLED.name())
+                    .config(HostConfigStrategyEnum.of(type).getDefault().serial())
+                    .build();
+            configs.add(config);
+        }
+        // 插入主机配置
+        if (!configs.isEmpty()) {
+            hostConfigDAO.insertBatch(configs);
+        }
+    }
+
+    @Override
     public Integer updateHostConfig(HostConfigUpdateRequest request) {
         log.info("HostConfigService-updateHostConfig request: {}", request);
         Long hostId = request.getHostId();

@@ -133,6 +133,7 @@
 
   // 更新主机信息
   const onUpdateHostInfo = (id: number) => {
+    title.value = '修改主机';
     hostId.value = id;
     hostViewUpdated.value = true;
   };

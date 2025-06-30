@@ -38,6 +38,14 @@ import java.util.List;
 public interface HostConfigService {
 
     /**
+     * 初始化主机配置
+     *
+     * @param hostId hostId
+     * @param types  types
+     */
+    void initHostConfig(Long hostId, List<String> types);
+
+    /**
      * 更新主机配置
      *
      * @param request request
