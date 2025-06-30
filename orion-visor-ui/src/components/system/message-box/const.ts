@@ -4,7 +4,7 @@ export const MessageStatus = {
   READ: 1,
 };
 
-export const MESSAGE_CONFIG_KEY = 'messageConfig';
+export const MESSAGE_CONFIG_KEY = 'message-config';
 
 // 查询数量
 export const messageLimit = 15;
