@@ -1,6 +1,6 @@
 version: '3.3'
 
-# latest = 2.4.0
+# latest = 2.4.1
 services:
   ui:
     image: registry.cn-hangzhou.aliyuncs.com/orionsec/orion-visor-ui:latest

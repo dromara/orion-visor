@@ -71,6 +71,7 @@ public class UserAggregateController {
     @GetMapping("/user")
     @Operation(summary = "获取用户权限聚合信息")
     public UserAggregateVO getUserAggregateInfo(HttpServletResponse response) {
+        // FIXME KIT
         // 设置版本号请求头
         response.setHeader(HttpHeaderConst.ACCESS_CONTROL_EXPOSE_HEADERS, HttpHeaderConst.APP_VERSION);
         response.setHeader(HttpHeaderConst.APP_VERSION, AppConst.VERSION);
