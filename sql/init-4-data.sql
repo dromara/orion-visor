@@ -85,6 +85,7 @@ INSERT INTO `dict_key` VALUES (72, 'keyboardLayout', 'STRING', '[]', '键盘布�
 INSERT INTO `dict_key` VALUES (73, 'clipboardNormalize', 'STRING', '[]', '剪切板标准', '2025-06-19 01:22:36', '2025-06-19 01:22:36', 'admin', 'admin', 0);
 INSERT INTO `dict_key` VALUES (74, 'clipboardEncoding', 'STRING', '[]', '剪切板编码', '2025-06-19 01:22:44', '2025-06-19 01:22:44', 'admin', 'admin', 0);
 INSERT INTO `dict_key` VALUES (75, 'vcnCursor', 'STRING', '[]', 'vnc光标', '2025-06-19 01:22:54', '2025-06-19 01:22:54', 'admin', 'admin', 0);
+INSERT INTO `dict_key` VALUES (76, 'driveMountMode', 'STRING', '[{\"name\": \"help\", \"type\": \"STRING\"}]', '驱动挂载模式', '2025-06-28 22:53:20', '2025-06-28 22:53:20', 'admin', 'admin', 0);
 
 -- 字典值
 INSERT INTO `dict_value` VALUES (3, 4, 'systemMenuType', '1', '父菜单', '{}', 10, '2023-10-26 15:58:59', '2023-10-26 15:58:59', 'admin', 'admin', 0);
@@ -232,8 +233,8 @@ INSERT INTO `dict_value` VALUES (197, 2, 'operatorLogType', 'terminal:sftp-remov
 INSERT INTO `dict_value` VALUES (198, 2, 'operatorLogType', 'terminal:sftp-truncate', '截断文件', '{}', 60, '2024-02-23 17:54:06', '2024-10-15 15:54:47', 'admin', 'admin', 0);
 INSERT INTO `dict_value` VALUES (199, 2, 'operatorLogType', 'terminal:sftp-chmod', '文件提权', '{}', 70, '2024-02-23 17:54:17', '2024-10-15 15:54:47', 'admin', 'admin', 0);
 INSERT INTO `dict_value` VALUES (200, 2, 'operatorLogType', 'terminal:sftp-set-content', '修改文件内容', '{}', 80, '2024-02-23 17:54:37', '2024-10-15 15:54:47', 'admin', 'admin', 0);
-INSERT INTO `dict_value` VALUES (201, 2, 'operatorLogType', 'terminal:sftp-upload', '上传文件', '{}', 90, '2024-02-23 17:54:52', '2024-10-15 15:54:47', 'admin', 'admin', 0);
-INSERT INTO `dict_value` VALUES (202, 2, 'operatorLogType', 'terminal:sftp-download', '下载文件', '{}', 100, '2024-02-23 17:55:03', '2024-10-15 15:54:47', 'admin', 'admin', 0);
+INSERT INTO `dict_value` VALUES (201, 2, 'operatorLogType', 'terminal:sftp-upload', '上传文件(SFTP)', '{}', 90, '2024-02-23 17:54:52', '2025-06-29 12:29:51', 'admin', 'admin', 0);
+INSERT INTO `dict_value` VALUES (202, 2, 'operatorLogType', 'terminal:sftp-download', '下载文件(SFTP)', '{}', 100, '2024-02-23 17:55:03', '2025-06-29 12:29:50', 'admin', 'admin', 0);
 INSERT INTO `dict_value` VALUES (203, 32, 'terminalTabColor', 'red', '红色', '{\"bg\": \"rgb(var(--red-2))\", \"color\": \"rgb(var(--red-6))\"}', 10, '2024-03-01 15:07:41', '2024-08-05 14:24:28', 'admin', 'admin', 0);
 INSERT INTO `dict_value` VALUES (204, 32, 'terminalTabColor', 'orange', '橙色', '{\"bg\": \"rgb(var(--orange-2))\", \"color\": \"rgb(var(--orange-6))\"}', 20, '2024-03-01 15:07:55', '2024-08-05 14:24:23', 'admin', 'admin', 0);
 INSERT INTO `dict_value` VALUES (205, 32, 'terminalTabColor', 'yellow', '黄色', '{\"bg\": \"rgb(var(--yellow-2))\", \"color\": \"rgb(var(--yellow-6))\"}', 30, '2024-03-01 15:08:13', '2024-08-05 14:24:15', 'admin', 'admin', 0);
@@ -252,16 +253,16 @@ INSERT INTO `dict_value` VALUES (218, 2, 'operatorLogType', 'terminal-connect-lo
 INSERT INTO `dict_value` VALUES (219, 1, 'operatorLogModule', 'infra:operator-log', '操作日志', '{}', 1060, '2024-03-04 16:32:11', '2024-03-04 16:32:11', 'admin', 'admin', 0);
 INSERT INTO `dict_value` VALUES (220, 2, 'operatorLogType', 'operator-log:delete', '删除操作日志', '{}', 10, '2024-03-04 16:33:11', '2024-03-04 16:33:44', 'admin', 'admin', 0);
 INSERT INTO `dict_value` VALUES (221, 2, 'operatorLogType', 'operator-log:clear', '清空操作日志', '{}', 20, '2024-03-04 16:33:31', '2024-03-04 16:33:31', 'admin', 'admin', 0);
-INSERT INTO `dict_value` VALUES (222, 2, 'operatorLogType', 'terminal:delete-sftp-log', '删除文件操作日志', '{}', 15, '2024-03-05 15:28:00', '2024-10-15 15:54:47', 'admin', 'admin', 0);
-INSERT INTO `dict_value` VALUES (223, 33, 'sftpOperatorType', 'terminal:sftp-mkdir', '创建文件夹', '{}', 10, '2024-03-05 16:50:17', '2024-10-15 15:54:47', 'admin', 'admin', 0);
-INSERT INTO `dict_value` VALUES (224, 33, 'sftpOperatorType', 'terminal:sftp-touch', '创建文件', '{}', 20, '2024-03-05 16:50:27', '2024-10-15 15:54:47', 'admin', 'admin', 0);
-INSERT INTO `dict_value` VALUES (225, 33, 'sftpOperatorType', 'terminal:sftp-move', '移动文件', '{}', 30, '2024-03-05 16:50:41', '2024-10-15 15:54:47', 'admin', 'admin', 0);
-INSERT INTO `dict_value` VALUES (226, 33, 'sftpOperatorType', 'terminal:sftp-remove', '删除文件', '{}', 40, '2024-03-05 16:50:53', '2024-10-15 15:54:47', 'admin', 'admin', 0);
-INSERT INTO `dict_value` VALUES (227, 33, 'sftpOperatorType', 'terminal:sftp-truncate', '截断文件', '{}', 50, '2024-03-05 16:51:04', '2024-10-15 15:54:47', 'admin', 'admin', 0);
-INSERT INTO `dict_value` VALUES (228, 33, 'sftpOperatorType', 'terminal:sftp-chmod', '文件提权', '{}', 60, '2024-03-05 16:51:15', '2024-10-15 15:54:47', 'admin', 'admin', 0);
-INSERT INTO `dict_value` VALUES (229, 33, 'sftpOperatorType', 'terminal:sftp-set-content', '修改文件内容', '{}', 70, '2024-03-05 16:51:30', '2024-10-15 15:54:47', 'admin', 'admin', 0);
-INSERT INTO `dict_value` VALUES (230, 33, 'sftpOperatorType', 'terminal:sftp-upload', '上传文件', '{}', 80, '2024-03-05 16:52:06', '2024-10-15 15:54:47', 'admin', 'admin', 0);
-INSERT INTO `dict_value` VALUES (231, 33, 'sftpOperatorType', 'terminal:sftp-download', '下载文件', '{}', 90, '2024-03-05 16:52:18', '2024-10-15 15:54:47', 'admin', 'admin', 0);
+INSERT INTO `dict_value` VALUES (222, 2, 'operatorLogType', 'terminal-file-log:delete', '删除文件操作日志', '{}', 15, '2024-03-05 15:28:00', '2025-06-29 17:48:55', 'admin', 'admin', 0);
+INSERT INTO `dict_value` VALUES (223, 33, 'terminalFileOperatorType', 'terminal:sftp-mkdir', '创建文件夹', '{}', 10, '2024-03-05 16:50:17', '2025-06-29 12:30:22', 'admin', 'admin', 0);
+INSERT INTO `dict_value` VALUES (224, 33, 'terminalFileOperatorType', 'terminal:sftp-touch', '创建文件', '{}', 20, '2024-03-05 16:50:27', '2025-06-29 12:30:22', 'admin', 'admin', 0);
+INSERT INTO `dict_value` VALUES (225, 33, 'terminalFileOperatorType', 'terminal:sftp-move', '移动文件', '{}', 30, '2024-03-05 16:50:41', '2025-06-29 12:30:22', 'admin', 'admin', 0);
+INSERT INTO `dict_value` VALUES (226, 33, 'terminalFileOperatorType', 'terminal:sftp-remove', '删除文件', '{}', 40, '2024-03-05 16:50:53', '2025-06-29 12:30:22', 'admin', 'admin', 0);
+INSERT INTO `dict_value` VALUES (227, 33, 'terminalFileOperatorType', 'terminal:sftp-truncate', '截断文件', '{}', 50, '2024-03-05 16:51:04', '2025-06-29 12:30:22', 'admin', 'admin', 0);
+INSERT INTO `dict_value` VALUES (228, 33, 'terminalFileOperatorType', 'terminal:sftp-chmod', '文件提权', '{}', 60, '2024-03-05 16:51:15', '2025-06-29 12:30:22', 'admin', 'admin', 0);
+INSERT INTO `dict_value` VALUES (229, 33, 'terminalFileOperatorType', 'terminal:sftp-set-content', '修改文件内容', '{}', 70, '2024-03-05 16:51:30', '2025-06-29 12:30:22', 'admin', 'admin', 0);
+INSERT INTO `dict_value` VALUES (230, 33, 'terminalFileOperatorType', 'terminal:sftp-upload', '上传文件(SFTP)', '{}', 80, '2024-03-05 16:52:06', '2025-06-29 12:30:22', 'admin', 'admin', 0);
+INSERT INTO `dict_value` VALUES (231, 33, 'terminalFileOperatorType', 'terminal:sftp-download', '下载文件(SFTP)', '{}', 90, '2024-03-05 16:52:18', '2025-06-29 12:30:22', 'admin', 'admin', 0);
 INSERT INTO `dict_value` VALUES (232, 1, 'operatorLogModule', 'exec:exec-template', '执行模板', '{}', 2070, '2024-03-07 18:32:41', '2024-10-14 10:46:50', 'admin', 'admin', 0);
 INSERT INTO `dict_value` VALUES (233, 2, 'operatorLogType', 'exec-template:create', '创建执行模板', '{}', 10, '2024-03-07 18:32:41', '2024-04-12 13:48:54', 'admin', 'admin', 0);
 INSERT INTO `dict_value` VALUES (234, 2, 'operatorLogType', 'exec-template:update', '更新执行模板', '{}', 20, '2024-03-07 18:32:41', '2024-04-12 13:48:56', 'admin', 'admin', 0);
@@ -414,6 +415,18 @@ INSERT INTO `dict_value` VALUES (504, 75, 'vcnCursor', 'remote', '远程', '{}',
 INSERT INTO `dict_value` VALUES (505, 69, 'screenResolution', 'fit', '自适应', '{\"width\": 0, \"height\": 0}', 5, '2025-06-21 22:51:30', '2025-06-21 22:51:30', 'admin', 'admin', 0);
 INSERT INTO `dict_value` VALUES (506, 71, 'graphActionBarPosition', 'top', '顶端(推荐)', '{}', 10, '2025-06-22 20:38:01', '2025-06-22 20:38:01', 'admin', 'admin', 0);
 INSERT INTO `dict_value` VALUES (507, 71, 'graphActionBarPosition', 'right', '右侧', '{}', 20, '2025-06-22 20:38:10', '2025-06-22 20:38:10', 'admin', 'admin', 0);
+INSERT INTO `dict_value` VALUES (508, 76, 'driveMountMode', 'SHARED', '完全共享', '{\"help\": \"所有资产使用同一个挂载路径\"}', 10, '2025-06-28 22:54:32', '2025-06-28 23:08:19', 'admin', 'admin', 0);
+INSERT INTO `dict_value` VALUES (509, 76, 'driveMountMode', 'SESSION', '会话维度', '{\"help\": \"每个会话使用独立的挂载路径\"}', 20, '2025-06-28 22:54:08', '2025-06-28 23:08:18', 'admin', 'admin', 0);
+INSERT INTO `dict_value` VALUES (510, 76, 'driveMountMode', 'ASSET', '资产维度', '{\"help\": \"同一资产使用同一个挂载路径\"}', 30, '2025-06-28 22:55:12', '2025-06-28 22:55:12', 'admin', 'admin', 0);
+INSERT INTO `dict_value` VALUES (511, 76, 'driveMountMode', 'DAY', '天维度', '{\"help\": \"同一天内使用同一个挂载路径\"}', 40, '2025-06-28 22:55:57', '2025-06-28 22:56:03', 'admin', 'admin', 0);
+INSERT INTO `dict_value` VALUES (512, 76, 'driveMountMode', 'DAY_ASSET', '天+资产', '{\"help\": \"同一天内同一个资产使用同一个挂载路径\"}', 50, '2025-06-28 22:56:31', '2025-06-28 22:56:31', 'admin', 'admin', 0);
+INSERT INTO `dict_value` VALUES (513, 76, 'driveMountMode', 'MONTH', '月维度', '{\"help\": \"同一月内使用同一个挂载路径\"}', 60, '2025-06-28 22:57:03', '2025-06-28 22:57:03', 'admin', 'admin', 0);
+INSERT INTO `dict_value` VALUES (514, 76, 'driveMountMode', 'MONTH_ASSET', '月+资产', '{\"help\": \"同一月内同一个资产使用同一个挂载路径\"}', 70, '2025-06-28 22:57:29', '2025-06-28 22:57:29', 'admin', 'admin', 0);
+INSERT INTO `dict_value` VALUES (515, 1, 'operatorLogModule', 'terminal:terminal-file-log', '文件操作日志', '{}', 2080, '2025-06-28 22:57:29', '2025-06-29 18:56:05', 'admin', 'admin', 0);
+INSERT INTO `dict_value` VALUES (516, 2, 'operatorLogType', 'terminal:rdp-upload', '上传文件(RDP)', '{}', 110, '2024-02-23 17:54:52', '2024-10-15 15:54:47', 'admin', 'admin', 0);
+INSERT INTO `dict_value` VALUES (517, 2, 'operatorLogType', 'terminal:rdp-download', '下载文件(RDP)', '{}', 120, '2024-02-23 17:55:03', '2024-10-15 15:54:47', 'admin', 'admin', 0);
+INSERT INTO `dict_value` VALUES (518, 33, 'terminalFileOperatorType', 'terminal:rdp-upload', '上传文件(RDP)', '{}', 100, '2024-03-05 16:52:06', '2025-06-29 12:27:24', 'admin', 'admin', 0);
+INSERT INTO `dict_value` VALUES (519, 33, 'terminalFileOperatorType', 'terminal:rdp-download', '下载文件(RDP)', '{}', 110, '2024-03-05 16:52:18', '2025-06-29 12:28:52', 'admin', 'admin', 0);
 
 -- 菜单配置
 INSERT INTO `system_menu` VALUES (1, 0, '工作台', NULL, 1, 10, 1, 1, 1, 0, 'IconComputer', NULL, 'workplace', '2023-07-28 10:51:50', '2024-08-11 00:05:44', 'admin', 'admin', 0);
@@ -485,7 +498,7 @@ INSERT INTO `system_menu` VALUES (143, 144, '主机身份授权', 'asset:host-id
 INSERT INTO `system_menu` VALUES (144, 63, '资产授权', NULL, 2, 60, 1, 1, 1, 0, 'icon-safe', NULL, 'assetGrant', '2023-11-30 22:38:57', '2024-07-03 18:52:18', 'admin', 'admin', 0);
 INSERT INTO `system_menu` VALUES (145, 0, '主机运维', NULL, 1, 400, 1, 1, 1, 1, 'IconDesktop', NULL, 'terminalModule', '2023-12-04 23:33:25', '2024-10-21 14:49:52', 'admin', 'admin', 0);
 INSERT INTO `system_menu` VALUES (146, 145, '主机终端', NULL, 2, 10, 1, 1, 1, 1, 'icon-code-square', NULL, 'terminal', '2023-12-04 23:38:01', '2024-10-21 14:54:11', 'admin', 'admin', 0);
-INSERT INTO `system_menu` VALUES (148, 152, '连接日志', NULL, 2, 10, 1, 1, 1, 0, 'IconLink', NULL, 'connectLog', '2023-12-26 22:53:07', '2024-03-07 19:09:59', 'admin', 'admin', 0);
+INSERT INTO `system_menu` VALUES (148, 152, '连接日志', NULL, 2, 10, 1, 1, 1, 0, 'IconLink', NULL, 'terminalConnectLog', '2023-12-26 22:53:07', '2025-06-29 19:01:30', 'admin', 'admin', 0);
 INSERT INTO `system_menu` VALUES (149, 148, '查询连接日志', 'terminal:terminal-connect-log:management:query', 3, 10, 1, 1, 1, 0, NULL, NULL, NULL, '2023-12-26 22:53:08', '2024-10-16 10:41:08', 'admin', 'admin', 0);
 INSERT INTO `system_menu` VALUES (151, 146, '连接终端', 'terminal:terminal:access', 3, 10, 1, 1, 1, 0, NULL, NULL, NULL, '2023-12-27 18:56:33', '2024-10-16 10:41:08', 'admin', 'admin', 0);
 INSERT INTO `system_menu` VALUES (152, 0, '运维审计', NULL, 1, 410, 1, 1, 1, 0, 'IconSafe', NULL, 'assetAuditModule', '2024-01-04 17:54:56', '2024-04-28 15:30:04', 'admin', 'admin', 0);
@@ -494,9 +507,9 @@ INSERT INTO `system_menu` VALUES (154, 148, '清空连接日志', 'terminal:term
 INSERT INTO `system_menu` VALUES (155, 148, '强制断开连接', 'terminal:terminal-connect-log:management:force-offline', 3, 40, 1, 1, 1, 0, NULL, NULL, NULL, '2024-03-04 13:41:02', '2024-10-16 10:41:08', 'admin', 'admin', 0);
 INSERT INTO `system_menu` VALUES (156, 122, '删除操作日志', 'infra:operator-log:delete', 3, 20, 1, 1, 1, 0, NULL, NULL, NULL, '2024-03-04 17:06:55', '2024-03-04 17:08:22', 'admin', 'admin', 0);
 INSERT INTO `system_menu` VALUES (157, 122, '清空操作日志', 'infra:operator-log:management:clear', 3, 30, 1, 1, 1, 0, NULL, NULL, NULL, '2024-03-04 17:07:25', '2024-04-11 11:16:17', 'admin', 'admin', 0);
-INSERT INTO `system_menu` VALUES (158, 152, '文件操作日志', NULL, 2, 40, 1, 1, 1, 0, 'IconFile', NULL, 'sftpLog', '2024-03-05 15:30:13', '2024-08-04 20:23:19', 'admin', 'admin', 0);
-INSERT INTO `system_menu` VALUES (159, 158, '查询文件操作日志', 'terminal:terminal-sftp-log:management:query', 3, 10, 1, 1, 1, 0, NULL, NULL, NULL, '2024-03-05 15:31:02', '2024-10-16 16:23:52', 'admin', 'admin', 0);
-INSERT INTO `system_menu` VALUES (160, 158, '删除文件操作日志', 'terminal:terminal-sftp-log:management:delete', 3, 20, 1, 1, 1, 0, NULL, NULL, NULL, '2024-03-05 15:31:17', '2024-10-16 16:23:52', 'admin', 'admin', 0);
+INSERT INTO `system_menu` VALUES (158, 152, '文件日志', NULL, 2, 40, 1, 1, 1, 0, 'IconFile', NULL, 'terminalFileLog', '2024-03-05 15:30:13', '2025-06-29 19:01:37', 'admin', 'admin', 0);
+INSERT INTO `system_menu` VALUES (159, 158, '查询文件操作日志', 'terminal:terminal-file-log:management:query', 3, 10, 1, 1, 1, 0, NULL, NULL, NULL, '2024-03-05 15:31:02', '2025-06-29 12:19:25', 'admin', 'admin', 0);
+INSERT INTO `system_menu` VALUES (160, 158, '删除文件操作日志', 'terminal:terminal-file-log:management:delete', 3, 20, 1, 1, 1, 0, NULL, NULL, NULL, '2024-03-05 15:31:17', '2025-06-29 12:19:30', 'admin', 'admin', 0);
 INSERT INTO `system_menu` VALUES (161, 176, '执行模板', NULL, 2, 80, 1, 1, 1, 0, 'IconBookmark', NULL, 'execTemplate', '2024-03-07 18:32:41', '2024-12-12 23:31:06', 'admin', 'admin', 0);
 INSERT INTO `system_menu` VALUES (162, 161, '查询执行模板', 'exec:exec-template:query', 3, 10, 1, 1, 1, 0, NULL, NULL, NULL, '2024-03-07 18:32:41', '2024-10-14 10:36:36', 'admin', 'admin', 0);
 INSERT INTO `system_menu` VALUES (163, 161, '创建执行模板', 'exec:exec-template:create', 3, 20, 1, 1, 1, 0, NULL, NULL, NULL, '2024-03-07 18:32:41', '2024-10-14 10:36:36', 'admin', 'admin', 0);
@@ -523,7 +536,7 @@ INSERT INTO `system_menu` VALUES (186, 184, '查询任务日志', 'exec:exec-job
 INSERT INTO `system_menu` VALUES (187, 184, '删除任务日志', 'exec:exec-job-log:delete', 3, 20, 1, 1, 1, 0, NULL, NULL, NULL, '2024-03-13 15:08:23', '2024-10-14 10:36:36', 'admin', 'admin', 0);
 INSERT INTO `system_menu` VALUES (189, 184, '清理任务日志', 'exec:exec-job-log:management:clear', 3, 30, 1, 1, 1, 0, NULL, NULL, NULL, '2024-03-13 15:08:23', '2024-10-14 10:36:36', 'admin', 'admin', 0);
 INSERT INTO `system_menu` VALUES (190, 184, '中断计划任务', 'exec:exec-job-log:interrupt', 3, 40, 1, 1, 1, 0, NULL, NULL, NULL, '2024-03-13 15:08:23', '2024-10-14 10:36:36', 'admin', 'admin', 0);
-INSERT INTO `system_menu` VALUES (194, 152, '在线会话', NULL, 2, 20, 1, 1, 1, 0, 'IconUserGroup', NULL, 'connectSession', '2024-05-07 11:12:17', '2024-05-07 11:12:35', 'admin', 'admin', 0);
+INSERT INTO `system_menu` VALUES (194, 152, '在线会话', NULL, 2, 20, 1, 1, 1, 0, 'IconUserGroup', NULL, 'terminalConnectSession', '2024-05-07 11:12:17', '2025-06-29 19:01:34', 'admin', 'admin', 0);
 INSERT INTO `system_menu` VALUES (195, 194, '查询在线会话', 'terminal:terminal-connect-session:management:query', 3, 10, 1, 1, 1, 0, NULL, NULL, NULL, '2024-05-07 11:13:16', '2024-10-16 10:41:08', 'admin', 'admin', 0);
 INSERT INTO `system_menu` VALUES (196, 194, '强制断开连接', 'terminal:terminal-connect-session:management:force-offline', 3, 20, 1, 1, 1, 0, NULL, NULL, NULL, '2024-05-07 11:13:37', '2024-10-16 10:41:08', 'admin', 'admin', 0);
 INSERT INTO `system_menu` VALUES (197, 176, '批量上传', NULL, 2, 60, 1, 1, 1, 0, 'IconUpload', NULL, 'batchUpload', '2024-05-08 22:12:23', '2024-12-12 23:34:11', 'admin', 'admin', 0);
