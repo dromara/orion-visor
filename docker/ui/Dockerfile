@@ -1,4 +1,4 @@
-FROM nginx:alpine
+FROM --platform=$BUILDPLATFORM nginx:alpine
 # 系统时区
 ARG TZ=Asia/Shanghai
 # 添加包
