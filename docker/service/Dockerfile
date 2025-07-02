@@ -1,4 +1,4 @@
-FROM openjdk:8-jdk-alpine
+FROM --platform=$BUILDPLATFORM openjdk:8-jdk-alpine
 USER root
 WORKDIR /app
 # 系统时区
