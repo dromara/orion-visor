@@ -1,5 +1,5 @@
 <template>
-  <div class="layout-container full">
+  <div class="layout-container full" v-if="render">
     <!-- 执行面板 -->
     <div v-show="!logVisible" class="panel-wrapper">
       <exec-command-panel @submit="openLog" />
@@ -34,6 +34,7 @@
   const { visible: logVisible, setVisible: setLogVisible } = useVisible();
   const route = useRoute();
 
+  const render = ref();
   const log = ref();
 
   // 打开日志
@@ -56,6 +57,7 @@
   onMounted(async () => {
     const dictStore = useDictStore();
     await dictStore.loadKeys(dictKeys);
+    render.value = true;
   });
 
   // 跳转日志

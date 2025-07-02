@@ -1,5 +1,5 @@
 <template>
-  <div class="layout-container">
+  <div class="layout-container" v-if="render">
     <!-- 列表-表格 -->
     <host-table v-if="renderTable"
                 ref="table"
@@ -36,6 +36,7 @@
   import HostFormDrawer from './components/host-form-drawer.vue';
   import HostGroupDrawer from '../host-group/drawer/index.vue';
 
+  const render = ref();
   const table = ref();
   const card = ref();
   const drawer = ref();
@@ -57,6 +58,7 @@
   // 加载字典配置
   onBeforeMount(() => {
     useDictStore().loadKeys(dictKeys);
+    render.value = true;
   });
 
 </script>

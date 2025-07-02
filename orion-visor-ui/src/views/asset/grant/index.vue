@@ -1,5 +1,5 @@
 <template>
-  <div class="layout-container view-container">
+  <div class="layout-container view-container" v-if="render">
     <a-tabs v-model:active-key="activeKey"
             class="tabs-container simple-card"
             size="large"
@@ -32,12 +32,14 @@
 
   const route = useRoute();
 
+  const render = ref();
   const activeKey = ref();
 
   // 加载字典项
   onBeforeMount(async () => {
     const dictStore = useDictStore();
     await dictStore.loadKeys(dictKeys);
+    render.value = true;
   });
 
   // 跳转到指定页

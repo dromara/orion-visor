@@ -30,7 +30,7 @@ const checkForVersionUpdate = (serverVersion: string) => {
       return;
     }
     // 提示用户更新
-    if (window.confirm('检测到新版本, 是否刷新页面以获取最新内容?')) {
+    if (window.confirm('检测到新版本, 请强制刷新页面以获取最新内容!')) {
       window.location.reload();
     }
     // 更新 localStorage 记录

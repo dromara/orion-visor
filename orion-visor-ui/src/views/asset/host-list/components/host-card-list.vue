@@ -208,6 +208,31 @@
     <!-- 拓展操作 -->
     <template #extra="{ record }">
       <a-space>
+        <!-- 单协议连接 -->
+        <a-button v-if="record.types?.length === 1"
+                  size="mini"
+                  v-permission="['terminal:terminal:access']"
+                  @click="openNewRoute({ name: 'terminal', query: { connect: record.id, type: record.types[0] } })">
+          连接
+        </a-button>
+        <!-- 多协议连接 -->
+        <a-popover v-if="(record.types?.length || 0) > 1"
+                   :title="undefined"
+                   :content-style="{ padding: '8px' }">
+          <a-button v-permission="['terminal:terminal:access']" size="mini">
+            连接
+          </a-button>
+          <template #content>
+            <a-space>
+              <a-button v-for="type in record.types"
+                        :key="type"
+                        size="mini"
+                        @click="openNewRoute({ name: 'terminal', query: { connect: record.id, type} })">
+                {{ type }}
+              </a-button>
+            </a-space>
+          </template>
+        </a-popover>
         <!-- 更多操作 -->
         <a-dropdown trigger="hover" :popup-max-height="false">
           <icon-more class="card-extra-icon" />
@@ -235,18 +260,6 @@
                        class="span-red"
                        @click="deleteRow(record.id)">
               <span class="more-doption error">删除</span>
-            </a-doption>
-            <!-- SSH -->
-            <a-doption v-if="record.types.includes(HostType.SSH.value)"
-                       v-permission="['terminal:terminal:access']"
-                       @click="openNewRoute({ name: 'terminal', query: { connect: record.id, type: 'SSH' } })">
-              <span class="more-doption normal">SSH</span>
-            </a-doption>
-            <!-- RDP -->
-            <a-doption v-if="record.types.includes(HostType.RDP.value)"
-                       v-permission="['terminal:terminal:access']"
-                       @click="openNewRoute({ name: 'terminal', query: { connect: record.id, type: 'RDP' } })">
-              <span class="more-doption normal">RDP</span>
             </a-doption>
           </template>
         </a-dropdown>
