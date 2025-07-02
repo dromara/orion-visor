@@ -19,35 +19,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up JDK 8
-        uses: actions/setup-java@v4
-        with:
-          java-version: '8' # Assuming Java 8, adjust if needed
-          distribution: 'temurin'
-          cache: 'maven'
-
-      - name: Set up Node.js 18
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18' # Assuming Node.js 18 for pnpm and UI build, adjust if needed
-
-      - name: Install pnpm
-        run: npm i -g pnpm
-
-      - name: Build Java project (generate JARs)
-        run: mvn -U clean install -DskipTests
-        # This assumes orion-visor-launch.jar will be in orion-visor-launch/target/
-
-      - name: Build UI project (generate dist)
-        # Assuming the UI project is in a subdirectory named 'orion-visor-ui'
-        # If your UI project is at the root, remove 'working-directory'
-        # and adjust paths in later copy steps accordingly.
-        working-directory: ./orion-visor-ui
-        run: |
-          pnpm install
-          pnpm build
-        # This assumes 'dist' directory will be created in ./orion-visor-ui/dist
-
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
 
@@ -88,7 +59,7 @@ jobs:
       - name: Build and push orion-visor-adminer
         uses: docker/build-push-action@v5
         with:
-          context: ./docker/adminer
+          context: .
           file: ./docker/adminer/Dockerfile
           push: true
           tags: |
@@ -100,7 +71,7 @@ jobs:
       - name: Build and push orion-visor-guacd
         uses: docker/build-push-action@v5
         with:
-          context: ./docker/guacd
+          context: .
           file: ./docker/guacd/Dockerfile
           push: true
           tags: |
@@ -109,18 +80,10 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           platforms: linux/amd64,linux/arm64
 
-      - name: Prepare mysql build context
-        run: |
-          echo "Copying SQL to service context..."
-          # ls -l ./sql/ # Optional: list files for debugging
-          cp -r ./sql ./docker/mysql
-          echo "Copied SQL."
-          # ls -l ./docker/mysql/ # Optional: list files for debugging
-
       - name: Build and push orion-visor-mysql
         uses: docker/build-push-action@v5
         with:
-          context: ./docker/mysql
+          context: .
           file: ./docker/mysql/Dockerfile
           push: true
           tags: |
@@ -132,7 +95,7 @@ jobs:
       - name: Build and push orion-visor-redis
         uses: docker/build-push-action@v5
         with:
-          context: ./docker/redis
+          context: .
           file: ./docker/redis/Dockerfile
           push: true
           tags: |
@@ -141,20 +104,10 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           platforms: linux/amd64,linux/arm64
 
-      # --- Build and push orion-visor-service (requires pre-built JAR) ---
-
-      - name: Prepare service build context
-        run: |
-          echo "Copying JAR to service context..."
-          # ls -l ./orion-visor-launch/target/ # Optional: list files for debugging
-          cp ./orion-visor-launch/target/orion-visor-launch.jar ./docker/service/orion-visor-launch.jar
-          echo "Copied JAR."
-          # ls -l ./docker/service/ # Optional: list files for debugging
-
       - name: Build and push orion-visor-service
         uses: docker/build-push-action@v5
         with:
-          context: ./docker/service
+          context: .
           file: ./docker/service/Dockerfile
           push: true
           tags: |
@@ -162,23 +115,11 @@ jobs:
             ghcr.io/${{ github.repository_owner }}/orion-visor-service:${{ steps.meta.outputs.version }}
           labels: ${{ steps.meta.outputs.labels }}
           platforms: linux/amd64,linux/arm64
-        # run: rm ./docker/service/orion-visor-launch.jar # Optional cleanup
-
-      # --- Build and push orion-visor-ui (requires pre-built dist directory) ---
-
-      - name: Prepare UI build context
-        run: |
-          echo "Copying UI dist to UI context..."
-          # ls -l ./orion-visor-ui/ # Optional: list files for debugging
-          # Ensure the source dist path is correct based on your UI build output
-          cp -r ./orion-visor-ui/dist ./docker/ui/dist
-          echo "Copied UI dist."
-          # ls -l ./docker/ui/ # Optional: list files for debugging
 
       - name: Build and push orion-visor-ui
         uses: docker/build-push-action@v5
         with:
-          context: ./docker/ui # dist/ directory should now be here
+          context: .
           file: ./docker/ui/Dockerfile
           push: true
           tags: |
@@ -186,5 +127,3 @@ jobs:
             ghcr.io/${{ github.repository_owner }}/orion-visor-ui:${{ steps.meta.outputs.version }}
           labels: ${{ steps.meta.outputs.labels }}
           platforms: linux/amd64,linux/arm64 # Uncomment for multi-platform builds
-        # Optional: Clean up the copied dist directory after build
-        # run: rm -rf ./docker/ui/dist
