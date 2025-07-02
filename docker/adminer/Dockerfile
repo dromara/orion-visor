@@ -1,1 +1,1 @@
-FROM adminer:latest
+FROM --platform=$BUILDPLATFORM adminer:latest
