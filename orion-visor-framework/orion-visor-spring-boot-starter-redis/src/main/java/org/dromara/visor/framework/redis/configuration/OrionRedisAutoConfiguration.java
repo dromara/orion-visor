@@ -22,6 +22,7 @@
  */
 package org.dromara.visor.framework.redis.configuration;
 
+import cn.orionsec.kit.lang.define.cache.key.CacheKeyDefine;
 import org.dromara.visor.common.constant.AutoConfigureOrderConst;
 import org.dromara.visor.common.interfaces.Locker;
 import org.dromara.visor.common.utils.LockerUtils;
@@ -31,6 +32,7 @@ import org.dromara.visor.framework.redis.core.utils.RedisUtils;
 import org.redisson.api.RedissonClient;
 import org.redisson.config.SingleServerConfig;
 import org.redisson.spring.starter.RedissonAutoConfigurationCustomizer;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -99,6 +101,16 @@ public class OrionRedisAutoConfiguration {
         RedisLocker redisLocker = new RedisLocker(redissonClient);
         LockerUtils.setDelegate(redisLocker);
         return redisLocker;
+    }
+
+    /**
+     * 设置 redis 数据版本
+     *
+     * @param dataVersion dataVersion
+     */
+    @Value("${spring.redis.data-version}")
+    public void setDataVersion(String dataVersion) {
+        CacheKeyDefine.setGlobalPrefix("v" + dataVersion + ":");
     }
 
 }

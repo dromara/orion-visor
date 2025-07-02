@@ -26,6 +26,12 @@
       "defaultValue": "16"
     },
     {
+      "name": "spring.redis.data-version",
+      "type": "java.lang.String",
+      "description": "redis 数据版本.",
+      "defaultValue": "1"
+    },
+    {
       "name": "no.redis",
       "type": "java.lang.Boolean",
       "description": "是否无 redis.",
