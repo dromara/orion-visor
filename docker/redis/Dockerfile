@@ -1,4 +1,4 @@
-FROM redis:6.0.16-alpine
+FROM --platform=$BUILDPLATFORM redis:6.0.16-alpine
 WORKDIR /data
 # 系统时区
 ARG TZ=Asia/Shanghai
