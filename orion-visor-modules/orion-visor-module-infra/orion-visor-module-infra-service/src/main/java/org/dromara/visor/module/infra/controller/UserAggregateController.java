@@ -25,6 +25,8 @@ package org.dromara.visor.module.infra.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
+import org.dromara.visor.common.constant.AppConst;
+import org.dromara.visor.common.constant.HttpHeaderConst;
 import org.dromara.visor.framework.log.core.annotation.IgnoreLog;
 import org.dromara.visor.framework.log.core.enums.IgnoreLogMode;
 import org.dromara.visor.framework.web.core.annotation.RestWrapper;
@@ -37,6 +39,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -67,7 +70,12 @@ public class UserAggregateController {
     @IgnoreLog(IgnoreLogMode.RET)
     @GetMapping("/user")
     @Operation(summary = "获取用户权限聚合信息")
-    public UserAggregateVO getUserAggregateInfo() {
+    public UserAggregateVO getUserAggregateInfo(HttpServletResponse response) {
+        // FIXME KIT
+        // 设置版本号请求头
+        response.setHeader(HttpHeaderConst.ACCESS_CONTROL_EXPOSE_HEADERS, HttpHeaderConst.APP_VERSION);
+        response.setHeader(HttpHeaderConst.APP_VERSION, AppConst.VERSION);
+        // 获取用户信息
         return userAggregateService.getUserAggregateInfo();
     }
 

@@ -1,16 +1,17 @@
 import type {
-  GuacdInitConfig,
-  GuacdReactiveSessionStatus,
   IGuacdChannel,
   IRdpSession,
-  IRdpSessionClipboardHandler,
+  TerminalSessionTabItem,
+  GuacdInitConfig,
   IRdpSessionDisplayHandler,
-  TerminalSessionTabItem
+  GuacdReactiveSessionStatus,
+  IRdpSessionClipboardHandler
 } from '@/views/terminal/interfaces';
 import type { OutputPayload } from '@/views/terminal/types/protocol';
 import { InputProtocol } from '@/views/terminal/types/protocol';
-import { fitDisplayValue, TerminalCloseCode, TerminalMessages } from '@/views/terminal/types/const';
+import { TerminalMessages, fitDisplayValue, TerminalCloseCode } from '@/views/terminal/types/const';
 import { screenshot } from '@/views/terminal/types/utils';
+import { Message } from '@arco-design/web-vue';
 import { useTerminalStore } from '@/store';
 import Guacamole from 'guacamole-common-js';
 import BaseSession from './base-session';
@@ -20,10 +21,12 @@ import RdpSessionClipboardHandler from '../handler/rdp-session-clipboard-handler
 
 export const AUDIO_INPUT_MIMETYPE = 'audio/L16;rate=44100,channels=2';
 
-export const CONNECT_TIMEOUT = 10000;
+export const CONNECT_TIMEOUT = 30000;
 
 // RDP 会话实现
 export default class RdpSession extends BaseSession<GuacdReactiveSessionStatus, IGuacdChannel> implements IRdpSession {
+
+  public fileSystemName: string;
 
   public config: GuacdInitConfig;
 
@@ -40,6 +43,7 @@ export default class RdpSession extends BaseSession<GuacdReactiveSessionStatus, 
       closeCode: 0,
       closeMessage: ''
     });
+    this.fileSystemName = 'Shared Driver';
     this.client = undefined as unknown as Guacamole.Client;
     this.config = {} as unknown as GuacdInitConfig;
     this.displayHandler = undefined as unknown as IRdpSessionDisplayHandler;
@@ -94,8 +98,23 @@ export default class RdpSession extends BaseSession<GuacdReactiveSessionStatus, 
     };
     // 剪切板回调
     this.client.onclipboard = this.clipboardHandler.receiveRemoteClipboardData.bind(this);
-
-    // TODO 下载文件
+    // 文件系统回调
+    this.client.onfilesystem = (_, fileSystemName) => {
+      if (fileSystemName) {
+        this.fileSystemName = fileSystemName;
+      }
+    };
+    // 下载文件回调
+    this.client.onfile = (stream, mimetype, filename) => {
+      if (!this.isWriteable()) {
+        Message.error('无写入权限');
+        return;
+      }
+      // 记录事件
+      this.onFileSystemEvent({ event: 'terminal:rdp-download', path: filename });
+      // 下载文件
+      useTerminalStore().transferManager.rdp.addDownload(this, stream, mimetype, filename);
+    };
   }
 
   // 连接会话
@@ -117,7 +136,7 @@ export default class RdpSession extends BaseSession<GuacdReactiveSessionStatus, 
     // 定时检查是否连接成功
     this.connectTimeoutId = window.setTimeout(() => {
       // 未连接上证明连接超时
-      if (!this.status.connected) {
+      if (!this.state.connected) {
         this.channel.closeTunnel(TerminalCloseCode.CONNECT_TIMEOUT, TerminalMessages.rdpConnectTimeout);
       }
     }, CONNECT_TIMEOUT);
@@ -128,7 +147,7 @@ export default class RdpSession extends BaseSession<GuacdReactiveSessionStatus, 
     // 手动触发管道已连接
     this.channel.processConnected({} as unknown as OutputPayload);
     // 监听音频输入
-    if (useTerminalStore().preference.rdpGraphSetting?.enableAudioInput) {
+    if (useTerminalStore().preference.rdpSessionSetting?.enableAudioInput) {
       const requestAudioStream = (client: Guacamole.Client) => {
         const stream = client.createAudioStream(AUDIO_INPUT_MIMETYPE);
         let recorder;
@@ -147,6 +166,11 @@ export default class RdpSession extends BaseSession<GuacdReactiveSessionStatus, 
       };
       requestAudioStream(this.client);
     }
+  }
+
+  // 文件系统事件
+  onFileSystemEvent(event: Record<string, any>): void {
+    this.channel.send(InputProtocol.RDP_FILE_SYSTEM_EVENT, { event: JSON.stringify(event) });
   }
 
   // 发送键
@@ -206,7 +230,15 @@ export default class RdpSession extends BaseSession<GuacdReactiveSessionStatus, 
 
   // 是否可写
   isWriteable(): boolean {
-    return this.status.connected && this.status.canWrite;
+    return this.state.connected && this.state.canWrite;
+  }
+
+  // 设置为已关闭
+  setClosed() {
+    // 设置为已关闭
+    super.setClosed();
+    // 关闭文件传输
+    useTerminalStore().transferManager.rdp.closeBySessionKey(this.sessionKey);
   }
 
   // 断开连接

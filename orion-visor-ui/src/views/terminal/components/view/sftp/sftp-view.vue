@@ -17,7 +17,9 @@
                              :session="session"
                              @load-file="loadFiles"
                              @set-loading="setTableLoading"
+                             @create-file="openCreate"
                              @delete-file="deleteFile"
+                             @upload="openUpload"
                              @download="downloadFiles" />
           <!-- 表格 -->
           <sftp-table class="sftp-table-wrapper"
@@ -27,6 +29,8 @@
                       :loading="tableLoading"
                       :editor-loading="editorLoading"
                       @load-file="loadFiles"
+                      @chmod-file="openChmod"
+                      @move-file="openMove"
                       @edit-file="editFile"
                       @delete-file="deleteFile"
                       @download="downloadFiles" />
@@ -48,13 +52,13 @@
       </template>
     </a-split>
     <!-- 创建文件模态框 -->
-    <sftp-create-modal ref="createModal" />
+    <sftp-create-modal ref="createModal" :session="session" />
     <!-- 移动文件模态框 -->
-    <sftp-move-modal ref="moveModal" />
+    <sftp-move-modal ref="moveModal" :session="session" />
     <!-- 文件提权模态框 -->
-    <sftp-chmod-modal ref="chmodModal" />
+    <sftp-chmod-modal ref="chmodModal" :session="session" />
     <!-- 文件上传模态框 -->
-    <sftp-upload-modal ref="uploadModal" />
+    <sftp-upload-modal ref="uploadModal" :session="session" />
   </div>
 </template>
 
@@ -66,11 +70,10 @@
 
 <script lang="ts" setup>
   import type { ISftpSession, SftpFile, TerminalSessionTabItem } from '@/views/terminal/interfaces';
-  import { onMounted, onUnmounted, provide, ref } from 'vue';
+  import { onMounted, onUnmounted, ref } from 'vue';
   import { useTerminalStore } from '@/store';
   import { Message } from '@arco-design/web-vue';
   import useLoading from '@/hooks/loading';
-  import { openSftpCreateModalKey, openSftpMoveModalKey, openSftpChmodModalKey, openSftpUploadModalKey } from '@/views/terminal/types/const';
   import { getSftpFileContent, setSftpFileContent } from '@/api/terminal/terminal-sftp';
   import { isString } from '@/utils/is';
   import SftpTableHeader from './sftp-table-header.vue';
@@ -105,26 +108,6 @@
   const chmodModal = ref();
   const uploadModal = ref();
 
-  // 暴露打开创建模态框
-  provide(openSftpCreateModalKey, (sessionKey: string, path: string, isTouch: boolean) => {
-    createModal.value?.open(sessionKey, path, isTouch);
-  });
-
-  // 暴露打开移动模态框
-  provide(openSftpMoveModalKey, (sessionKey: string, path: string) => {
-    moveModal.value?.open(sessionKey, path);
-  });
-
-  // 暴露打开提权模态框
-  provide(openSftpChmodModalKey, (sessionKey: string, path: string, permission: number) => {
-    chmodModal.value?.open(sessionKey, path, permission);
-  });
-
-  // 暴露打开上传模态框
-  provide(openSftpUploadModalKey, () => {
-    uploadModal.value?.open(props.item.hostId, currentPath.value);
-  });
-
   // 编辑文件
   const editFile = (name: string, path: string) => {
     setEditorLoading(true);
@@ -149,6 +132,26 @@
     editorFilePath.value = '';
   };
 
+  // 打开创建文件
+  const openCreate = (isTouch: boolean) => {
+    createModal.value.open(currentPath.value, isTouch);
+  };
+
+  // 打开文件移动
+  const openMove = (path: string) => {
+    moveModal.value.open(path);
+  };
+
+  // 打开文件提权
+  const openChmod = (path: string, permission: number) => {
+    chmodModal.value.open(path, permission);
+  };
+
+  // 打开文件上传
+  const openUpload = () => {
+    uploadModal.value.open(currentPath.value);
+  };
+
   // 删除文件
   const deleteFile = (paths: Array<string>) => {
     if (!paths.length) {
@@ -160,7 +163,7 @@
   };
 
   // 下载文件
-  const downloadFiles = (paths: Array<string>, clear: boolean) => {
+  const downloadFiles = async (paths: Array<string>, clear: boolean) => {
     if (!paths.length) {
       return;
     }
@@ -172,10 +175,9 @@
     if (clear) {
       selectFiles.value = [];
     }
-    Message.success('已开始下载, 点击右侧传输列表查看进度');
     // 添加普通文件到下载队列
     const normalFiles = files.filter(s => !s.isDir);
-    transferManager.addDownload(props.item.hostId as number, currentPath.value, normalFiles);
+    await transferManager.sftp.addDownload(session.value as ISftpSession, currentPath.value, normalFiles);
     // 将文件夹展开普通文件
     const directoryPaths = files.filter(s => s.isDir).map(s => s.path);
     if (directoryPaths.length) {
@@ -283,7 +285,7 @@
     if (!checkResult(result, msg)) {
       return;
     }
-    transferManager.addDownload(props.item.hostId as number, currentPath, list);
+    transferManager.sftp.addDownload(session.value as ISftpSession, currentPath, list);
   };
 
   // 初始化会话

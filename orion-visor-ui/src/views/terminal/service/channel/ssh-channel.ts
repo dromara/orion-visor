@@ -16,7 +16,7 @@ export default class SshChannel extends BaseTerminalChannel<ISshSession> impleme
       hostId: this.session.info.hostId,
       connectType: TerminalSessionTypes.SSH.type,
       extra: {
-        terminalType: preference.sessionSetting.terminalEmulationType ?? 'xterm',
+        terminalType: preference.sshInteractSetting.terminalEmulationType ?? 'xterm',
       }
     });
     // 打开 channel
@@ -36,13 +36,13 @@ export default class SshChannel extends BaseTerminalChannel<ISshSession> impleme
     if (this.triggerClosed) {
       return;
     }
-    const beforeConnected = this.session.status.connected;
+    const beforeConnected = this.session.state.connected;
     this.triggerClosed = true;
     // 设置重连状态
-    this.session.status.canReconnect = TerminalCloseCode.FORCE !== Number.parseInt(code);
+    this.session.state.canReconnect = TerminalCloseCode.FORCE !== Number.parseInt(code);
     // 拼接关闭消息
     this.session.write((beforeConnected ? '\r\n\r\n' : '') + ansi(91, msg || ''));
-    if (this.session.status.canReconnect) {
+    if (this.session.state.canReconnect) {
       this.session.write('\r\n' + ansi(91, TerminalMessages.waitingReconnect) + '\r\n');
     }
     // 设置已关闭

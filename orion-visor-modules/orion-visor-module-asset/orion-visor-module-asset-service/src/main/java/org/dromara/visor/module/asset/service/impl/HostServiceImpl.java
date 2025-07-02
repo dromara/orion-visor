@@ -128,8 +128,10 @@ public class HostServiceImpl implements HostService {
         this.checkHostCodePresent(record);
         // 插入主机
         int effect = hostDAO.insert(record);
-        log.info("HostService-createHost effect: {}", effect);
         Long id = record.getId();
+        log.info("HostService-createHost id: {}, effect: {}", id, effect);
+        // 初始化主机配置
+        hostConfigService.initHostConfig(id, request.getTypes());
         // 插入 tag
         tagRelApi.addTagRel(TagTypeEnum.HOST, id, request.getTags());
         // 引用分组
@@ -183,6 +185,8 @@ public class HostServiceImpl implements HostService {
         // 修改 config 状态
         hostConfigDAO.updateConfigStatus(id, types, EnableStatus.ENABLED.name());
         hostConfigDAO.updateConfigInvertStatus(id, types, EnableStatus.DISABLED.name());
+        // 初始化主机配置
+        hostConfigService.initHostConfig(id, types);
         // 删除缓存
         this.clearCache();
         return effect;

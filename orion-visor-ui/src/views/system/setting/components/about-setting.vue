@@ -6,12 +6,6 @@
                     :align="{ label: 'right', value: 'left' }"
                     :label-style="{ paddingTop: '2px', paddingLeft: '32px', verticalAlign: 'top' }"
                     :column="1">
-      <!-- 机器码 -->
-      <a-descriptions-item label="机器码">
-        <span class="text-copy uuid-wrapper" @click="copy(app.uuid, true)">
-          {{ app.uuid }}
-        </span>
-      </a-descriptions-item>
       <!-- 当前前端版本 -->
       <a-descriptions-item label="当前前端版本">
         <!-- 前端版本 -->
@@ -66,7 +60,6 @@
 
   const app = ref<AppInfoResponse>({
     version: '',
-    uuid: '',
   });
 
   const repo = ref<AppReleaseResponse>({

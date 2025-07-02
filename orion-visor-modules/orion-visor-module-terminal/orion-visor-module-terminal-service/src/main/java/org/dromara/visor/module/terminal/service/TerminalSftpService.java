@@ -22,15 +22,11 @@
  */
 package org.dromara.visor.module.terminal.service;
 
-import cn.orionsec.kit.lang.define.wrapper.DataGrid;
-import org.dromara.visor.module.terminal.entity.request.terminal.TerminalSftpLogQueryRequest;
-import org.dromara.visor.module.terminal.entity.vo.TerminalSftpLogVO;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.List;
 
 /**
  * SFTP 操作 服务类
@@ -40,30 +36,6 @@ import java.util.List;
  * @since 2023-12-26 22:09
  */
 public interface TerminalSftpService {
-
-    /**
-     * 分页查询 SFTP 操作日志
-     *
-     * @param request request
-     * @return rows
-     */
-    DataGrid<TerminalSftpLogVO> getTerminalSftpLogPage(TerminalSftpLogQueryRequest request);
-
-    /**
-     * 获取 SFTP 操作日志数量
-     *
-     * @param request request
-     * @return count
-     */
-    Long getTerminalSftpLogCount(TerminalSftpLogQueryRequest request);
-
-    /**
-     * 删除 SFTP 操作日志
-     *
-     * @param idList idList
-     * @return effect
-     */
-    Integer deleteTerminalSftpLog(List<Long> idList);
 
     /**
      * 设置文件内容

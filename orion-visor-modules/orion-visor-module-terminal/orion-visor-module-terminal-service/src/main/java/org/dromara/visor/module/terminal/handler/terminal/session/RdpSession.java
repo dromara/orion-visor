@@ -25,11 +25,11 @@ package org.dromara.visor.module.terminal.handler.terminal.session;
 import cn.orionsec.kit.lang.utils.Booleans;
 import cn.orionsec.kit.lang.utils.Strings;
 import cn.orionsec.kit.lang.utils.io.Files1;
-import cn.orionsec.kit.lang.utils.time.Dates;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.visor.common.constant.AppConst;
 import org.dromara.visor.common.utils.AesEncryptUtils;
 import org.dromara.visor.module.common.config.GuacdConfig;
+import org.dromara.visor.module.terminal.enums.DriveMountModeEnum;
 import org.dromara.visor.module.terminal.handler.guacd.GuacdTunnel;
 import org.dromara.visor.module.terminal.handler.guacd.IGuacdTunnel;
 import org.dromara.visor.module.terminal.handler.guacd.constant.GuacdConst;
@@ -101,9 +101,10 @@ public class RdpSession extends AbstractGuacdSession<TerminalSessionRdpConfig> i
         tunnel.setParameter(GuacdConst.ENABLE_FULL_WINDOW_DRAG, extra.getEnableFullWindowDrag());
         tunnel.setParameter(GuacdConst.ENABLE_DESKTOP_COMPOSITION, extra.getEnableDesktopComposition());
         tunnel.setParameter(GuacdConst.ENABLE_MENU_ANIMATIONS, extra.getEnableMenuAnimations());
+        tunnel.setParameter(GuacdConst.DISABLE_BITMAP_CACHING, extra.getDisableBitmapCaching());
         tunnel.setParameter(GuacdConst.DISABLE_OFFSCREEN_CACHING, extra.getDisableOffscreenCaching());
         tunnel.setParameter(GuacdConst.DISABLE_GLYPH_CACHING, extra.getDisableGlyphCaching());
-        tunnel.setParameter(GuacdConst.DISABLE_BITMAP_CACHING, extra.getDisableBitmapCaching());
+        tunnel.setParameter(GuacdConst.DISABLE_GFX, extra.getDisableGfx());
         // 音频
         tunnel.setAudioMimeTypes(GuacdConst.AUDIO_MIMETYPES);
         tunnel.setParameter(GuacdConst.ENABLE_AUDIO_INPUT, extra.getEnableAudioInput());
@@ -113,8 +114,15 @@ public class RdpSession extends AbstractGuacdSession<TerminalSessionRdpConfig> i
         tunnel.setParameter(GuacdConst.ENABLE_DRIVE, true);
         tunnel.setParameter(GuacdConst.CREATE_DRIVE_PATH, true);
         tunnel.setParameter(GuacdConst.DRIVE_NAME, GuacdConst.DRIVE_DRIVE_NAME);
-        // 父文件夹必须存在 所以只能用 _ 分
-        tunnel.setParameter(GuacdConst.DRIVE_PATH, Files1.getPath(guacdConfig.getDrivePath() + "/" + Dates.current(Dates.YMD2) + "_" + props.getUserId() + "_" + props.getHostId()));
+        // 父文件夹必须存在 否则会报错 所以不能分层
+        String driveMountPath = DriveMountModeEnum.of(extra.getDriveMountMode())
+                .getDriveMountPath(props.getUserId(), props.getHostId(), props.getId());
+        tunnel.setParameter(GuacdConst.DRIVE_PATH, Files1.getPath(guacdConfig.getDrivePath() + "/" + driveMountPath));
+        // 初始化程序
+        String initialProgram = config.getInitialProgram();
+        if (!Strings.isBlank(initialProgram)) {
+            tunnel.setParameter(GuacdConst.INITIAL_PROGRAM, initialProgram);
+        }
         // 预连接
         String preConnectionId = config.getPreConnectionId();
         if (!Strings.isBlank(preConnectionId)) {
@@ -153,8 +161,9 @@ public class RdpSession extends AbstractGuacdSession<TerminalSessionRdpConfig> i
         extra.setEnableDesktopComposition(false);
         extra.setEnableMenuAnimations(false);
         extra.setDisableBitmapCaching(false);
+        extra.setDisableOffscreenCaching(false);
         extra.setDisableGlyphCaching(false);
-        extra.setDisableBitmapCaching(false);
+        extra.setDisableGfx(false);
         extra.setEnableAudioInput(false);
         extra.setEnableAudioOutput(false);
     }

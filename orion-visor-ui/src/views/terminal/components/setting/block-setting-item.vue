@@ -13,11 +13,11 @@
       </div>
       <!-- 描述 -->
       <div class="block-form-item-desc">
-        <template v-if="desc">
-          {{ desc }}
-        </template>
-        <template v-else>
+        <template v-if="$slots.desc">
           <slot name="desc" />
+        </template>
+        <template v-else-if="desc">
+          {{ desc }}
         </template>
       </div>
     </div>

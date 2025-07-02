@@ -99,7 +99,7 @@
         background: isDark.value ? '#354276' : '#E8F3FF',
         iconColor: isDark.value ? '#4A7FF7' : '#165DFF',
       },
-      go: () => router.push({ name: 'connectLog', query: { action: 'self' } })
+      go: () => router.push({ name: 'terminalConnectLog', query: { action: 'self' } })
     }, {
       title: '今日批量执行次数',
       value: props.data.exec?.todayExecCommandCount || 0,

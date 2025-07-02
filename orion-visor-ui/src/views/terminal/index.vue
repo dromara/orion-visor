@@ -154,7 +154,7 @@
     // 加载偏好
     fetchPreference().then(() => {
       // 设置系统主题配色
-      const dark = preference.theme.dark;
+      const dark = preference.sshTheme.dark;
       document.body.setAttribute('terminal-theme', dark ? 'dark' : 'light');
       render.value = true;
     });

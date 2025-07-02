@@ -42,6 +42,11 @@ import lombok.experimental.SuperBuilder;
 public class TerminalSetInfo implements IJsonObject {
 
     /**
+     * logId
+     */
+    private Long logId;
+
+    /**
      * 地址
      */
     private String address;

@@ -293,8 +293,9 @@ public class HostConnectServiceImpl implements HostConnectService {
         // 填充基础主机信息
         this.setBaseConnectConfig(connectConfig, host);
         if (extra != null) {
-            // 设置低带宽模式
+            // 设置额外配置信息
             connectConfig.setLowBandwidthMode(extra.getLowBandwidthMode());
+            connectConfig.setInitialProgram(extra.getInitialProgram());
             // 获取自定义认证方式
             HostExtraAuthTypeEnum extraAuthType = HostExtraAuthTypeEnum.of(extra.getAuthType());
             if (HostExtraAuthTypeEnum.CUSTOM_IDENTITY.equals(extraAuthType)) {

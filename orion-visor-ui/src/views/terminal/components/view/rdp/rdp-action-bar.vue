@@ -1,5 +1,5 @@
 <template>
-  <div v-if="session.status.connectStatus === TerminalStatus.CONNECTED">
+  <div v-if="session.state.connectStatus === TerminalStatus.CONNECTED">
     <!-- 工具栏 -->
     <a-popover v-model:popup-visible="visible"
                :title="undefined"
@@ -138,7 +138,6 @@
   } from '@/views/terminal/types/const';
   import { computed, ref, watch, onMounted } from 'vue';
   import { setAutoFocus } from '@/utils/dom';
-  import { Message } from '@arco-design/web-vue';
   import { saveAs } from 'file-saver';
   import { readText } from '@/hooks/copy';
   import { useTerminalStore, useDictStore } from '@/store';
@@ -150,7 +149,7 @@
     direction: string;
   }>();
 
-  const { preference } = useTerminalStore();
+  const { preference, transferManager } = useTerminalStore();
   const { toOptions, getDictValue } = useDictStore();
   const { visible, setVisible } = useVisible();
 
@@ -276,8 +275,12 @@
 
   // 上传文件
   const uploadFile = () => {
-    // TODO 上传功能
-    Message.warning('暂不支持文件上传, 等下版本携带');
+    const file = fileList.value[0].file as File;
+    // 记录事件
+    props.session.onFileSystemEvent({ event: 'terminal:rdp-upload', path: file.name });
+    // 上传文件
+    transferManager.rdp.addUpload(props.session, file);
+    fileList.value = [];
   };
 
   // 选择文件回调

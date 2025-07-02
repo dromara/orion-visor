@@ -1,11 +1,11 @@
 <template>
-  <div v-if="session.status.connectStatus !== TerminalStatus.CONNECTED && visible">
+  <div v-if="session.state.connectStatus !== TerminalStatus.CONNECTED && visible">
     <!-- 连接中 -->
-    <a-spin v-if="session.status.connectStatus === TerminalStatus.CONNECTING"
+    <a-spin v-if="session.state.connectStatus === TerminalStatus.CONNECTING"
             tip="正在连接会话..."
             dot />
     <!-- 会话关闭 -->
-    <a-card v-if="session.status.connectStatus === TerminalStatus.CLOSED"
+    <a-card v-if="session.state.connectStatus === TerminalStatus.CLOSED"
             class="rdp-status-wrapper"
             title="会话已关闭">
       <!-- 错误信息 -->
@@ -20,18 +20,18 @@
         </a-descriptions-item>
         <!-- 错误码 -->
         <a-descriptions-item label="错误码">
-          {{ session.status.closeCode }}
+          {{ session.state.closeCode }}
         </a-descriptions-item>
         <!-- 错误信息 -->
         <a-descriptions-item label="错误信息">
           <span class="span-red">
             <!-- 异地登录 -->
-            <template v-if="session.status.closeCode === TerminalCloseCode.LOGGED_ELSEWHERE">
+            <template v-if="session.state.closeCode === TerminalCloseCode.LOGGED_ELSEWHERE">
               {{ TerminalMessages.loggedElsewhere }} ({{ dateFormat() }})
             </template>
             <!-- 其他错误 -->
             <template v-else>
-              {{ session.status.closeMessage ?? '-' }}
+              {{ session.state.closeMessage ?? '-' }}
             </template>
           </span>
         </a-descriptions-item>
@@ -39,7 +39,7 @@
       <!-- 按钮 -->
       <a-space class="status-button">
         <a-button @click="setVisible(false)">关闭</a-button>
-        <a-button v-if="session.status.closeCode !== TerminalCloseCode.FORCE && session.status.canReconnect"
+        <a-button v-if="session.state.closeCode !== TerminalCloseCode.FORCE && session.state.canReconnect"
                   type="primary"
                   @click="reOpenSession(session.sessionKey)">
           重连

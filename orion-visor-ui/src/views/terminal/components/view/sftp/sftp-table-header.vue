@@ -45,7 +45,7 @@
       </div>
     </div>
     <!-- 已关闭-右侧操作 -->
-    <div v-if="session?.status.connected === false && closeMessage !== undefined"
+    <div v-if="session?.state.connected === false && closeMessage !== undefined"
          class="sftp-table-header-right">
       <!-- 错误信息 -->
       <a-tag class="close-message"
@@ -54,7 +54,7 @@
         已断开: {{ closeMessage }}
       </a-tag>
       <!-- 重连 -->
-      <a-tooltip v-if="session?.status.connected === false && session?.status.canReconnect"
+      <a-tooltip v-if="session?.state.connected === false && session?.state.canReconnect"
                  position="top"
                  :mini="true"
                  :overlay-inverse="true"
@@ -135,7 +135,7 @@
                  arrow-class="terminal-tooltip-content"
                  content="创建文件">
         <a-button class="header-action-icon icon-button"
-                  @click="createFile">
+                  @click="createFile(true)">
           <icon-drive-file />
         </a-button>
       </a-tooltip>
@@ -148,7 +148,7 @@
                  arrow-class="terminal-tooltip-content"
                  content="创建文件夹">
         <a-button class="header-action-icon icon-button"
-                  @click="createDir">
+                  @click="createFile(false)">
           <icon-folder-add />
         </a-button>
       </a-tooltip>
@@ -174,7 +174,7 @@
                  arrow-class="terminal-tooltip-content"
                  content="上传">
         <a-button class="header-action-icon icon-button"
-                  @click="openSftpUploadModal">
+                  @click="openUpload">
           <icon-upload />
         </a-button>
       </a-tooltip>
@@ -204,9 +204,8 @@
 <script lang="ts" setup>
   import type { PathAnalysis } from '@/utils/file';
   import type { ISftpSession } from '@/views/terminal/interfaces';
-  import { inject, nextTick, ref, watch } from 'vue';
+  import { nextTick, ref, watch } from 'vue';
   import { getParentPath, getPathAnalysis } from '@/utils/file';
-  import { openSftpCreateModalKey, openSftpUploadModalKey } from '@/views/terminal/types/const';
   import { useTerminalStore } from '@/store';
 
   const props = defineProps<{
@@ -216,17 +215,13 @@
     selectedFiles: Array<string>;
   }>();
 
-  const emits = defineEmits(['loadFile', 'download', 'deleteFile', 'setLoading']);
+  const emits = defineEmits(['loadFile', 'createFile', 'upload', 'download', 'deleteFile', 'setLoading']);
 
   const showHiddenFile = ref(false);
   const analysisPaths = ref<Array<PathAnalysis>>([]);
   const pathEditable = ref(false);
   const pathInput = ref('');
   const pathInputRef = ref();
-
-  const openSftpCreateModal = inject(openSftpCreateModalKey) as (sessionKey: string, path: string, isTouch: boolean) => void;
-
-  const openSftpUploadModal = inject(openSftpUploadModalKey) as () => void;
 
   // 监听路径变化
   watch(() => props.currentPath, (path) => {
@@ -245,7 +240,7 @@
   // 设置命令编辑模式
   const setPathEditable = (editable: boolean) => {
     // 检查是否断开
-    if (editable && !props.session?.status.connected) {
+    if (editable && !props.session?.state.connected) {
       return;
     }
     pathEditable.value = editable;
@@ -267,7 +262,7 @@
   // 加载文件列表
   const loadFileList = (path: string = props.currentPath) => {
     // 检查是否断开
-    if (!props.session?.status.connected) {
+    if (!props.session?.state.connected) {
       return;
     }
     emits('loadFile', path);
@@ -284,18 +279,18 @@
   };
 
   // 创建文件
-  const createFile = () => {
-    openSftpCreateModal(props.session?.sessionKey as string, props.currentPath, true);
-  };
-
-  // 创建文件夹
-  const createDir = () => {
-    openSftpCreateModal(props.session?.sessionKey as string, props.currentPath, false);
+  const createFile = (isTouch: boolean) => {
+    emits('createFile', isTouch);
   };
 
   // 删除选中文件
   const deleteSelectFiles = () => {
     emits('deleteFile', [...props.selectedFiles]);
+  };
+
+  // 上传文件
+  const openUpload = () => {
+    emits('upload');
   };
 
   // 下载文件

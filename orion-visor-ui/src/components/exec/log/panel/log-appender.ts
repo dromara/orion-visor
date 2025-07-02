@@ -172,11 +172,11 @@ export default class LogAppender implements ILogAppender {
     };
     this.client.onmessage = this.processMessage.bind(this);
     // 注册持久化
-    this.keepAliveTask = setInterval(() => {
+    this.keepAliveTask = window.setInterval(() => {
       if (this.client?.readyState === WebSocket.OPEN) {
         this.client?.send('p');
       }
-    }, 15000) as unknown as number;
+    }, 15000);
   }
 
   // 打开日志

@@ -129,6 +129,7 @@ public class TerminalConnectHandler extends AbstractTerminalHandler<ITerminalSen
             this.updateTerminalConnectLog(logId, null, null);
             // 发送设置信息
             sender.sendSetInfo(TerminalSetInfo.builder()
+                    .logId(logId)
                     .address(connectConfig.getHostAddress())
                     .port(connectConfig.getHostPort())
                     .username(connectConfig.getUsername())

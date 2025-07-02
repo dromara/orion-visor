@@ -43,7 +43,7 @@ import javax.annotation.PostConstruct;
 public enum InputProtocolEnum {
 
     /**
-     * 连接终端
+     * 请求连接
      */
     CONNECT("co",
             TerminalConnectHandler.class,
@@ -74,7 +74,17 @@ public enum InputProtocolEnum {
             new String[]{"type", "width", "height"},
             TerminalResizeRequest.class),
 
-    // ----------------------- SSH ----------------------
+    // ----------------------- guacd ----------------------
+
+    /**
+     * guacd 指令
+     */
+    GUACD_INSTRUCTION("gi",
+            GuacdInstructionHandler.class,
+            new String[]{"type", "instruction"},
+            GuacdInstructionRequest.class),
+
+    // ----------------------- ssh ----------------------
 
     /**
      * SSH  输入
@@ -84,7 +94,7 @@ public enum InputProtocolEnum {
             new String[]{"type", "command"},
             SshInputRequest.class),
 
-    // ----------------------- SFTP ----------------------
+    // ----------------------- sftp ----------------------
 
     /**
      * SFTP 文件列表
@@ -182,15 +192,15 @@ public enum InputProtocolEnum {
             new String[]{"type", "path"},
             SftpBaseRequest.class),
 
-    // ----------------------- guacd ----------------------
+    // ----------------------- rdp ----------------------
 
     /**
-     * guacd 指令
+     * RDP 文件系统事件
      */
-    GUACD_INSTRUCTION("gi",
-            GuacdInstructionHandler.class,
-            new String[]{"type", "instruction"},
-            GuacdInstructionRequest.class),
+    RDP_FILE_SYSTEM_EVENT("fse",
+            RdpFileSystemEventHandler.class,
+            new String[]{"type", "event"},
+            RdpFileSystemEventRequest.class),
 
     ;
 

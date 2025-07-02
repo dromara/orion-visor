@@ -26,6 +26,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.visor.framework.biz.operator.log.core.annotation.OperatorLog;
+import org.dromara.visor.framework.biz.operator.log.core.enums.ReturnType;
 import org.dromara.visor.framework.log.core.annotation.IgnoreLog;
 import org.dromara.visor.framework.log.core.enums.IgnoreLogMode;
 import org.dromara.visor.framework.web.core.annotation.RestWrapper;
@@ -58,7 +59,7 @@ public class AuthenticationController {
     @Resource
     private AuthenticationService authenticationService;
 
-    @OperatorLog(AuthenticationOperatorType.LOGIN)
+    @OperatorLog(value = AuthenticationOperatorType.LOGIN, ret = ReturnType.IGNORE)
     @PermitAll
     @Operation(summary = "登录")
     @PostMapping("/login")

@@ -49,7 +49,4 @@ public class AppInfoVO implements Serializable {
     @Schema(description = "系统版本")
     private String version;
 
-    @Schema(description = "机器码")
-    private String uuid;
-
 }

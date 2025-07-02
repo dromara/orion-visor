@@ -324,7 +324,7 @@
     // 加载数据
     fetchTableData();
     // 注册状态轮询
-    pullIntervalId.value = setInterval(pullTaskStatus, 10000);
+    pullIntervalId.value = window.setInterval(pullTaskStatus, 10000);
   });
 
   onUnmounted(() => {

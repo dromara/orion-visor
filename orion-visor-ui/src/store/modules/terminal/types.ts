@@ -1,4 +1,4 @@
-import type { ISftpTransferManager, ITerminalPanelManager, ITerminalSessionManager, ITerminalTabManager, TerminalTheme } from '@/views/terminal/interfaces';
+import type { ITerminalPanelManager, ITerminalSessionManager, ITerminalTabManager, ITerminalTransferManager, TerminalTheme } from '@/views/terminal/interfaces';
 import type { AuthorizedHostQueryResponse } from '@/api/asset/asset-authorized-data';
 
 export interface TerminalState {
@@ -8,21 +8,21 @@ export interface TerminalState {
   tabManager: ITerminalTabManager;
   panelManager: ITerminalPanelManager;
   sessionManager: ITerminalSessionManager;
-  transferManager: ISftpTransferManager;
+  transferManager: ITerminalTransferManager;
 }
 
 // 终端配置
 export interface TerminalPreference {
   newConnectionType: string;
-  theme: TerminalTheme;
+  sshTheme: TerminalTheme;
   sshDisplaySetting: TerminalSshDisplaySetting;
-  rdpGraphSetting: TerminalRdpGraphSetting;
   sshActionBarSetting: TerminalSshActionBarSetting;
+  sshRightMenuSetting: Array<string>,
+  sshInteractSetting: TerminalSshInteractSetting;
+  sshPluginsSetting: TerminalSshPluginsSetting;
+  rdpGraphSetting: TerminalRdpGraphSetting;
   rdpActionBarSetting: TerminalRdpActionBarSetting;
-  rightMenuSetting: Array<string>,
-  interactSetting: TerminalInteractSetting;
-  pluginsSetting: TerminalPluginsSetting;
-  sessionSetting: TerminalSessionSetting;
+  rdpSessionSetting: TerminalRdpSessionSetting;
   shortcutSetting: TerminalShortcutSetting;
 }
 
@@ -38,13 +38,44 @@ export interface TerminalSshDisplaySetting {
   cursorBlink?: boolean;
 }
 
+// SSH 操作栏设置
+export interface TerminalSshActionBarSetting {
+  connectStatus?: boolean;
+  share?: boolean;
+
+  [key: string]: unknown;
+}
+
+// SSH 插件设置
+export interface TerminalSshPluginsSetting {
+  enableWeblinkPlugin: boolean;
+  enableWebglPlugin: boolean;
+  enableUnicodePlugin: boolean;
+  enableImagePlugin: boolean;
+}
+
+// SSH 交互设置
+export interface TerminalSshInteractSetting {
+  fastScrollModifier: boolean;
+  altClickMovesCursor: boolean;
+  rightClickSelectsWord: boolean;
+  selectionChangeCopy: boolean;
+  copyAutoTrim: boolean;
+  pasteAutoTrim: boolean;
+  rightClickPaste: boolean;
+  enableRightClickMenu: boolean;
+  enableBell: boolean;
+  wordSeparator: string;
+  terminalEmulationType: string;
+  scrollBackLine: number;
+}
+
 // RDP 图形化设置
 export interface TerminalRdpGraphSetting {
   displaySize?: string;
   displayWidth?: number;
   displayHeight?: number;
-  enableAudioInput?: boolean;
-  enableAudioOutput?: boolean;
+
   colorDepth?: number;
   forceLossless?: boolean;
   enableWallpaper?: boolean;
@@ -56,13 +87,7 @@ export interface TerminalRdpGraphSetting {
   disableBitmapCaching?: boolean;
   disableOffscreenCaching?: boolean;
   disableGlyphCaching?: boolean;
-}
-
-// SSH 操作栏设置
-export interface TerminalSshActionBarSetting {
-  connectStatus?: boolean;
-
-  [key: string]: unknown;
+  disableGfx?: boolean;
 }
 
 // RDP 操作栏设置
@@ -79,32 +104,11 @@ export interface TerminalRdpActionBarSetting {
   [key: string]: unknown;
 }
 
-// 交互设置
-export interface TerminalInteractSetting {
-  fastScrollModifier: boolean;
-  altClickMovesCursor: boolean;
-  rightClickSelectsWord: boolean;
-  selectionChangeCopy: boolean;
-  copyAutoTrim: boolean;
-  pasteAutoTrim: boolean;
-  rightClickPaste: boolean;
-  enableRightClickMenu: boolean;
-  enableBell: boolean;
-  wordSeparator: string;
-}
-
-// 插件设置
-export interface TerminalPluginsSetting {
-  enableWeblinkPlugin: boolean;
-  enableWebglPlugin: boolean;
-  enableUnicodePlugin: boolean;
-  enableImagePlugin: boolean;
-}
-
-// 会话设置
-export interface TerminalSessionSetting {
-  terminalEmulationType: string;
-  scrollBackLine: number;
+// RDP 会话设置
+export interface TerminalRdpSessionSetting {
+  enableAudioInput?: boolean;
+  enableAudioOutput?: boolean;
+  driveMountMode?: string;
 }
 
 // 终端快捷键设置

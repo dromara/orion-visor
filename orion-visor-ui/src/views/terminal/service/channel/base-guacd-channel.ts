@@ -131,10 +131,10 @@ export default abstract class BaseGuacdChannel<T extends ITerminalSession<GuacdR
       this.onerror(new Guacamole.Status(closeCode as any, msg));
     }
     // 设置关闭原因
-    this.session.status.closeCode = closeCode;
-    this.session.status.closeMessage = msg || TerminalMessages.sessionClosed;
+    this.session.state.closeCode = closeCode;
+    this.session.state.closeMessage = msg || TerminalMessages.sessionClosed;
     // 设置重连状态
-    this.session.status.canReconnect = TerminalCloseCode.FORCE !== closeCode;
+    this.session.state.canReconnect = TerminalCloseCode.FORCE !== closeCode;
     // 设置已关闭
     this.setState(Guacamole.Tunnel.State.CLOSED);
     this.session.setClosed();

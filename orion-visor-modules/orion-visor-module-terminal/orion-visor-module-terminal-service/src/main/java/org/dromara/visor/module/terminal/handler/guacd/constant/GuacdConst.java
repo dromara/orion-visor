@@ -306,9 +306,14 @@ public interface GuacdConst {
     String DISABLE_OFFSCREEN_CACHING = "disable-offscreen-caching";
 
     /**
-     * 禁用字形缓存 boolean 默认禁用
+     * 禁用字形缓存 boolean
      */
     String DISABLE_GLYPH_CACHING = "disable-glyph-caching";
+
+    /**
+     * 禁用图形加速 boolean
+     */
+    String DISABLE_GFX = "disable-gfx";
 
     /**
      * 远程应用名称

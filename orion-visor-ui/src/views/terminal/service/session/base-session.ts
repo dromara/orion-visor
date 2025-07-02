@@ -1,38 +1,38 @@
 import type { Reactive } from 'vue';
 import { reactive } from 'vue';
-import type { ITerminalChannel, ITerminalSession, ReactiveSessionStatus, SessionHostInfo, TerminalSessionTabItem } from '@/views/terminal/interfaces';
+import type { ITerminalChannel, ITerminalSession, ReactiveSessionState, SessionHostInfo, TerminalSessionTabItem } from '@/views/terminal/interfaces';
 import { TerminalStatus } from '@/views/terminal/types/const';
 
 // 会话基类
-export default abstract class BaseSession<Status extends ReactiveSessionStatus, Channel extends ITerminalChannel>
-  implements ITerminalSession<Status> {
+export default abstract class BaseSession<State extends ReactiveSessionState, Channel extends ITerminalChannel>
+  implements ITerminalSession<State> {
 
   public readonly type: string;
   public readonly info: SessionHostInfo;
   public readonly panelIndex: number;
-  public readonly status: Reactive<Status>;
+  public readonly state: Reactive<State>;
   public readonly sessionKey: string;
   public sessionId: string;
   protected channel: Channel;
 
-  protected constructor(item: TerminalSessionTabItem, reactiveStatus: Partial<Status>) {
+  protected constructor(item: TerminalSessionTabItem, state: Partial<State>) {
     this.type = item.type;
     this.info = {
-      hostId: item.hostId,
       title: item.title,
       name: item.name,
+      hostId: item.hostId,
       address: item.address,
     } as SessionHostInfo;
     this.panelIndex = item.panelIndex;
     this.sessionKey = item.key;
     this.sessionId = item.key;
-    this.status = reactive({
+    this.state = reactive({
       connectStatus: TerminalStatus.CONNECTING,
       connected: false,
       canWrite: false,
       canReconnect: false,
-      ...reactiveStatus,
-    } as Status);
+      ...state,
+    } as State);
     this.channel = undefined as unknown as Channel;
   }
 
@@ -62,28 +62,28 @@ export default abstract class BaseSession<Status extends ReactiveSessionStatus, 
 
   // 设置是否可写
   setCanWrite(canWrite: boolean): void {
-    this.status.canWrite = canWrite;
+    this.state.canWrite = canWrite;
   }
 
   // 设置连接中
   setConnecting(): void {
-    this.status.connected = false;
-    this.status.canWrite = false;
-    this.status.connectStatus = TerminalStatus.CONNECTING;
+    this.state.connected = false;
+    this.state.canWrite = false;
+    this.state.connectStatus = TerminalStatus.CONNECTING;
   }
 
   // 设置已连接
   setConnected(): void {
     // 设置状态
-    this.status.connected = true;
-    this.status.connectStatus = TerminalStatus.CONNECTED;
+    this.state.connected = true;
+    this.state.connectStatus = TerminalStatus.CONNECTED;
   }
 
   // 设置已关闭
   setClosed(): void {
-    this.status.connected = false;
-    this.status.canWrite = false;
-    this.status.connectStatus = TerminalStatus.CLOSED;
+    this.state.connected = false;
+    this.state.canWrite = false;
+    this.state.connectStatus = TerminalStatus.CLOSED;
   }
 
 }

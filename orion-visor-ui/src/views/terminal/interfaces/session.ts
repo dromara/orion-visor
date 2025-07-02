@@ -35,6 +35,7 @@ export interface GuacdInitConfig {
 export interface SessionHostInfo {
   title: string;
   name: string;
+  logId: number;
   hostId: number;
   address: string;
   port: number;
@@ -42,7 +43,7 @@ export interface SessionHostInfo {
 }
 
 // 会话状态
-export interface ReactiveSessionStatus {
+export interface ReactiveSessionState {
   // 连接状态
   connectStatus: number;
   // 是否已连接
@@ -54,7 +55,7 @@ export interface ReactiveSessionStatus {
 }
 
 // guacd 会话状态
-export interface GuacdReactiveSessionStatus extends ReactiveSessionStatus {
+export interface GuacdReactiveSessionStatus extends ReactiveSessionState {
   // 关闭码
   closeCode: number;
   // 关闭信息
@@ -76,7 +77,7 @@ export interface IDomViewportHandler {
 }
 
 // 终端会话定义
-export interface ITerminalSession<Status extends ReactiveSessionStatus = ReactiveSessionStatus> {
+export interface ITerminalSession<State extends ReactiveSessionState = ReactiveSessionState> {
   readonly type: string;
 
   // 会话主机信息
@@ -88,7 +89,7 @@ export interface ITerminalSession<Status extends ReactiveSessionStatus = Reactiv
   // 后端交互的唯一值 后端的 sessionId
   sessionId: string;
   // 会话状态
-  readonly status: Reactive<Status>;
+  readonly state: Reactive<State>;
 
   // 重新初始化
   reInit: () => Promise<void>;
@@ -113,7 +114,7 @@ export interface ITerminalSession<Status extends ReactiveSessionStatus = Reactiv
 export interface ISshSession extends ITerminalSession, IDomViewportHandler {
   // terminal 实例
   inst: Terminal;
-  // 元素对象
+  // 会话配置
   config: SshInitConfig;
   // 处理器
   handler: ISshSessionHandler;
@@ -164,7 +165,8 @@ export interface IGuacdSession extends ITerminalSession<GuacdReactiveSessionStat
 
 // RDP 会话定义
 export interface IRdpSession extends IGuacdSession {
-  // 元素对象
+  fileSystemName: string;
+  // 会话配置
   config: GuacdInitConfig;
   // 视图处理器
   displayHandler: IRdpSessionDisplayHandler;
@@ -173,6 +175,8 @@ export interface IRdpSession extends IGuacdSession {
 
   // 初始化
   init: (config: GuacdInitConfig) => Promise<void>;
+  // 文件系统事件
+  onFileSystemEvent: (event: Record<string, any>) => void;
   // 发送键
   sendKeys: (keys: Array<number>) => void;
   // 粘贴

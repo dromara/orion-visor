@@ -126,6 +126,16 @@ public class TerminalChannelExtra {
      */
     private Boolean disableGlyphCaching;
 
+    /**
+     * 禁用图形加速
+     */
+    private Boolean disableGfx;
+
+    /**
+     * 驱动挂载模式
+     */
+    private String driveMountMode;
+
     // -------------------- vnc --------------------
 
 }

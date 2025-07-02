@@ -51,23 +51,23 @@ public class TerminalPreferenceStrategy extends AbstractGenericsDataStrategy<Ter
                 // 连接类型
                 .newConnectionType("group")
                 // ssh 主题
-                .theme(new JSONObject())
+                .sshTheme(new JSONObject())
                 // ssh 显示设置
                 .sshDisplaySetting(JSONObject.parseObject(this.getDefaultSshDisplaySetting()))
-                // rdp 图形化设置
-                .rdpGraphSetting(JSONObject.parseObject(this.getDefaultRdpGraphSetting()))
                 // ssh 操作栏设置
                 .sshActionBarSetting(JSONObject.parseObject(this.getDefaultSshActionBarSetting()))
+                // ssh 右键菜单设置
+                .sshRightMenuSetting(this.getDefaultSshRightMenuSetting())
+                // ssh 交互设置
+                .sshInteractSetting(JSONObject.parseObject(this.getDefaultSshInteractSetting()))
+                // ssh 插件设置
+                .sshPluginsSetting(JSONObject.parseObject(this.getDefaultSshPluginsSetting()))
+                // rdp 图形化设置
+                .rdpGraphSetting(JSONObject.parseObject(this.getDefaultRdpGraphSetting()))
                 // rdp 操作栏设置
                 .rdpActionBarSetting(JSONObject.parseObject(this.getDefaultRdpActionBarSetting()))
-                // ssh 右键菜单设置
-                .rightMenuSetting(this.getDefaultRightMenuSetting())
-                // 交互设置
-                .interactSetting(JSONObject.parseObject(this.getDefaultInteractSetting()))
-                // 插件设置
-                .pluginsSetting(JSONObject.parseObject(this.getDefaultPluginsSetting()))
-                // 会话设置
-                .sessionSetting(JSONObject.parseObject(this.getDefaultSessionSetting()))
+                // rdp 会话设置
+                .rdpSessionSetting(JSONObject.parseObject(this.getDefaultRdpSessionSetting()))
                 // 快捷键设置
                 .shortcutSetting(JSONObject.parseObject(this.getDefaultShortcutSetting()))
                 .build();
@@ -94,30 +94,12 @@ public class TerminalPreferenceStrategy extends AbstractGenericsDataStrategy<Ter
     }
 
     /**
-     * 获取 rdp 图形化默认设置
+     * 获取 ssh 右键菜单默认设置
      *
      * @return setting
      */
-    private String getDefaultRdpGraphSetting() {
-        return TerminalPreferenceModel.RdpGraphSettingModel.builder()
-                .displaySize("fit")
-                .displayWidth(0)
-                .displayHeight(0)
-                .colorDepth(24)
-                .enableAudioInput(false)
-                .enableAudioOutput(true)
-                .forceLossless(true)
-                .enableWallpaper(true)
-                .enableTheming(true)
-                .enableFontSmoothing(true)
-                .enableFullWindowDrag(true)
-                .enableDesktopComposition(true)
-                .enableMenuAnimations(false)
-                .disableBitmapCaching(false)
-                .disableOffscreenCaching(false)
-                .disableGlyphCaching(false)
-                .build()
-                .toJsonString();
+    private List<String> getDefaultSshRightMenuSetting() {
+        return Lists.of("selectAll", "copy", "paste", "search", "clear");
     }
 
     /**
@@ -148,6 +130,70 @@ public class TerminalPreferenceStrategy extends AbstractGenericsDataStrategy<Ter
     }
 
     /**
+     * 获取 ssh 默认交互设置
+     *
+     * @return setting
+     */
+    private String getDefaultSshInteractSetting() {
+        return TerminalPreferenceModel.SshInteractSettingModel.builder()
+                .fastScrollModifier(true)
+                .altClickMovesCursor(true)
+                .rightClickSelectsWord(false)
+                .selectionChangeCopy(false)
+                .copyAutoTrim(false)
+                .pasteAutoTrim(false)
+                .rightClickPaste(false)
+                .enableRightClickMenu(true)
+                .enableBell(false)
+                .wordSeparator("/\\()\"'` -.,:;<>~!@#$%^&*|+=[]{}~?│")
+                .terminalEmulationType(TerminalType.XTERM.getType())
+                .scrollBackLine(1000)
+                .build()
+                .toJsonString();
+    }
+
+    /**
+     * 获取默认插件设置
+     *
+     * @return setting
+     */
+    private String getDefaultSshPluginsSetting() {
+        return TerminalPreferenceModel.SshPluginsSettingModel.builder()
+                .enableWeblinkPlugin(true)
+                .enableWebglPlugin(true)
+                .enableUnicodePlugin(true)
+                .enableImagePlugin(false)
+                .build()
+                .toJsonString();
+    }
+
+    /**
+     * 获取 rdp 图形化默认设置
+     *
+     * @return setting
+     */
+    private String getDefaultRdpGraphSetting() {
+        return TerminalPreferenceModel.RdpGraphSettingModel.builder()
+                .displaySize("fit")
+                .displayWidth(0)
+                .displayHeight(0)
+                .colorDepth(24)
+                .forceLossless(true)
+                .enableWallpaper(true)
+                .enableTheming(true)
+                .enableFontSmoothing(true)
+                .enableFullWindowDrag(true)
+                .enableDesktopComposition(true)
+                .enableMenuAnimations(false)
+                .disableBitmapCaching(false)
+                .disableOffscreenCaching(false)
+                .disableGlyphCaching(false)
+                .disableGfx(false)
+                .build()
+                .toJsonString();
+    }
+
+    /**
      * 获取 rdp 操作栏默认设置
      *
      * @return setting
@@ -167,59 +213,15 @@ public class TerminalPreferenceStrategy extends AbstractGenericsDataStrategy<Ter
     }
 
     /**
-     * 获取 ssh 右键菜单默认设置
+     * 获取 rdp 默认会话设置
      *
      * @return setting
      */
-    private List<String> getDefaultRightMenuSetting() {
-        return Lists.of("selectAll", "copy", "paste", "search", "clear");
-    }
-
-    /**
-     * 获取默认交互设置
-     *
-     * @return setting
-     */
-    private String getDefaultInteractSetting() {
-        return TerminalPreferenceModel.InteractSettingModel.builder()
-                .fastScrollModifier(true)
-                .altClickMovesCursor(true)
-                .rightClickSelectsWord(false)
-                .selectionChangeCopy(false)
-                .copyAutoTrim(false)
-                .pasteAutoTrim(false)
-                .rightClickPaste(false)
-                .enableRightClickMenu(true)
-                .enableBell(false)
-                .wordSeparator("/\\()\"'` -.,:;<>~!@#$%^&*|+=[]{}~?│")
-                .build()
-                .toJsonString();
-    }
-
-    /**
-     * 获取默认插件设置
-     *
-     * @return setting
-     */
-    private String getDefaultPluginsSetting() {
-        return TerminalPreferenceModel.PluginsSettingModel.builder()
-                .enableWeblinkPlugin(true)
-                .enableWebglPlugin(true)
-                .enableUnicodePlugin(true)
-                .enableImagePlugin(false)
-                .build()
-                .toJsonString();
-    }
-
-    /**
-     * 获取默认会话设置
-     *
-     * @return setting
-     */
-    private String getDefaultSessionSetting() {
-        return TerminalPreferenceModel.SessionSettingModel.builder()
-                .terminalEmulationType(TerminalType.XTERM.getType())
-                .scrollBackLine(1000)
+    private String getDefaultRdpSessionSetting() {
+        return TerminalPreferenceModel.RdpSessionSettingModel.builder()
+                .enableAudioInput(false)
+                .enableAudioOutput(true)
+                .driveMountMode("ASSET")
                 .build()
                 .toJsonString();
     }

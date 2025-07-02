@@ -51,9 +51,9 @@ public class TerminalPreferenceModel implements GenericsDataModel {
     private String newConnectionType;
 
     /**
-     * 终端主题
+     * ssh 主题
      */
-    private JSONObject theme;
+    private JSONObject sshTheme;
 
     /**
      * ssh 显示设置
@@ -61,9 +61,9 @@ public class TerminalPreferenceModel implements GenericsDataModel {
     private JSONObject sshDisplaySetting;
 
     /**
-     * rdp 图形化设置
+     * ssh 右键菜单设置
      */
-    private JSONObject rdpGraphSetting;
+    private List<String> sshRightMenuSetting;
 
     /**
      * ssh 操作栏设置
@@ -71,29 +71,29 @@ public class TerminalPreferenceModel implements GenericsDataModel {
     private JSONObject sshActionBarSetting;
 
     /**
+     * ssh 交互设置
+     */
+    private JSONObject sshInteractSetting;
+
+    /**
+     * ssh 插件设置
+     */
+    private JSONObject sshPluginsSetting;
+
+    /**
+     * rdp 会话设置
+     */
+    private JSONObject rdpSessionSetting;
+
+    /**
+     * rdp 图形化设置
+     */
+    private JSONObject rdpGraphSetting;
+
+    /**
      * rdp 操作栏设置
      */
     private JSONObject rdpActionBarSetting;
-
-    /**
-     * 右键菜单设置
-     */
-    private List<String> rightMenuSetting;
-
-    /**
-     * 交互设置
-     */
-    private JSONObject interactSetting;
-
-    /**
-     * 插件设置
-     */
-    private JSONObject pluginsSetting;
-
-    /**
-     * 会话设置
-     */
-    private JSONObject sessionSetting;
 
     /**
      * 快捷键设置
@@ -145,94 +145,6 @@ public class TerminalPreferenceModel implements GenericsDataModel {
          * 光标闪烁
          */
         private Boolean cursorBlink;
-
-    }
-
-    @Data
-    @Builder
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class RdpGraphSettingModel implements IJsonObject {
-
-        /**
-         * 显示大小
-         */
-        private String displaySize;
-
-        /**
-         * 显示宽度
-         */
-        private Integer displayWidth;
-
-        /**
-         * 显示高度
-         */
-        private Integer displayHeight;
-
-        /**
-         * 启用音频输入
-         */
-        private Boolean enableAudioInput;
-
-        /**
-         * 启用音频输出
-         */
-        private Boolean enableAudioOutput;
-
-        /**
-         * 颜色深度
-         */
-        private Integer colorDepth;
-
-        /**
-         * 无损压缩
-         */
-        private Boolean forceLossless;
-
-        /**
-         * 启用壁纸
-         */
-        private Boolean enableWallpaper;
-
-        /**
-         * 启用主题
-         */
-        private Boolean enableTheming;
-
-        /**
-         * 启动平滑字体
-         */
-        private Boolean enableFontSmoothing;
-
-        /**
-         * 启用窗口拖动
-         */
-        private Boolean enableFullWindowDrag;
-
-        /**
-         * 启用桌面合成
-         */
-        private Boolean enableDesktopComposition;
-
-        /**
-         * 启用菜单动画
-         */
-        private Boolean enableMenuAnimations;
-
-        /**
-         * 禁用位图缓存
-         */
-        private Boolean disableBitmapCaching;
-
-        /**
-         * 禁用离屏缓存
-         */
-        private Boolean disableOffscreenCaching;
-
-        /**
-         * 禁用字形缓存
-         */
-        private Boolean disableGlyphCaching;
 
     }
 
@@ -323,55 +235,7 @@ public class TerminalPreferenceModel implements GenericsDataModel {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class RdpActionBarSettingModel implements IJsonObject {
-
-        /**
-         * 位置
-         */
-        private String position;
-
-        /**
-         * 显示设置
-         */
-        private Boolean display;
-
-        /**
-         * 组合键
-         */
-        private Boolean combinationKey;
-
-        /**
-         * 剪切板
-         */
-        private Boolean clipboard;
-
-        /**
-         * 上传
-         */
-        private Boolean upload;
-
-        /**
-         * 保存为 rdp 文件
-         */
-        private Boolean saveRdp;
-
-        /**
-         * 断开连接
-         */
-        private Boolean disconnect;
-
-        /**
-         * 关闭
-         */
-        private Boolean close;
-
-    }
-
-    @Data
-    @Builder
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class InteractSettingModel implements IJsonObject {
+    public static class SshInteractSettingModel implements IJsonObject {
 
         /**
          * 快速滚动
@@ -423,13 +287,23 @@ public class TerminalPreferenceModel implements GenericsDataModel {
          */
         private String wordSeparator;
 
+        /**
+         * 伪终端类型
+         */
+        private String terminalEmulationType;
+
+        /**
+         * 保存在缓冲区的行数
+         */
+        private Integer scrollBackLine;
+
     }
 
     @Data
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class PluginsSettingModel implements IJsonObject {
+    public static class SshPluginsSettingModel implements IJsonObject {
 
         /**
          * 超链接插件
@@ -457,17 +331,153 @@ public class TerminalPreferenceModel implements GenericsDataModel {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class SessionSettingModel implements IJsonObject {
+    public static class RdpGraphSettingModel implements IJsonObject {
 
         /**
-         * 伪终端类型
+         * 显示大小
          */
-        private String terminalEmulationType;
+        private String displaySize;
 
         /**
-         * 保存在缓冲区的行数
+         * 显示宽度
          */
-        private Integer scrollBackLine;
+        private Integer displayWidth;
+
+        /**
+         * 显示高度
+         */
+        private Integer displayHeight;
+
+        /**
+         * 颜色深度
+         */
+        private Integer colorDepth;
+
+        /**
+         * 无损压缩
+         */
+        private Boolean forceLossless;
+
+        /**
+         * 启用壁纸
+         */
+        private Boolean enableWallpaper;
+
+        /**
+         * 启用主题
+         */
+        private Boolean enableTheming;
+
+        /**
+         * 启动平滑字体
+         */
+        private Boolean enableFontSmoothing;
+
+        /**
+         * 启用窗口拖动
+         */
+        private Boolean enableFullWindowDrag;
+
+        /**
+         * 启用桌面合成
+         */
+        private Boolean enableDesktopComposition;
+
+        /**
+         * 启用菜单动画
+         */
+        private Boolean enableMenuAnimations;
+
+        /**
+         * 禁用位图缓存
+         */
+        private Boolean disableBitmapCaching;
+
+        /**
+         * 禁用离屏缓存
+         */
+        private Boolean disableOffscreenCaching;
+
+        /**
+         * 禁用字形缓存
+         */
+        private Boolean disableGlyphCaching;
+
+        /**
+         * 禁用图形加速
+         */
+        private Boolean disableGfx;
+
+    }
+
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class RdpActionBarSettingModel implements IJsonObject {
+
+        /**
+         * 位置
+         */
+        private String position;
+
+        /**
+         * 显示设置
+         */
+        private Boolean display;
+
+        /**
+         * 组合键
+         */
+        private Boolean combinationKey;
+
+        /**
+         * 剪切板
+         */
+        private Boolean clipboard;
+
+        /**
+         * 上传
+         */
+        private Boolean upload;
+
+        /**
+         * 保存为 rdp 文件
+         */
+        private Boolean saveRdp;
+
+        /**
+         * 断开连接
+         */
+        private Boolean disconnect;
+
+        /**
+         * 关闭
+         */
+        private Boolean close;
+
+    }
+
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class RdpSessionSettingModel implements IJsonObject {
+
+        /**
+         * 启用音频输入
+         */
+        private Boolean enableAudioInput;
+
+        /**
+         * 启用音频输出
+         */
+        private Boolean enableAudioOutput;
+
+        /**
+         * 驱动挂载模式
+         */
+        private String driveMountMode;
 
     }
 

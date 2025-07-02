@@ -8,6 +8,41 @@ import { removeRouteListener } from '@/utils/route-listener';
 import { getUserAggregateInfo } from '@/api/user/user-aggregate';
 import { useAppStore, useCacheStore, useMenuStore, useTabBarStore, useTipsStore } from '@/store';
 
+const CHECK_APP_VERSION_KEY = 'check-app-version';
+
+// 检查版本更新
+const checkForVersionUpdate = (serverVersion: string) => {
+  try {
+    if (!serverVersion) {
+      return;
+    }
+    const clientVersion = import.meta.env.VITE_APP_VERSION;
+    // 版本相同
+    if (serverVersion === clientVersion) {
+      localStorage.removeItem(CHECK_APP_VERSION_KEY);
+      return;
+    }
+    // 版本不同
+    const lastCheck = localStorage.getItem(CHECK_APP_VERSION_KEY);
+    const lastCheckData = lastCheck ? JSON.parse(lastCheck) : null;
+    // 判断是否是同版本 或 距离上次提醒不超过 24 小时
+    if (lastCheckData?.version === serverVersion && Date.now() - (lastCheckData?.time || 0) < 24 * 60 * 60 * 1000) {
+      return;
+    }
+    // 提示用户更新
+    if (window.confirm('检测到新版本, 是否刷新页面以获取最新内容?')) {
+      window.location.reload();
+    }
+    // 更新 localStorage 记录
+    localStorage.setItem(CHECK_APP_VERSION_KEY, JSON.stringify({
+      version: serverVersion,
+      time: Date.now(),
+    }));
+  } catch (error) {
+    // ignored
+  }
+};
+
 export default defineStore('user', {
   state: (): UserState => ({
     id: undefined,
@@ -32,7 +67,9 @@ export default defineStore('user', {
 
     // 获取用户信息
     async getUserInfo() {
-      const { data } = await getUserAggregateInfo();
+      const { data: { data }, headers } = await getUserAggregateInfo();
+      // 检查版本更新
+      checkForVersionUpdate(headers?.['x-app-version']);
       // 设置用户信息
       this.setUserInfo({
         id: data.user.id,

@@ -3,7 +3,7 @@
            row-key="path"
            ref="tableRef"
            class="sftp-table"
-           :columns="columns"
+           :columns="sftpColumns"
            :row-selection="rowSelection"
            :sticky-header="true"
            :data="list"
@@ -144,13 +144,13 @@
 <script lang="ts" setup>
   import type { TableData } from '@arco-design/web-vue';
   import type { SftpFile, ISftpSession } from '@/views/terminal/interfaces';
-  import { ref, computed, watch, inject } from 'vue';
+  import { ref, computed, watch } from 'vue';
   import { useRowSelection } from '@/hooks/table';
   import { dateFormat } from '@/utils';
   import { setAutoFocus } from '@/utils/dom';
   import { copy } from '@/hooks/copy';
-  import columns from './types/table.columns';
-  import { FILE_TYPE, openSftpChmodModalKey, openSftpMoveModalKey } from '@/views/terminal/types/const';
+  import { sftpColumns } from '@/views/terminal/types/table.columns';
+  import { FILE_TYPE } from '@/views/terminal/types/const';
 
   const props = defineProps<{
     session?: ISftpSession;
@@ -160,10 +160,7 @@
     selectedFiles: Array<string>;
   }>();
 
-  const emits = defineEmits(['update:selectedFiles', 'loadFile', 'editFile', 'deleteFile', 'download']);
-
-  const openSftpMoveModal = inject(openSftpMoveModalKey) as (sessionKey: string, path: string) => void;
-  const openSftpChmodModal = inject(openSftpChmodModalKey) as (sessionKey: string, path: string, permission: number) => void;
+  const emits = defineEmits(['update:selectedFiles', 'loadFile', 'moveFile', 'chmodFile', 'editFile', 'deleteFile', 'download']);
 
   const rowSelection = useRowSelection({ width: 40 });
 
@@ -205,7 +202,7 @@
   const clickFilename = (record: TableData) => {
     if (record.isDir) {
       // 检查是否断开
-      if (!props.session?.status.connected) {
+      if (!props.session?.state.connected) {
         return;
       }
       // 进入文件夹
@@ -218,7 +215,7 @@
   // 编辑文件
   const editFile = (record: TableData) => {
     // 检查是否断开
-    if (!props.session?.status.connected) {
+    if (!props.session?.state.connected) {
       return;
     }
     emits('editFile', record.name, record.path);
@@ -228,7 +225,7 @@
   // 删除文件
   const deleteFile = (path: string) => {
     // 检查是否断开
-    if (!props.session?.status.connected) {
+    if (!props.session?.state.connected) {
       return;
     }
     emits('deleteFile', [path]);
@@ -237,7 +234,7 @@
   // 下载文件
   const downloadFile = (path: string) => {
     // 检查是否断开
-    if (!props.session?.status.connected) {
+    if (!props.session?.state.connected) {
       return;
     }
     emits('download', [path], false);
@@ -246,19 +243,19 @@
   // 移动文件
   const moveFile = (path: string) => {
     // 检查是否断开
-    if (!props.session?.status.connected) {
+    if (!props.session?.state.connected) {
       return;
     }
-    openSftpMoveModal(props.session?.sessionKey as string, path);
+    emits('moveFile', path);
   };
 
   // 文件提权
   const chmodFile = (path: string, permission: number) => {
     // 检查是否断开
-    if (!props.session?.status.connected) {
+    if (!props.session?.state.connected) {
       return;
     }
-    openSftpChmodModal(props.session?.sessionKey as string, path, permission);
+    emits('chmodFile', path, permission);
   };
 
   // 格式化文件类型

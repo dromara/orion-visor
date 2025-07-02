@@ -2,7 +2,7 @@
   <editor ref="editorRef"
           language="txt"
           :auto-focus="true"
-          :theme="preference.theme.dark ? 'vs-dark' : 'vs'" />
+          :theme="preference.sshTheme.dark ? 'vs-dark' : 'vs'" />
 </template>
 
 <script lang="ts">

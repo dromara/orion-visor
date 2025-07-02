@@ -1,13 +1,13 @@
 import type {
-  TerminalInteractSetting,
-  TerminalPluginsSetting,
   TerminalPreference,
   TerminalRdpActionBarSetting,
   TerminalRdpGraphSetting,
-  TerminalSessionSetting,
+  TerminalRdpSessionSetting,
   TerminalShortcutSetting,
   TerminalSshActionBarSetting,
   TerminalSshDisplaySetting,
+  TerminalSshInteractSetting,
+  TerminalSshPluginsSetting,
   TerminalState
 } from './types';
 import type {
@@ -34,30 +34,30 @@ import { TerminalSessionTypes, TerminalTabs } from '@/views/terminal/types/const
 import TerminalTabManager from '@/views/terminal/service/tab/terminal-tab-manager';
 import TerminalPanelManager from '@/views/terminal/service/tab/terminal-panel-manager';
 import TerminalSessionManager from '@/views/terminal/service/session/terminal-session-manager';
-import SftpTransferManager from '@/views/terminal/service/transfer/sftp-transfer-manager';
+import TerminalTransferManager from '@/views/terminal/service/transfer/terminal-transfer-manager';
 
 // 终端偏好项
 export const TerminalPreferenceItem = {
   // 新建连接类型
   NEW_CONNECTION_TYPE: 'newConnectionType',
-  // 终端主题
-  THEME: 'theme',
+  // ssh 主题
+  SSH_THEME: 'sshTheme',
   // ssh 显示设置
   SSH_DISPLAY_SETTING: 'sshDisplaySetting',
-  // rdp 图形化设置
-  RDP_GRAPH_SETTING: 'rdpGraphSetting',
   // ssh 操作栏设置
   SSH_ACTION_BAR_SETTING: 'sshActionBarSetting',
+  // ssh 右键菜单设置
+  SSH_RIGHT_MENU_SETTING: 'sshRightMenuSetting',
+  // ssh 交互设置
+  SSH_INTERACT_SETTING: 'sshInteractSetting',
+  // ssh 插件设置
+  SSH_PLUGINS_SETTING: 'sshPluginsSetting',
+  // rdp 图形化设置
+  RDP_GRAPH_SETTING: 'rdpGraphSetting',
   // rdp 操作栏设置
   RDP_ACTION_BAR_SETTING: 'rdpActionBarSetting',
-  // 右键菜单设置
-  RIGHT_MENU_SETTING: 'rightMenuSetting',
-  // 交互设置
-  INTERACT_SETTING: 'interactSetting',
-  // 插件设置
-  PLUGINS_SETTING: 'pluginsSetting',
   // 会话设置
-  SESSION_SETTING: 'sessionSetting',
+  RDP_SESSION_SETTING: 'rdpSessionSetting',
   // 快捷键设置
   SHORTCUT_SETTING: 'shortcutSetting',
 };
@@ -66,17 +66,17 @@ export default defineStore('terminal', {
   state: (): TerminalState => ({
     preference: {
       newConnectionType: 'group',
-      theme: {
+      sshTheme: {
         schema: {} as TerminalThemeSchema
       } as TerminalTheme,
       sshDisplaySetting: {} as TerminalSshDisplaySetting,
-      rdpGraphSetting: {} as TerminalRdpGraphSetting,
       sshActionBarSetting: {} as TerminalSshActionBarSetting,
+      sshRightMenuSetting: [],
+      sshInteractSetting: {} as TerminalSshInteractSetting,
+      sshPluginsSetting: {} as TerminalSshPluginsSetting,
+      rdpGraphSetting: {} as TerminalRdpGraphSetting,
+      rdpSessionSetting: {} as TerminalRdpSessionSetting,
       rdpActionBarSetting: {} as TerminalRdpActionBarSetting,
-      rightMenuSetting: [],
-      interactSetting: {} as TerminalInteractSetting,
-      pluginsSetting: {} as TerminalPluginsSetting,
-      sessionSetting: {} as TerminalSessionSetting,
       shortcutSetting: {
         enabled: false,
         keys: []
@@ -90,7 +90,7 @@ export default defineStore('terminal', {
     tabManager: new TerminalTabManager(),
     panelManager: new TerminalPanelManager(),
     sessionManager: markRaw(new TerminalSessionManager()),
-    transferManager: new SftpTransferManager(),
+    transferManager: new TerminalTransferManager(),
   }),
 
   actions: {
@@ -100,11 +100,11 @@ export default defineStore('terminal', {
         // 加载偏好
         const { data } = await getPreference<TerminalPreference>('TERMINAL');
         // theme 不存在则默认加载第一个
-        if (!data.theme?.name) {
+        if (!data.sshTheme?.name) {
           const { data: themes } = await getTerminalThemes();
-          data.theme = themes[0];
+          data.sshTheme = themes[0];
           // 更新默认主题偏好
-          await this.updateTerminalPreference(TerminalPreferenceItem.THEME, data.theme);
+          await this.updateTerminalPreference(TerminalPreferenceItem.SSH_THEME, data.sshTheme);
         }
         // 移除禁用的快捷键
         if (data.shortcutSetting?.enabled) {

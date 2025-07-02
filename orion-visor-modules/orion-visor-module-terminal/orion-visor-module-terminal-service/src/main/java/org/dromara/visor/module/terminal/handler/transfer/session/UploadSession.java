@@ -22,6 +22,7 @@
  */
 package org.dromara.visor.module.terminal.handler.transfer.session;
 
+import cn.orionsec.kit.lang.utils.collect.Lists;
 import cn.orionsec.kit.lang.utils.io.Streams;
 import cn.orionsec.kit.net.host.SessionStore;
 import lombok.extern.slf4j.Slf4j;
@@ -58,7 +59,7 @@ public class UploadSession extends TransferSession {
         try {
             log.info("UploadSession.startUpload start channelId: {}, path: {}", channelId, path);
             // 保存操作日志
-            this.saveOperatorLog(TerminalOperatorType.SFTP_UPLOAD, path);
+            this.saveOperatorLog(request.getLogId(), TerminalOperatorType.SFTP_UPLOAD, Lists.singleton(path));
             // 检查连接
             this.init();
             // 检查文件是否存在

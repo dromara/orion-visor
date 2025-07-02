@@ -1,4 +1,4 @@
-import type { ISshChannel, ISshSession, ISshSessionHandler, ReactiveSessionStatus, SshInitConfig, TerminalSessionTabItem } from '@/views/terminal/interfaces';
+import type { ISshChannel, ISshSession, ISshSessionHandler, ReactiveSessionState, SshInitConfig, TerminalSessionTabItem } from '@/views/terminal/interfaces';
 import type { UnwrapRef } from 'vue';
 import type { ISearchOptions } from '@xterm/addon-search';
 import { SearchAddon } from '@xterm/addon-search';
@@ -23,7 +23,7 @@ import SshChannel from '../channel/ssh-channel';
 import SshSessionHandler from '../handler/ssh-session-handler';
 
 // SSH 会话实现
-export default class SshSession extends BaseSession<ReactiveSessionStatus, ISshChannel> implements ISshSession {
+export default class SshSession extends BaseSession<ReactiveSessionState, ISshChannel> implements ISshSession {
 
   public inst: Terminal;
 
@@ -50,13 +50,13 @@ export default class SshSession extends BaseSession<ReactiveSessionStatus, ISshC
     // 初始化实例
     this.inst.options = {
       ...(preference.sshDisplaySetting as any),
-      theme: preference.theme.schema,
-      fastScrollModifier: !!preference.interactSetting.fastScrollModifier ? 'alt' : 'none',
-      altClickMovesCursor: !!preference.interactSetting.altClickMovesCursor,
-      rightClickSelectsWord: !!preference.interactSetting.rightClickSelectsWord,
-      wordSeparator: preference.interactSetting.wordSeparator,
+      theme: preference.sshTheme.schema,
+      fastScrollModifier: !!preference.sshInteractSetting.fastScrollModifier ? 'alt' : 'none',
+      altClickMovesCursor: !!preference.sshInteractSetting.altClickMovesCursor,
+      rightClickSelectsWord: !!preference.sshInteractSetting.rightClickSelectsWord,
+      wordSeparator: preference.sshInteractSetting.wordSeparator,
+      scrollback: preference.sshInteractSetting.scrollBackLine,
       fontFamily: fontFamily === '_' ? defaultFontFamily : `${fontFamily}, ${defaultFontFamily}`,
-      scrollback: preference.sessionSetting.scrollBackLine,
       allowProposedApi: true,
     };
     // 初始化 channel
@@ -102,9 +102,9 @@ export default class SshSession extends BaseSession<ReactiveSessionStatus, ISshC
         e.preventDefault();
       }
       // 检查重新连接
-      if (!this.status.connected && this.status.canReconnect && e.key === 'Enter') {
+      if (!this.state.connected && this.state.canReconnect && e.key === 'Enter') {
         // 防止重复回车
-        this.status.canReconnect = false;
+        this.state.canReconnect = false;
         // 异步作用域重新连接
         setTimeout(async () => {
           await useTerminalStore().reOpenSession(this.sessionKey);
@@ -129,7 +129,7 @@ export default class SshSession extends BaseSession<ReactiveSessionStatus, ISshC
   private registerEvent(dom: HTMLElement, preference: UnwrapRef<TerminalPreference>) {
     // 注册输入事件
     this.inst.onData(s => {
-      if (!this.status.canWrite || !this.status.connected) {
+      if (!this.state.canWrite || !this.state.connected) {
         return;
       }
       // 输入
@@ -138,14 +138,14 @@ export default class SshSession extends BaseSession<ReactiveSessionStatus, ISshC
       });
     });
     // 启用响铃
-    if (preference.interactSetting.enableBell) {
+    if (preference.sshInteractSetting.enableBell) {
       this.inst.onBell(() => {
         // 播放响铃
         playBell();
       });
     }
     // 选中复制
-    if (preference.interactSetting.selectionChangeCopy) {
+    if (preference.sshInteractSetting.selectionChangeCopy) {
       this.inst.onSelectionChange(() => {
         // 复制选中内容
         this.handler.copy();
@@ -153,7 +153,7 @@ export default class SshSession extends BaseSession<ReactiveSessionStatus, ISshC
     }
     // 注册 resize 事件
     this.inst.onResize(({ cols, rows }) => {
-      if (!this.status.connected) {
+      if (!this.state.connected) {
         return;
       }
       this.channel.send(InputProtocol.RESIZE, {
@@ -164,12 +164,12 @@ export default class SshSession extends BaseSession<ReactiveSessionStatus, ISshC
     // 设置右键选项
     addEventListen(dom, 'contextmenu', async () => {
       // 右键粘贴逻辑
-      if (preference.interactSetting.rightClickPaste) {
-        if (!this.status.canWrite || !this.status.connected) {
+      if (preference.sshInteractSetting.rightClickPaste) {
+        if (!this.state.canWrite || !this.state.connected) {
           return;
         }
         // 未开启右键选中 || 开启并无选中的内容则粘贴
-        if (!preference.interactSetting.rightClickSelectsWord || !this.inst.hasSelection()) {
+        if (!preference.sshInteractSetting.rightClickSelectsWord || !this.inst.hasSelection()) {
           this.handler.paste();
         }
       }
@@ -181,10 +181,10 @@ export default class SshSession extends BaseSession<ReactiveSessionStatus, ISshC
     this.addons.fit = new FitAddon();
     this.addons.search = new SearchAddon();
     // 超链接插件
-    if (preference.pluginsSetting.enableWeblinkPlugin) {
+    if (preference.sshPluginsSetting.enableWeblinkPlugin) {
       this.addons.weblink = new WebLinksAddon();
     }
-    if (preference.pluginsSetting.enableWebglPlugin && this.config.webglAvailable) {
+    if (preference.sshPluginsSetting.enableWebglPlugin && this.config.webglAvailable) {
       // WebGL 渲染插件
       this.addons.webgl = new WebglAddon(true);
     } else {
@@ -192,11 +192,11 @@ export default class SshSession extends BaseSession<ReactiveSessionStatus, ISshC
       this.addons.canvas = new CanvasAddon();
     }
     // 图片渲染插件
-    if (preference.pluginsSetting.enableImagePlugin) {
+    if (preference.sshPluginsSetting.enableImagePlugin) {
       this.addons.image = new ImageAddon();
     }
     // unicode11 插件
-    if (preference.pluginsSetting.enableUnicodePlugin) {
+    if (preference.sshPluginsSetting.enableUnicodePlugin) {
       this.addons.unicode = new Unicode11Addon();
     }
     // 加载插件

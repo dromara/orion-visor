@@ -23,9 +23,7 @@
 package org.dromara.visor.module.terminal.service.impl;
 
 import cn.orionsec.kit.lang.constant.StandardContentType;
-import cn.orionsec.kit.lang.define.wrapper.DataGrid;
 import cn.orionsec.kit.lang.define.wrapper.HttpWrapper;
-import cn.orionsec.kit.lang.utils.Arrays1;
 import cn.orionsec.kit.lang.utils.Exceptions;
 import cn.orionsec.kit.lang.utils.Strings;
 import cn.orionsec.kit.lang.utils.Valid;
@@ -34,27 +32,17 @@ import cn.orionsec.kit.lang.utils.io.Streams;
 import cn.orionsec.kit.net.host.SessionStore;
 import cn.orionsec.kit.net.host.sftp.SftpExecutor;
 import cn.orionsec.kit.web.servlet.web.Servlets;
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.visor.common.constant.Const;
 import org.dromara.visor.common.constant.ErrorMessage;
-import org.dromara.visor.common.constant.ExtraFieldConst;
 import org.dromara.visor.common.session.config.SshConnectConfig;
 import org.dromara.visor.common.session.ssh.SessionStores;
-import org.dromara.visor.framework.biz.operator.log.core.utils.OperatorLogs;
 import org.dromara.visor.framework.redis.core.utils.RedisStrings;
 import org.dromara.visor.framework.security.core.utils.SecurityUtils;
 import org.dromara.visor.module.asset.api.HostConnectApi;
-import org.dromara.visor.module.infra.api.OperatorLogApi;
-import org.dromara.visor.module.infra.entity.dto.operator.OperatorLogQueryDTO;
-import org.dromara.visor.module.terminal.convert.TerminalSftpLogConvert;
 import org.dromara.visor.module.terminal.define.cache.TerminalCacheKeyDefine;
-import org.dromara.visor.module.terminal.define.operator.TerminalOperatorType;
 import org.dromara.visor.module.terminal.entity.dto.SftpGetContentCacheDTO;
 import org.dromara.visor.module.terminal.entity.dto.SftpSetContentCacheDTO;
-import org.dromara.visor.module.terminal.entity.request.terminal.TerminalSftpLogQueryRequest;
-import org.dromara.visor.module.terminal.entity.vo.TerminalSftpLogVO;
 import org.dromara.visor.module.terminal.handler.transfer.manager.TerminalTransferManager;
 import org.dromara.visor.module.terminal.handler.transfer.session.DownloadSession;
 import org.dromara.visor.module.terminal.service.TerminalSftpService;
@@ -67,7 +55,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -82,52 +69,10 @@ import java.util.Optional;
 public class TerminalSftpServiceImpl implements TerminalSftpService {
 
     @Resource
-    private OperatorLogApi operatorLogApi;
-
-    @Resource
     private HostConnectApi hostConnectApi;
 
     @Resource
     private TerminalTransferManager terminalTransferManager;
-
-    @Override
-    public DataGrid<TerminalSftpLogVO> getTerminalSftpLogPage(TerminalSftpLogQueryRequest request) {
-        // 查询
-        OperatorLogQueryDTO query = this.buildQueryInfo(request);
-        // 转换
-        return operatorLogApi.getOperatorLogPage(query)
-                .map(s -> {
-                    JSONObject extra = JSON.parseObject(s.getExtra());
-                    TerminalSftpLogVO vo = TerminalSftpLogConvert.MAPPER.to(s);
-                    vo.setHostId(extra.getLong(ExtraFieldConst.HOST_ID));
-                    vo.setHostName(extra.getString(ExtraFieldConst.HOST_NAME));
-                    vo.setHostAddress(extra.getString(ExtraFieldConst.ADDRESS));
-                    String[] paths = Optional.ofNullable(extra.getString(ExtraFieldConst.PATH))
-                            .map(p -> p.split("\\|"))
-                            .orElse(new String[0]);
-                    vo.setPaths(paths);
-                    vo.setExtra(extra);
-                    return vo;
-                });
-    }
-
-    @Override
-    public Long getTerminalSftpLogCount(TerminalSftpLogQueryRequest request) {
-        // 查询
-        OperatorLogQueryDTO query = this.buildQueryInfo(request);
-        // 转换
-        return operatorLogApi.getOperatorLogCount(query);
-    }
-
-    @Override
-    public Integer deleteTerminalSftpLog(List<Long> idList) {
-        log.info("TerminalSftpService.deleteSftpLog start {}", JSON.toJSONString(idList));
-        Integer effect = operatorLogApi.deleteOperatorLog(idList);
-        log.info("TerminalSftpService.deleteSftpLog finish {}", effect);
-        // 设置日志参数
-        OperatorLogs.add(OperatorLogs.COUNT, effect);
-        return effect;
-    }
 
     @Override
     public void getFileContentByToken(String token, HttpServletResponse response) throws IOException {
@@ -213,38 +158,6 @@ public class TerminalSftpServiceImpl implements TerminalSftpService {
         // 响应文件
         Servlets.setAttachmentHeader(response, Files1.getFileName(session.getPath()));
         return session;
-    }
-
-    /**
-     * 构建查询对象
-     *
-     * @param request request
-     * @return query
-     */
-    private OperatorLogQueryDTO buildQueryInfo(TerminalSftpLogQueryRequest request) {
-        Long hostId = request.getHostId();
-        String type = request.getType();
-        // 构建参数
-        OperatorLogQueryDTO query = OperatorLogQueryDTO.builder()
-                .userId(request.getUserId())
-                .result(request.getResult())
-                .startTimeStart(Arrays1.getIfPresent(request.getStartTimeRange(), 0))
-                .startTimeEnd(Arrays1.getIfPresent(request.getStartTimeRange(), 1))
-                .build();
-        query.setPage(request.getPage());
-        query.setLimit(request.getLimit());
-        query.setOrder(request.getOrder());
-        if (Strings.isBlank(type)) {
-            // 查询全部 SFTP 类型
-            query.setTypeList(TerminalOperatorType.SFTP_TYPES);
-        } else {
-            query.setType(type);
-        }
-        // 模糊查询
-        if (hostId != null) {
-            query.setExtra("\"hostId\": " + hostId + ",");
-        }
-        return query;
     }
 
 }

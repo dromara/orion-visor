@@ -23,7 +23,7 @@ export default class TerminalSessionManager implements ITerminalSessionManager {
 
   public sessions: Array<ITerminalSession>;
 
-  private readonly keepAliveTaskId?: any;
+  private readonly keepAliveTaskId: number;
 
   private readonly dispatchFitFn: () => void;
 
@@ -33,7 +33,7 @@ export default class TerminalSessionManager implements ITerminalSessionManager {
     // 注册 resize 事件
     addEventListen(window, 'resize', this.dispatchFitFn);
     // 注册 ping 事件
-    this.keepAliveTaskId = setInterval(this.dispatchPing.bind(this), 15000);
+    this.keepAliveTaskId = window.setInterval(this.dispatchPing.bind(this), 15000);
   }
 
   // 打开 ssh 会话

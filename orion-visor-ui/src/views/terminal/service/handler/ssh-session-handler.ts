@@ -1,4 +1,4 @@
-import type { ShortcutKey, TerminalInteractSetting, TerminalShortcutKey } from '@/store/modules/terminal/types';
+import type { ShortcutKey, TerminalShortcutKey, TerminalSshInteractSetting } from '@/store/modules/terminal/types';
 import type { ISshSession, ISshSessionHandler } from '@/views/terminal/interfaces';
 import type { Terminal } from '@xterm/xterm';
 import useCopy from '@/hooks/copy';
@@ -39,7 +39,7 @@ export default class SshSessionHandler implements ISshSessionHandler {
 
   private readonly session: ISshSession;
 
-  private readonly interactSetting: TerminalInteractSetting;
+  private readonly interactSetting: TerminalSshInteractSetting;
 
   private readonly shortcutKeys: Array<TerminalShortcutKey>;
 
@@ -47,7 +47,7 @@ export default class SshSessionHandler implements ISshSessionHandler {
     this.session = session;
     this.inst = session.inst;
     const { preference } = useTerminalStore();
-    this.interactSetting = preference.interactSetting;
+    this.interactSetting = preference.sshInteractSetting;
     this.shortcutKeys = preference.shortcutSetting.keys;
   }
 
@@ -82,9 +82,9 @@ export default class SshSessionHandler implements ISshSessionHandler {
       case 'openSftp':
       case 'uploadFile':
       case 'checkAppendMissing':
-        return this.session.status.canWrite;
+        return this.session.state.canWrite;
       case 'disconnect':
-        return this.session.status.connected;
+        return this.session.state.connected;
       default:
         return true;
     }
@@ -193,7 +193,7 @@ export default class SshSessionHandler implements ISshSessionHandler {
   // 字号增加
   private fontSizeAdd(addSize: number) {
     this.inst.options['fontSize'] = this.inst.options['fontSize'] as number + addSize;
-    if (this.session.status.connected) {
+    if (this.session.state.connected) {
       this.session.fit();
       this.inst.focus();
     }
@@ -211,7 +211,7 @@ export default class SshSessionHandler implements ISshSessionHandler {
 
   // 上传文件
   uploadFile(): void {
-    this.session.config.uploadModal.open(this.session.info.hostId, '/');
+    this.session.config.uploadModal.open('/');
   }
 
   // ctrl + c

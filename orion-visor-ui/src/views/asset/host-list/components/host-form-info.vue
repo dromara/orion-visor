@@ -194,11 +194,13 @@
         // 复制
         const { data } = await copyHost(formModel.value);
         Message.success('复制成功');
+        formModel.value.id = data;
         emits('updated', data);
       } else if (!formModel.value.id) {
         // 新增
         const { data } = await createHost(formModel.value);
         Message.success('创建成功');
+        formModel.value.id = data;
         emits('updated', data);
       } else {
         // 修改

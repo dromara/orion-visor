@@ -8,7 +8,7 @@
     <!-- 终端插槽 -->
     <slot />
     <!-- 右键菜单 -->
-    <template v-if="session && preference.interactSetting.enableRightClickMenu" #content>
+    <template v-if="session && preference.sshInteractSetting.enableRightClickMenu" #content>
       <a-doption v-for="(action, index) in actions"
                  :key="index"
                  :disabled="!session || !session.handler.enabledStatus(action.item)"
@@ -44,9 +44,9 @@
 
   const { preference } = useTerminalStore();
 
-  const actions: Array<ContextMenuItem> = !preference.interactSetting.enableRightClickMenu
+  const actions: Array<ContextMenuItem> = !preference.sshInteractSetting.enableRightClickMenu
     ? []
-    : preference.rightMenuSetting
+    : preference.sshRightMenuSetting
       .map(s => SshActionBarItems.find(i => i.item === s) as ContextMenuItem)
       .filter(Boolean);
 

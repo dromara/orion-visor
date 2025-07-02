@@ -6,7 +6,7 @@
         <!-- 跳转 -->
         <span class="pointer span-blue"
               title="详情"
-              @click="router.push({ name: 'connectLog', query: { action: 'self' } })">
+              @click="router.push({ name: 'terminalConnectLog', query: { action: 'self' } })">
           详情
         </span>
       </div>

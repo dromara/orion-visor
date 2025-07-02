@@ -45,6 +45,11 @@ export const InputProtocol = {
     type: 'rs',
     template: ['type', 'width', 'height']
   },
+  // guacd 指令
+  GUACD_INSTRUCTION: {
+    type: 'gi',
+    template: ['type', 'instruction']
+  },
   // SSH 输入
   SSH_INPUT: {
     type: 'i',
@@ -95,11 +100,11 @@ export const InputProtocol = {
     type: 'sc',
     template: ['type', 'path']
   },
-  // guacd 指令
-  GUACD_INSTRUCTION: {
-    type: 'gi',
-    template: ['type', 'instruction']
-  }
+  // RDP 文件系统事件
+  RDP_FILE_SYSTEM_EVENT: {
+    type: 'fse',
+    template: ['type', 'event']
+  },
 };
 
 // 输出协议
@@ -139,6 +144,12 @@ export const OutputProtocol = {
     type: 'p',
     template: ['type'],
     processMethod: 'processPong'
+  },
+  // guacd 指令
+  GUACD_INSTRUCTION: {
+    type: 'gi',
+    template: ['type', 'instruction'],
+    processMethod: 'processInstruction'
   },
   // SSH 输出
   SSH_OUTPUT: {
@@ -200,12 +211,6 @@ export const OutputProtocol = {
     template: ['type', 'result', 'msg', 'token'],
     processMethod: 'processSftpSetContent'
   },
-  // guacd 指令
-  GUACD_INSTRUCTION: {
-    type: 'gi',
-    template: ['type', 'instruction'],
-    processMethod: 'processInstruction'
-  }
 };
 
 // 解析参数

@@ -98,6 +98,10 @@ export const TerminalMessages = {
   waitingReconnect: '输入回车重新连接...',
   loggedElsewhere: '该账号已在另一台设备登录',
   rdpConnectTimeout: '请检查远程计算机网络及其他配置是否正常',
+  fileTransferError: '传输失败',
+  fileSaveError: '保存失败',
+  fileUploading: '已开始上传, 点击右侧传输列表查看进度',
+  fileDownloading: '已开始下载, 点击右侧传输列表查看进度',
 };
 
 // 文件类型
@@ -457,6 +461,12 @@ export const TransferType = {
   DOWNLOAD: 'download',
 };
 
+// 传输来源
+export const TransferSource = {
+  SFTP: 'sftp',
+  RDP: 'rdp',
+};
+
 // 传输操作
 export const TransferOperator = {
   START: 'start',
@@ -475,20 +485,14 @@ export const TransferReceiver = {
   ABORT: 'abort',
 };
 
+// 路径书签类型
+export const PathBookmarkType = {
+  FILE: 'FILE',
+  DIR: 'DIR',
+};
+
 // 打开 extraModal key
 export const openExtraModalKey = Symbol();
-
-// 打开 sftpCreateModal key
-export const openSftpCreateModalKey = Symbol();
-
-// 打开 sftpMoveModal key
-export const openSftpMoveModalKey = Symbol();
-
-// 打开 sftpChmodModal key
-export const openSftpChmodModalKey = Symbol();
-
-// 打开 sftpUploadModal key
-export const openSftpUploadModalKey = Symbol();
 
 // 终端字体样式
 export const fontFamilyKey = 'terminalFontFamily';
@@ -513,6 +517,9 @@ export const screenResolutionKey = 'screenResolution';
 
 // 图形化色彩深度
 export const graphColorDepthKey = 'graphColorDepth';
+
+// 驱动挂载模式
+export const driveMountModeKey = 'driveMountMode';
 
 // vnc光标
 export const vcnCursorKey = 'vcnCursor';
@@ -541,7 +548,7 @@ export const pathBookmarkTypeKey = 'pathBookmarkType';
 // 加载的字典值
 export const dictKeys = [
   fontFamilyKey, fontSizeKey, fontWeightKey, cursorStyleKey, emulationTypeKey,
-  graphActionBarPositionKey, graphColorDepthKey, screenResolutionKey, vcnCursorKey,
+  graphActionBarPositionKey, graphColorDepthKey, screenResolutionKey, driveMountModeKey, vcnCursorKey,
   newConnectionTypeKey, connectStatusKey, tabColorKey,
   extraSshAuthTypeKey, extraPasswordAuthTypeKey,
   transferStatusKey,

@@ -1,6 +1,6 @@
 #/bin/bash
 set -e
-version=2.4.0
+version=2.4.1
 mv ../../orion-visor-ui/dist ./dist
 docker build -t orion-visor-ui:${version} .
 rm -rf ./orion-visor-launch.jar

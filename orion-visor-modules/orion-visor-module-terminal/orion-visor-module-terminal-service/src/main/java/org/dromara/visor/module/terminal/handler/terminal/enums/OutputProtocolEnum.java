@@ -69,6 +69,13 @@ public enum OutputProtocolEnum {
      */
     RESIZE("rs", "${type}|${width}|${height}"),
 
+    // ----------------------- guacd ----------------------
+
+    /**
+     * guacd 指令
+     */
+    GUACD_INSTRUCTION("gi", "${type}|${instruction}"),
+
     // ----------------------- ssh ----------------------
 
     /**
@@ -142,13 +149,6 @@ public enum OutputProtocolEnum {
      * SFTP 修改文件内容
      */
     SFTP_SET_CONTENT("sc", "${type}|${result}|${msg}|${token}"),
-
-    // ----------------------- guacd ----------------------
-
-    /**
-     * guacd 指令
-     */
-    GUACD_INSTRUCTION("gi", "${type}|${instruction}"),
 
     ;
 

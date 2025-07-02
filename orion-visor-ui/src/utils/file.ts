@@ -41,6 +41,17 @@ export function readFileText(e: File, encoding = 'UTF-8'): Promise<string> {
   });
 }
 
+// 关闭 fileReader
+export function closeFileReader(reader: FileReader) {
+  // 清理资源
+  if (reader.readyState === FileReader.LOADING) {
+    reader.abort();
+  }
+  reader.onload = null;
+  reader.onerror = null;
+  reader.onabort = null;
+}
+
 /**
  * 解析路径类型
  */

@@ -69,7 +69,7 @@
       // 等待一秒后先查询一下状态
       setTimeout(pullExecStatus, 1000);
       // 注册状态轮询
-      pullIntervalId.value = setInterval(pullExecStatus, 5000);
+      pullIntervalId.value = window.setInterval(pullExecStatus, 5000);
     }
     // 打开日志
     nextTick(() => {

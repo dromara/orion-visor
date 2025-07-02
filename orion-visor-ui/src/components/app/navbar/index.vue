@@ -331,7 +331,7 @@
     // 查询未读消息
     pullHasUnreadMessage();
     // 注册未读消息轮询
-    messageIntervalId.value = setInterval(pullHasUnreadMessage, 30000);
+    messageIntervalId.value = window.setInterval(pullHasUnreadMessage, 30000);
   });
 
   onUnmounted(() => {

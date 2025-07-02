@@ -1,4 +1,5 @@
 import type { MenuQueryResponse } from '@/api/system/menu';
+import type { AxiosResponse } from 'axios';
 import axios from 'axios';
 
 /**
@@ -35,7 +36,9 @@ export interface UserUpdatePasswordResponse {
  * 获取用户聚合信息
  */
 export function getUserAggregateInfo() {
-  return axios.get<UserAggregateResponse>('/infra/user-aggregate/user');
+  return axios.get<AxiosResponse<UserAggregateResponse>>('/infra/user-aggregate/user', {
+    unwrap: true
+  });
 }
 
 /**

@@ -2,6 +2,7 @@ import type { FileItem } from '@arco-design/web-vue';
 import type { IFileUploader, ResponseMessageBody } from './const';
 import { UploadOperatorType, UploadReceiverType } from './const';
 import { openFileUploadChannel } from '@/api/system/upload';
+import { closeFileReader } from '@/utils/file';
 
 // 512 KB
 export const PART_SIZE = 512 * 1024;
@@ -81,13 +82,14 @@ export default class FileUploader implements IFileUploader {
 
   // 上传下一块数据
   private async uploadNextPart() {
+    let reader = undefined as unknown as FileReader;
     try {
       if (this.currentPart < this.totalPart) {
         // 有下一个分片则上传
         const start = this.currentPart++ * PART_SIZE;
         const end = Math.min(this.currentFile.size, start + PART_SIZE);
         const chunk = this.currentFile.slice(start, end);
-        const reader = new FileReader();
+        reader = new FileReader();
         // 读取数据
         const arrayBuffer = await new Promise((resolve, reject) => {
           reader.onload = () => resolve(reader.result);
@@ -107,11 +109,15 @@ export default class FileUploader implements IFileUploader {
         }));
       }
     } catch (e) {
-      // 读取文件失败
+      // 发送读取文件失败
       this.client?.send(JSON.stringify({
         type: UploadOperatorType.ERROR,
         fileId: this.currentFileItem.uid,
       }));
+      // 释放资源
+      if (reader) {
+        closeFileReader(reader);
+      }
     }
   }
 
