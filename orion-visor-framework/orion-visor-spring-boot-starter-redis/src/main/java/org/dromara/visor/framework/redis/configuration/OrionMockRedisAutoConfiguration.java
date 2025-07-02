@@ -38,17 +38,17 @@ import java.net.InetAddress;
 import java.util.function.Supplier;
 
 /**
- * noRedis 配置
+ * MockRedis
  * 仅用于本地调试无 redis 的情况
  *
  * @author Jiahang Li
  * @version 1.0.0
  * @since 2024/12/26 10:02
  */
-@ConditionalOnProperty(value = "no.redis", havingValue = "true")
+@ConditionalOnProperty(value = "spring.redis.mock", havingValue = "true")
 @AutoConfiguration
 @AutoConfigureOrder(AutoConfigureOrderConst.FRAMEWORK_REDIS - 10)
-public class OrionNoRedisAutoConfiguration {
+public class OrionMockRedisAutoConfiguration {
 
     /**
      * @return mocked redis server

@@ -37,7 +37,7 @@
             <artifactId>netty-all</artifactId>
         </dependency>
 
-        <!-- test redis noRedis -->
+        <!-- test redis MockRedis -->
         <dependency>
             <groupId>com.github.fppt</groupId>
             <artifactId>jedis-mock</artifactId>
