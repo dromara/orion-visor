@@ -22,16 +22,14 @@
  */
 package org.dromara.visor.common.constant;
 
-import cn.orionsec.kit.lang.constant.StandardHttpHeader;
-
 /**
- * http 请求头
+ * 自定义请求头
  *
  * @author Jiahang Li
  * @version 1.0.0
  * @since 2025/7/1 1:02
  */
-public interface HttpHeaderConst extends StandardHttpHeader {
+public interface CustomHeaderConst {
 
     String APP_VERSION = "X-App-Version";
 

@@ -39,7 +39,7 @@ import java.util.concurrent.TimeUnit;
 public interface PreferenceCacheKeyDefine {
 
     CacheKeyDefine PREFERENCE = new CacheKeyBuilder()
-            .key("v1:user:prefer:{}:{}")
+            .key("user:prefer:{}:{}")
             .desc("用户偏好 ${userId} ${type}")
             .type(JSONObject.class)
             .struct(RedisCacheStruct.STRING)

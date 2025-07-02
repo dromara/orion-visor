@@ -51,9 +51,6 @@ public interface Const extends cn.orionsec.kit.lang.constant.Const, FieldConst, 
 
     String SYSTEM_USERNAME = "system";
 
-    // FIXME KIT
-    String ADMINISTRATOR = "Administrator";
-
     Long ALL_HOST_ID = -1L;
 
     int BATCH_COUNT = 500;

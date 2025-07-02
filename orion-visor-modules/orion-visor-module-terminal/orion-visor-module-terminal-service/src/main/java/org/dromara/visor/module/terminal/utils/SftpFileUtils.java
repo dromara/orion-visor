@@ -79,7 +79,7 @@ public class SftpFileUtils {
         SftpFileVO vo = new SftpFileVO();
         vo.setName(file.getName());
         vo.setPath(file.getPath());
-        vo.setSuffix(Files1.getSuffix(file.getName()));
+        vo.setSuffix(Files1.getFileNameSuffix(file.getName()));
         vo.setSize(file.getSize());
         vo.setPermission(file.getPermission());
         vo.setUid(file.getUid());
