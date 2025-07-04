@@ -5,7 +5,7 @@ import axios from 'axios';
 import qs from 'query-string';
 
 // 主机类型
-export type HostType = 'SSH' | string | undefined;
+export type HostType = 'SSH' | 'RDP' | 'VNC' | string | undefined;
 
 /**
  * 主机创建请求

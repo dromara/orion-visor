@@ -51,6 +51,16 @@ export interface HostRdpConfig extends HostBaseConfig {
   remoteAppArgs?: string;
 }
 
+// 主机 VNC 配置
+export interface HostVncConfig extends HostBaseConfig {
+  identityId?: number;
+  noUsername?: boolean;
+  noPassword?: boolean;
+  portForwardId?: number;
+  timezone?: string;
+  clipboardEncoding?: string;
+}
+
 /**
  * 更新主机配置
  */

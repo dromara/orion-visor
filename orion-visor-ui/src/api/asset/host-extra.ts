@@ -33,6 +33,12 @@ export interface HostRdpExtraSettingModel {
   initialProgram: string;
 }
 
+// VNC 额外配置
+export interface HostVncExtraSettingModel {
+  port: number;
+  lowBandwidthMode: boolean;
+}
+
 // 标签额外配置
 export interface HostLabelExtraSettingModel {
   alias: string;
