@@ -1,0 +1,81 @@
+name: Docker Publish
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    env:
+      GITHUB_REGISTRY: ghcr.io
+      ALIYUN_REGISTRY: registry.cn-hangzhou.aliyuncs.com
+      ALIYUN_NAMESPACE: ${{ vars.ALIYUN_NAMESPACE }}
+      DOCKERHUB_NAMESPACE: ${{ vars.DOCKERHUB_NAMESPACE }}
+
+    strategy:
+      matrix:
+        service: [ adminer, guacd, mysql, redis, service, ui ]
+
+    steps:
+      - name: 🌱 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: ⚙️ Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: 🔧 Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: 🐳 Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: 🐳 Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.GITHUB_REGISTRY }}
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: 🐳 Login to Aliyun Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.ALIYUN_REGISTRY }}
+          username: ${{ secrets.ALIYUN_USERNAME }}
+          password: ${{ secrets.ALIYUN_TOKEN }}
+
+      - name: 📦 Extract Docker metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            orion-visor-${{ matrix.service }}
+          tags: |
+            type=semver,pattern={{version}}         
+            type=semver,pattern={{major}}.{{minor}} 
+            type=semver,pattern={{major}}           
+
+      - name: 🛠️ Build and push Docker image for orion-visor-${{ matrix.service }}
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./docker/${{ matrix.service }}/Dockerfile
+          push: true
+          tags: |
+            ${{ env.DOCKERHUB_NAMESPACE }}/orion-visor-${{ matrix.service }}:${{ steps.meta.outputs.version }}
+            ${{ env.DOCKERHUB_NAMESPACE }}/orion-visor-${{ matrix.service }}:latest
+            ${{ env.GITHUB_REGISTRY }}/${{ github.repository_owner }}/orion-visor-${{ matrix.service }}:${{ steps.meta.outputs.version }}
+            ${{ env.GITHUB_REGISTRY }}/${{ github.repository_owner }}/orion-visor-${{ matrix.service }}:latest
+            ${{ env.ALIYUN_REGISTRY }}/${{ env.ALIYUN_NAMESPACE }}/orion-visor-${{ matrix.service }}:${{ steps.meta.outputs.version }}
+            ${{ env.ALIYUN_REGISTRY }}/${{ env.ALIYUN_NAMESPACE }}/orion-visor-${{ matrix.service }}:latest
+          labels: ${{ steps.meta.outputs.labels }}
+          platforms: linux/amd64,linux/arm64
