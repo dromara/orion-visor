@@ -1,4 +1,4 @@
-FROM redis:6.0.16-alpine
+FROM --platform=$BUILDPLATFORM redis:6.0.16-alpine
 WORKDIR /data
 # 系统时区
 ARG TZ=Asia/Shanghai
@@ -11,5 +11,5 @@ RUN \
 RUN ln -sf /usr/share/zoneinfo/${TZ} /etc/localtime && \
   echo '${TZ}' > /etc/timezone
 # redis 配置
-COPY ./redis.conf /tmp
+COPY ./docker/redis/redis.conf /tmp
 RUN cat /tmp/redis.conf > /usr/local/redis.conf
