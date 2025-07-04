@@ -24,6 +24,7 @@ package org.dromara.visor.module.asset.api;
 
 import org.dromara.visor.common.session.config.RdpConnectConfig;
 import org.dromara.visor.common.session.config.SshConnectConfig;
+import org.dromara.visor.common.session.config.VncConnectConfig;
 import org.dromara.visor.module.asset.entity.dto.host.HostDTO;
 
 /**
@@ -86,5 +87,31 @@ public interface HostConnectApi {
      * @return session
      */
     RdpConnectConfig getRdpConnectConfig(HostDTO host, Long userId);
+
+    /**
+     * 获取 VNC 连接配置
+     *
+     * @param hostId hostId
+     * @return session
+     */
+    VncConnectConfig getVncConnectConfig(Long hostId);
+
+    /**
+     * 使用用户配置获取 VNC 连接配置
+     *
+     * @param hostId hostId
+     * @param userId userId
+     * @return session
+     */
+    VncConnectConfig getVncConnectConfig(Long hostId, Long userId);
+
+    /**
+     * 使用用户配置获取 VNC 连接配置
+     *
+     * @param host   host
+     * @param userId userId
+     * @return session
+     */
+    VncConnectConfig getVncConnectConfig(HostDTO host, Long userId);
 
 }

@@ -59,6 +59,7 @@ public class HostRdpExtraStrategy extends AbstractGenericsDataStrategy<HostRdpEx
     public HostRdpExtraModel getDefault() {
         return HostRdpExtraModel.builder()
                 .authType(HostExtraAuthTypeEnum.DEFAULT.name())
+                .lowBandwidthMode(false)
                 .build();
     }
 

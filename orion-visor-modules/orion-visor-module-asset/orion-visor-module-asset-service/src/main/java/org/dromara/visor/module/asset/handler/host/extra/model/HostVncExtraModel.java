@@ -20,54 +20,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.dromara.visor.module.asset.handler.host.config;
+package org.dromara.visor.module.asset.handler.host.extra.model;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
-import org.dromara.visor.common.handler.data.GenericsStrategyDefinition;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.dromara.visor.common.handler.data.model.GenericsDataModel;
-import org.dromara.visor.common.handler.data.strategy.GenericsDataStrategy;
 
 /**
- * 主机配置类型策略枚举
+ * 主机拓展信息 - vnc 模型
  *
  * @author Jiahang Li
  * @version 1.0.0
- * @since 2023/9/11 14:37
+ * @since 2023/12/20 21:36
  */
-@Getter
+@Data
+@Builder
+@NoArgsConstructor
 @AllArgsConstructor
-public enum HostConfigStrategyEnum implements GenericsStrategyDefinition {
+public class HostVncExtraModel implements GenericsDataModel {
 
     /**
-     * SSH
+     * 端口号
      */
-    SSH(HostSshConfigStrategy.class),
+    private Integer port;
 
     /**
-     * RDP
+     * 低带宽模式
      */
-    RDP(HostRdpConfigStrategy.class),
-
-    /**
-     * VNC
-     */
-    VNC(HostVncConfigStrategy.class),
-
-    ;
-
-    private final Class<? extends GenericsDataStrategy<? extends GenericsDataModel>> strategyClass;
-
-    public static HostConfigStrategyEnum of(String type) {
-        if (type == null) {
-            return null;
-        }
-        for (HostConfigStrategyEnum value : values()) {
-            if (value.name().equals(type)) {
-                return value;
-            }
-        }
-        return null;
-    }
+    private Boolean lowBandwidthMode;
 
 }
