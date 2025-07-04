@@ -1,4 +1,4 @@
-#/bin/bash
+#!/bin/bash
 set -e
 version=2.4.1
 mv ../../orion-visor-ui/dist ./dist

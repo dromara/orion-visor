@@ -8,7 +8,7 @@ if [ "$1" == "demo" ]; then
     export DEMO_MODE=true
     echo "Starting services for demo mode..."
     # 启动指定的服务
-    docker compose up -d --remove-orphans mysql redis ui service  adminer
+    docker compose up -d --remove-orphans mysql redis ui service guacd adminer
 else
     echo "Starting all services..."
     # 正常启动所有服务
