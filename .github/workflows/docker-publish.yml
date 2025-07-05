@@ -43,7 +43,7 @@ jobs:
 
       - name: 📁 Prepare build context
         run: |
-          cp -r ./sql ./docker/mysql
+          cp -r ./sql ./docker/mysql/sql
           cp -r ./orion-visor-ui/dist ./docker/ui/dist
           cp ./orion-visor-launch/target/orion-visor-launch.jar ./docker/service/orion-visor-launch.jar
 
