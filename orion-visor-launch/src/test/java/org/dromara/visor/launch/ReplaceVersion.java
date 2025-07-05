@@ -46,7 +46,8 @@ public class ReplaceVersion {
     private static final String PATH = new File("").getAbsolutePath();
 
     private static final String[] DOCKER_FILES = new String[]{
-            "docker/build.sh",
+            "docker/docker-build.sh",
+            "docker/project-build.sh",
             "docker-compose.yml",
             "docker-compose-testing.yml"
     };

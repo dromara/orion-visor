@@ -32,6 +32,17 @@
                     </snapshots>
                 </repository>
             </repositories>
+
+            <pluginRepositories>
+                <pluginRepository>
+                    <id>aliyun-plugin</id>
+                    <url>https://maven.aliyun.com/repository/public</url>
+                </pluginRepository>
+                <pluginRepository>
+                    <id>central-plugin</id>
+                    <url>https://repo.maven.apache.org/maven2</url>
+                </pluginRepository>
+            </pluginRepositories>
         </profile>
     </profiles>
 
