@@ -16,7 +16,7 @@ RUN \
   rm -f /usr/local/redis.conf
 
 # 复制配置文件
-COPY ./docker/redis/redis.conf /usr/local/redis.conf
+COPY ./redis/redis.conf /usr/local/redis.conf
 
 # 启动 Redis 并加载自定义配置
 CMD ["redis-server", "/usr/local/redis.conf"]

@@ -27,6 +27,36 @@ jobs:
       - name: 🌱 Checkout repository
         uses: actions/checkout@v4
 
+      - name: ⚙️ Set up JDK 8
+        uses: actions/setup-java@v4
+        with:
+          java-version: '8'
+          distribution: 'temurin'
+          cache: 'maven'
+
+      - name: ⚙️ Set up Node.js 18
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: 🔧 Install pnpm
+        run: npm i -g pnpm
+
+      - name: 📦 Build Java
+        run: mvn -U clean install -DskipTests
+
+      - name: 📦️ Build UI
+        working-directory: ./orion-visor-ui
+        run: |
+          pnpm install
+          pnpm build
+
+      - name: 📁 Prepare build context
+        run: |
+          cp -r ./sql ./docker/mysql
+          cp -r ./orion-visor-ui/dist ./docker/ui/dist
+          cp ./orion-visor-launch/target/orion-visor-launch.jar ./docker/service/orion-visor-launch.jar
+
       - name: ⚙️ Set up QEMU
         uses: docker/setup-qemu-action@v3
 
@@ -67,7 +97,7 @@ jobs:
       - name: 🛠️ Build and push Docker image for orion-visor-${{ matrix.service }}
         uses: docker/build-push-action@v5
         with:
-          context: .
+          context: ./docker
           file: ./docker/${{ matrix.service }}/Dockerfile
           push: true
           tags: |

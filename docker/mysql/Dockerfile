@@ -7,11 +7,11 @@ ARG TZ=Asia/Shanghai
 RUN ln -sf /usr/share/zoneinfo/${TZ} /etc/localtime && \
     echo "${TZ}" > /etc/timezone
 
-# 复制配置
-COPY ./docker/mysql/my.cnf /etc/mysql/conf.d/my.cnf
+# 复制配置文件
+COPY ./mysql/my.cnf /etc/mysql/conf.d/my.cnf
 
 # 复制初始化脚本
-COPY ./sql /tmp
+COPY ./mysql/sql /tmp
 
 # 设置初始化脚本
 RUN cat /tmp/init-1-schema-databases.sql >> /tmp/init.sql && \
