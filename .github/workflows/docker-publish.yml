@@ -7,21 +7,11 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-and-push:
+  build-project:
     runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
-
-    env:
-      GITHUB_REGISTRY: ghcr.io
-      ALIYUN_REGISTRY: registry.cn-hangzhou.aliyuncs.com
-      ALIYUN_NAMESPACE: ${{ vars.ALIYUN_NAMESPACE }}
-      DOCKERHUB_NAMESPACE: ${{ vars.DOCKERHUB_NAMESPACE }}
-
-    strategy:
-      matrix:
-        service: [ adminer, guacd, mysql, redis, service, ui ]
 
     steps:
       - name: 🌱 Checkout repository
@@ -57,6 +47,36 @@ jobs:
           cp -r ./orion-visor-ui/dist ./docker/ui/dist
           cp ./orion-visor-launch/target/orion-visor-launch.jar ./docker/service/orion-visor-launch.jar
 
+      - name: 📤 Upload build context
+        uses: actions/upload-artifact@v4
+        with:
+          name: docker-context
+          path: docker
+
+  build-and-push:
+    needs: build-project
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    strategy:
+      matrix:
+        service: [ adminer, guacd, mysql, redis, service, ui ]
+
+    env:
+      GITHUB_REGISTRY: ghcr.io
+      ALIYUN_REGISTRY: registry.cn-hangzhou.aliyuncs.com
+      ALIYUN_NAMESPACE: ${{ vars.ALIYUN_NAMESPACE }}
+      DOCKERHUB_NAMESPACE: ${{ vars.DOCKERHUB_NAMESPACE }}
+
+    steps:
+      - name: 📥 Download build context
+        uses: actions/download-artifact@v4
+        with:
+          name: docker-context
+          path: docker
+
       - name: ⚙️ Set up QEMU
         uses: docker/setup-qemu-action@v3
 
@@ -88,7 +108,9 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: |
-            orion-visor-${{ matrix.service }}
+            ${{ env.DOCKERHUB_NAMESPACE }}/orion-visor-${{ matrix.service }}
+            ${{ env.GITHUB_REGISTRY }}/${{ github.repository_owner }}/orion-visor-${{ matrix.service }}
+            ${{ env.ALIYUN_REGISTRY }}/${{ env.ALIYUN_NAMESPACE }}/orion-visor-${{ matrix.service }}
           tags: |
             type=semver,pattern={{version}}         
             type=semver,pattern={{major}}.{{minor}} 
