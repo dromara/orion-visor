@@ -23,9 +23,11 @@
 package org.dromara.visor.module.terminal.handler.terminal.session;
 
 import cn.orionsec.kit.lang.utils.Exceptions;
+import org.dromara.visor.common.utils.AesEncryptUtils;
 import org.dromara.visor.module.terminal.define.TerminalThreadPools;
 import org.dromara.visor.module.terminal.handler.guacd.IGuacdTunnel;
 import org.dromara.visor.module.terminal.handler.terminal.constant.TerminalMessage;
+import org.dromara.visor.module.terminal.handler.terminal.model.TerminalChannelExtra;
 import org.dromara.visor.module.terminal.handler.terminal.model.TerminalChannelProps;
 import org.dromara.visor.module.terminal.handler.terminal.model.config.ITerminalSessionConfig;
 import org.dromara.visor.module.terminal.handler.terminal.sender.IGuacdTerminalSender;
@@ -71,9 +73,50 @@ public abstract class AbstractGuacdSession<C extends ITerminalSessionConfig>
     protected abstract IGuacdTunnel createTunnel();
 
     /**
+     * 是否为低带宽模式
+     *
+     * @return is
+     */
+    protected abstract boolean isLowBandwidthMode();
+
+    /**
      * 设置 tunnel 参数
      */
-    protected abstract void setTunnelParams();
+    protected void setTunnelParams() {
+        // 设置低带宽模式
+        if (this.isLowBandwidthMode()) {
+            this.setLowBandwidthMode();
+        }
+        // 主机信息
+        tunnel.remote(config.getHostAddress(), config.getHostPort());
+        // 身份信息
+        tunnel.auth(config.getUsername(), AesEncryptUtils.decryptAsString(config.getPassword()));
+        // 大小
+        tunnel.size(config.getWidth(), config.getHeight());
+    }
+
+    /**
+     * 设置低带宽模式
+     */
+    protected void setLowBandwidthMode() {
+        TerminalChannelExtra extra = props.getExtra();
+        extra.setColorDepth(8);
+        extra.setForceLossless(false);
+        extra.setEnableWallpaper(false);
+        extra.setEnableTheming(false);
+        extra.setEnableFontSmoothing(false);
+        extra.setEnableFullWindowDrag(false);
+        extra.setEnableDesktopComposition(false);
+        extra.setEnableMenuAnimations(false);
+        extra.setDisableBitmapCaching(false);
+        extra.setDisableOffscreenCaching(false);
+        extra.setDisableGlyphCaching(false);
+        extra.setDisableGfx(false);
+        extra.setEnableAudioInput(false);
+        extra.setEnableAudioOutput(false);
+        extra.setCompressLevel(9);
+        extra.setQualityLevel(1);
+    }
 
     /**
      * 执行连接
@@ -90,6 +133,13 @@ public abstract class AbstractGuacdSession<C extends ITerminalSessionConfig>
     @Override
     public void write(String data) {
         tunnel.write(data);
+    }
+
+    @Override
+    public void resize(int width, int height) {
+        config.setWidth(width);
+        config.setHeight(height);
+        tunnel.writeInstruction("size", String.valueOf(width), String.valueOf(height));
     }
 
     @Override

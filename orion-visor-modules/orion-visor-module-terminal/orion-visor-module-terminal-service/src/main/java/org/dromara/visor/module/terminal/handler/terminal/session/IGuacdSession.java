@@ -29,7 +29,7 @@ package org.dromara.visor.module.terminal.handler.terminal.session;
  * @version 1.0.0
  * @since 2025/3/30 17:42
  */
-public interface IGuacdSession extends ITerminalSession {
+public interface IGuacdSession extends ITerminalSession, IResizeableSession {
 
     /**
      * 写入数据

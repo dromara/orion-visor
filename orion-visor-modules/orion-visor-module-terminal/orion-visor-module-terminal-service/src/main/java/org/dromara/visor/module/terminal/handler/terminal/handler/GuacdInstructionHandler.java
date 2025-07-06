@@ -26,7 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.dromara.visor.module.terminal.handler.terminal.model.TerminalChannelProps;
 import org.dromara.visor.module.terminal.handler.terminal.model.request.GuacdInstructionRequest;
 import org.dromara.visor.module.terminal.handler.terminal.sender.IGuacdTerminalSender;
-import org.dromara.visor.module.terminal.handler.terminal.session.IRdpSession;
+import org.dromara.visor.module.terminal.handler.terminal.session.IGuacdSession;
 import org.dromara.visor.module.terminal.handler.terminal.session.ITerminalSession;
 import org.springframework.stereotype.Component;
 
@@ -45,20 +45,10 @@ public class GuacdInstructionHandler extends AbstractTerminalHandler<IGuacdTermi
     public void handle(TerminalChannelProps props, IGuacdTerminalSender sender, GuacdInstructionRequest payload) {
         // 获取会话
         ITerminalSession session = terminalManager.getSession(props.getId());
-        if (session instanceof IRdpSession) {
-            // 处理 rdp 指令
-            this.processRdpInstruction((IRdpSession) session, payload.getInstruction());
+        // 发送指令
+        if (session instanceof IGuacdSession) {
+            ((IGuacdSession) session).write(payload.getInstruction());
         }
-    }
-
-    /**
-     * 处理 rdp 指令
-     *
-     * @param session     session
-     * @param instruction instruction
-     */
-    private void processRdpInstruction(IRdpSession session, String instruction) {
-        session.write(instruction);
     }
 
 }

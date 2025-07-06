@@ -23,11 +23,20 @@
 package org.dromara.visor.module.terminal.handler.terminal.session;
 
 /**
- * rdp 会话
+ * 可修改大小的会话
  *
  * @author Jiahang Li
  * @version 1.0.0
- * @since 2025/3/30 17:42
+ * @since 2025/7/3 2:16
  */
-public interface IRdpSession extends IGuacdSession {
+public interface IResizeableSession {
+
+    /**
+     * 修改大小
+     *
+     * @param width  width
+     * @param height height
+     */
+    void resize(int width, int height);
+
 }

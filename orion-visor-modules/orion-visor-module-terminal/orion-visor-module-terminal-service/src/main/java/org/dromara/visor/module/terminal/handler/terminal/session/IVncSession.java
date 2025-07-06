@@ -23,11 +23,11 @@
 package org.dromara.visor.module.terminal.handler.terminal.session;
 
 /**
- * rdp 会话
+ * vnc 会话
  *
  * @author Jiahang Li
  * @version 1.0.0
- * @since 2025/3/30 17:42
+ * @since 2025/7/3 2:04
  */
-public interface IRdpSession extends IGuacdSession {
+public interface IVncSession extends IGuacdSession {
 }

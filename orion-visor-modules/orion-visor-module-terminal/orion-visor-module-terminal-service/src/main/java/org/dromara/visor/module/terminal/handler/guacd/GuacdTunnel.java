@@ -192,12 +192,16 @@ public class GuacdTunnel implements IGuacdTunnel {
     }
 
     @Override
-    public void size(int width, int height, int dpi) {
+    public void size(int width, int height) {
         clientConfig.setOptimalScreenWidth(width);
         clientConfig.setOptimalScreenHeight(height);
-        clientConfig.setOptimalResolution(dpi);
         this.setParameter(GuacdConst.WIDTH, width);
         this.setParameter(GuacdConst.HEIGHT, height);
+    }
+
+    @Override
+    public void dpi(int dpi) {
+        clientConfig.setOptimalResolution(dpi);
         this.setParameter(GuacdConst.DPI, dpi);
     }
 
