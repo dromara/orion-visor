@@ -138,4 +138,24 @@ public class TerminalChannelExtra {
 
     // -------------------- vnc --------------------
 
+    /**
+     * 交换红蓝
+     */
+    private Boolean swapRedBlue;
+
+    /**
+     * 光标
+     */
+    private String cursor;
+
+    /**
+     * 压缩等级
+     */
+    private Integer compressLevel;
+
+    /**
+     * 质量等级
+     */
+    private Integer qualityLevel;
+
 }

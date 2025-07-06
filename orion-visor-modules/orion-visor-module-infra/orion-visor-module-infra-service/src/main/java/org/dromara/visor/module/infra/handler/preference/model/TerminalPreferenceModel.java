@@ -96,6 +96,16 @@ public class TerminalPreferenceModel implements GenericsDataModel {
     private JSONObject rdpActionBarSetting;
 
     /**
+     * vnc 图形化设置
+     */
+    private JSONObject vncGraphSetting;
+
+    /**
+     * vnc 操作栏设置
+     */
+    private JSONObject vncActionBarSetting;
+
+    /**
      * 快捷键设置
      */
     private JSONObject shortcutSetting;
@@ -297,6 +307,11 @@ public class TerminalPreferenceModel implements GenericsDataModel {
          */
         private Integer scrollBackLine;
 
+        /**
+         * 替换退格符
+         */
+        private Boolean replaceBackspace;
+
     }
 
     @Data
@@ -478,6 +493,97 @@ public class TerminalPreferenceModel implements GenericsDataModel {
          * 驱动挂载模式
          */
         private String driveMountMode;
+
+    }
+
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class VncGraphSettingModel implements IJsonObject {
+
+        /**
+         * 显示大小
+         */
+        private String displaySize;
+
+        /**
+         * 显示宽度
+         */
+        private Integer displayWidth;
+
+        /**
+         * 显示高度
+         */
+        private Integer displayHeight;
+
+        /**
+         * 颜色深度
+         */
+        private Integer colorDepth;
+
+        /**
+         * 无损压缩
+         */
+        private Boolean forceLossless;
+
+        /**
+         * 交换红蓝
+         */
+        private Boolean swapRedBlue;
+
+        /**
+         * 光标
+         */
+        private String cursor;
+
+        /**
+         * 质量等级
+         */
+        private Integer compressLevel;
+
+        /**
+         * 压缩等级
+         */
+        private Integer qualityLevel;
+
+    }
+
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class VncActionBarSettingModel implements IJsonObject {
+
+        /**
+         * 位置
+         */
+        private String position;
+
+        /**
+         * 显示设置
+         */
+        private Boolean display;
+
+        /**
+         * 组合键
+         */
+        private Boolean combinationKey;
+
+        /**
+         * 剪切板
+         */
+        private Boolean clipboard;
+
+        /**
+         * 断开连接
+         */
+        private Boolean disconnect;
+
+        /**
+         * 关闭
+         */
+        private Boolean close;
 
     }
 

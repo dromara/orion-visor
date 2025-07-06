@@ -68,6 +68,10 @@ public class TerminalPreferenceStrategy extends AbstractGenericsDataStrategy<Ter
                 .rdpActionBarSetting(JSONObject.parseObject(this.getDefaultRdpActionBarSetting()))
                 // rdp 会话设置
                 .rdpSessionSetting(JSONObject.parseObject(this.getDefaultRdpSessionSetting()))
+                // vnc 图形化设置
+                .vncGraphSetting(JSONObject.parseObject(this.getDefaultVncGraphSetting()))
+                // vnc 图形化设置
+                .vncActionBarSetting(JSONObject.parseObject(this.getDefaultVncSessionSetting()))
                 // 快捷键设置
                 .shortcutSetting(JSONObject.parseObject(this.getDefaultShortcutSetting()))
                 .build();
@@ -148,6 +152,7 @@ public class TerminalPreferenceStrategy extends AbstractGenericsDataStrategy<Ter
                 .wordSeparator("/\\()\"'` -.,:;<>~!@#$%^&*|+=[]{}~?│")
                 .terminalEmulationType(TerminalType.XTERM.getType())
                 .scrollBackLine(1000)
+                .replaceBackspace(false)
                 .build()
                 .toJsonString();
     }
@@ -222,6 +227,43 @@ public class TerminalPreferenceStrategy extends AbstractGenericsDataStrategy<Ter
                 .enableAudioInput(false)
                 .enableAudioOutput(true)
                 .driveMountMode("ASSET")
+                .build()
+                .toJsonString();
+    }
+
+    /**
+     * 获取 vnc 图形化默认设置
+     *
+     * @return setting
+     */
+    private String getDefaultVncGraphSetting() {
+        return TerminalPreferenceModel.VncGraphSettingModel.builder()
+                .displaySize("fit")
+                .displayWidth(0)
+                .displayHeight(0)
+                .colorDepth(24)
+                .forceLossless(true)
+                .swapRedBlue(false)
+                .cursor("local")
+                .compressLevel(5)
+                .qualityLevel(5)
+                .build()
+                .toJsonString();
+    }
+
+    /**
+     * 获取 vnc 工具栏默认设置
+     *
+     * @return setting
+     */
+    private String getDefaultVncSessionSetting() {
+        return TerminalPreferenceModel.VncActionBarSettingModel.builder()
+                .position("top")
+                .display(true)
+                .combinationKey(true)
+                .clipboard(true)
+                .disconnect(true)
+                .close(true)
                 .build()
                 .toJsonString();
     }

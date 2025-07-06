@@ -49,7 +49,7 @@ public enum TerminalConnectTypeEnum {
     /**
      * vnc
      */
-    // VNC,
+    VNC,
 
     ;
 

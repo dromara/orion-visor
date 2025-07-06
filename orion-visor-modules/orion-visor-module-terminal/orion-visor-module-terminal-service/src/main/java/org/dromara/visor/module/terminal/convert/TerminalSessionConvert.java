@@ -24,9 +24,11 @@ package org.dromara.visor.module.terminal.convert;
 
 import org.dromara.visor.common.session.config.RdpConnectConfig;
 import org.dromara.visor.common.session.config.SshConnectConfig;
+import org.dromara.visor.common.session.config.VncConnectConfig;
 import org.dromara.visor.module.terminal.handler.terminal.model.config.TerminalSessionRdpConfig;
 import org.dromara.visor.module.terminal.handler.terminal.model.config.TerminalSessionSftpConfig;
 import org.dromara.visor.module.terminal.handler.terminal.model.config.TerminalSessionSshConfig;
+import org.dromara.visor.module.terminal.handler.terminal.model.config.TerminalSessionVncConfig;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
@@ -47,5 +49,7 @@ public interface TerminalSessionConvert {
     TerminalSessionSftpConfig toSftp(SshConnectConfig request);
 
     TerminalSessionRdpConfig toRdp(RdpConnectConfig domain);
+
+    TerminalSessionVncConfig toVnc(VncConnectConfig domain);
 
 }
