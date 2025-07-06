@@ -26,7 +26,7 @@ while [[ $# -gt 0 ]]; do
       locally_build=true
       shift
       ;;
-    -latest|latest-image)
+    -latest|--latest-image)
       latest_image=true
       shift
       ;;

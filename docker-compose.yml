@@ -1,6 +1,12 @@
 version: '3.3'
 
 # latest = 2.4.1
+
+# 支持以下源
+# lijiahangmax/*
+# ghcr.io/dromara/*
+# registry.cn-hangzhou.aliyuncs.com/orionsec/*
+
 services:
   ui:
     image: registry.cn-hangzhou.aliyuncs.com/orionsec/orion-visor-ui:latest
