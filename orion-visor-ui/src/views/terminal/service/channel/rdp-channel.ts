@@ -5,7 +5,7 @@ import { TerminalSessionTypes } from '@/views/terminal/types/const';
 import { getTerminalAccessToken, openTerminalAccessChannel } from '@/api/terminal/terminal';
 import BaseGuacdChannel from './base-guacd-channel';
 
-// 终端通信会话 Rdp 会话实现
+// 终端通信会话 RDP 会话实现
 export default class RdpChannel extends BaseGuacdChannel<IRdpSession> {
 
   // 打开 channel
@@ -20,7 +20,7 @@ export default class RdpChannel extends BaseGuacdChannel<IRdpSession> {
         enableAudioInput: sessionSetting.enableAudioInput,
         enableAudioOutput: sessionSetting.enableAudioOutput,
         driveMountMode: sessionSetting.driveMountMode,
-        colorDepth: graphSetting.colorDepth || 16,
+        colorDepth: graphSetting.colorDepth || 24,
         forceLossless: graphSetting.forceLossless,
         enableWallpaper: graphSetting.enableWallpaper,
         enableTheming: graphSetting.enableTheming,

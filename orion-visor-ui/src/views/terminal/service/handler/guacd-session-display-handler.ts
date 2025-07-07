@@ -1,11 +1,11 @@
-import type { IRdpSession, IRdpSessionDisplayHandler } from '@/views/terminal/interfaces';
+import type { IGuacdSession, IGuacdSessionDisplayHandler } from '@/views/terminal/interfaces';
 import { useDebounceFn } from '@vueuse/core';
 import Guacamole from 'guacamole-common-js';
 
-// rdp 会话视图处理器实现
-export default class RdpSessionDisplayHandler implements IRdpSessionDisplayHandler {
+// guacd 会话视图处理器实现
+export default class GuacdSessionDisplayHandler implements IGuacdSessionDisplayHandler {
 
-  private readonly session: IRdpSession;
+  private readonly session: IGuacdSession;
 
   public displayWidth: number;
   public displayHeight: number;
@@ -21,7 +21,7 @@ export default class RdpSessionDisplayHandler implements IRdpSessionDisplayHandl
 
   private readonly focusSink: () => void;
 
-  constructor(session: IRdpSession) {
+  constructor(session: IGuacdSession) {
     this.session = session;
     this.displayWidth = 0;
     this.displayHeight = 0;

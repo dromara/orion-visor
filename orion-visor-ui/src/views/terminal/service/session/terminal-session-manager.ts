@@ -7,6 +7,7 @@ import type {
   ISshSession,
   ITerminalSession,
   ITerminalSessionManager,
+  IVncSession,
   SshInitConfig,
   TerminalSessionTabItem
 } from '@/views/terminal/interfaces';
@@ -17,6 +18,7 @@ import { addEventListen, removeEventListen } from '@/utils/event';
 import SshSession from './ssh-session';
 import SftpSession from './sftp-session';
 import RdpSession from './rdp-session';
+import VncSession from './vnc-session';
 
 // 终端会话管理器实现
 export default class TerminalSessionManager implements ITerminalSessionManager {
@@ -80,7 +82,23 @@ export default class TerminalSessionManager implements ITerminalSessionManager {
       // 连接会话
       session.connect();
     } catch (ex) {
-      console.error(ex);
+      // 异常关闭
+      session.close();
+    }
+  }
+
+  // 打开 vnc 会话
+  async openVnc(item: TerminalSessionTabItem, config: GuacdInitConfig): Promise<void> {
+    // 获取会话
+    const session: IVncSession = this.getSession(item.key);
+    try {
+      // 初始化 session
+      await session.init(config);
+      // 等待前端渲染完成
+      await sleep(100);
+      // 连接会话
+      session.connect();
+    } catch (ex) {
       // 异常关闭
       session.close();
     }
@@ -110,6 +128,9 @@ export default class TerminalSessionManager implements ITerminalSessionManager {
     } else if (item.type === TerminalSessionTypes.RDP.type) {
       // RDP 会话
       session = new RdpSession(item);
+    } else if (item.type === TerminalSessionTypes.VNC.type) {
+      // VNC 会话
+      session = new VncSession(item);
     } else {
       return undefined as unknown as T;
     }

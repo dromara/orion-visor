@@ -1,4 +1,4 @@
-import type { GuacdReactiveSessionStatus, IGuacdChannel, ITerminalSession } from '@/views/terminal/interfaces';
+import type { ITerminalSession, IGuacdChannel, GuacdReactiveSessionStatus } from '@/views/terminal/interfaces';
 import type { OutputPayload } from '../../types/protocol';
 import { InputProtocol, OutputProtocol } from '../../types/protocol';
 import { TerminalCloseCode, TerminalMessages } from '@/views/terminal/types/const';
@@ -147,7 +147,8 @@ export default abstract class BaseGuacdChannel<T extends ITerminalSession<GuacdR
     if (Date.now() < this.lastSentTime + PING_FREQUENCY) {
       return;
     }
-    this.sendInstruction(Guacamole.Tunnel.INTERNAL_DATA_OPCODE, 'ping', Date.now());
+    // this.sendInstruction(Guacamole.Tunnel.INTERNAL_DATA_OPCODE, 'ping', Date.now());
+    this.send(InputProtocol.PING);
   }
 
   // 发送指令 guacd 内部调用

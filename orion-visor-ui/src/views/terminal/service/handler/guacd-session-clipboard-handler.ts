@@ -1,14 +1,14 @@
-import type { IRdpSession, IRdpSessionClipboardHandler } from '@/views/terminal/interfaces';
+import type { IGuacdSession, IGuacdSessionClipboardHandler } from '@/views/terminal/interfaces';
 import Guacamole from 'guacamole-common-js';
 import { copyToClipboard } from '@/hooks/copy';
 import { isString } from '@/utils/is';
 
-// rdp 会话剪切板处理器实现
-export default class RdpSessionClipboardHandler implements IRdpSessionClipboardHandler {
+// guacd 会话剪切板处理器实现
+export default class GuacdSessionClipboardHandler implements IGuacdSessionClipboardHandler {
 
-  private readonly session: IRdpSession;
+  private readonly session: IGuacdSession;
 
-  constructor(session: IRdpSession) {
+  constructor(session: IGuacdSession) {
     this.session = session;
   }
 
