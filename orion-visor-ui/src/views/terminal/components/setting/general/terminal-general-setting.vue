@@ -11,6 +11,8 @@
       <terminal-rdp-graph-block />
       <!-- RDP 会话设置 -->
       <terminal-rdp-session-block />
+      <!-- VNC 图形化设置 -->
+      <terminal-vnc-graph-block />
     </div>
   </div>
 </template>
@@ -26,6 +28,7 @@
   import TerminalSshPluginsBlock from './terminal-ssh-plugins-block.vue';
   import TerminalRdpGraphBlock from './terminal-rdp-graph-block.vue';
   import TerminalRdpSessionBlock from './terminal-rdp-session-block.vue';
+  import TerminalVncGraphBlock from './terminal-vnc-graph-block.vue';
 
 </script>
 

@@ -3,7 +3,7 @@
     <!-- 顶部 -->
     <div class="terminal-setting-subtitle-wrapper">
       <h3 class="terminal-setting-subtitle">
-        RDP 工具栏设置
+        VNC 工具栏设置
       </h3>
     </div>
     <!-- 内容区域 -->
@@ -33,23 +33,23 @@
 
 <script lang="ts">
   export default {
-    name: 'terminalRdpActionBarBlock'
+    name: 'terminalVncActionBarBlock'
   };
 </script>
 
 <script lang="ts" setup>
-  import type { TerminalRdpActionBarSetting } from '@/store/modules/terminal/types';
+  import type { TerminalVncActionBarSetting } from '@/store/modules/terminal/types';
   import type { SidebarAction } from '@/views/terminal/types/define';
   import { computed, ref, watch } from 'vue';
   import { useTerminalStore, useDictStore } from '@/store';
   import { TerminalPreferenceItem } from '@/store/modules/terminal';
-  import { RdpActionBarItems, graphActionBarPositionKey } from '@/views/terminal/types/const';
+  import { VncActionBarItems, graphActionBarPositionKey } from '@/views/terminal/types/const';
   import IconActions from '../../layout/icon-actions.vue';
 
   const { toOptions } = useDictStore();
   const { preference, updateTerminalPreference } = useTerminalStore();
 
-  const formModel = ref<TerminalRdpActionBarSetting>({ ...preference.rdpActionBarSetting });
+  const formModel = ref<TerminalVncActionBarSetting>({ ...preference.vncActionBarSetting });
 
   // 监听同步
   watch(formModel, (v) => {
@@ -57,12 +57,12 @@
       return;
     }
     // 同步
-    updateTerminalPreference(TerminalPreferenceItem.RDP_ACTION_BAR_SETTING, formModel.value, true);
+    updateTerminalPreference(TerminalPreferenceItem.VNC_ACTION_BAR_SETTING, formModel.value, true);
   }, { deep: true });
 
   // 操作项
   const actions = computed<Array<SidebarAction>>(() => {
-    return RdpActionBarItems.map(s => {
+    return VncActionBarItems.map(s => {
       return {
         icon: s.icon,
         content: (formModel.value[s.item] === false ? '显示 ' : '隐藏 ') + s.content,

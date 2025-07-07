@@ -89,7 +89,6 @@ public class GuacdTunnel implements IGuacdTunnel {
     @Override
     public void connect() throws GuacdException {
         try {
-            // TODO 端口转发
             this.socket = new ConfiguredGuacamoleSocket(new InetGuacamoleSocket(serverAddress, serverPort), serverConfig, clientConfig);
             this.tunnel = new CustomGuacamoleTunnel(uuid, socket);
         } catch (GuacamoleException e) {
