@@ -127,6 +127,8 @@
   import { useDictStore } from '@/store';
   import { sshAuthTypeKey, HostAuthType, HostType } from '../types/const';
   import { sshFormRules } from '../types/form.rules';
+  import { Message } from '@arco-design/web-vue';
+  import { testHostConnect } from '@/api/asset/host';
   import useHostConfigForm from '../types/use-host-config';
   import HostIdentitySelector from '@/components/asset/host-identity/selector/index.vue';
   import HostKeySelector from '@/components/asset/host-key/selector/index.vue';
@@ -144,7 +146,6 @@
     formRef,
     formRules,
     fetchHostConfig,
-    testConnect,
     saveConfig,
   } = useHostConfigForm({
     type: HostType.SSH.value,
@@ -153,6 +154,23 @@
     formModel,
     setLoading,
   });
+
+  // 测试连接
+  const testConnect = async () => {
+    const error = await formRef.value.validate();
+    if (error) {
+      return;
+    }
+    try {
+      setLoading(true);
+      // 测试连接
+      await testHostConnect({ id: props.hostId, type: HostType.SSH.value });
+      Message.success('连接成功');
+    } catch (e) {
+    } finally {
+      setLoading(false);
+    }
+  };
 
   onMounted(fetchHostConfig);
 

@@ -6,7 +6,6 @@ import type { FieldRule } from '@arco-design/web-vue';
 import { Message } from '@arco-design/web-vue';
 import { baseFormRules } from './form.rules';
 import { encrypt } from '@/utils/rsa';
-import { testHostConnect } from '@/api/asset/host';
 
 // 主机配置表单信息
 export interface UseHostConfigFormOptions<T extends HostBaseConfig> {
@@ -33,26 +32,6 @@ export default function useHostConfigForm<T extends HostBaseConfig>(options: Use
       formModel.value = data;
     } catch (err: any) {
       Message.error('配置加载失败');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // 测试连接
-  const testConnect = async () => {
-    if (!formRef?.value) {
-      return;
-    }
-    const error = await formRef.value.validate();
-    if (error) {
-      return;
-    }
-    try {
-      setLoading(true);
-      // 测试连接
-      await testHostConnect({ id: hostId, type });
-      Message.success('连接成功');
-    } catch (e) {
     } finally {
       setLoading(false);
     }
@@ -93,7 +72,6 @@ export default function useHostConfigForm<T extends HostBaseConfig>(options: Use
     formRef,
     formRules,
     fetchHostConfig,
-    testConnect,
     saveConfig,
   };
 }

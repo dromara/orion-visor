@@ -104,17 +104,6 @@
                   @click="saveConfig">
           保存
         </a-button>
-        <!-- 测试连接 -->
-        <a-tooltip position="tr"
-                   content="请先保存后测试连接"
-                   mini>
-          <a-button class="extra-button"
-                    type="primary"
-                    long
-                    @click="testConnect">
-            测试连接
-          </a-button>
-        </a-tooltip>
       </a-form-item>
     </a-form>
   </a-spin>
@@ -150,7 +139,6 @@
     formRef,
     formRules,
     fetchHostConfig,
-    testConnect,
     saveConfig,
   } = useHostConfigForm({
     type: HostType.VNC.value,

@@ -230,17 +230,27 @@ export const SshActionBarItems = [
 
 // guacd 终端操作栏键
 export const GuacdActionItemKeys = {
+  INFO: 'info',
   DISPLAY: 'display',
   COMBINATION_KEY: 'combinationKey',
+  TRIGGER_KEY: 'triggerKey',
   CLIPBOARD: 'clipboard',
-  UPLOAD: 'upload',
+  RDP_UPLOAD: 'rdpUpload',
+  SFTP_UPLOAD: 'sftpUpload',
+  OPEN_SFTP: 'openSftp',
   SAVE_RDP: 'saveRdp',
   DISCONNECT: 'disconnect',
+  RECONNECT: 'reconnect',
   CLOSE: 'close',
 };
 
 // guacd 终端操作栏
 export const GuacdActionBarItemMap = {
+  [GuacdActionItemKeys.INFO]: {
+    item: GuacdActionItemKeys.INFO,
+    icon: 'icon-info',
+    content: '会话信息',
+  },
   [GuacdActionItemKeys.DISPLAY]: {
     item: GuacdActionItemKeys.DISPLAY,
     icon: 'icon-desktop',
@@ -251,15 +261,30 @@ export const GuacdActionBarItemMap = {
     icon: 'icon-command',
     content: '组合键',
   },
+  [GuacdActionItemKeys.TRIGGER_KEY]: {
+    item: GuacdActionItemKeys.TRIGGER_KEY,
+    icon: 'icon-dice',
+    content: '长按键',
+  },
   [GuacdActionItemKeys.CLIPBOARD]: {
     item: GuacdActionItemKeys.CLIPBOARD,
     icon: 'icon-paste',
     content: '剪切板',
   },
-  [GuacdActionItemKeys.UPLOAD]: {
-    item: GuacdActionItemKeys.UPLOAD,
+  [GuacdActionItemKeys.RDP_UPLOAD]: {
+    item: GuacdActionItemKeys.RDP_UPLOAD,
     icon: 'icon-upload',
-    content: '文件上传',
+    content: 'RDP 文件上传',
+  },
+  [GuacdActionItemKeys.SFTP_UPLOAD]: {
+    item: GuacdActionItemKeys.SFTP_UPLOAD,
+    icon: 'icon-folder-add',
+    content: 'SFTP 文件上传',
+  },
+  [GuacdActionItemKeys.OPEN_SFTP]: {
+    item: GuacdActionItemKeys.OPEN_SFTP,
+    icon: 'icon-folder',
+    content: '打开 SFTP',
   },
   [GuacdActionItemKeys.SAVE_RDP]: {
     item: GuacdActionItemKeys.SAVE_RDP,
@@ -271,6 +296,11 @@ export const GuacdActionBarItemMap = {
     icon: 'icon-stop',
     content: '断开连接',
   },
+  [GuacdActionItemKeys.RECONNECT]: {
+    item: GuacdActionItemKeys.RECONNECT,
+    icon: 'icon-refresh',
+    content: '重新连接',
+  },
   [GuacdActionItemKeys.CLOSE]: {
     item: GuacdActionItemKeys.CLOSE,
     icon: 'icon-close',
@@ -280,21 +310,31 @@ export const GuacdActionBarItemMap = {
 
 // 终端操作栏 - RDP
 export const RdpActionBarItems = [
+  GuacdActionBarItemMap[GuacdActionItemKeys.INFO],
   GuacdActionBarItemMap[GuacdActionItemKeys.DISPLAY],
   GuacdActionBarItemMap[GuacdActionItemKeys.COMBINATION_KEY],
+  GuacdActionBarItemMap[GuacdActionItemKeys.TRIGGER_KEY],
   GuacdActionBarItemMap[GuacdActionItemKeys.CLIPBOARD],
-  GuacdActionBarItemMap[GuacdActionItemKeys.UPLOAD],
+  GuacdActionBarItemMap[GuacdActionItemKeys.RDP_UPLOAD],
+  GuacdActionBarItemMap[GuacdActionItemKeys.SFTP_UPLOAD],
+  GuacdActionBarItemMap[GuacdActionItemKeys.OPEN_SFTP],
   GuacdActionBarItemMap[GuacdActionItemKeys.SAVE_RDP],
   GuacdActionBarItemMap[GuacdActionItemKeys.DISCONNECT],
+  GuacdActionBarItemMap[GuacdActionItemKeys.RECONNECT],
   GuacdActionBarItemMap[GuacdActionItemKeys.CLOSE],
 ];
 
 // 终端操作栏 - VNC
 export const VncActionBarItems = [
+  GuacdActionBarItemMap[GuacdActionItemKeys.INFO],
   GuacdActionBarItemMap[GuacdActionItemKeys.DISPLAY],
   GuacdActionBarItemMap[GuacdActionItemKeys.COMBINATION_KEY],
+  GuacdActionBarItemMap[GuacdActionItemKeys.TRIGGER_KEY],
   GuacdActionBarItemMap[GuacdActionItemKeys.CLIPBOARD],
+  GuacdActionBarItemMap[GuacdActionItemKeys.SFTP_UPLOAD],
+  GuacdActionBarItemMap[GuacdActionItemKeys.OPEN_SFTP],
   GuacdActionBarItemMap[GuacdActionItemKeys.DISCONNECT],
+  GuacdActionBarItemMap[GuacdActionItemKeys.RECONNECT],
   GuacdActionBarItemMap[GuacdActionItemKeys.CLOSE],
 ];
 
@@ -560,6 +600,26 @@ export const GuacdCombinationKeyItems: Array<CombinationKeyItem> = [
     keys: [65507, 65513, 65481],
     name: 'Ctrl+Alt+F12'
   }
+];
+
+// Guacd 键盘码
+export const GuacdKeyboardItems = [
+  {
+    key: 65507,
+    name: 'Ctrl',
+  },
+  {
+    key: 65505,
+    name: 'Shift',
+  },
+  {
+    key: 65513,
+    name: 'Alt',
+  },
+  {
+    key: 65515,
+    name: 'Windows',
+  },
 ];
 
 // backspace 字符
