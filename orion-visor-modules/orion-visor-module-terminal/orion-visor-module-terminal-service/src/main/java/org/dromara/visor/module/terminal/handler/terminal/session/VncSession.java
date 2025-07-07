@@ -71,6 +71,8 @@ public class VncSession extends AbstractGuacdSession<TerminalSessionVncConfig> i
         tunnel.setParameter(GuacdConst.FORCE_LOSSLESS, extra.getForceLossless());
         tunnel.setParameter(GuacdConst.COMPRESS_LEVEL, extra.getCompressLevel());
         tunnel.setParameter(GuacdConst.QUALITY_LEVEL, extra.getQualityLevel());
+        // 交换红蓝
+        tunnel.setParameter(GuacdConst.SWAP_RED_BLUE, config.getSwapRedBlue());
         // 光标设置
         tunnel.setParameter(GuacdConst.CURSOR, extra.getCursor());
         // 编码设置

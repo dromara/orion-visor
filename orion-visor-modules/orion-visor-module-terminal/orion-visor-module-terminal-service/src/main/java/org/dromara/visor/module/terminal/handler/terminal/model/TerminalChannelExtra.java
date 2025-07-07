@@ -139,11 +139,6 @@ public class TerminalChannelExtra {
     // -------------------- vnc --------------------
 
     /**
-     * 交换红蓝
-     */
-    private Boolean swapRedBlue;
-
-    /**
      * 光标
      */
     private String cursor;

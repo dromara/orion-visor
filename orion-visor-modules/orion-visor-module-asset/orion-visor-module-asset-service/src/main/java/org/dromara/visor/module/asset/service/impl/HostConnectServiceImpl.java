@@ -368,6 +368,7 @@ public class HostConnectServiceImpl implements HostConnectService {
         if (extra != null) {
             // 设置额外配置信息
             connectConfig.setLowBandwidthMode(extra.getLowBandwidthMode());
+            connectConfig.setSwapRedBlue(extra.getSwapRedBlue());
             // 设置自定义端口
             Integer extraPort = extra.getPort();
             if (extraPort != null) {

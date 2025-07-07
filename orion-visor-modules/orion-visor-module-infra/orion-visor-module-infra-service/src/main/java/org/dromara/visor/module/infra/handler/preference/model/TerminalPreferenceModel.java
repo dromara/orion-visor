@@ -437,6 +437,11 @@ public class TerminalPreferenceModel implements GenericsDataModel {
         private String position;
 
         /**
+         * 会话信息
+         */
+        private Boolean info;
+
+        /**
          * 显示设置
          */
         private Boolean display;
@@ -447,17 +452,32 @@ public class TerminalPreferenceModel implements GenericsDataModel {
         private Boolean combinationKey;
 
         /**
+         * 长按键
+         */
+        private Boolean triggerKey;
+
+        /**
          * 剪切板
          */
         private Boolean clipboard;
 
         /**
-         * 上传
+         * RDP 上传
          */
-        private Boolean upload;
+        private Boolean rdpUpload;
 
         /**
-         * 保存为 rdp 文件
+         * SFTP 上传
+         */
+        private Boolean sftpUpload;
+
+        /**
+         * 打开 SFTP
+         */
+        private Boolean openSftp;
+
+        /**
+         * 保存为 RDP 文件
          */
         private Boolean saveRdp;
 
@@ -465,6 +485,11 @@ public class TerminalPreferenceModel implements GenericsDataModel {
          * 断开连接
          */
         private Boolean disconnect;
+
+        /**
+         * 重新连接
+         */
+        private Boolean reconnect;
 
         /**
          * 关闭
@@ -528,11 +553,6 @@ public class TerminalPreferenceModel implements GenericsDataModel {
         private Boolean forceLossless;
 
         /**
-         * 交换红蓝
-         */
-        private Boolean swapRedBlue;
-
-        /**
          * 光标
          */
         private String cursor;
@@ -561,6 +581,11 @@ public class TerminalPreferenceModel implements GenericsDataModel {
         private String position;
 
         /**
+         * 会话信息
+         */
+        private Boolean info;
+
+        /**
          * 显示设置
          */
         private Boolean display;
@@ -571,14 +596,35 @@ public class TerminalPreferenceModel implements GenericsDataModel {
         private Boolean combinationKey;
 
         /**
+         * 长按键
+         */
+        private Boolean triggerKey;
+
+        /**
          * 剪切板
          */
         private Boolean clipboard;
 
         /**
+         * SFTP 上传
+         */
+        private Boolean sftpUpload;
+
+        /**
+         * 打开 SFTP
+         */
+        private Boolean openSftp;
+
+        /**
          * 断开连接
          */
         private Boolean disconnect;
+
+        /**
+         * 重新连接
+         */
+        private Boolean reconnect;
+
 
         /**
          * 关闭

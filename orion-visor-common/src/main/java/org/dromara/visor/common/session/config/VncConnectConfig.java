@@ -47,6 +47,9 @@ public class VncConnectConfig extends BaseConnectConfig {
     @Schema(description = "低带宽模式")
     private Boolean lowBandwidthMode;
 
+    @Schema(description = "交换红蓝")
+    private Boolean swapRedBlue;
+
     @Schema(description = "时区")
     private String timezone;
 

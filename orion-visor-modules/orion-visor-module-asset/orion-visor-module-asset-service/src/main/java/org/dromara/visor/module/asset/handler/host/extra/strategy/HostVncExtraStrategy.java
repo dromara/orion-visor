@@ -44,6 +44,7 @@ public class HostVncExtraStrategy extends AbstractGenericsDataStrategy<HostVncEx
     public HostVncExtraModel getDefault() {
         return HostVncExtraModel.builder()
                 .lowBandwidthMode(false)
+                .swapRedBlue(false)
                 .build();
     }
 

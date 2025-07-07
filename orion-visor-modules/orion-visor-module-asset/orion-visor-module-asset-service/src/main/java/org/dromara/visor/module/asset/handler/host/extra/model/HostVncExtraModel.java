@@ -51,4 +51,9 @@ public class HostVncExtraModel implements GenericsDataModel {
      */
     private Boolean lowBandwidthMode;
 
+    /**
+     * 交换红蓝
+     */
+    private Boolean swapRedBlue;
+
 }
