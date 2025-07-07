@@ -1,6 +1,6 @@
 import type { Reactive } from 'vue';
 import { reactive } from 'vue';
-import type { ITerminalChannel, ITerminalSession, ReactiveSessionState, SessionHostInfo, TerminalSessionTabItem } from '@/views/terminal/interfaces';
+import type { ITerminalChannel, ITerminalSession, ReactiveSessionState, TerminalSessionTabItem, SessionHostInfo } from '@/views/terminal/interfaces';
 import { TerminalStatus } from '@/views/terminal/types/const';
 
 // 会话基类
@@ -84,6 +84,11 @@ export default abstract class BaseSession<State extends ReactiveSessionState, Ch
     this.state.connected = false;
     this.state.canWrite = false;
     this.state.connectStatus = TerminalStatus.CLOSED;
+  }
+
+  // 是否可写
+  isWriteable(): boolean {
+    return this.state.connected && this.state.canWrite;
   }
 
 }

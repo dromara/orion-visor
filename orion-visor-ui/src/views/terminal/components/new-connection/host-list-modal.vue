@@ -40,45 +40,21 @@
               </div>
               <!-- 操作 -->
               <div class="host-item-actions">
-                <!-- 打开 SSH -->
-                <a-tooltip v-if="item.types?.includes(TerminalSessionTypes.SSH.type)"
-                           position="top"
-                           :mini="true"
-                           :auto-fix-position="false"
-                           content-class="terminal-tooltip-content"
-                           arrow-class="terminal-tooltip-content"
-                           content="打开 SSH">
-                  <a-button class="host-item-action icon-button"
-                            @click="clickHost(item, TerminalSessionTypes.SSH)">
-                    <icon-thunderbolt />
-                  </a-button>
-                </a-tooltip>
-                <!-- 打开 SFTP -->
-                <a-tooltip v-if="item.types?.includes(TerminalSessionTypes.SSH.type)"
-                           position="top"
-                           :mini="true"
-                           :auto-fix-position="false"
-                           content-class="terminal-tooltip-content"
-                           arrow-class="terminal-tooltip-content"
-                           content="打开 SFTP">
-                  <a-button class="host-item-action icon-button"
-                            @click="clickHost(item, TerminalSessionTypes.SFTP)">
-                    <icon-folder />
-                  </a-button>
-                </a-tooltip>
-                <!-- 打开 RDP -->
-                <a-tooltip v-if="item.types?.includes(TerminalSessionTypes.RDP.type)"
-                           position="top"
-                           :mini="true"
-                           :auto-fix-position="false"
-                           content-class="terminal-tooltip-content"
-                           arrow-class="terminal-tooltip-content"
-                           content="打开 RDP">
-                  <a-button class="host-item-action icon-button"
-                            @click="clickHost(item, TerminalSessionTypes.RDP)">
-                    <icon-computer />
-                  </a-button>
-                </a-tooltip>
+                <!-- 打开会话 -->
+                <template v-for="type in TerminalSessionTypes">
+                  <template v-if="item.types?.includes(type.protocol)">
+                    <a-tooltip position="top"
+                               :mini="true"
+                               :auto-fix-position="false"
+                               :content="`打开 ${type.type}`"
+                               content-class="terminal-tooltip-content"
+                               arrow-class="terminal-tooltip-content">
+                      <a-button class="host-item-action icon-button" @click="openHostSession(item, type)">
+                        <component :is="type.connectIcon || type.icon" />
+                      </a-button>
+                    </a-tooltip>
+                  </template>
+                </template>
               </div>
             </div>
           </a-list-item>
@@ -144,7 +120,7 @@
   defineExpose({ open });
 
   // 打开终端
-  const clickHost = (item: HostQueryResponse, tab: TerminalSessionType) => {
+  const openHostSession = (item: HostQueryResponse, tab: TerminalSessionType) => {
     openSession(item, tab, panelIndex.value);
     setVisible(false);
   };

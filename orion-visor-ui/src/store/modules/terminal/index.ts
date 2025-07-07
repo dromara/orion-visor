@@ -8,7 +8,9 @@ import type {
   TerminalSshDisplaySetting,
   TerminalSshInteractSetting,
   TerminalSshPluginsSetting,
-  TerminalState
+  TerminalState,
+  TerminalVncActionBarSetting,
+  TerminalVncGraphSetting
 } from './types';
 import type {
   IDomViewportHandler,
@@ -56,8 +58,12 @@ export const TerminalPreferenceItem = {
   RDP_GRAPH_SETTING: 'rdpGraphSetting',
   // rdp 操作栏设置
   RDP_ACTION_BAR_SETTING: 'rdpActionBarSetting',
-  // 会话设置
+  // rdp 会话设置
   RDP_SESSION_SETTING: 'rdpSessionSetting',
+  // vnc 图形化设置
+  VNC_GRAPH_SETTING: 'vncGraphSetting',
+  // vnc 工具栏设置
+  VNC_ACTION_BAR_SETTING: 'vncActionBarSetting',
   // 快捷键设置
   SHORTCUT_SETTING: 'shortcutSetting',
 };
@@ -77,6 +83,8 @@ export default defineStore('terminal', {
       rdpGraphSetting: {} as TerminalRdpGraphSetting,
       rdpSessionSetting: {} as TerminalRdpSessionSetting,
       rdpActionBarSetting: {} as TerminalRdpActionBarSetting,
+      vncGraphSetting: {} as TerminalVncGraphSetting,
+      vncActionBarSetting: {} as TerminalVncActionBarSetting,
       shortcutSetting: {
         enabled: false,
         keys: []

@@ -68,7 +68,7 @@
 
 <script lang="ts" setup>
   import type { SelectOptionData } from '@arco-design/web-vue';
-  import { onBeforeMount, ref } from 'vue';
+  import { ref, onMounted } from 'vue';
   import { NewConnectionType, newConnectionTypeKey } from '../../types/const';
   import { useDictStore, useTerminalStore } from '@/store';
   import { TerminalPreferenceItem } from '@/store/modules/terminal';
@@ -86,7 +86,7 @@
   const filterOptions = ref<Array<SelectOptionData>>([]);
 
   // 初始化过滤器项
-  onBeforeMount(() => {
+  onMounted(() => {
     filterOptions.value = getAuthorizedHostOptions(hosts.hostList);
   });
 

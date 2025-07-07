@@ -3,8 +3,8 @@ import type { Terminal } from '@xterm/xterm';
 import type { ISearchOptions } from '@xterm/addon-search';
 import type Guacamole from 'guacamole-common-js';
 import type {
-  IRdpSessionClipboardHandler,
-  IRdpSessionDisplayHandler,
+  IGuacdSessionClipboardHandler,
+  IGuacdSessionDisplayHandler,
   ISftpSessionHandler,
   ISshSessionHandler,
   TerminalSessionTabItem
@@ -108,6 +108,9 @@ export interface ITerminalSession<State extends ReactiveSessionState = ReactiveS
   setConnected: () => void;
   // 设置已关闭
   setClosed: () => void;
+
+  // 是否可写
+  isWriteable: () => boolean;
 }
 
 // SSH 会话定义
@@ -160,29 +163,32 @@ export interface ISftpSession extends ITerminalSession {
 export interface IGuacdSession extends ITerminalSession<GuacdReactiveSessionStatus>, IDomViewportHandler {
   // guacd 客户端
   client: Guacamole.Client;
-  // FIXME VNC 可以再抽象
+  // 会话配置
+  config: GuacdInitConfig;
+  // 视图处理器
+  displayHandler: IGuacdSessionDisplayHandler;
+  // 剪切板处理器
+  clipboardHandler: IGuacdSessionClipboardHandler;
+
+  // 初始化
+  init: (config: GuacdInitConfig) => Promise<void>;
+
+  // 发送键
+  sendKeys: (keys: Array<number>) => void;
+  // 粘贴
+  paste: (data: string) => void;
 }
 
 // RDP 会话定义
 export interface IRdpSession extends IGuacdSession {
   fileSystemName: string;
-  // 会话配置
-  config: GuacdInitConfig;
-  // 视图处理器
-  displayHandler: IRdpSessionDisplayHandler;
-  // 剪切板处理器
-  clipboardHandler: IRdpSessionClipboardHandler;
 
-  // 初始化
-  init: (config: GuacdInitConfig) => Promise<void>;
   // 文件系统事件
   onFileSystemEvent: (event: Record<string, any>) => void;
-  // 发送键
-  sendKeys: (keys: Array<number>) => void;
-  // 粘贴
-  paste: (data: string) => void;
-  // 是否可写
-  isWriteable: () => boolean;
+}
+
+// VNC 会话定义
+export interface IVncSession extends IGuacdSession {
 }
 
 // sftp 文件
@@ -210,6 +216,8 @@ export interface ITerminalSessionManager {
   openSftp: (item: TerminalSessionTabItem, handler: ISftpSessionHandler) => Promise<void>;
   // 打开 rdp 会话
   openRdp: (item: TerminalSessionTabItem, config: GuacdInitConfig) => Promise<void>;
+  // 打开 vnc 会话
+  openVnc: (item: TerminalSessionTabItem, config: GuacdInitConfig) => Promise<void>;
   // 重新打开会话
   reOpenSession: (sessionKey: string) => Promise<void>;
   // 创建终端会话
