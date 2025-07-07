@@ -37,6 +37,7 @@ export interface HostRdpExtraSettingModel {
 export interface HostVncExtraSettingModel {
   port: number;
   lowBandwidthMode: boolean;
+  swapRedBlue: boolean;
 }
 
 // 标签额外配置

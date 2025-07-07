@@ -95,23 +95,16 @@
 
 <script lang="ts" setup>
   import type { TerminalRdpGraphSetting } from '@/store/modules/terminal/types';
-  import { ref, watch } from 'vue';
-  import { useTerminalStore, useDictStore } from '@/store';
+  import { useDictStore } from '@/store';
   import { TerminalPreferenceItem } from '@/store/modules/terminal';
   import { screenResolutionKey, graphColorDepthKey, fitDisplayValue } from '@/views/terminal/types/const';
   import { getDisplaySize } from '@/views/terminal/types/utils';
+  import useTerminalPreference from '@/views/terminal/types/use-terminal-preference';
   import BlockSettingItem from '../block-setting-item.vue';
 
   const { toOptions, getDictValue } = useDictStore();
-  const { preference, updateTerminalPreference } = useTerminalStore();
 
-  const formModel = ref<TerminalRdpGraphSetting>({ ...preference.rdpGraphSetting });
-
-  // 监听内容变化
-  watch(formModel, (v) => {
-    if (!v) {
-      return;
-    }
+  const { formModel } = useTerminalPreference<TerminalRdpGraphSetting>(TerminalPreferenceItem.RDP_GRAPH_SETTING, true, (v) => {
     // 同步大小
     if (v.displaySize) {
       // 自适应大小
@@ -129,9 +122,7 @@
         }
       }
     }
-    // 同步
-    updateTerminalPreference(TerminalPreferenceItem.RDP_GRAPH_SETTING, formModel.value, true);
-  }, { deep: true });
+  });
 
 </script>
 

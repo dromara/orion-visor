@@ -116,23 +116,22 @@
 <script lang="ts" setup>
   import type { TerminalSshDisplaySetting } from '@/store/modules/terminal/types';
   import type { ISshSession } from '@/views/terminal/interfaces';
-  import { ref, watch, onMounted } from 'vue';
+  import { ref } from 'vue';
   import { useDictStore, useTerminalStore } from '@/store';
   import { fontFamilyKey, fontSizeKey, fontWeightKey, cursorStyleKey, TerminalSessionTypes } from '@/views/terminal/types/const';
   import { labelFilter } from '@/types/form';
-  import { TerminalPreferenceItem } from '@/store/modules/terminal';
   import { defaultFontFamily } from '@/types/xterm';
+  import { TerminalPreferenceItem } from '@/store/modules/terminal';
+  import useTerminalPreference from '@/views/terminal/types/use-terminal-preference';
   import TerminalExample from '../terminal-example.vue';
 
   const { toOptions, toRadioOptions } = useDictStore();
-  const { preference, updateTerminalPreference, sessionManager } = useTerminalStore();
+  const { preference, sessionManager } = useTerminalStore();
 
   const background = preference.sshTheme.schema.background;
   const previewTerminal = ref();
-  const formModel = ref<TerminalSshDisplaySetting>({});
 
-  // 监听内容变化
-  watch(formModel, (v, before) => {
+  const { formModel } = useTerminalPreference<TerminalSshDisplaySetting>(TerminalPreferenceItem.SSH_DISPLAY_SETTING, true, (v) => {
     if (!v || !Object.keys(v).length) {
       return;
     }
@@ -168,17 +167,8 @@
         // 自适应
         s.fit();
       });
-    // 非初始化则同步
-    if (Object.keys(before).length) {
-      updateTerminalPreference(TerminalPreferenceItem.SSH_DISPLAY_SETTING, formModel.value, true);
-    }
     // 聚焦
     previewTerminal.value.term.focus();
-  }, { deep: true });
-
-  // 初始化配置
-  onMounted(() => {
-    formModel.value = { ...preference.sshDisplaySetting };
   });
 
 </script>

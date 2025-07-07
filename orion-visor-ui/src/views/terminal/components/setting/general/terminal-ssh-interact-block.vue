@@ -110,26 +110,16 @@
 
 <script lang="ts" setup>
   import type { TerminalSshInteractSetting } from '@/store/modules/terminal/types';
-  import { ref, watch } from 'vue';
-  import { useTerminalStore, useDictStore } from '@/store';
+  import { useDictStore } from '@/store';
   import { TerminalPreferenceItem } from '@/store/modules/terminal';
   import { emulationTypeKey } from '@/views/terminal/types/const';
   import { isSecureEnvironment } from '@/utils/env';
+  import useTerminalPreference from '@/views/terminal/types/use-terminal-preference';
   import BlockSettingItem from '../block-setting-item.vue';
 
   const { toOptions } = useDictStore();
-  const { preference, updateTerminalPreference } = useTerminalStore();
 
-  const formModel = ref<TerminalSshInteractSetting>({ ...preference.sshInteractSetting });
-
-  // 监听内容变化
-  watch(formModel, (v) => {
-    if (!v) {
-      return;
-    }
-    // 同步
-    updateTerminalPreference(TerminalPreferenceItem.SSH_INTERACT_SETTING, formModel.value);
-  }, { deep: true });
+  const { formModel } = useTerminalPreference<TerminalSshInteractSetting>(TerminalPreferenceItem.SSH_INTERACT_SETTING);
 
 </script>
 

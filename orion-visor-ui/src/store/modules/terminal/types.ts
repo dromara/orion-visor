@@ -121,7 +121,6 @@ export interface TerminalVncGraphSetting {
   displayHeight?: number;
   colorDepth?: number;
   forceLossless?: boolean;
-  swapRedBlue?: boolean;
   cursor?: string;
   compressLevel?: number;
   qualityLevel?: number;

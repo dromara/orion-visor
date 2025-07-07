@@ -17,7 +17,6 @@ export default class VncChannel extends BaseGuacdChannel<IVncSession> {
       extra: {
         colorDepth: setting.colorDepth || 24,
         forceLossless: setting.forceLossless,
-        swapRedBlue: setting.swapRedBlue,
         cursor: setting.cursor,
         compressLevel: setting.compressLevel,
         qualityLevel: setting.qualityLevel,

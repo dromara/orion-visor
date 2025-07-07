@@ -30,7 +30,7 @@ import { getPreference, updatePreference } from '@/api/user/preference';
 import { getLatestConnectHostId } from '@/api/terminal/terminal-connect-log';
 import { useCacheStore } from '@/store';
 import { nextId } from '@/utils';
-import { isObject } from '@/utils/is';
+import { isArray, isObject } from '@/utils/is';
 import { Message } from '@arco-design/web-vue';
 import { TerminalSessionTypes, TerminalTabs } from '@/views/terminal/types/const';
 import TerminalTabManager from '@/views/terminal/service/tab/terminal-tab-manager';
@@ -146,7 +146,7 @@ export default defineStore('terminal', {
         await updatePreference({
           type: 'TERMINAL',
           item,
-          value: isObject(value) ? JSON.stringify(value) : value,
+          value: (isObject(value) || isArray(value)) ? JSON.stringify(value) : value,
         });
       } catch (e) {
         Message.error('同步失败');

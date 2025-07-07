@@ -40,25 +40,16 @@
 <script lang="ts" setup>
   import type { TerminalVncActionBarSetting } from '@/store/modules/terminal/types';
   import type { SidebarAction } from '@/views/terminal/types/define';
-  import { computed, ref, watch } from 'vue';
-  import { useTerminalStore, useDictStore } from '@/store';
+  import { computed } from 'vue';
+  import { useDictStore } from '@/store';
   import { TerminalPreferenceItem } from '@/store/modules/terminal';
   import { VncActionBarItems, graphActionBarPositionKey } from '@/views/terminal/types/const';
+  import useTerminalPreference from '@/views/terminal/types/use-terminal-preference';
   import IconActions from '../../layout/icon-actions.vue';
 
   const { toOptions } = useDictStore();
-  const { preference, updateTerminalPreference } = useTerminalStore();
 
-  const formModel = ref<TerminalVncActionBarSetting>({ ...preference.vncActionBarSetting });
-
-  // 监听同步
-  watch(formModel, (v) => {
-    if (!v) {
-      return;
-    }
-    // 同步
-    updateTerminalPreference(TerminalPreferenceItem.VNC_ACTION_BAR_SETTING, formModel.value, true);
-  }, { deep: true });
+  const { formModel } = useTerminalPreference<TerminalVncActionBarSetting>(TerminalPreferenceItem.VNC_ACTION_BAR_SETTING, true);
 
   // 操作项
   const actions = computed<Array<SidebarAction>>(() => {

@@ -32,9 +32,12 @@
         <block-setting-item label="无损压缩" desc="是否启用对图像更新的无损压缩">
           <a-switch v-model="formModel.forceLossless" type="round" />
         </block-setting-item>
-        <!-- 交换红蓝 -->
-        <block-setting-item label="交换红蓝" desc="若显示的颜色出现错误(蓝色显示为橙色或红色等) 则需要启用此选项">
-          <a-switch v-model="formModel.swapRedBlue" type="round" />
+        <!-- 光标 -->
+        <block-setting-item label="光标" desc="光标渲染方式, 远程光标会比本地光标慢">
+          <a-select v-model="formModel.cursor"
+                    style="width: 168px;"
+                    size="small"
+                    :options="toOptions(vcnCursorKey)" />
         </block-setting-item>
       </a-row>
       <a-row class="mb16" align="stretch" :gutter="16">
@@ -59,15 +62,6 @@
                           placeholder="图像质量等级 0 ~ 9" />
         </block-setting-item>
       </a-row>
-      <a-row class="mb16" align="stretch" :gutter="16">
-        <!-- 光标 -->
-        <block-setting-item label="光标" desc="光标渲染方式, 远程光标会比本地光标慢">
-          <a-select v-model="formModel.cursor"
-                    style="width: 168px;"
-                    size="small"
-                    :options="toOptions(vcnCursorKey)" />
-        </block-setting-item>
-      </a-row>
     </div>
   </div>
 </template>
@@ -80,23 +74,16 @@
 
 <script lang="ts" setup>
   import type { TerminalVncGraphSetting } from '@/store/modules/terminal/types';
-  import { ref, watch } from 'vue';
-  import { useTerminalStore, useDictStore } from '@/store';
+  import { useDictStore } from '@/store';
   import { TerminalPreferenceItem } from '@/store/modules/terminal';
   import { graphColorDepthKey, vcnCursorKey, fitDisplayValue, screenResolutionKey } from '@/views/terminal/types/const';
   import { getDisplaySize } from '@/views/terminal/types/utils';
+  import useTerminalPreference from '@/views/terminal/types/use-terminal-preference';
   import BlockSettingItem from '../block-setting-item.vue';
 
   const { toOptions, getDictValue } = useDictStore();
-  const { preference, updateTerminalPreference } = useTerminalStore();
 
-  const formModel = ref<TerminalVncGraphSetting>({ ...preference.vncGraphSetting });
-
-  // 监听内容变化
-  watch(formModel, (v) => {
-    if (!v) {
-      return;
-    }
+  const { formModel } = useTerminalPreference<TerminalVncGraphSetting>(TerminalPreferenceItem.VNC_GRAPH_SETTING, true, (v) => {
     // 同步大小
     if (v.displaySize) {
       // 自适应大小
@@ -114,9 +101,7 @@
         }
       }
     }
-    // 同步
-    updateTerminalPreference(TerminalPreferenceItem.VNC_GRAPH_SETTING, formModel.value, true);
-  }, { deep: true });
+  });
 
 </script>
 

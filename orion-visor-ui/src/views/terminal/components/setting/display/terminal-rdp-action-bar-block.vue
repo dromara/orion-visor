@@ -40,25 +40,16 @@
 <script lang="ts" setup>
   import type { TerminalRdpActionBarSetting } from '@/store/modules/terminal/types';
   import type { SidebarAction } from '@/views/terminal/types/define';
-  import { computed, ref, watch } from 'vue';
-  import { useTerminalStore, useDictStore } from '@/store';
+  import { computed } from 'vue';
+  import { useDictStore } from '@/store';
   import { TerminalPreferenceItem } from '@/store/modules/terminal';
   import { RdpActionBarItems, graphActionBarPositionKey } from '@/views/terminal/types/const';
+  import useTerminalPreference from '@/views/terminal/types/use-terminal-preference';
   import IconActions from '../../layout/icon-actions.vue';
 
   const { toOptions } = useDictStore();
-  const { preference, updateTerminalPreference } = useTerminalStore();
 
-  const formModel = ref<TerminalRdpActionBarSetting>({ ...preference.rdpActionBarSetting });
-
-  // 监听同步
-  watch(formModel, (v) => {
-    if (!v) {
-      return;
-    }
-    // 同步
-    updateTerminalPreference(TerminalPreferenceItem.RDP_ACTION_BAR_SETTING, formModel.value, true);
-  }, { deep: true });
+  const { formModel } = useTerminalPreference<TerminalRdpActionBarSetting>(TerminalPreferenceItem.RDP_ACTION_BAR_SETTING, true);
 
   // 操作项
   const actions = computed<Array<SidebarAction>>(() => {
