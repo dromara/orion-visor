@@ -12,6 +12,7 @@ export default class GuacdSessionDisplayHandler implements IGuacdSessionDisplayH
   public displayDpi: number;
   public autoFit: boolean;
   public localCursor: boolean;
+  public keyboardDownKeys: Array<number>;
 
   private display?: Guacamole.Display;
   private sink?: Guacamole.InputSink;
@@ -28,6 +29,7 @@ export default class GuacdSessionDisplayHandler implements IGuacdSessionDisplayH
     this.displayDpi = 96;
     this.autoFit = true;
     this.localCursor = true;
+    this.keyboardDownKeys = [];
     this.focusSink = useDebounceFn(() => this.sink?.focus(), 300).bind(this);
   }
 
@@ -187,6 +189,12 @@ export default class GuacdSessionDisplayHandler implements IGuacdSessionDisplayH
       return;
     }
     this.session.client.sendKeyEvent(0, key);
+    // 触发长按键
+    if (this.keyboardDownKeys) {
+      this.keyboardDownKeys.forEach(key => {
+        this.session.client.sendKeyEvent(0, key);
+      });
+    }
   }
 
   // 键盘按下事件
@@ -194,6 +202,12 @@ export default class GuacdSessionDisplayHandler implements IGuacdSessionDisplayH
     // 是否可写
     if (!this.session.isWriteable()) {
       return;
+    }
+    // 触发长按键
+    if (this.keyboardDownKeys) {
+      this.keyboardDownKeys.forEach(key => {
+        this.session.client.sendKeyEvent(1, key);
+      });
     }
     this.session.client.sendKeyEvent(1, key);
     // // 处理退格

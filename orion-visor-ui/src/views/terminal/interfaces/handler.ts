@@ -86,6 +86,7 @@ export interface IGuacdSessionDisplayHandler {
   displayDpi: number;
   autoFit: boolean;
   localCursor: boolean;
+  keyboardDownKeys: number[];
 
   // 初始化
   init: () => void;

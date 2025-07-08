@@ -47,9 +47,6 @@ public class TerminalSessionVncConfig extends VncConnectConfig implements ITermi
     @Schema(description = "logId")
     private Long logId;
 
-    @Schema(description = "录屏文件路径")
-    private String recordPath;
-
     @Schema(description = "宽")
     private Integer width;
 
