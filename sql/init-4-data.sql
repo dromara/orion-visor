@@ -370,12 +370,12 @@ INSERT INTO `dict_value` VALUES (459, 27, 'terminalConnectType', 'RDP', 'RDP', '
 INSERT INTO `dict_value` VALUES (460, 68, 'graphColorDepth', '8', '低质量 (8bit)', '{}', 10, '2025-06-19 00:56:41', '2025-06-19 00:56:41', 'admin', 'admin', 0);
 INSERT INTO `dict_value` VALUES (461, 68, 'graphColorDepth', '16', '中质量 (16bit)', '{}', 20, '2025-06-19 00:56:53', '2025-06-19 00:56:53', 'admin', 'admin', 0);
 INSERT INTO `dict_value` VALUES (462, 68, 'graphColorDepth', '24', '高质量 (24bit)', '{}', 30, '2025-06-19 00:57:21', '2025-06-19 00:57:21', 'admin', 'admin', 0);
-INSERT INTO `dict_value` VALUES (463, 69, 'screenResolution', '1920x1080', '1920x1080 (最佳平衡)', '{\"width\": 1920, \"height\": 1080}', 10, '2025-06-19 00:57:51', '2025-06-19 00:58:04', 'admin', 'admin', 0);
-INSERT INTO `dict_value` VALUES (464, 69, 'screenResolution', '1600x900', '1600x900 (良好)', '{\"width\": 1600, \"height\": 900}', 20, '2025-06-19 00:58:25', '2025-06-19 00:59:24', 'admin', 'admin', 0);
-INSERT INTO `dict_value` VALUES (465, 69, 'screenResolution', '1440x900', '1440x900 (良好)', '{\"width\": 1440, \"height\": 900}', 30, '2025-06-19 00:58:52', '2025-06-19 00:59:30', 'admin', 'admin', 0);
-INSERT INTO `dict_value` VALUES (466, 69, 'screenResolution', '1366x768', '1366x768 (低带宽)', '{\"width\": 1366, \"height\": 768}', 40, '2025-06-19 00:59:48', '2025-06-22 00:48:45', 'admin', 'admin', 0);
-INSERT INTO `dict_value` VALUES (467, 69, 'screenResolution', '1280x720', '1280x720 (低带宽)', '{\"width\": 1280, \"height\": 720}', 50, '2025-06-19 00:59:59', '2025-06-19 00:59:59', 'admin', 'admin', 0);
-INSERT INTO `dict_value` VALUES (468, 69, 'screenResolution', '1024x768', '1024x768 (兼容性)', '{\"width\": 1024, \"height\": 768}', 60, '2025-06-19 01:00:10', '2025-06-19 01:00:10', 'admin', 'admin', 0);
+INSERT INTO `dict_value` VALUES (463, 69, 'screenResolution', '1920x1080', '1920x1080', '{\"width\": 1920, \"height\": 1080}', 10, '2025-06-19 00:57:51', '2025-07-03 02:36:09', 'admin', 'admin', 0);
+INSERT INTO `dict_value` VALUES (464, 69, 'screenResolution', '1600x900', '1600x900', '{\"width\": 1600, \"height\": 900}', 20, '2025-06-19 00:58:25', '2025-07-03 02:36:05', 'admin', 'admin', 0);
+INSERT INTO `dict_value` VALUES (465, 69, 'screenResolution', '1440x900', '1440x900', '{\"width\": 1440, \"height\": 900}', 30, '2025-06-19 00:58:52', '2025-07-03 02:36:01', 'admin', 'admin', 0);
+INSERT INTO `dict_value` VALUES (466, 69, 'screenResolution', '1366x768', '1366x768', '{\"width\": 1366, \"height\": 768}', 40, '2025-06-19 00:59:48', '2025-07-03 02:35:58', 'admin', 'admin', 0);
+INSERT INTO `dict_value` VALUES (467, 69, 'screenResolution', '1280x720', '1280x720', '{\"width\": 1280, \"height\": 720}', 50, '2025-06-19 00:59:59', '2025-07-03 02:35:54', 'admin', 'admin', 0);
+INSERT INTO `dict_value` VALUES (468, 69, 'screenResolution', '1024x768', '1024x768', '{\"width\": 1024, \"height\": 768}', 60, '2025-06-19 01:00:10', '2025-07-03 02:35:50', 'admin', 'admin', 0);
 INSERT INTO `dict_value` VALUES (469, 70, 'timezone', 'Asia/Shanghai', '中国上海', '{}', 10, '2025-06-19 01:00:27', '2025-06-19 01:00:27', 'admin', 'admin', 0);
 INSERT INTO `dict_value` VALUES (470, 70, 'timezone', 'America/New_York', '美国东部', '{}', 20, '2025-06-19 01:00:40', '2025-06-19 01:00:40', 'admin', 'admin', 0);
 INSERT INTO `dict_value` VALUES (471, 70, 'timezone', 'Europe/London', '英国伦敦', '{}', 30, '2025-06-19 01:00:52', '2025-06-19 01:00:52', 'admin', 'admin', 0);
@@ -427,6 +427,8 @@ INSERT INTO `dict_value` VALUES (516, 2, 'operatorLogType', 'terminal:rdp-upload
 INSERT INTO `dict_value` VALUES (517, 2, 'operatorLogType', 'terminal:rdp-download', '下载文件(RDP)', '{}', 120, '2024-02-23 17:55:03', '2024-10-15 15:54:47', 'admin', 'admin', 0);
 INSERT INTO `dict_value` VALUES (518, 33, 'terminalFileOperatorType', 'terminal:rdp-upload', '上传文件(RDP)', '{}', 100, '2024-03-05 16:52:06', '2025-06-29 12:27:24', 'admin', 'admin', 0);
 INSERT INTO `dict_value` VALUES (519, 33, 'terminalFileOperatorType', 'terminal:rdp-download', '下载文件(RDP)', '{}', 110, '2024-03-05 16:52:18', '2025-06-29 12:28:52', 'admin', 'admin', 0);
+INSERT INTO `dict_value` VALUES (520, 58, 'hostType', 'VNC', 'VNC', '{\"color\": \"pinkpurple\"}', 30, '2025-07-01 16:02:01', '2025-07-03 00:56:56', 'admin', 'admin', 0);
+INSERT INTO `dict_value` VALUES (521, 27, 'terminalConnectType', 'VNC', 'VNC', '{\"color\": \"pinkpurple\"}', 40, '2025-07-01 16:02:21', '2025-07-03 00:56:54', 'admin', 'admin', 0);
 
 -- 菜单配置
 INSERT INTO `system_menu` VALUES (1, 0, '工作台', NULL, 1, 10, 1, 1, 1, 0, 'IconComputer', NULL, 'workplace', '2023-07-28 10:51:50', '2024-08-11 00:05:44', 'admin', 'admin', 0);
