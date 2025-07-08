@@ -13,7 +13,6 @@ export interface CardProps {
   cardHeight?: string;
   cardClass?: string;
   cardBodyStyle?: CSSProperties;
-  contextMenu?: boolean;
   filterCount?: number;
   searchInputPlaceholder?: string;
   searchInputWidth?: string;

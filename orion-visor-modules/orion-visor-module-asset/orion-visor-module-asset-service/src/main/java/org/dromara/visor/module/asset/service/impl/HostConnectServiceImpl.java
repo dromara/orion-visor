@@ -112,7 +112,6 @@ public class HostConnectServiceImpl implements HostConnectService {
                 Streams.close(sessionStore);
             }
         }
-        // TODO: 其他连接方式
     }
 
     @Override

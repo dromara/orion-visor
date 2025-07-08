@@ -9,7 +9,6 @@
           :bordered="false"
           :hoverable="true"
           :body-style="cardBodyStyle as Record<string, any>"
-          @contextmenu.prevent="() => false"
           @click="bubblesEmitter(CardEmitter.CLICK, item, index)"
           @dblclick="bubblesEmitter(CardEmitter.DBL_CLICK, item, index)">
     <!-- 标题 -->
