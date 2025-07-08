@@ -71,7 +71,7 @@ public class HostSshConfigDTO implements GenericsDataModel, UpdatePasswordAction
     private Long keyId;
 
     @NotNull
-    @Min(value = 1)
+    @Min(value = 0)
     @Max(value = 100000)
     @Schema(description = "连接超时时间")
     private Integer connectTimeout;

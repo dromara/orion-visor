@@ -25,9 +25,9 @@
                        :show-arrow="false"
                        :content="action.content">
               <a-button class="action-bar-button"
-                        :disabled="action.disabled"
+                        :disabled="!action.enabled()"
                         :type="action.active ? 'primary' : 'secondary'"
-                        @click="toggleClickAction(action.item)">
+                        @click="toggleAction(action.item)">
                 <template #icon>
                   <component :is="action.icon" />
                 </template>
@@ -35,65 +35,35 @@
             </a-tooltip>
           </div>
         </a-space>
+        <!-- 连接信息 -->
+        <div v-if="current === GuacdActionItemKeys.INFO" class="action-bar-content">
+          <info-action :session="session" />
+        </div>
         <!-- 显示设置 -->
-        <div v-if="current === GuacdActionItemKeys.DISPLAY" class="action-bar-content">
-          <!-- 分辨率 -->
-          <a-space>
-            <span class="display-size-label">分辨率</span>
-            <a-select v-model="displaySize"
-                      class="display-size-input"
-                      placeholder="请选择分辨率"
-                      :options="toOptions(screenResolutionKey)"
-                      allow-create />
-          </a-space>
-          <!-- 按钮 -->
-          <a-space class="action-bar-content-footer">
-            <a-button type="primary"
-                      size="small"
-                      @click="fitOnce">
-              临时自适应
-            </a-button>
-            <a-button type="primary"
-                      size="small"
-                      @click="setDisplaySize">
-              设置
-            </a-button>
-          </a-space>
+        <div v-else-if="current === GuacdActionItemKeys.DISPLAY" class="action-bar-content">
+          <display-action ref="display"
+                          :session="session"
+                          @close="close" />
         </div>
         <!-- 组合键 -->
         <div v-else-if="current === GuacdActionItemKeys.COMBINATION_KEY" class="action-bar-content">
-          <a-row :gutter="[12, 12]" wrap>
-            <a-col v-for="item in GuacdCombinationKeyItems"
-                   :key="item.name"
-                   :span="12"
-                   class="combination-key-item"
-                   @click="triggerCombinationKey(item.keys)">
-              <span>{{ item.name }}</span>
-            </a-col>
-          </a-row>
+          <combination-key-action :session="session"
+                                  @close="close" />
+        </div>
+        <!-- 触发键 -->
+        <div v-else-if="current === GuacdActionItemKeys.TRIGGER_KEY" class="action-bar-content">
+          <trigger-key-action :session="session" />
         </div>
         <!-- 剪切板 -->
         <div v-else-if="current === GuacdActionItemKeys.CLIPBOARD" class="action-bar-content">
-          <a-textarea class="action-bar-clipboard"
-                      v-model="clipboardData"
-                      :ref="setAutoFocus"
-                      placeholder="远程剪切板"
-                      allow-clear />
-          <!-- 按钮 -->
-          <a-space class="action-bar-content-footer">
-            <a-button size="small" @click="clearClipboardData">
-              清空
-            </a-button>
-            <a-button type="primary"
-                      size="small"
-                      :disabled="!clipboardData"
-                      @click="sendClipboardData">
-              发送
-            </a-button>
-          </a-space>
+          <clipboard-action ref="clipboard"
+                            :session="session"
+                            @close="close" />
         </div>
       </template>
     </a-popover>
+    <!-- sftp 上传框 -->
+    <sftp-upload-modal ref="sftpUploadModalRef" :session="session" />
   </div>
 </template>
 
@@ -107,43 +77,31 @@
   import type { IVncSession } from '@/views/terminal/interfaces';
   import {
     TerminalStatus,
-    GuacdCombinationKeyItems,
     GuacdActionItemKeys,
     VncActionBarItems,
-    screenResolutionKey,
-    fitDisplayValue, ActionBarPosition,
+    ActionBarPosition,
+    TerminalSessionTypes,
   } from '@/views/terminal/types/const';
   import { computed, ref, watch, onMounted } from 'vue';
-  import { setAutoFocus } from '@/utils/dom';
-  import { readText } from '@/hooks/copy';
-  import { useTerminalStore, useDictStore } from '@/store';
-  import useGuacdActionBar from '@/views/terminal/types/use-guacd-action-bar';
+  import { useTerminalStore } from '@/store';
   import useVisible from '@/hooks/visible';
+  import InfoAction from '../guacd/actions/info-action.vue';
+  import DisplayAction from '../guacd/actions/display-action.vue';
+  import ClipboardAction from '../guacd/actions/clipboard-action.vue';
+  import TriggerKeyAction from '../guacd/actions/trigger-key-action.vue';
+  import CombinationKeyAction from '../guacd/actions/combination-key-action.vue';
+  import SftpUploadModal from '@/views/terminal/components/view/sftp/sftp-upload-modal.vue';
 
   const props = defineProps<{
     session: IVncSession;
     direction: string;
   }>();
 
-  const { preference } = useTerminalStore();
-  const { toOptions, getDictValue } = useDictStore();
+  const { hosts, preference, openSession, reOpenSession } = useTerminalStore();
   const { visible, setVisible } = useVisible();
 
-  const {
-    displaySize,
-    clipboardData,
-    fitOnce,
-    setDisplaySize,
-    triggerCombinationKey,
-    sendClipboardData,
-    clearClipboardData,
-    disconnect,
-  } = useGuacdActionBar({
-    session: props.session,
-    setVisible,
-  });
-
   const current = ref('');
+  const sftpUploadModalRef = ref();
 
   const actions = computed(() => {
     return VncActionBarItems.filter(item => {
@@ -153,7 +111,16 @@
       return {
         ...item,
         active: current.value === key,
-        disabled: (key === GuacdActionItemKeys.DISPLAY || GuacdActionItemKeys.DISCONNECT || key === GuacdActionItemKeys.CLOSE) ? false : !props.session.isWriteable(),
+        enabled: () => {
+          if (key === GuacdActionItemKeys.DISPLAY || key === GuacdActionItemKeys.DISCONNECT || key === GuacdActionItemKeys.RECONNECT || key === GuacdActionItemKeys.CLOSE) {
+            return true;
+          } else if (key === GuacdActionItemKeys.OPEN_SFTP || key === GuacdActionItemKeys.SFTP_UPLOAD) {
+            if (!hosts.hostList.find(s => s.id === props.session.info.hostId)?.types?.includes?.(TerminalSessionTypes.SFTP.protocol)) {
+              return false;
+            }
+          }
+          return props.session.isWriteable();
+        }
       };
     });
   });
@@ -163,36 +130,55 @@
     if (!val) {
       return;
     }
-    // 重新触发点击
-    toggleClickAction(current.value);
+    // 重新触发
+    toggleAction(current.value);
   });
 
   // 触发 action
-  const toggleClickAction = (key: string) => {
-    if (key === GuacdActionItemKeys.DISPLAY) {
-      // 显示设置
-      current.value = GuacdActionItemKeys.DISPLAY;
-      if (props.session.displayHandler?.autoFit) {
-        displaySize.value = fitDisplayValue;
-      } else {
-        displaySize.value = `${props.session.displayHandler?.displayWidth || 0}x${props.session.displayHandler?.displayHeight || 0}`;
-      }
-    } else if (key === GuacdActionItemKeys.COMBINATION_KEY) {
-      // 组合键
-      current.value = GuacdActionItemKeys.COMBINATION_KEY;
-    } else if (key === GuacdActionItemKeys.CLIPBOARD) {
-      // 剪切板
-      current.value = GuacdActionItemKeys.CLIPBOARD;
-      readText(false)
-        .then(s => clipboardData.value = s)
-        .catch(() => clipboardData.value = '');
+  const toggleAction = (key: string) => {
+    if (key === GuacdActionItemKeys.OPEN_SFTP) {
+      // 打开 SFTP 会话
+      openSession(hosts.hostList.find(s => s.id === props.session.info.hostId) as any, TerminalSessionTypes.SFTP);
+      setVisible(false);
+    } else if (key === GuacdActionItemKeys.SFTP_UPLOAD) {
+      // 打开 SFTP 上传
+      sftpUploadModalRef.value.open('/');
+      setVisible(false);
     } else if (key === GuacdActionItemKeys.DISCONNECT) {
       // 断开连接
       disconnect();
+    } else if (key === GuacdActionItemKeys.RECONNECT) {
+      // 重新连接
+      reconnect();
     } else if (key === GuacdActionItemKeys.CLOSE) {
       // 关闭工具栏
       setVisible(false);
+    } else {
+      current.value = key;
     }
+  };
+
+  // 关闭会话
+  const disconnect = () => {
+    props.session.disconnect();
+    setVisible(false);
+  };
+
+  // 关闭会话
+  const reconnect = () => {
+    const session = props.session;
+    // 断开连接
+    session.disconnect();
+    // 重新连接
+    if (session.state.canReconnect) {
+      reOpenSession(session.sessionKey);
+    }
+    setVisible(false);
+  };
+
+  // 关闭
+  const close = () => {
+    setVisible(false);
   };
 
   // 设置选中
