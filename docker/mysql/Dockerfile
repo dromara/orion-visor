@@ -11,4 +11,4 @@ RUN ln -sf /usr/share/zoneinfo/${TZ} /etc/localtime && \
 COPY ./mysql/my.cnf /etc/mysql/conf.d/my.cnf
 
 # 复制初始化脚本
-COPY ./mysql/sql/init-*.sql /docker-entrypoint-initdb.d
+COPY ./mysql/sql/init-*.sql /docker-entrypoint-initdb.d/
