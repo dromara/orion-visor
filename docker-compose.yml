@@ -23,7 +23,7 @@ services:
     image: registry.cn-hangzhou.aliyuncs.com/orionsec/orion-visor-service:latest
     privileged: true
     ports:
-      - 9200:9200
+      - "9200:9200"
     environment:
       SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-prod}
       MYSQL_HOST: ${MYSQL_HOST:-mysql}
@@ -61,7 +61,7 @@ services:
     image: registry.cn-hangzhou.aliyuncs.com/orionsec/orion-visor-mysql:latest
     privileged: true
     ports:
-      - 3307:3306
+      - "3307:3306"
     environment:
       MYSQL_DATABASE: ${MYSQL_DATABASE:-orion_visor}
       MYSQL_USER: ${MYSQL_USER:-orion}
@@ -84,7 +84,7 @@ services:
     image: registry.cn-hangzhou.aliyuncs.com/orionsec/orion-visor-redis:latest
     privileged: true
     ports:
-      - 6380:6379
+      - "6380:6379"
     environment:
       REDIS_PASSWORD: ${REDIS_PASSWORD:-Data@123456}
     volumes:
@@ -103,7 +103,7 @@ services:
   guacd:
     image: registry.cn-hangzhou.aliyuncs.com/orionsec/orion-visor-guacd:latest
     ports:
-      - 4822.4.32
+      - "4822:4822"
     environment:
       GUACD_LOG_LEVEL: info
       GUACD_LOG_FILE: /var/log/guacd.log
@@ -125,7 +125,7 @@ services:
   adminer:
     image: registry.cn-hangzhou.aliyuncs.com/orionsec/orion-visor-adminer:latest
     ports:
-      - 8081:8080
+      - "8081:8080"
     environment:
       ADMINER_DEFAULT_SERVER: ${MYSQL_HOST:-mysql}
     depends_on:

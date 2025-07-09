@@ -5,7 +5,7 @@ services:
     image: registry.cn-hangzhou.aliyuncs.com/orionsec/orion-visor-service:latest
     privileged: true
     ports:
-      - 9200:9200
+      - "9200:9200"
     environment:
       SPRING_PROFILES_ACTIVE: prod
       MYSQL_HOST: mysql
@@ -37,7 +37,7 @@ services:
     image: registry.cn-hangzhou.aliyuncs.com/orionsec/orion-visor-mysql:latest
     privileged: true
     ports:
-      - 3307:3306
+      - "3307:3306"
     environment:
       MYSQL_DATABASE: orion_visor
       MYSQL_USER: orion
@@ -59,7 +59,7 @@ services:
     image: registry.cn-hangzhou.aliyuncs.com/orionsec/orion-visor-redis:latest
     privileged: true
     ports:
-      - 6380:6379
+      - "6380:6379"
     environment:
       REDIS_PASSWORD: Data@123456
     volumes:
