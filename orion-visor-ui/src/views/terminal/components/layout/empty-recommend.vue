@@ -31,45 +31,21 @@
                 <icon-right />
               </a-button>
             </a-tooltip>
-            <!-- 打开 SSH -->
-            <a-tooltip v-if="handler.host?.types?.includes(TerminalSessionTypes.SSH.type)"
-                       position="top"
-                       :mini="true"
-                       :auto-fix-position="false"
-                       content-class="terminal-tooltip-content"
-                       arrow-class="terminal-tooltip-content"
-                       content="打开 SSH">
-              <a-button class="combined-handler-action icon-button"
-                        @click="openSession(handler.host as any, TerminalSessionTypes.SSH)">
-                <icon-thunderbolt />
-              </a-button>
-            </a-tooltip>
-            <!-- 打开 SFTP -->
-            <a-tooltip v-if="handler.host?.types?.includes(TerminalSessionTypes.SSH.type)"
-                       position="top"
-                       :mini="true"
-                       :auto-fix-position="false"
-                       content-class="terminal-tooltip-content"
-                       arrow-class="terminal-tooltip-content"
-                       content="打开 SFTP">
-              <a-button class="combined-handler-action icon-button"
-                        @click="openSession(handler.host as any, TerminalSessionTypes.SFTP)">
-                <icon-folder />
-              </a-button>
-            </a-tooltip>
-            <!-- 打开 RDP -->
-            <a-tooltip v-if="handler.host?.types?.includes(TerminalSessionTypes.RDP.type)"
-                       position="top"
-                       :mini="true"
-                       :auto-fix-position="false"
-                       content-class="terminal-tooltip-content"
-                       arrow-class="terminal-tooltip-content"
-                       content="打开 RDP">
-              <a-button class="combined-handler-action icon-button"
-                        @click="openSession(handler.host as any, TerminalSessionTypes.RDP)">
-                <icon-computer />
-              </a-button>
-            </a-tooltip>
+            <!-- 打开会话 -->
+            <template v-for="type in TerminalSessionTypes">
+              <template v-if="handler.host?.types?.includes(type.protocol)">
+                <a-tooltip position="top"
+                           :mini="true"
+                           :auto-fix-position="false"
+                           :content="`打开 ${type.type}`"
+                           content-class="terminal-tooltip-content"
+                           arrow-class="terminal-tooltip-content">
+                  <a-button class="combined-handler-action icon-button" @click="openSession(handler.host as any, type)">
+                    <component :is="type.connectIcon || type.icon" />
+                  </a-button>
+                </a-tooltip>
+              </template>
+            </template>
           </div>
         </div>
       </div>

@@ -89,7 +89,6 @@ public class GuacdTunnel implements IGuacdTunnel {
     @Override
     public void connect() throws GuacdException {
         try {
-            // TODO 端口转发
             this.socket = new ConfiguredGuacamoleSocket(new InetGuacamoleSocket(serverAddress, serverPort), serverConfig, clientConfig);
             this.tunnel = new CustomGuacamoleTunnel(uuid, socket);
         } catch (GuacamoleException e) {
@@ -192,12 +191,16 @@ public class GuacdTunnel implements IGuacdTunnel {
     }
 
     @Override
-    public void size(int width, int height, int dpi) {
+    public void size(int width, int height) {
         clientConfig.setOptimalScreenWidth(width);
         clientConfig.setOptimalScreenHeight(height);
-        clientConfig.setOptimalResolution(dpi);
         this.setParameter(GuacdConst.WIDTH, width);
         this.setParameter(GuacdConst.HEIGHT, height);
+    }
+
+    @Override
+    public void dpi(int dpi) {
+        clientConfig.setOptimalResolution(dpi);
         this.setParameter(GuacdConst.DPI, dpi);
     }
 

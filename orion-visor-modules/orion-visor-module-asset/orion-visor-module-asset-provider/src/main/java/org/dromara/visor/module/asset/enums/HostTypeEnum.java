@@ -27,6 +27,7 @@ import lombok.AllArgsConstructor;
 import org.dromara.visor.common.constant.Const;
 import org.dromara.visor.module.asset.entity.dto.host.HostRdpConfigDTO;
 import org.dromara.visor.module.asset.entity.dto.host.HostSshConfigDTO;
+import org.dromara.visor.module.asset.entity.dto.host.HostVncConfigDTO;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -53,6 +54,11 @@ public enum HostTypeEnum {
      * RDP
      */
     RDP(HostRdpConfigDTO.class),
+
+    /**
+     * VNC
+     */
+    VNC(HostVncConfigDTO.class),
 
     ;
 

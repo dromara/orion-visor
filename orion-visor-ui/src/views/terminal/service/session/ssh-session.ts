@@ -7,7 +7,7 @@ import type { XtermAddons } from '@/types/xterm';
 import { defaultFontFamily } from '@/types/xterm';
 import { useTerminalStore } from '@/store';
 import { InputProtocol } from '@/views/terminal/types/protocol';
-import { TerminalShortcutType } from '@/views/terminal/types/const';
+import { BACKSPACE_CHAR, CTRL_H_CHAR, TerminalShortcutType } from '@/views/terminal/types/const';
 import { Terminal } from '@xterm/xterm';
 import { FitAddon } from '@xterm/addon-fit';
 import { WebLinksAddon } from '@xterm/addon-web-links';
@@ -127,15 +127,20 @@ export default class SshSession extends BaseSession<ReactiveSessionState, ISshCh
 
   // 注册事件
   private registerEvent(dom: HTMLElement, preference: UnwrapRef<TerminalPreference>) {
+    // 是否替换退格符
+    const replaceBackspace = preference.sshInteractSetting.replaceBackspace;
     // 注册输入事件
-    this.inst.onData(s => {
-      if (!this.state.canWrite || !this.state.connected) {
+    this.inst.onData(command => {
+      // 不可写
+      if (!this.isWriteable()) {
         return;
       }
+      // 替换退格符
+      if (replaceBackspace) {
+        command = command.replace(BACKSPACE_CHAR, CTRL_H_CHAR);
+      }
       // 输入
-      this.channel.send(InputProtocol.SSH_INPUT, {
-        command: s
-      });
+      this.channel.send(InputProtocol.SSH_INPUT, { command });
     });
     // 启用响铃
     if (preference.sshInteractSetting.enableBell) {
@@ -165,7 +170,8 @@ export default class SshSession extends BaseSession<ReactiveSessionState, ISshCh
     addEventListen(dom, 'contextmenu', async () => {
       // 右键粘贴逻辑
       if (preference.sshInteractSetting.rightClickPaste) {
-        if (!this.state.canWrite || !this.state.connected) {
+        // 不可写
+        if (!this.isWriteable()) {
           return;
         }
         // 未开启右键选中 || 开启并无选中的内容则粘贴

@@ -111,48 +111,23 @@
             </div>
             <!-- 操作 -->
             <div class="host-item-right-actions">
-              <!-- 打开 SSH -->
-              <a-tooltip v-if="item.types?.includes(TerminalSessionTypes.SSH.type)"
-                         position="top"
-                         :mini="true"
-                         :auto-fix-position="false"
-                         content-class="terminal-tooltip-content"
-                         arrow-class="terminal-tooltip-content"
-                         content="打开 SSH">
-                <div class="terminal-sidebar-icon-wrapper">
-                  <a-button class="terminal-sidebar-icon" @click="openSession(item, TerminalSessionTypes.SSH)">
-                    <icon-thunderbolt />
-                  </a-button>
-                </div>
-              </a-tooltip>
-              <!-- 打开 SFTP -->
-              <a-tooltip v-if="item.types?.includes(TerminalSessionTypes.SSH.type)"
-                         position="top"
-                         :mini="true"
-                         :auto-fix-position="false"
-                         content-class="terminal-tooltip-content"
-                         arrow-class="terminal-tooltip-content"
-                         content="打开 SFTP">
-                <div class="terminal-sidebar-icon-wrapper">
-                  <a-button class="terminal-sidebar-icon" @click="openSession(item, TerminalSessionTypes.SFTP)">
-                    <icon-folder />
-                  </a-button>
-                </div>
-              </a-tooltip>
-              <!-- 打开 RDP -->
-              <a-tooltip v-if="item.types?.includes(TerminalSessionTypes.RDP.type)"
-                         position="top"
-                         :mini="true"
-                         :auto-fix-position="false"
-                         content-class="terminal-tooltip-content"
-                         arrow-class="terminal-tooltip-content"
-                         content="打开 RDP">
-                <div class="terminal-sidebar-icon-wrapper">
-                  <a-button class="terminal-sidebar-icon" @click="openSession(item, TerminalSessionTypes.RDP)">
-                    <icon-computer />
-                  </a-button>
-                </div>
-              </a-tooltip>
+              <!-- 打开会话 -->
+              <template v-for="type in TerminalSessionTypes">
+                <template v-if="item.types?.includes(type.protocol)">
+                  <a-tooltip position="top"
+                             :mini="true"
+                             :auto-fix-position="false"
+                             :content="`打开 ${type.type}`"
+                             content-class="terminal-tooltip-content"
+                             arrow-class="terminal-tooltip-content">
+                    <div class="terminal-sidebar-icon-wrapper">
+                      <a-button class="terminal-sidebar-icon" @click="openSession(item, type)">
+                        <component :is="type.connectIcon || type.icon" />
+                      </a-button>
+                    </div>
+                  </a-tooltip>
+                </template>
+              </template>
               <!-- 主机设置 -->
               <a-tooltip position="top"
                          :mini="true"

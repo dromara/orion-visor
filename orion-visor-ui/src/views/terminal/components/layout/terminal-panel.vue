@@ -32,15 +32,25 @@
             <span class="tab-title-icon">
               <component :is="item.icon" />
             </span>
-            {{ item.title }}
+            <span>{{ item.title }}</span>
           </span>
         </template>
         <!-- ssh -->
-        <ssh-view v-if="item.type === TerminalSessionTypes.SSH.type" :item="item" />
+        <ssh-view v-if="item.type === TerminalSessionTypes.SSH.type"
+                  class="session-container"
+                  :item="item" />
         <!-- sftp -->
-        <sftp-view v-else-if="item.type === TerminalSessionTypes.SFTP.type" :item="item" />
+        <sftp-view v-else-if="item.type === TerminalSessionTypes.SFTP.type"
+                   class="session-container"
+                   :item="item" />
         <!-- rdp -->
-        <rdp-view v-else-if="item.type === TerminalSessionTypes.RDP.type" :item="item" />
+        <rdp-view v-else-if="item.type === TerminalSessionTypes.RDP.type"
+                  class="session-container"
+                  :item="item" />
+        <!-- vnc -->
+        <vnc-view v-else-if="item.type === TerminalSessionTypes.VNC.type"
+                  class="session-container"
+                  :item="item" />
       </a-tab-pane>
     </a-tabs>
   </div>
@@ -60,6 +70,7 @@
   import SshView from '../view/ssh/ssh-view.vue';
   import SftpView from '../view/sftp/sftp-view.vue';
   import RdpView from '../view/rdp/rdp-view.vue';
+  import VncView from '../view/vnc/vnc-view.vue';
 
   const props = defineProps<{
     index: number;
@@ -118,56 +129,62 @@
   .terminal-panel-container {
     width: 100%;
     height: 100%;
-  }
 
-  .tab-title-wrapper {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    padding: 11px 18px 9px 14px;
-    background: var(--bg);
-    position: relative;
-    transition: all .3s;
-
-    .tab-title-icon {
-      font-size: 16px;
-      margin-right: 6px;
-    }
-
-    &:hover {
-      filter: brightness(1.04);
-    }
-
-    &::after {
-      content: '';
-      width: calc(100% - 3px);
-      height: 2px;
-      background: var(--color);
-      position: absolute;
-      left: 1px;
-      bottom: -1px;
-    }
-  }
-
-  .panel-extra {
-    margin-right: 8px;
-
-    .extra-icon {
-      color: var(--color-panel-text-1);
-      transition: 0.2s;
-      font-size: 16px;
-      cursor: pointer;
-      width: 24px;
-      height: 24px;
+    .tab-title-wrapper {
+      width: 100%;
+      height: 100%;
       display: flex;
       align-items: center;
-      justify-content: center;
-      border-radius: 50%;
+      padding: 4px 18px 4px 14px;
+      background: var(--bg);
+      position: relative;
+      transition: all .3s;
+
+      .tab-title-icon {
+        font-size: 16px;
+        margin-right: 6px;
+      }
 
       &:hover {
-        background: var(--color-bg-panel-icon-1);
+        filter: brightness(1.04);
       }
+
+      &::after {
+        content: '';
+        width: calc(100% - 3px);
+        height: 2px;
+        background: var(--color);
+        position: absolute;
+        left: 1px;
+        bottom: -1px;
+      }
+    }
+
+    .panel-extra {
+      margin-right: 8px;
+
+      .extra-icon {
+        color: var(--color-panel-text-1);
+        transition: 0.2s;
+        font-size: 16px;
+        cursor: pointer;
+        width: 24px;
+        height: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+
+        &:hover {
+          background: var(--color-bg-panel-icon-1);
+        }
+      }
+    }
+
+    .session-container {
+      width: 100%;
+      height: 100%;
+      position: relative;
     }
   }
 

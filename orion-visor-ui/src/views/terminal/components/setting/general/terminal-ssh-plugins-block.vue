@@ -40,23 +40,11 @@
 
 <script lang="ts" setup>
   import type { TerminalSshPluginsSetting } from '@/store/modules/terminal/types';
-  import { ref, watch } from 'vue';
-  import { useTerminalStore } from '@/store';
   import { TerminalPreferenceItem } from '@/store/modules/terminal';
+  import useTerminalPreference from '@/views/terminal/types/use-terminal-preference';
   import BlockSettingItem from '../block-setting-item.vue';
 
-  const { preference, updateTerminalPreference } = useTerminalStore();
-
-  const formModel = ref<TerminalSshPluginsSetting>({ ...preference.sshPluginsSetting });
-
-  // 监听内容变化
-  watch(formModel, (v) => {
-    if (!v) {
-      return;
-    }
-    // 同步
-    updateTerminalPreference(TerminalPreferenceItem.SSH_PLUGINS_SETTING, formModel.value);
-  }, { deep: true });
+  const { formModel } = useTerminalPreference<TerminalSshPluginsSetting>(TerminalPreferenceItem.SSH_PLUGINS_SETTING);
 
 </script>
 

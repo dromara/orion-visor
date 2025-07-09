@@ -1,5 +1,5 @@
 <template>
-  <div class="layout-container">
+  <div class="layout-container" v-if="render">
     <!-- 列表-表格 -->
     <host-identity-table v-if="renderTable"
                          ref="table"
@@ -36,6 +36,7 @@
   import HostIdentityFormModal from './components/host-identity-form-modal.vue';
   import HostKeyFormDrawer from '../host-key/components/host-key-form-drawer.vue';
 
+  const render = ref();
   const table = ref();
   const card = ref();
   const modal = ref();
@@ -57,6 +58,7 @@
   onBeforeMount(async () => {
     const dictStore = useDictStore();
     await dictStore.loadKeys(dictKeys);
+    render.value = true;
   });
 
 </script>

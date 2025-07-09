@@ -64,9 +64,15 @@ public interface IGuacdTunnel extends Runnable, Executable, SafeCloseable {
      *
      * @param width  width
      * @param height height
-     * @param dpi    dpi
      */
-    void size(int width, int height, int dpi);
+    void size(int width, int height);
+
+    /**
+     * dpi
+     *
+     * @param dpi dpi
+     */
+    void dpi(int dpi);
 
     /**
      * 设置时区

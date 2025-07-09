@@ -32,15 +32,7 @@ import org.dromara.visor.module.terminal.handler.terminal.sender.ISshTerminalSen
  * @version 1.0.0
  * @since 2024/2/4 16:47
  */
-public interface ISshSession extends ITerminalSession {
-
-    /**
-     * 重置大小
-     *
-     * @param width  width
-     * @param height height
-     */
-    void resize(int width, int height);
+public interface ISshSession extends ITerminalSession, IResizeableSession {
 
     /**
      * 写入内容

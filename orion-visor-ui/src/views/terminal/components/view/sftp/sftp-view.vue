@@ -1,5 +1,5 @@
 <template>
-  <div class="sftp-container">
+  <div>
     <a-split class="split-view"
              v-model:size="splitSize"
              :min="0.3"
@@ -69,7 +69,7 @@
 </script>
 
 <script lang="ts" setup>
-  import type { ISftpSession, SftpFile, TerminalSessionTabItem } from '@/views/terminal/interfaces';
+  import type { ISftpSession, ISftpSessionHandler, SftpFile, TerminalSessionTabItem } from '@/views/terminal/interfaces';
   import { onMounted, onUnmounted, ref } from 'vue';
   import { useTerminalStore } from '@/store';
   import { Message } from '@arco-design/web-vue';
@@ -297,8 +297,7 @@
     }
     // 创建终端会话
     session.value = sessionManager.createSession<ISftpSession>(props.item);
-    // 打开终端会话
-    await sessionManager.openSftp(props.item, {
+    const handler: ISftpSessionHandler = {
       setLoading: setTableLoading,
       connectCallback,
       onClose,
@@ -311,7 +310,8 @@
       resolveDownloadFlatDirectory,
       resolveSftpGetContent,
       resolveSftpSetContent,
-    });
+    };
+    await sessionManager.openSftp(props.item, handler);
   });
 
   // 关闭会话
@@ -326,15 +326,9 @@
 <style lang="less" scoped>
   @sftp-table-header-height: 32px + 8px;
 
-  .sftp-container {
+  .split-view {
     width: 100%;
     height: 100%;
-    position: relative;
-
-    .split-view {
-      width: 100%;
-      height: 100%;
-    }
   }
 
   .sftp-table-container, .sftp-editor-container {

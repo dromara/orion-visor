@@ -4,8 +4,9 @@
     <a-form :model="formModel"
             ref="formRef"
             label-align="right"
-            :auto-label-width="true"
-            :rules="sshFormRules">
+            :label-col-props="{ span: 6 }"
+            :wrapper-col-props="{ span: 18 }"
+            :rules="formRules">
       <!-- 端口 -->
       <a-form-item field="port"
                    label="端口"
@@ -17,7 +18,6 @@
       <!-- 用户名 -->
       <a-form-item field="username"
                    label="用户名"
-                   :rules="usernameRules"
                    :help="HostAuthType.IDENTITY === formModel.authType ? '将使用主机身份的用户名' : undefined">
         <a-input v-model="formModel.username"
                  :disabled="HostAuthType.IDENTITY === formModel.authType"
@@ -35,8 +35,7 @@
       <!-- 主机密码 -->
       <a-form-item v-if="HostAuthType.PASSWORD === formModel.authType"
                    field="password"
-                   label="主机密码"
-                   :rules="passwordRules">
+                   label="主机密码">
         <a-input-password v-model="formModel.password"
                           :disabled="!formModel.useNewPassword && formModel.hasPassword"
                           placeholder="主机密码" />
@@ -105,7 +104,6 @@
                    mini>
           <a-button class="extra-button"
                     type="primary"
-                    :loading="connectLoading"
                     long
                     @click="testConnect">
             测试连接
@@ -123,7 +121,6 @@
 </script>
 
 <script lang="ts" setup>
-  import type { FieldRule } from '@arco-design/web-vue';
   import type { HostSshConfig } from '@/api/asset/host-config';
   import { ref, onMounted } from 'vue';
   import useLoading from '@/hooks/loading';
@@ -131,9 +128,8 @@
   import { sshAuthTypeKey, HostAuthType, HostType } from '../types/const';
   import { sshFormRules } from '../types/form.rules';
   import { Message } from '@arco-design/web-vue';
-  import { encrypt } from '@/utils/rsa';
   import { testHostConnect } from '@/api/asset/host';
-  import { getHostConfig, updateHostConfig } from '@/api/asset/host-config';
+  import useHostConfigForm from '../types/use-host-config';
   import HostIdentitySelector from '@/components/asset/host-identity/selector/index.vue';
   import HostKeySelector from '@/components/asset/host-key/selector/index.vue';
 
@@ -142,103 +138,34 @@
   }>();
 
   const { loading, setLoading } = useLoading();
-  const { loading: connectLoading, setLoading: setConnectLoading } = useLoading();
   const { toRadioOptions } = useDictStore();
 
-  const formRef = ref();
   const formModel = ref<HostSshConfig>({} as HostSshConfig);
 
-  // 用户名验证
-  const usernameRules = [{
-    validator: (value, cb) => {
-      if (value && value.length > 128) {
-        cb('用户名长度不能大于128位');
-        return;
-      }
-      if (formModel.value.authType !== HostAuthType.IDENTITY && !value) {
-        cb('请输入用户名');
-        return;
-      }
-    }
-  }] as FieldRule[];
-
-  // 密码验证
-  const passwordRules = [{
-    validator: (value, cb) => {
-      if (value && value.length > 256) {
-        cb('密码长度不能大于256位');
-        return;
-      }
-      if (formModel.value.useNewPassword && !value) {
-        cb('请输入密码');
-        return;
-      }
-    }
-  }] as FieldRule[];
-
-  // 加载配置
-  const fetchHostConfig = async () => {
-    try {
-      setLoading(true);
-      // 加载配置
-      const { data } = await getHostConfig<HostSshConfig>({
-        hostId: props.hostId,
-        type: HostType.SSH.value,
-      });
-      formModel.value = data;
-      // 使用新密码默认为不包含密码
-      formModel.value.useNewPassword = !formModel.value.hasPassword;
-    } catch ({ message }) {
-      Message.error(`配置加载失败 ${message}`);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const {
+    formRef,
+    formRules,
+    fetchHostConfig,
+    saveConfig,
+  } = useHostConfigForm({
+    type: HostType.SSH.value,
+    hostId: props.hostId,
+    rules: sshFormRules,
+    formModel,
+    setLoading,
+  });
 
   // 测试连接
   const testConnect = async () => {
-    // 验证参数
     const error = await formRef.value.validate();
     if (error) {
-      return;
-    }
-    try {
-      setConnectLoading(true);
-      // 测试连接
-      await testHostConnect({
-        id: props.hostId,
-        type: HostType.SSH.value,
-      });
-      Message.success('连接成功');
-    } catch (e) {
-    } finally {
-      setConnectLoading(false);
-    }
-  };
-
-  // 保存配置
-  const saveConfig = async () => {
-    // 验证参数
-    const error = await formRef.value.validate();
-    if (error) {
-      return;
-    }
-    // 加密参数
-    const requestData = { ...formModel.value };
-    try {
-      requestData.password = await encrypt(formModel.value.password);
-    } catch (e) {
       return;
     }
     try {
       setLoading(true);
-      // 更新
-      await updateHostConfig({
-        hostId: props.hostId,
-        type: HostType.SSH.value,
-        config: JSON.stringify(requestData),
-      });
-      Message.success('修改成功');
+      // 测试连接
+      await testHostConnect({ id: props.hostId, type: HostType.SSH.value });
+      Message.success('连接成功');
     } catch (e) {
     } finally {
       setLoading(false);
@@ -259,11 +186,6 @@
       width: 33%;
       text-align: center;
     }
-  }
-
-  .password-switch {
-    width: 148px;
-    margin-left: 8px;
   }
 
 </style>

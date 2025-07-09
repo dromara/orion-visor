@@ -48,7 +48,6 @@
 
   const { visible, setVisible } = useVisible();
 
-  const sessionKey = ref();
   const targetRef = ref();
   const formRef = ref();
   const formModel = ref({
@@ -57,8 +56,7 @@
   });
 
   // 打开新增
-  const open = (key: string, path: string) => {
-    sessionKey.value = key;
+  const open = (path: string) => {
     formModel.value.path = path;
     formModel.value.target = path;
     setVisible(true);

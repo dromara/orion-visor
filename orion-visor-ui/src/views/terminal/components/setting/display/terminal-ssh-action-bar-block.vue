@@ -30,6 +30,12 @@
                       :default-checked="true"
                       type="round" />
           </a-form-item>
+          <!-- 分享按钮 -->
+          <a-form-item field="share" label="分享按钮">
+            <a-switch v-model="formModel.share"
+                      :default-checked="true"
+                      type="round" />
+          </a-form-item>
         </a-space>
       </a-form>
     </div>
@@ -45,25 +51,14 @@
 <script lang="ts" setup>
   import type { TerminalSshActionBarSetting } from '@/store/modules/terminal/types';
   import type { SidebarAction } from '@/views/terminal/types/define';
-  import { computed, ref, watch } from 'vue';
-  import { useTerminalStore } from '@/store';
+  import { computed } from 'vue';
   import { TerminalPreferenceItem } from '@/store/modules/terminal';
   import { SshActionBarItems } from '@/views/terminal/types/const';
   import { isSecureEnvironment } from '@/utils/env';
+  import useTerminalPreference from '@/views/terminal/types/use-terminal-preference';
   import IconActions from '../../layout/icon-actions.vue';
 
-  const { preference, updateTerminalPreference } = useTerminalStore();
-
-  const formModel = ref<TerminalSshActionBarSetting>({ ...preference.sshActionBarSetting });
-
-  // 监听同步
-  watch(formModel, (v) => {
-    if (!v) {
-      return;
-    }
-    // 同步
-    updateTerminalPreference(TerminalPreferenceItem.SSH_ACTION_BAR_SETTING, formModel.value, true);
-  }, { deep: true });
+  const { formModel } = useTerminalPreference<TerminalSshActionBarSetting>(TerminalPreferenceItem.SSH_ACTION_BAR_SETTING, true);
 
   // 操作项
   const actions = computed<Array<SidebarAction>>(() => {

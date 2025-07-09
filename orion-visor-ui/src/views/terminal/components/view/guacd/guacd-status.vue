@@ -6,7 +6,7 @@
             dot />
     <!-- 会话关闭 -->
     <a-card v-if="session.state.connectStatus === TerminalStatus.CLOSED"
-            class="rdp-status-wrapper"
+            class="status-wrapper"
             title="会话已关闭">
       <!-- 错误信息 -->
       <a-descriptions size="large"
@@ -51,12 +51,12 @@
 
 <script lang="ts">
   export default {
-    name: 'rdpStatus'
+    name: 'guacdStatus'
   };
 </script>
 
 <script lang="ts" setup>
-  import type { IRdpSession } from '@/views/terminal/interfaces';
+  import type { IGuacdSession } from '@/views/terminal/interfaces';
   import { TerminalStatus, TerminalCloseCode, TerminalMessages } from '@/views/terminal/types/const';
   import { copy } from '@/hooks/copy';
   import { dateFormat } from '@/utils';
@@ -64,7 +64,7 @@
   import useVisible from '@/hooks/visible';
 
   const props = defineProps<{
-    session: IRdpSession;
+    session: IGuacdSession;
   }>();
 
   const { visible, setVisible } = useVisible(true);
@@ -73,7 +73,7 @@
 </script>
 
 <style lang="less" scoped>
-  .rdp-status-wrapper {
+  .status-wrapper {
     width: 520px;
     min-height: 180px;
     border-radius: 8px;

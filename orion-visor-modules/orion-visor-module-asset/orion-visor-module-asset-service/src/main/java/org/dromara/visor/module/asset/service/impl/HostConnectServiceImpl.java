@@ -22,6 +22,7 @@
  */
 package org.dromara.visor.module.asset.service.impl;
 
+import cn.orionsec.kit.lang.utils.Booleans;
 import cn.orionsec.kit.lang.utils.Exceptions;
 import cn.orionsec.kit.lang.utils.io.Streams;
 import cn.orionsec.kit.net.host.SessionStore;
@@ -30,6 +31,7 @@ import org.dromara.visor.common.constant.ErrorMessage;
 import org.dromara.visor.common.session.config.BaseConnectConfig;
 import org.dromara.visor.common.session.config.RdpConnectConfig;
 import org.dromara.visor.common.session.config.SshConnectConfig;
+import org.dromara.visor.common.session.config.VncConnectConfig;
 import org.dromara.visor.common.session.ssh.SessionStores;
 import org.dromara.visor.common.utils.Valid;
 import org.dromara.visor.module.asset.dao.HostDAO;
@@ -40,6 +42,7 @@ import org.dromara.visor.module.asset.entity.domain.HostIdentityDO;
 import org.dromara.visor.module.asset.entity.domain.HostKeyDO;
 import org.dromara.visor.module.asset.entity.dto.host.HostRdpConfigDTO;
 import org.dromara.visor.module.asset.entity.dto.host.HostSshConfigDTO;
+import org.dromara.visor.module.asset.entity.dto.host.HostVncConfigDTO;
 import org.dromara.visor.module.asset.entity.request.host.HostTestConnectRequest;
 import org.dromara.visor.module.asset.enums.HostAuthTypeEnum;
 import org.dromara.visor.module.asset.enums.HostExtraAuthTypeEnum;
@@ -48,6 +51,7 @@ import org.dromara.visor.module.asset.enums.HostTypeEnum;
 import org.dromara.visor.module.asset.handler.host.extra.HostExtraItemEnum;
 import org.dromara.visor.module.asset.handler.host.extra.model.HostRdpExtraModel;
 import org.dromara.visor.module.asset.handler.host.extra.model.HostSshExtraModel;
+import org.dromara.visor.module.asset.handler.host.extra.model.HostVncExtraModel;
 import org.dromara.visor.module.asset.service.AssetAuthorizedDataService;
 import org.dromara.visor.module.asset.service.HostConfigService;
 import org.dromara.visor.module.asset.service.HostConnectService;
@@ -108,7 +112,6 @@ public class HostConnectServiceImpl implements HostConnectService {
                 Streams.close(sessionStore);
             }
         }
-        // TODO: 其他连接方式
     }
 
     @Override
@@ -189,6 +192,41 @@ public class HostConnectServiceImpl implements HostConnectService {
         return this.getRdpConnectConfig(host, config, extra);
     }
 
+    @Override
+    public VncConnectConfig getVncConnectConfig(Long hostId) {
+        log.info("HostConnectService.getVncConnectConfig-withHost hostId: {}", hostId);
+        // 查询主机
+        HostDO host = hostDAO.selectById(hostId);
+        // 查询主机配置
+        HostVncConfigDTO config = hostConfigService.getHostConfig(hostId, HostTypeEnum.VNC.name());
+        // 获取配置
+        return this.getVncConnectConfig(host, config, null);
+    }
+
+    @Override
+    public VncConnectConfig getVncConnectConfig(Long hostId, Long userId) {
+        // 查询主机
+        HostDO host = hostDAO.selectById(hostId);
+        Valid.notNull(host, ErrorMessage.HOST_ABSENT);
+        // 获取配置
+        return this.getVncConnectConfig(host, userId);
+    }
+
+    @Override
+    public VncConnectConfig getVncConnectConfig(HostDO host, Long userId) {
+        Long hostId = host.getId();
+        log.info("HostConnectService.getVncConnectConfig hostId: {}, userId: {}", hostId, userId);
+        // 验证权限
+        this.validHostAuthorized(userId, hostId);
+        // 获取主机配置
+        HostVncConfigDTO config = hostConfigService.getHostConfig(hostId, HostTypeEnum.VNC.name());
+        Valid.notNull(config, ErrorMessage.CONFIG_ABSENT);
+        // 查询主机额外配置
+        HostVncExtraModel extra = hostExtraService.getHostExtra(userId, hostId, HostExtraItemEnum.VNC);
+        // 获取连接配置
+        return this.getVncConnectConfig(host, config, extra);
+    }
+
     /**
      * 获取主机 SSH 连接配置
      *
@@ -254,14 +292,7 @@ public class HostConnectServiceImpl implements HostConnectService {
             connectConfig.setPassword(config.getPassword());
         } else if (HostAuthTypeEnum.KEY.equals(authType)) {
             // 密钥认证
-            Long keyId = config.getKeyId();
-            Valid.notNull(keyId, ErrorMessage.KEY_ABSENT);
-            HostKeyDO key = hostKeyDAO.selectById(keyId);
-            Valid.notNull(key, ErrorMessage.KEY_ABSENT);
-            connectConfig.setKeyId(keyId);
-            connectConfig.setPublicKey(key.getPublicKey());
-            connectConfig.setPrivateKey(key.getPrivateKey());
-            connectConfig.setPrivateKeyPassword(key.getPassword());
+            this.setSshKey(config.getKeyId(), connectConfig);
         }
         return connectConfig;
     }
@@ -279,6 +310,8 @@ public class HostConnectServiceImpl implements HostConnectService {
         // 填充认证信息
         RdpConnectConfig connectConfig = RdpConnectConfig.builder()
                 .hostPort(config.getPort())
+                .username(config.getUsername())
+                .password(config.getPassword())
                 .versionGt81(config.getVersionGt81())
                 .timezone(config.getTimezone())
                 .keyboardLayout(config.getKeyboardLayout())
@@ -304,25 +337,54 @@ public class HostConnectServiceImpl implements HostConnectService {
                 config.setIdentityId(extra.getIdentityId());
             }
         }
-
-        // 身份认证
-        HostAuthTypeEnum authType = HostAuthTypeEnum.of(config.getAuthType());
-        if (HostAuthTypeEnum.IDENTITY.equals(authType)) {
-            // 身份认证 - 仅密码
-            authType = HostAuthTypeEnum.PASSWORD;
-            Valid.notNull(config.getIdentityId(), ErrorMessage.IDENTITY_ABSENT);
-            HostIdentityDO identity = hostIdentityDAO.selectById(config.getIdentityId());
-            Valid.notNull(identity, ErrorMessage.IDENTITY_ABSENT);
-            // 设置身份信息
-            config.setUsername(identity.getUsername());
-            config.setPassword(identity.getPassword());
+        // 填充身份认证信息
+        if (HostAuthTypeEnum.IDENTITY.name().equals(config.getAuthType())) {
+            this.setIdentityPasswordAuthorization(config.getIdentityId(), connectConfig);
         }
+        return connectConfig;
+    }
 
+    /**
+     * 获取 VNC 连接信息
+     *
+     * @param host   host
+     * @param config config
+     * @return info
+     */
+    private VncConnectConfig getVncConnectConfig(HostDO host,
+                                                 HostVncConfigDTO config,
+                                                 HostVncExtraModel extra) {
         // 填充认证信息
-        connectConfig.setUsername(config.getUsername());
-        if (HostAuthTypeEnum.PASSWORD.equals(authType)) {
-            // 密码认证
-            connectConfig.setPassword(config.getPassword());
+        VncConnectConfig connectConfig = VncConnectConfig.builder()
+                .hostPort(config.getPort())
+                .username(config.getUsername())
+                .password(config.getPassword())
+                .timezone(config.getTimezone())
+                .clipboardEncoding(config.getClipboardEncoding())
+                .build();
+        // 填充基础主机信息
+        this.setBaseConnectConfig(connectConfig, host);
+        if (extra != null) {
+            // 设置额外配置信息
+            connectConfig.setLowBandwidthMode(extra.getLowBandwidthMode());
+            connectConfig.setSwapRedBlue(extra.getSwapRedBlue());
+            // 设置自定义端口
+            Integer extraPort = extra.getPort();
+            if (extraPort != null) {
+                connectConfig.setHostPort(extraPort);
+            }
+        }
+        // 填充身份认证信息
+        if (HostAuthTypeEnum.IDENTITY.name().equals(config.getAuthType())) {
+            this.setIdentityPasswordAuthorization(config.getIdentityId(), connectConfig);
+        }
+        // 无用户名
+        if (Booleans.isTrue(config.getNoUsername())) {
+            connectConfig.setUsername(null);
+        }
+        // 无密码
+        if (Booleans.isTrue(config.getNoPassword())) {
+            connectConfig.setPassword(null);
         }
         return connectConfig;
     }
@@ -364,6 +426,41 @@ public class HostConnectServiceImpl implements HostConnectService {
                     ErrorMessage.ANY_NO_PERMISSION,
                     DataPermissionTypeEnum.HOST_IDENTITY.getPermissionName());
         }
+    }
+
+    /**
+     * 设置密码认证
+     *
+     * @param identityId    identityId
+     * @param connectConfig connectConfig
+     */
+    private void setIdentityPasswordAuthorization(Long identityId, BaseConnectConfig connectConfig) {
+        if (identityId == null) {
+            return;
+        }
+        // 查询身份信息
+        HostIdentityDO identity = hostIdentityDAO.selectById(identityId);
+        Valid.notNull(identity, ErrorMessage.IDENTITY_ABSENT);
+        // 设置身份信息
+        connectConfig.setUsername(identity.getUsername());
+        connectConfig.setPassword(identity.getPassword());
+    }
+
+    /**
+     * 设置 SSH 密钥信息
+     *
+     * @param keyId         keyId
+     * @param connectConfig connectConfig
+     */
+    private void setSshKey(Long keyId, SshConnectConfig connectConfig) {
+        Valid.notNull(keyId, ErrorMessage.KEY_ABSENT);
+        // 查询密钥信息
+        HostKeyDO key = hostKeyDAO.selectById(keyId);
+        Valid.notNull(key, ErrorMessage.KEY_ABSENT);
+        connectConfig.setKeyId(keyId);
+        connectConfig.setPublicKey(key.getPublicKey());
+        connectConfig.setPrivateKey(key.getPrivateKey());
+        connectConfig.setPrivateKeyPassword(key.getPassword());
     }
 
     /**

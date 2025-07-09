@@ -39,20 +39,15 @@ import java.util.function.Function;
  */
 public class ReplaceVersion {
 
-    private static final String TARGET_VERSION = "2.4.0";
+    private static final String TARGET_VERSION = "2.4.1";
 
-    private static final String REPLACE_VERSION = "2.4.1";
+    private static final String REPLACE_VERSION = "2.4.2";
 
     private static final String PATH = new File("").getAbsolutePath();
 
     private static final String[] DOCKER_FILES = new String[]{
-            "docker/push.sh",
-            "docker/adminer/build.sh",
-            "docker/mysql/build.sh",
-            "docker/redis/build.sh",
-            "docker/guacd/build.sh",
-            "docker/service/build.sh",
-            "docker/ui/build.sh",
+            "docker/docker-build.sh",
+            "docker/project-build.sh",
             "docker-compose.yml",
             "docker-compose-testing.yml"
     };

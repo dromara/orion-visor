@@ -26,8 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.dromara.visor.module.terminal.handler.terminal.model.TerminalChannelProps;
 import org.dromara.visor.module.terminal.handler.terminal.model.request.TerminalResizeRequest;
 import org.dromara.visor.module.terminal.handler.terminal.sender.ITerminalSender;
-import org.dromara.visor.module.terminal.handler.terminal.session.IRdpSession;
-import org.dromara.visor.module.terminal.handler.terminal.session.ISshSession;
+import org.dromara.visor.module.terminal.handler.terminal.session.IResizeableSession;
 import org.dromara.visor.module.terminal.handler.terminal.session.ITerminalSession;
 import org.springframework.stereotype.Component;
 
@@ -44,16 +43,10 @@ public class TerminalResizeHandler extends AbstractTerminalHandler<ITerminalSend
 
     @Override
     public void handle(TerminalChannelProps props, ITerminalSender sender, TerminalResizeRequest payload) {
-        Integer width = payload.getWidth();
-        Integer height = payload.getHeight();
         // 获取会话
         ITerminalSession session = terminalManager.getSession(props.getId());
-        if (session instanceof ISshSession) {
-            // SSH
-            ((ISshSession) session).resize(width, height);
-        } else if (session instanceof IRdpSession) {
-            // RDP
-            ((IRdpSession) session).resize(width, height);
+        if (session instanceof IResizeableSession) {
+            ((IResizeableSession) session).resize(payload.getWidth(), payload.getHeight());
         }
     }
 

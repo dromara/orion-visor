@@ -16,7 +16,7 @@
         <!-- 驱动挂载模式 -->
         <block-setting-item label="驱动挂载模式">
           <a-select v-model="formModel.driveMountMode"
-                    style="width: 198px;"
+                    style="width: 168px;"
                     size="small"
                     :options="toOptions(driveMountModeKey)" />
           <template #desc>
@@ -36,25 +36,15 @@
 
 <script lang="ts" setup>
   import type { TerminalRdpSessionSetting } from '@/store/modules/terminal/types';
-  import { ref, watch } from 'vue';
-  import { useDictStore, useTerminalStore } from '@/store';
+  import { useDictStore } from '@/store';
   import { TerminalPreferenceItem } from '@/store/modules/terminal';
   import { driveMountModeKey } from '@/views/terminal/types/const';
+  import useTerminalPreference from '@/views/terminal/types/use-terminal-preference';
   import BlockSettingItem from '../block-setting-item.vue';
 
   const { toOptions, getDictValue } = useDictStore();
-  const { preference, updateTerminalPreference } = useTerminalStore();
 
-  const formModel = ref<TerminalRdpSessionSetting>({ ...preference.rdpSessionSetting });
-
-  // 监听内容变化
-  watch(formModel, (v) => {
-    if (!v) {
-      return;
-    }
-    // 同步
-    updateTerminalPreference(TerminalPreferenceItem.RDP_SESSION_SETTING, formModel.value, true);
-  }, { deep: true });
+  const { formModel } = useTerminalPreference<TerminalRdpSessionSetting>(TerminalPreferenceItem.RDP_SESSION_SETTING, true);
 
 </script>
 

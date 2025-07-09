@@ -71,8 +71,7 @@
   };
 
   // 打开新增
-  const open = (key: string, path: string, permission: number) => {
-    sessionKey.value = key;
+  const open = (path: string, permission: number) => {
     formModel.value.path = path;
     formModel.value.mod = permission;
     formModel.value.permission = permission10toString(permission);

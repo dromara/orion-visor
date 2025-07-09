@@ -33,7 +33,9 @@
                v-bind="cardLayoutCols"
                :class="{ 'disabled-col': item.disabled === true }">
           <!-- 右键菜单 -->
-          <a-dropdown trigger="contextMenu" alignPoint>
+          <a-dropdown trigger="contextMenu"
+                      :disabled="!$slots.contextMenu"
+                      alignPoint>
             <!-- 卡片 -->
             <card-item v-bind="props"
                        :index="index"
@@ -48,7 +50,7 @@
               </template>
             </card-item>
             <!-- 右键菜单 -->
-            <template v-if="contextMenu" #content>
+            <template v-if="$slots.contextMenu" #content>
               <slot name="contextMenu"
                     :record="item"
                     :index="index"
@@ -92,7 +94,6 @@
     pagination: false,
     loading: false,
     cardHeight: '100%',
-    contextMenu: true,
     filterCount: 0,
     searchInputWidth: '200px',
     searchValue: '',

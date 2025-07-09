@@ -1,5 +1,5 @@
 <template>
-  <div class="layout-container upload-container">
+  <div class="layout-container upload-container" v-if="render">
     <!-- 上传面板 -->
     <upload-panel ref="panel" />
   </div>
@@ -20,12 +20,14 @@
 
   const route = useRoute();
 
+  const render = ref();
   const panel = ref();
 
   // 加载字典值
   onMounted(async () => {
     const dictStore = useDictStore();
     await dictStore.loadKeys(dictKeys);
+    render.value = true;
   });
 
   // 跳转日志

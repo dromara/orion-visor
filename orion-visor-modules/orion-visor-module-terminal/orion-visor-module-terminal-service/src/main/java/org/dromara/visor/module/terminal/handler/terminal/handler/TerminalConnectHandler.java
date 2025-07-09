@@ -35,6 +35,7 @@ import org.dromara.visor.common.constant.ExtraFieldConst;
 import org.dromara.visor.common.session.config.BaseConnectConfig;
 import org.dromara.visor.common.session.config.RdpConnectConfig;
 import org.dromara.visor.common.session.config.SshConnectConfig;
+import org.dromara.visor.common.session.config.VncConnectConfig;
 import org.dromara.visor.common.session.ssh.SessionStores;
 import org.dromara.visor.framework.biz.operator.log.core.model.OperatorLogModel;
 import org.dromara.visor.framework.biz.operator.log.core.utils.OperatorLogs;
@@ -52,10 +53,7 @@ import org.dromara.visor.module.terminal.handler.terminal.constant.SessionCloseC
 import org.dromara.visor.module.terminal.handler.terminal.constant.TerminalMessage;
 import org.dromara.visor.module.terminal.handler.terminal.model.TerminalChannelExtra;
 import org.dromara.visor.module.terminal.handler.terminal.model.TerminalChannelProps;
-import org.dromara.visor.module.terminal.handler.terminal.model.config.ITerminalSessionConfig;
-import org.dromara.visor.module.terminal.handler.terminal.model.config.TerminalSessionRdpConfig;
-import org.dromara.visor.module.terminal.handler.terminal.model.config.TerminalSessionSftpConfig;
-import org.dromara.visor.module.terminal.handler.terminal.model.config.TerminalSessionSshConfig;
+import org.dromara.visor.module.terminal.handler.terminal.model.config.*;
 import org.dromara.visor.module.terminal.handler.terminal.model.request.TerminalConnectRequest;
 import org.dromara.visor.module.terminal.handler.terminal.model.transport.TerminalConnectBody;
 import org.dromara.visor.module.terminal.handler.terminal.model.transport.TerminalSetInfo;
@@ -63,10 +61,7 @@ import org.dromara.visor.module.terminal.handler.terminal.sender.IGuacdTerminalS
 import org.dromara.visor.module.terminal.handler.terminal.sender.ISftpTerminalSender;
 import org.dromara.visor.module.terminal.handler.terminal.sender.ISshTerminalSender;
 import org.dromara.visor.module.terminal.handler.terminal.sender.ITerminalSender;
-import org.dromara.visor.module.terminal.handler.terminal.session.ITerminalSession;
-import org.dromara.visor.module.terminal.handler.terminal.session.RdpSession;
-import org.dromara.visor.module.terminal.handler.terminal.session.SftpSession;
-import org.dromara.visor.module.terminal.handler.terminal.session.SshSession;
+import org.dromara.visor.module.terminal.handler.terminal.session.*;
 import org.dromara.visor.module.terminal.service.TerminalConnectLogService;
 import org.springframework.stereotype.Component;
 
@@ -238,6 +233,12 @@ public class TerminalConnectHandler extends AbstractTerminalHandler<ITerminalSen
                 config.setDpi(connectParams.getDpi());
                 this.setBaseSessionConfig(config, connectLog, connectParams);
                 session = new RdpSession(props, (IGuacdTerminalSender) sender, config, guacdConfig);
+            } else if (TerminalConnectTypeEnum.VNC.name().equals(connectType)) {
+                // 打开 vnc 会话
+                TerminalSessionVncConfig config = TerminalSessionConvert.MAPPER.toVnc((VncConnectConfig) connectConfig);
+                config.setDpi(connectParams.getDpi());
+                this.setBaseSessionConfig(config, connectLog, connectParams);
+                session = new VncSession(props, (IGuacdTerminalSender) sender, config, guacdConfig);
             } else {
                 throw Exceptions.unsupported();
             }

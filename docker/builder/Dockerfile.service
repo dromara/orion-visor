@@ -1,0 +1,16 @@
+FROM maven:3.9.10-eclipse-temurin-8-alpine AS builder
+
+# 设置阿里云镜像加速
+RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
+
+# 拷贝 settings.xml
+COPY ./docker/builder/maven-settings.xml /root/.m2/settings.xml
+
+WORKDIR /build
+
+COPY . .
+
+# 复制 POM 文件先进行依赖下载 (利用 Docker 缓存)
+RUN mvn dependency:go-offline --settings=/root/.m2/settings.xml
+# 构建
+RUN mvn clean package -DskipTests --settings=/root/.m2/settings.xml

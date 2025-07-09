@@ -274,7 +274,6 @@
               <a-space>
                 <a-button v-for="type in record.types"
                           :key="type"
-                          type="text"
                           size="mini"
                           @click="openNewRoute({ name: 'terminal', query: { connect: record.id, type} })">
                   {{ type }}

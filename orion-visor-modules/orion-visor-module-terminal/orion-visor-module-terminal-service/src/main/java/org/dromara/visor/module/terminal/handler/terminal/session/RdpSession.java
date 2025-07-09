@@ -27,7 +27,6 @@ import cn.orionsec.kit.lang.utils.Strings;
 import cn.orionsec.kit.lang.utils.io.Files1;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.visor.common.constant.AppConst;
-import org.dromara.visor.common.utils.AesEncryptUtils;
 import org.dromara.visor.module.common.config.GuacdConfig;
 import org.dromara.visor.module.terminal.enums.DriveMountModeEnum;
 import org.dromara.visor.module.terminal.handler.guacd.GuacdTunnel;
@@ -66,19 +65,13 @@ public class RdpSession extends AbstractGuacdSession<TerminalSessionRdpConfig> i
 
     @Override
     protected void setTunnelParams() {
+        super.setTunnelParams();
+        // 设置额外参数
         TerminalChannelExtra extra = props.getExtra();
         // 音频输入会导致无法连接先写死
         extra.setEnableAudioInput(false);
-        // 设置低带宽模式
-        if (Booleans.isTrue(config.getLowBandwidthMode())) {
-            this.setLowBandwidthMode(extra);
-        }
-        // 主机信息
-        tunnel.remote(config.getHostAddress(), config.getHostPort());
-        // 身份信息
-        tunnel.auth(config.getUsername(), AesEncryptUtils.decryptAsString(config.getPassword()));
-        // 大小
-        tunnel.size(config.getWidth(), config.getHeight(), config.getDpi());
+        // dpi
+        tunnel.dpi(config.getDpi());
         // 时区
         tunnel.timezone(config.getTimezone());
         // 忽略证书
@@ -140,32 +133,8 @@ public class RdpSession extends AbstractGuacdSession<TerminalSessionRdpConfig> i
     }
 
     @Override
-    public void resize(int width, int height) {
-        config.setWidth(width);
-        config.setHeight(height);
-        tunnel.writeInstruction("size", String.valueOf(width), String.valueOf(height));
-    }
-
-    /**
-     * 低带宽模式
-     *
-     * @param extra extra
-     */
-    private void setLowBandwidthMode(TerminalChannelExtra extra) {
-        extra.setColorDepth(8);
-        extra.setForceLossless(false);
-        extra.setEnableWallpaper(false);
-        extra.setEnableTheming(false);
-        extra.setEnableFontSmoothing(false);
-        extra.setEnableFullWindowDrag(false);
-        extra.setEnableDesktopComposition(false);
-        extra.setEnableMenuAnimations(false);
-        extra.setDisableBitmapCaching(false);
-        extra.setDisableOffscreenCaching(false);
-        extra.setDisableGlyphCaching(false);
-        extra.setDisableGfx(false);
-        extra.setEnableAudioInput(false);
-        extra.setEnableAudioOutput(false);
+    protected boolean isLowBandwidthMode() {
+        return Booleans.isTrue(config.getLowBandwidthMode());
     }
 
 }

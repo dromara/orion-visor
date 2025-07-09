@@ -1,17 +1,18 @@
-import type { IRdpSession, IRdpSessionDisplayHandler } from '@/views/terminal/interfaces';
+import type { IGuacdSession, IGuacdSessionDisplayHandler } from '@/views/terminal/interfaces';
 import { useDebounceFn } from '@vueuse/core';
 import Guacamole from 'guacamole-common-js';
 
-// rdp 会话视图处理器实现
-export default class RdpSessionDisplayHandler implements IRdpSessionDisplayHandler {
+// guacd 会话视图处理器实现
+export default class GuacdSessionDisplayHandler implements IGuacdSessionDisplayHandler {
 
-  private readonly session: IRdpSession;
+  private readonly session: IGuacdSession;
 
   public displayWidth: number;
   public displayHeight: number;
   public displayDpi: number;
   public autoFit: boolean;
   public localCursor: boolean;
+  public keyboardDownKeys: Array<number>;
 
   private display?: Guacamole.Display;
   private sink?: Guacamole.InputSink;
@@ -21,13 +22,14 @@ export default class RdpSessionDisplayHandler implements IRdpSessionDisplayHandl
 
   private readonly focusSink: () => void;
 
-  constructor(session: IRdpSession) {
+  constructor(session: IGuacdSession) {
     this.session = session;
     this.displayWidth = 0;
     this.displayHeight = 0;
     this.displayDpi = 96;
     this.autoFit = true;
     this.localCursor = true;
+    this.keyboardDownKeys = [];
     this.focusSink = useDebounceFn(() => this.sink?.focus(), 300).bind(this);
   }
 
@@ -187,6 +189,12 @@ export default class RdpSessionDisplayHandler implements IRdpSessionDisplayHandl
       return;
     }
     this.session.client.sendKeyEvent(0, key);
+    // 触发长按键
+    if (this.keyboardDownKeys) {
+      this.keyboardDownKeys.forEach(key => {
+        this.session.client.sendKeyEvent(0, key);
+      });
+    }
   }
 
   // 键盘按下事件
@@ -194,6 +202,12 @@ export default class RdpSessionDisplayHandler implements IRdpSessionDisplayHandl
     // 是否可写
     if (!this.session.isWriteable()) {
       return;
+    }
+    // 触发长按键
+    if (this.keyboardDownKeys) {
+      this.keyboardDownKeys.forEach(key => {
+        this.session.client.sendKeyEvent(1, key);
+      });
     }
     this.session.client.sendKeyEvent(1, key);
     // // 处理退格

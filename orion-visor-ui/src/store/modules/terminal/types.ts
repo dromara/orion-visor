@@ -23,6 +23,8 @@ export interface TerminalPreference {
   rdpGraphSetting: TerminalRdpGraphSetting;
   rdpActionBarSetting: TerminalRdpActionBarSetting;
   rdpSessionSetting: TerminalRdpSessionSetting;
+  vncGraphSetting: TerminalVncGraphSetting;
+  vncActionBarSetting: TerminalVncActionBarSetting;
   shortcutSetting: TerminalShortcutSetting;
 }
 
@@ -68,6 +70,7 @@ export interface TerminalSshInteractSetting {
   wordSeparator: string;
   terminalEmulationType: string;
   scrollBackLine: number;
+  replaceBackspace: boolean;
 }
 
 // RDP 图形化设置
@@ -109,6 +112,30 @@ export interface TerminalRdpSessionSetting {
   enableAudioInput?: boolean;
   enableAudioOutput?: boolean;
   driveMountMode?: string;
+}
+
+// VNC 图形化设置
+export interface TerminalVncGraphSetting {
+  displaySize?: string;
+  displayWidth?: number;
+  displayHeight?: number;
+  colorDepth?: number;
+  forceLossless?: boolean;
+  cursor?: string;
+  compressLevel?: number;
+  qualityLevel?: number;
+}
+
+// VNC 操作栏设置
+export interface TerminalVncActionBarSetting {
+  position?: string;
+  display?: boolean;
+  combinationKey?: boolean;
+  clipboard?: boolean;
+  disconnect?: boolean;
+  close?: boolean;
+
+  [key: string]: unknown;
 }
 
 // 终端快捷键设置

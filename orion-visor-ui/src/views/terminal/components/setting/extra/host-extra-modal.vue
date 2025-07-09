@@ -14,7 +14,9 @@
            :cancel-button-props="{ disabled: loading }"
            :on-before-ok="handlerOk"
            @close="handleClose">
-    <a-spin class="full" :loading="loading">
+    <a-spin v-if="hostId"
+            class="full"
+            :loading="loading">
       <a-tabs v-model:active-key="activeItem"
               position="left"
               type="rounded"
@@ -22,7 +24,7 @@
         <!-- 标签配置 -->
         <a-tab-pane :key="ExtraSettingItems.LABEL" title="标签配置">
           <label-extra-form ref="labelForm"
-                            :host-id="hostId as number"
+                            :host-id="hostId"
                             :item="ExtraSettingItems.LABEL" />
         </a-tab-pane>
         <!-- SSH 配置 -->
@@ -30,7 +32,7 @@
                     :key="ExtraSettingItems.SSH"
                     title="SSH 配置">
           <ssh-extra-form ref="sshForm"
-                          :host-id="hostId as number"
+                          :host-id="hostId"
                           :item="ExtraSettingItems.SSH" />
         </a-tab-pane>
         <!-- RDP 配置 -->
@@ -38,8 +40,16 @@
                     :key="ExtraSettingItems.RDP"
                     title="RDP 配置">
           <rdp-extra-form ref="rdpForm"
-                          :host-id="hostId as number"
+                          :host-id="hostId"
                           :item="ExtraSettingItems.RDP" />
+        </a-tab-pane>
+        <!-- VNC 配置 -->
+        <a-tab-pane v-if="host?.types.includes(HostType.VNC.value)"
+                    :key="ExtraSettingItems.VNC"
+                    title="VNC 配置">
+          <vnc-extra-form ref="vncForm"
+                          :host-id="hostId"
+                          :item="ExtraSettingItems.VNC" />
         </a-tab-pane>
       </a-tabs>
     </a-spin>
@@ -64,6 +74,7 @@
   import LabelExtraForm from './label-extra-form.vue';
   import SshExtraForm from './ssh-extra-form.vue';
   import RdpExtraForm from './rdp-extra-form.vue';
+  import VncExtraForm from './vnc-extra-form.vue';
 
   const { visible, setVisible } = useVisible();
   const { loading, setLoading } = useLoading();
@@ -75,6 +86,7 @@
   const labelForm = ref();
   const sshForm = ref();
   const rdpForm = ref();
+  const vncForm = ref();
 
   // 打开配置
   const open = (record: HostQueryResponse) => {
@@ -101,6 +113,9 @@
       } else if (activeItem.value === ExtraSettingItems.RDP) {
         // RDP 配置
         value = await rdpForm.value.getValue();
+      } else if (activeItem.value === ExtraSettingItems.VNC) {
+        // VNC 配置
+        value = await vncForm.value.getValue();
       }
       if (!value) {
         return false;

@@ -8,7 +8,9 @@ import type {
   TerminalSshDisplaySetting,
   TerminalSshInteractSetting,
   TerminalSshPluginsSetting,
-  TerminalState
+  TerminalState,
+  TerminalVncActionBarSetting,
+  TerminalVncGraphSetting
 } from './types';
 import type {
   IDomViewportHandler,
@@ -28,7 +30,7 @@ import { getPreference, updatePreference } from '@/api/user/preference';
 import { getLatestConnectHostId } from '@/api/terminal/terminal-connect-log';
 import { useCacheStore } from '@/store';
 import { nextId } from '@/utils';
-import { isObject } from '@/utils/is';
+import { isArray, isObject } from '@/utils/is';
 import { Message } from '@arco-design/web-vue';
 import { TerminalSessionTypes, TerminalTabs } from '@/views/terminal/types/const';
 import TerminalTabManager from '@/views/terminal/service/tab/terminal-tab-manager';
@@ -56,8 +58,12 @@ export const TerminalPreferenceItem = {
   RDP_GRAPH_SETTING: 'rdpGraphSetting',
   // rdp 操作栏设置
   RDP_ACTION_BAR_SETTING: 'rdpActionBarSetting',
-  // 会话设置
+  // rdp 会话设置
   RDP_SESSION_SETTING: 'rdpSessionSetting',
+  // vnc 图形化设置
+  VNC_GRAPH_SETTING: 'vncGraphSetting',
+  // vnc 工具栏设置
+  VNC_ACTION_BAR_SETTING: 'vncActionBarSetting',
   // 快捷键设置
   SHORTCUT_SETTING: 'shortcutSetting',
 };
@@ -77,6 +83,8 @@ export default defineStore('terminal', {
       rdpGraphSetting: {} as TerminalRdpGraphSetting,
       rdpSessionSetting: {} as TerminalRdpSessionSetting,
       rdpActionBarSetting: {} as TerminalRdpActionBarSetting,
+      vncGraphSetting: {} as TerminalVncGraphSetting,
+      vncActionBarSetting: {} as TerminalVncActionBarSetting,
       shortcutSetting: {
         enabled: false,
         keys: []
@@ -138,7 +146,7 @@ export default defineStore('terminal', {
         await updatePreference({
           type: 'TERMINAL',
           item,
-          value: isObject(value) ? JSON.stringify(value) : value,
+          value: (isObject(value) || isArray(value)) ? JSON.stringify(value) : value,
         });
       } catch (e) {
         Message.error('同步失败');

@@ -25,6 +25,7 @@ package org.dromara.visor.module.terminal.configuration;
 import org.dromara.visor.module.terminal.handler.terminal.TerminalAccessRdpHandler;
 import org.dromara.visor.module.terminal.handler.terminal.TerminalAccessSftpHandler;
 import org.dromara.visor.module.terminal.handler.terminal.TerminalAccessSshHandler;
+import org.dromara.visor.module.terminal.handler.terminal.TerminalAccessVncHandler;
 import org.dromara.visor.module.terminal.handler.transfer.TransferMessageDispatcher;
 import org.dromara.visor.module.terminal.interceptor.TerminalAccessInterceptor;
 import org.dromara.visor.module.terminal.interceptor.TerminalTransferInterceptor;
@@ -64,6 +65,9 @@ public class TerminalWebSocketConfiguration implements WebSocketConfigurer {
     private TerminalAccessRdpHandler terminalAccessRdpHandler;
 
     @Resource
+    private TerminalAccessVncHandler terminalAccessVncHandler;
+
+    @Resource
     private TransferMessageDispatcher transferMessageDispatcher;
 
     @Override
@@ -78,6 +82,10 @@ public class TerminalWebSocketConfiguration implements WebSocketConfigurer {
                 .setAllowedOrigins("*");
         // RDP 终端会话
         registry.addHandler(terminalAccessRdpHandler, prefix + "/terminal/access/rdp/{accessToken}")
+                .addInterceptors(terminalAccessInterceptor)
+                .setAllowedOrigins("*");
+        // VNC 终端会话
+        registry.addHandler(terminalAccessVncHandler, prefix + "/terminal/access/vnc/{accessToken}")
                 .addInterceptors(terminalAccessInterceptor)
                 .setAllowedOrigins("*");
         // 文件传输

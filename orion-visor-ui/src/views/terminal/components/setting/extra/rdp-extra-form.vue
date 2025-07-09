@@ -23,7 +23,7 @@
     <a-form-item field="lowBandwidthMode"
                  style="margin-bottom: 8px;"
                  label="低带宽模式"
-                 help="调整图形化配置以及禁用音频, 提升慢速网络下的响应速度">
+                 help="调整图形化配置为最低以及禁用音频, 提升慢速网络下的响应速度">
       <a-switch v-model="formModel.lowBandwidthMode" type="round" />
     </a-form-item>
     <!-- 初始化程序 -->

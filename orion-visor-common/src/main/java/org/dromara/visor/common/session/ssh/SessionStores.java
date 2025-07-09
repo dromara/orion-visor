@@ -110,7 +110,10 @@ public class SessionStores {
             }
         }
         // 超时时间
-        session.timeout(config.getTimeout());
+        Integer timeout = config.getTimeout();
+        if (timeout != null) {
+            session.timeout(timeout);
+        }
         return session;
     }
 

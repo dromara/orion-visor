@@ -22,11 +22,12 @@
  */
 package org.dromara.visor.module.infra.controller;
 
+import cn.orionsec.kit.web.servlet.web.Servlets;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.visor.common.constant.AppConst;
-import org.dromara.visor.common.constant.HttpHeaderConst;
+import org.dromara.visor.common.constant.CustomHeaderConst;
 import org.dromara.visor.framework.log.core.annotation.IgnoreLog;
 import org.dromara.visor.framework.log.core.enums.IgnoreLogMode;
 import org.dromara.visor.framework.web.core.annotation.RestWrapper;
@@ -71,10 +72,8 @@ public class UserAggregateController {
     @GetMapping("/user")
     @Operation(summary = "获取用户权限聚合信息")
     public UserAggregateVO getUserAggregateInfo(HttpServletResponse response) {
-        // FIXME KIT
         // 设置版本号请求头
-        response.setHeader(HttpHeaderConst.ACCESS_CONTROL_EXPOSE_HEADERS, HttpHeaderConst.APP_VERSION);
-        response.setHeader(HttpHeaderConst.APP_VERSION, AppConst.VERSION);
+        Servlets.addCustomHeader(response, CustomHeaderConst.APP_VERSION, AppConst.VERSION);
         // 获取用户信息
         return userAggregateService.getUserAggregateInfo();
     }

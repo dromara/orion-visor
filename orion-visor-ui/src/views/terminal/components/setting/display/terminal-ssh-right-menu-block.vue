@@ -26,7 +26,7 @@
                    class="action-item-wrapper"
                    v-for="(action, index) in SshActionBarItems"
                    :key="index">
-              <div class="action-item" @click="clickAction(action.item)">
+              <div class="action-item" @click="toggleAction(action.item)">
                 <!-- 图标 -->
                 <div class="action-icon">
                   <component :is="action.icon" />
@@ -62,7 +62,7 @@
               <div>{{ action.content }}</div>
             </div>
             <!-- 关闭按钮 -->
-            <div class="close-icon" @click="clickAction(action.item)">
+            <div class="close-icon" @click="toggleAction(action.item)">
               <icon-close />
             </div>
           </a-doption>
@@ -86,22 +86,15 @@
 
 <script lang="ts" setup>
   import type { ContextMenuItem } from '@/views/terminal/types/define';
-  import { computed, ref, watch } from 'vue';
-  import { useTerminalStore } from '@/store';
+  import { computed, ref } from 'vue';
   import { TerminalPreferenceItem } from '@/store/modules/terminal';
   import { SshActionBarItems } from '@/views/terminal/types/const';
   import { isSecureEnvironment } from '@/utils/env';
-
-  const { preference, updateTerminalPreference } = useTerminalStore();
+  import useTerminalPreference from '@/views/terminal/types/use-terminal-preference';
 
   const popupContainer = ref();
-  const rightActionItems = ref<Array<string>>([...preference.sshRightMenuSetting]);
 
-  // // 监听同步
-  watch(rightActionItems, (v) => {
-    // 同步
-    updateTerminalPreference(TerminalPreferenceItem.SSH_RIGHT_MENU_SETTING, JSON.stringify(v), true);
-  }, { deep: true });
+  const { formModel: rightActionItems } = useTerminalPreference<Array<string>>(TerminalPreferenceItem.SSH_RIGHT_MENU_SETTING, true);
 
   // 实际操作项
   const rightActions = computed<Array<ContextMenuItem>>(() => {
@@ -110,8 +103,8 @@
       .filter(Boolean);
   });
 
-  // 添加操作项
-  const clickAction = (item: string) => {
+  // 触发操作项
+  const toggleAction = (item: string) => {
     if (rightActionItems.value.includes(item)) {
       // 移除
       rightActionItems.value.splice(rightActionItems.value.indexOf(item), 1);

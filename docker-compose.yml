@@ -1,6 +1,12 @@
 version: '3.3'
 
-# latest = 2.4.1
+# latest = 2.4.2
+
+# 支持以下源
+# lijiahangmax/*
+# ghcr.io/dromara/*
+# registry.cn-hangzhou.aliyuncs.com/orionsec/*
+
 services:
   ui:
     image: registry.cn-hangzhou.aliyuncs.com/orionsec/orion-visor-ui:latest
@@ -27,6 +33,8 @@ services:
       MYSQL_PASSWORD: ${MYSQL_PASSWORD:-Data@123456}
       REDIS_HOST: ${REDIS_HOST:-redis}
       REDIS_PASSWORD: ${REDIS_PASSWORD:-Data@123456}
+      REDIS_DATABASE: ${REDIS_DATABASE:-0}
+      REDIS_DATA_VERSION: ${REDIS_DATA_VERSION:-1}
       GUACD_HOST: ${GUACD_HOST:-guacd}
       GUACD_PORT: ${GUACD_PORT:-4822}
       GUACD_DRIVE_PATH: ${GUACD_DRIVE_PATH:-/drive}

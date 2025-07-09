@@ -20,19 +20,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.dromara.visor.common.constant;
+package org.dromara.visor.module.asset.handler.host.extra.strategy;
 
-import cn.orionsec.kit.lang.constant.StandardHttpHeader;
+import org.dromara.visor.common.handler.data.strategy.AbstractGenericsDataStrategy;
+import org.dromara.visor.module.asset.handler.host.extra.model.HostVncExtraModel;
+import org.springframework.stereotype.Component;
 
 /**
- * http 请求头
+ * 主机拓展信息 - rdp 模型处理策略
  *
  * @author Jiahang Li
  * @version 1.0.0
- * @since 2025/7/1 1:02
+ * @since 2023/12/20 22:17
  */
-public interface HttpHeaderConst extends StandardHttpHeader {
+@Component
+public class HostVncExtraStrategy extends AbstractGenericsDataStrategy<HostVncExtraModel> {
 
-    String APP_VERSION = "X-App-Version";
+    public HostVncExtraStrategy() {
+        super(HostVncExtraModel.class);
+    }
+
+    @Override
+    public HostVncExtraModel getDefault() {
+        return HostVncExtraModel.builder()
+                .lowBandwidthMode(false)
+                .swapRedBlue(false)
+                .build();
+    }
 
 }

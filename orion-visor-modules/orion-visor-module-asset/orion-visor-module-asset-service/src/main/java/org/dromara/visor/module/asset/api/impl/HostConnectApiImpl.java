@@ -25,6 +25,7 @@ package org.dromara.visor.module.asset.api.impl;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.visor.common.session.config.RdpConnectConfig;
 import org.dromara.visor.common.session.config.SshConnectConfig;
+import org.dromara.visor.common.session.config.VncConnectConfig;
 import org.dromara.visor.module.asset.api.HostConnectApi;
 import org.dromara.visor.module.asset.convert.HostProviderConvert;
 import org.dromara.visor.module.asset.entity.dto.host.HostDTO;
@@ -75,6 +76,21 @@ public class HostConnectApiImpl implements HostConnectApi {
     @Override
     public RdpConnectConfig getRdpConnectConfig(HostDTO host, Long userId) {
         return hostConnectService.getRdpConnectConfig(HostProviderConvert.MAPPER.to(host), userId);
+    }
+
+    @Override
+    public VncConnectConfig getVncConnectConfig(Long hostId) {
+        return hostConnectService.getVncConnectConfig(hostId);
+    }
+
+    @Override
+    public VncConnectConfig getVncConnectConfig(Long hostId, Long userId) {
+        return hostConnectService.getVncConnectConfig(hostId, userId);
+    }
+
+    @Override
+    public VncConnectConfig getVncConnectConfig(HostDTO host, Long userId) {
+        return hostConnectService.getVncConnectConfig(HostProviderConvert.MAPPER.to(host), userId);
     }
 
 }

@@ -1,4 +1,7 @@
 import type { FieldRule } from '@arco-design/web-vue';
+import type { Ref } from 'vue';
+import type { HostBaseConfig } from '@/api/asset/host-config';
+import { HostAuthType } from './const';
 
 // 主机表单规则
 export const hostFormRules = {
@@ -62,11 +65,11 @@ export const hostFormRules = {
 export const sshFormRules = {
   port: [{
     required: true,
-    message: '请输入 SSH 端口'
+    message: '请输入端口'
   }, {
     min: 1,
     max: 65535,
-    message: 'SSH 端口不合法'
+    message: '端口不合法'
   }],
   authType: [{
     required: true,
@@ -116,11 +119,11 @@ export const sshFormRules = {
 export const rdpFormRules = {
   port: [{
     required: true,
-    message: '请输入 RDP 端口'
+    message: '请输入端口'
   }, {
     min: 1,
     max: 65535,
-    message: 'RDP 端口不合法'
+    message: '端口不合法'
   }],
   authType: [{
     required: true,
@@ -131,5 +134,65 @@ export const rdpFormRules = {
     message: '请选择主机身份'
   }],
 } as Record<string, FieldRule | FieldRule[]>;
+
+// vnc 表单规则
+export const vncFormRules = {
+  port: [{
+    required: true,
+    message: '请输入端口'
+  }, {
+    min: 1,
+    max: 65535,
+    message: '端口不合法'
+  }],
+  authType: [{
+    required: true,
+    message: '请选择认证方式'
+  }],
+  identityId: [{
+    required: true,
+    message: '请选择主机身份'
+  }],
+  clipboardEncoding: [{
+    required: true,
+    message: '请选择剪切板编码'
+  }],
+} as Record<string, FieldRule | FieldRule[]>;
+
+// 基础规则
+export const baseFormRules = {
+  // 用户名验证规则
+  username(formModel: Ref<HostBaseConfig>) {
+    return [{
+      validator: (value: string, cb: (msg?: string) => void) => {
+        if (value && value.length > 128) {
+          cb('用户名长度不能大于128位');
+          return;
+        }
+        if (formModel.value.authType !== HostAuthType.IDENTITY && !value) {
+          cb('请输入用户名');
+          return;
+        }
+        cb();
+      }
+    }] as FieldRule[];
+  },
+  // 密码验证规则
+  password(formModel: Ref<HostBaseConfig>) {
+    return [{
+      validator: (value: string, cb: (msg?: string) => void) => {
+        if (value && value.length > 256) {
+          cb('密码长度不能大于256位');
+          return;
+        }
+        if (formModel.value.useNewPassword && !value) {
+          cb('请输入密码');
+          return;
+        }
+        cb();
+      }
+    }] as FieldRule[];
+  }
+};
 
 export default null;

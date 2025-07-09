@@ -13,6 +13,9 @@ spring:
     host: ${REDIS_HOST:127.0.0.1}
     port: ${REDIS_PORT:6379}
     password: ${REDIS_PASSWORD:Data@123456}
+    database: ${REDIS_DATABASE:10}
+    data-version: ${REDIS_DATA_VERSION:1}
+    mock: false
   redisson:
     threads: 2
     netty-threads: 2
@@ -40,6 +43,3 @@ mybatis-plus:
   configuration:
     # 日志打印
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
-
-no:
-  redis: false

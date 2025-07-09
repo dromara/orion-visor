@@ -67,7 +67,7 @@
         <block-setting-item label="单词分隔符" desc="在终端中双击文本将使用该分隔符进行分割 (一般不用修改)">
           <a-input v-model="formModel.wordSeparator"
                    size="small"
-                   style="width: 198px"
+                   style="width: 168px"
                    placeholder="单词分隔符"
                    allow-clear />
         </block-setting-item>
@@ -76,20 +76,26 @@
         <!-- 终端类型 -->
         <block-setting-item label="终端类型" desc="若显示异常请尝试切换此选项 兼容性 vt100 > xterm > 16color > 256color">
           <a-select v-model="formModel.terminalEmulationType"
-                    style="width: 198px;"
+                    style="width: 168px;"
                     size="small"
                     :options="toOptions(emulationTypeKey)" />
         </block-setting-item>
         <!-- 缓冲区行数 -->
         <block-setting-item label="缓冲区行数" desc="保存在缓冲区的行数, 多出的行数会被忽略, 此值越大占用内存的内存会更多">
           <a-input-number v-model="formModel.scrollBackLine"
-                          style="width: 198px"
+                          style="width: 168px"
                           size="small"
                           :min="1"
                           :max="100000"
                           placeholder="缓冲区行数 默认 1000 行"
                           allow-clear
                           hide-button />
+        </block-setting-item>
+      </a-row>
+      <a-row class="mb16" align="stretch" :gutter="16">
+        <!-- 替换退格符 -->
+        <block-setting-item label="替换退格符" desc="开启后会将退格符 (Backspace) 替换为 (Ctrl+H)">
+          <a-switch v-model="formModel.replaceBackspace" type="round" />
         </block-setting-item>
       </a-row>
     </div>
@@ -104,26 +110,16 @@
 
 <script lang="ts" setup>
   import type { TerminalSshInteractSetting } from '@/store/modules/terminal/types';
-  import { ref, watch } from 'vue';
-  import { useTerminalStore, useDictStore } from '@/store';
+  import { useDictStore } from '@/store';
   import { TerminalPreferenceItem } from '@/store/modules/terminal';
   import { emulationTypeKey } from '@/views/terminal/types/const';
   import { isSecureEnvironment } from '@/utils/env';
+  import useTerminalPreference from '@/views/terminal/types/use-terminal-preference';
   import BlockSettingItem from '../block-setting-item.vue';
 
   const { toOptions } = useDictStore();
-  const { preference, updateTerminalPreference } = useTerminalStore();
 
-  const formModel = ref<TerminalSshInteractSetting>({ ...preference.sshInteractSetting });
-
-  // 监听内容变化
-  watch(formModel, (v) => {
-    if (!v) {
-      return;
-    }
-    // 同步
-    updateTerminalPreference(TerminalPreferenceItem.SSH_INTERACT_SETTING, formModel.value);
-  }, { deep: true });
+  const { formModel } = useTerminalPreference<TerminalSshInteractSetting>(TerminalPreferenceItem.SSH_INTERACT_SETTING);
 
 </script>
 

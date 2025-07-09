@@ -49,6 +49,11 @@ public enum HostConfigStrategyEnum implements GenericsStrategyDefinition {
      */
     RDP(HostRdpConfigStrategy.class),
 
+    /**
+     * VNC
+     */
+    VNC(HostVncConfigStrategy.class),
+
     ;
 
     private final Class<? extends GenericsDataStrategy<? extends GenericsDataModel>> strategyClass;

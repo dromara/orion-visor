@@ -1,5 +1,5 @@
 <template>
-  <div class="ssh-container">
+  <div>
     <!-- 头部 -->
     <ssh-header :session="session" @handle="doTerminalHandle" />
     <!-- 终端右键菜单 -->
@@ -93,12 +93,6 @@
 
 <style lang="less" scoped>
   @ssh-header-height: 36px;
-
-  .ssh-container {
-    width: 100%;
-    height: 100%;
-    position: relative;
-  }
 
   .ssh-wrapper {
     width: 100%;

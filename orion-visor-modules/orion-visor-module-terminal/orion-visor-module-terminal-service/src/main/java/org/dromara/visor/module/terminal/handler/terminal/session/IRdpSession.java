@@ -30,13 +30,4 @@ package org.dromara.visor.module.terminal.handler.terminal.session;
  * @since 2025/3/30 17:42
  */
 public interface IRdpSession extends IGuacdSession {
-
-    /**
-     * 重置大小
-     *
-     * @param width  width
-     * @param height height
-     */
-    void resize(int width, int height);
-
 }

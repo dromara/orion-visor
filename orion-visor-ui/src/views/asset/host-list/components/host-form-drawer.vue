@@ -51,6 +51,15 @@
                          class="form-panel"
                          :hostId="hostId" />
         </a-tab-pane>
+        <!-- VNC 配置 -->
+        <a-tab-pane v-permission="['asset:host:update-config']"
+                    key="vnc"
+                    title="VNC"
+                    :disabled="!hostId || !types.includes(HostType.VNC.value)">
+          <host-form-vnc v-if="hostId"
+                         class="form-panel"
+                         :hostId="hostId" />
+        </a-tab-pane>
       </a-tabs>
     </div>
   </a-drawer>
@@ -64,14 +73,15 @@
 
 <script lang="ts" setup>
   import { ref, nextTick } from 'vue';
-  import useVisible from '@/hooks/visible';
   import { Message } from '@arco-design/web-vue';
   import { useCacheStore } from '@/store';
   import { HostType } from '../types/const';
+  import useVisible from '@/hooks/visible';
   import HostFormInfo from './host-form-info.vue';
   import HostFormSpec from './host-form-spec.vue';
   import HostFormSsh from './host-form-ssh.vue';
   import HostFormRdp from './host-form-rdp.vue';
+  import HostFormVnc from './host-form-vnc.vue';
 
   const { visible, setVisible } = useVisible();
 
@@ -115,8 +125,8 @@
     hostId.value = id;
     hostViewUpdated.value = false;
     types.value = [];
-    checkHostGroup();
     setVisible(true);
+    checkHostGroup();
   };
 
   // 检查是否有主机分组
@@ -187,5 +197,21 @@
     width: 100%;
     height: 100%;
     padding: 0 24px;
+
+    :deep(.password-switch) {
+      width: 148px;
+      margin-left: 8px;
+    }
+
+    :deep(.password-auth-type-group) {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+
+      .arco-radio-button {
+        width: 50%;
+        text-align: center;
+      }
+    }
   }
 </style>

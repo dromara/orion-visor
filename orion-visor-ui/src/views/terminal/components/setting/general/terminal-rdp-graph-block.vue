@@ -14,7 +14,7 @@
         <!-- 显示分辨率 -->
         <block-setting-item label="显示分辨率" desc="若选择为自适应, 则会根据窗口大小自动调整">
           <a-select v-model="formModel.displaySize"
-                    style="width: 198px;"
+                    style="width: 168px;"
                     size="small"
                     :options="toOptions(screenResolutionKey)"
                     allow-create />
@@ -22,14 +22,14 @@
         <!-- 颜色深度 -->
         <block-setting-item label="颜色深度" desc="显示的颜色深度, 越高显示效果越好">
           <a-select v-model="formModel.colorDepth"
-                    style="width: 198px;"
+                    style="width: 168px;"
                     size="small"
                     :options="toOptions(graphColorDepthKey)" />
         </block-setting-item>
       </a-row>
       <a-row class="mb16" align="stretch" :gutter="16">
         <!-- 无损压缩 -->
-        <block-setting-item label="无损压缩" desc="是否启用对图形更新的无损压缩">
+        <block-setting-item label="无损压缩" desc="是否启用对图像更新的无损压缩">
           <a-switch v-model="formModel.forceLossless" type="round" />
         </block-setting-item>
         <!-- 启用壁纸 -->
@@ -79,7 +79,7 @@
       </a-row>
       <a-row class="mb16" align="stretch" :gutter="16">
         <!-- 禁用图形加速 -->
-        <block-setting-item label="禁用图形加速" desc="禁用后将不再使用 GFX 进行数据编码">
+        <block-setting-item label="禁用图像加速" desc="禁用后将不再使用 GFX 进行数据编码">
           <a-switch v-model="formModel.disableGfx" type="round" />
         </block-setting-item>
       </a-row>
@@ -95,23 +95,16 @@
 
 <script lang="ts" setup>
   import type { TerminalRdpGraphSetting } from '@/store/modules/terminal/types';
-  import { ref, watch } from 'vue';
-  import { useTerminalStore, useDictStore } from '@/store';
+  import { useDictStore } from '@/store';
   import { TerminalPreferenceItem } from '@/store/modules/terminal';
   import { screenResolutionKey, graphColorDepthKey, fitDisplayValue } from '@/views/terminal/types/const';
   import { getDisplaySize } from '@/views/terminal/types/utils';
+  import useTerminalPreference from '@/views/terminal/types/use-terminal-preference';
   import BlockSettingItem from '../block-setting-item.vue';
 
   const { toOptions, getDictValue } = useDictStore();
-  const { preference, updateTerminalPreference } = useTerminalStore();
 
-  const formModel = ref<TerminalRdpGraphSetting>({ ...preference.rdpGraphSetting });
-
-  // 监听内容变化
-  watch(formModel, (v) => {
-    if (!v) {
-      return;
-    }
+  const { formModel } = useTerminalPreference<TerminalRdpGraphSetting>(TerminalPreferenceItem.RDP_GRAPH_SETTING, true, (v) => {
     // 同步大小
     if (v.displaySize) {
       // 自适应大小
@@ -129,9 +122,7 @@
         }
       }
     }
-    // 同步
-    updateTerminalPreference(TerminalPreferenceItem.RDP_GRAPH_SETTING, formModel.value, true);
-  }, { deep: true });
+  });
 
 </script>
 

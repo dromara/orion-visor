@@ -24,6 +24,10 @@ export const HostType = {
     value: 'RDP',
     port: 3389,
   },
+  VNC: {
+    value: 'VNC',
+    port: 5900,
+  },
 };
 
 // 系统类型

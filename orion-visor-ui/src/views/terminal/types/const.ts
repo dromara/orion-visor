@@ -44,18 +44,31 @@ export const TerminalTabs = {
 export const TerminalSessionTypes = {
   SSH: {
     type: 'SSH',
+    protocol: 'SSH',
     channel: 'ssh',
-    icon: 'icon-desktop'
+    icon: 'icon-desktop',
+    connectIcon: 'icon-thunderbolt',
   },
   SFTP: {
     type: 'SFTP',
+    protocol: 'SSH',
     channel: 'sftp',
-    icon: 'icon-folder'
+    icon: 'icon-folder',
+    connectIcon: 'icon-folder',
   },
   RDP: {
     type: 'RDP',
+    protocol: 'RDP',
     channel: 'rdp',
-    icon: 'icon-computer'
+    icon: 'icon-desktop',
+    connectIcon: 'icon-desktop',
+  },
+  VNC: {
+    type: 'VNC',
+    protocol: 'VNC',
+    channel: 'vnc',
+    icon: 'icon-computer',
+    connectIcon: 'icon-computer',
   },
 };
 
@@ -72,6 +85,7 @@ export const ExtraSettingItems = {
   LABEL: 'LABEL',
   SSH: 'SSH',
   RDP: 'RDP',
+  VNC: 'VNC',
 };
 
 // 主机额外配置认证方式
@@ -97,7 +111,7 @@ export const TerminalMessages = {
   sessionClosed: '会话已结束...',
   waitingReconnect: '输入回车重新连接...',
   loggedElsewhere: '该账号已在另一台设备登录',
-  rdpConnectTimeout: '请检查远程计算机网络及其他配置是否正常',
+  connectTimeout: '请检查远程计算机网络及其他配置是否正常',
   fileTransferError: '传输失败',
   fileSaveError: '保存失败',
   fileUploading: '已开始上传, 点击右侧传输列表查看进度',
@@ -214,55 +228,121 @@ export const SshActionBarItems = [
   }
 ];
 
-// 终端操作栏键 - RDP
-export const RdpActionItemKeys = {
+// guacd 终端操作栏键
+export const GuacdActionItemKeys = {
+  INFO: 'info',
   DISPLAY: 'display',
   COMBINATION_KEY: 'combinationKey',
+  TRIGGER_KEY: 'triggerKey',
   CLIPBOARD: 'clipboard',
-  UPLOAD: 'upload',
+  RDP_UPLOAD: 'rdpUpload',
+  SFTP_UPLOAD: 'sftpUpload',
+  OPEN_SFTP: 'openSftp',
   SAVE_RDP: 'saveRdp',
   DISCONNECT: 'disconnect',
+  RECONNECT: 'reconnect',
   CLOSE: 'close',
+};
+
+// guacd 终端操作栏
+export const GuacdActionBarItemMap = {
+  [GuacdActionItemKeys.INFO]: {
+    item: GuacdActionItemKeys.INFO,
+    icon: 'icon-info',
+    content: '会话信息',
+  },
+  [GuacdActionItemKeys.DISPLAY]: {
+    item: GuacdActionItemKeys.DISPLAY,
+    icon: 'icon-desktop',
+    content: '显示设置',
+  },
+  [GuacdActionItemKeys.COMBINATION_KEY]: {
+    item: GuacdActionItemKeys.COMBINATION_KEY,
+    icon: 'icon-command',
+    content: '组合键',
+  },
+  [GuacdActionItemKeys.TRIGGER_KEY]: {
+    item: GuacdActionItemKeys.TRIGGER_KEY,
+    icon: 'icon-dice',
+    content: '长按键',
+  },
+  [GuacdActionItemKeys.CLIPBOARD]: {
+    item: GuacdActionItemKeys.CLIPBOARD,
+    icon: 'icon-paste',
+    content: '剪切板',
+  },
+  [GuacdActionItemKeys.RDP_UPLOAD]: {
+    item: GuacdActionItemKeys.RDP_UPLOAD,
+    icon: 'icon-upload',
+    content: 'RDP 文件上传',
+  },
+  [GuacdActionItemKeys.SFTP_UPLOAD]: {
+    item: GuacdActionItemKeys.SFTP_UPLOAD,
+    icon: 'icon-folder-add',
+    content: 'SFTP 文件上传',
+  },
+  [GuacdActionItemKeys.OPEN_SFTP]: {
+    item: GuacdActionItemKeys.OPEN_SFTP,
+    icon: 'icon-folder',
+    content: '打开 SFTP',
+  },
+  [GuacdActionItemKeys.SAVE_RDP]: {
+    item: GuacdActionItemKeys.SAVE_RDP,
+    icon: 'icon-save',
+    content: '保存 rdp 文件',
+  },
+  [GuacdActionItemKeys.DISCONNECT]: {
+    item: GuacdActionItemKeys.DISCONNECT,
+    icon: 'icon-stop',
+    content: '断开连接',
+  },
+  [GuacdActionItemKeys.RECONNECT]: {
+    item: GuacdActionItemKeys.RECONNECT,
+    icon: 'icon-refresh',
+    content: '重新连接',
+  },
+  [GuacdActionItemKeys.CLOSE]: {
+    item: GuacdActionItemKeys.CLOSE,
+    icon: 'icon-close',
+    content: '关闭工具栏',
+  },
 };
 
 // 终端操作栏 - RDP
 export const RdpActionBarItems = [
-  {
-    item: RdpActionItemKeys.DISPLAY,
-    icon: 'icon-desktop',
-    content: '显示设置',
-  },
-  {
-    item: RdpActionItemKeys.COMBINATION_KEY,
-    icon: 'icon-command',
-    content: '组合键',
-  },
-  {
-    item: RdpActionItemKeys.CLIPBOARD,
-    icon: 'icon-paste',
-    content: '剪切板',
-  },
-  {
-    item: RdpActionItemKeys.UPLOAD,
-    icon: 'icon-upload',
-    content: '文件上传',
-  },
-  {
-    item: RdpActionItemKeys.SAVE_RDP,
-    icon: 'icon-save',
-    content: '保存 rdp 文件',
-  },
-  {
-    item: RdpActionItemKeys.DISCONNECT,
-    icon: 'icon-stop',
-    content: '断开连接',
-  },
-  {
-    item: RdpActionItemKeys.CLOSE,
-    icon: 'icon-close',
-    content: '关闭工具栏',
-  },
+  GuacdActionBarItemMap[GuacdActionItemKeys.INFO],
+  GuacdActionBarItemMap[GuacdActionItemKeys.DISPLAY],
+  GuacdActionBarItemMap[GuacdActionItemKeys.COMBINATION_KEY],
+  GuacdActionBarItemMap[GuacdActionItemKeys.TRIGGER_KEY],
+  GuacdActionBarItemMap[GuacdActionItemKeys.CLIPBOARD],
+  GuacdActionBarItemMap[GuacdActionItemKeys.RDP_UPLOAD],
+  GuacdActionBarItemMap[GuacdActionItemKeys.SFTP_UPLOAD],
+  GuacdActionBarItemMap[GuacdActionItemKeys.OPEN_SFTP],
+  GuacdActionBarItemMap[GuacdActionItemKeys.SAVE_RDP],
+  GuacdActionBarItemMap[GuacdActionItemKeys.DISCONNECT],
+  GuacdActionBarItemMap[GuacdActionItemKeys.RECONNECT],
+  GuacdActionBarItemMap[GuacdActionItemKeys.CLOSE],
 ];
+
+// 终端操作栏 - VNC
+export const VncActionBarItems = [
+  GuacdActionBarItemMap[GuacdActionItemKeys.INFO],
+  GuacdActionBarItemMap[GuacdActionItemKeys.DISPLAY],
+  GuacdActionBarItemMap[GuacdActionItemKeys.COMBINATION_KEY],
+  GuacdActionBarItemMap[GuacdActionItemKeys.TRIGGER_KEY],
+  GuacdActionBarItemMap[GuacdActionItemKeys.CLIPBOARD],
+  GuacdActionBarItemMap[GuacdActionItemKeys.SFTP_UPLOAD],
+  GuacdActionBarItemMap[GuacdActionItemKeys.OPEN_SFTP],
+  GuacdActionBarItemMap[GuacdActionItemKeys.DISCONNECT],
+  GuacdActionBarItemMap[GuacdActionItemKeys.RECONNECT],
+  GuacdActionBarItemMap[GuacdActionItemKeys.CLOSE],
+];
+
+// 终端操作栏方向
+export const ActionBarPosition = {
+  TOP: 'top',
+  RIGHT: 'right',
+};
 
 // 终端快捷键操作类型
 export const TerminalShortcutType = {
@@ -403,8 +483,8 @@ export const TerminalShortcutItems: Array<ShortcutKeyItem> = [
   },
 ];
 
-// RDP 组合键元素
-export const RdpCombinationKeyItems: Array<CombinationKeyItem> = [
+// Guacd 组合键元素
+export const GuacdCombinationKeyItems: Array<CombinationKeyItem> = [
   {
     keys: [65307],
     name: 'Esc'
@@ -444,8 +524,109 @@ export const RdpCombinationKeyItems: Array<CombinationKeyItem> = [
   {
     keys: [65515, 120],
     name: 'Windows+X'
+  }, {
+    keys: [65507, 99],
+    name: 'Ctrl+C'
+  },
+  {
+    keys: [65507, 118],
+    name: 'Ctrl+V'
+  },
+  {
+    keys: [65507, 120],
+    name: 'Ctrl+X'
+  },
+  {
+    keys: [65507, 97],
+    name: 'Ctrl+A'
+  },
+  {
+    keys: [65507, 122],
+    name: 'Ctrl+Z'
+  },
+  {
+    keys: [65507, 65535],
+    name: 'Ctrl+Delete'
+  },
+  {
+    keys: [65507, 65288],
+    name: 'Ctrl+Backspace'
+  },
+  {
+    keys: [65507, 65513, 65470],
+    name: 'Ctrl+Alt+F1'
+  },
+  {
+    keys: [65507, 65513, 65471],
+    name: 'Ctrl+Alt+F2'
+  },
+  {
+    keys: [65507, 65513, 65472],
+    name: 'Ctrl+Alt+F3'
+  },
+  {
+    keys: [65507, 65513, 65473],
+    name: 'Ctrl+Alt+F4'
+  },
+  {
+    keys: [65507, 65513, 65474],
+    name: 'Ctrl+Alt+F5'
+  },
+  {
+    keys: [65507, 65513, 65475],
+    name: 'Ctrl+Alt+F6'
+  },
+  {
+    keys: [65507, 65513, 65476],
+    name: 'Ctrl+Alt+F7'
+  },
+  {
+    keys: [65507, 65513, 65477],
+    name: 'Ctrl+Alt+F8'
+  },
+  {
+    keys: [65507, 65513, 65478],
+    name: 'Ctrl+Alt+F9'
+  },
+  {
+    keys: [65507, 65513, 65479],
+    name: 'Ctrl+Alt+F10'
+  },
+  {
+    keys: [65507, 65513, 65480],
+    name: 'Ctrl+Alt+F11'
+  },
+  {
+    keys: [65507, 65513, 65481],
+    name: 'Ctrl+Alt+F12'
+  }
+];
+
+// Guacd 键盘码
+export const GuacdKeyboardItems = [
+  {
+    key: 65507,
+    name: 'Ctrl',
+  },
+  {
+    key: 65505,
+    name: 'Shift',
+  },
+  {
+    key: 65513,
+    name: 'Alt',
+  },
+  {
+    key: 65515,
+    name: 'Windows',
   },
 ];
+
+// backspace 字符
+export const BACKSPACE_CHAR = String.fromCharCode(127);
+
+// ctrl^h 字符
+export const CTRL_H_CHAR = String.fromCharCode(8);
 
 // 传输状态
 export const TransferStatus = {

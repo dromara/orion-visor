@@ -392,6 +392,16 @@ public interface GuacdConst {
      */
     String CLIPBOARD_ENCODING = "clipboard-encoding";
 
+    /**
+     * 压缩等级
+     */
+    String COMPRESS_LEVEL = "compress-level";
+
+    /**
+     * 质量等级
+     */
+    String QUALITY_LEVEL = "quality-level";
+
     // -------------------- const --------------------
 
     String RESIZE_METHOD_DISPLAY_UPDATE = "display-update";

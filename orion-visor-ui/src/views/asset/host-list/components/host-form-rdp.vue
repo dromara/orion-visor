@@ -6,7 +6,7 @@
             label-align="right"
             :label-col-props="{ span: 6 }"
             :wrapper-col-props="{ span: 18 }"
-            :rules="rdpFormRules">
+            :rules="formRules">
       <!-- 端口 -->
       <a-form-item field="port"
                    label="端口"
@@ -18,7 +18,6 @@
       <!-- 用户名 -->
       <a-form-item field="username"
                    label="用户名"
-                   :rules="usernameRules"
                    :help="HostAuthType.IDENTITY === formModel.authType ? '将使用主机身份的用户名' : undefined"
                    hide-asterisk>
         <a-input v-model="formModel.username"
@@ -30,7 +29,7 @@
                    label="认证方式"
                    hide-asterisk>
         <a-radio-group type="button"
-                       class="auth-type-group usn"
+                       class="password-auth-type-group usn"
                        v-model="formModel.authType"
                        :options="toRadioOptions(passwordAuthTypeKey)" />
       </a-form-item>
@@ -38,7 +37,6 @@
       <a-form-item v-if="HostAuthType.PASSWORD === formModel.authType"
                    field="password"
                    label="主机密码"
-                   :rules="passwordRules"
                    hide-asterisk>
         <a-input-password v-model="formModel.password"
                           :disabled="!formModel.useNewPassword && formModel.hasPassword"
@@ -154,18 +152,6 @@
                   @click="saveConfig">
           保存
         </a-button>
-        <!-- 测试连接 -->
-        <a-tooltip position="tr"
-                   content="请先保存后测试连接"
-                   mini>
-          <a-button class="extra-button"
-                    type="primary"
-                    :loading="connectLoading"
-                    long
-                    @click="testConnect">
-            测试连接
-          </a-button>
-        </a-tooltip>
       </a-form-item>
     </a-form>
   </a-spin>
@@ -178,7 +164,6 @@
 </script>
 
 <script lang="ts" setup>
-  import type { FieldRule } from '@arco-design/web-vue';
   import type { HostRdpConfig } from '@/api/asset/host-config';
   import { ref, onMounted } from 'vue';
   import useLoading from '@/hooks/loading';
@@ -186,10 +171,7 @@
   import { passwordAuthTypeKey, HostAuthType, HostType, timezoneKey, keyboardLayoutKey, clipboardNormalizeKey } from '../types/const';
   import { IdentityType } from '@/views/asset/host-identity/types/const';
   import { rdpFormRules } from '../types/form.rules';
-  import { Message } from '@arco-design/web-vue';
-  import { encrypt } from '@/utils/rsa';
-  import { testHostConnect } from '@/api/asset/host';
-  import { getHostConfig, updateHostConfig } from '@/api/asset/host-config';
+  import useHostConfigForm from '../types/use-host-config';
   import HostIdentitySelector from '@/components/asset/host-identity/selector/index.vue';
 
   const props = defineProps<{
@@ -197,130 +179,28 @@
   }>();
 
   const { loading, setLoading } = useLoading();
-  const { loading: connectLoading, setLoading: setConnectLoading } = useLoading();
   const { toOptions, toRadioOptions } = useDictStore();
 
-  const formRef = ref();
   const formModel = ref<HostRdpConfig>({} as HostRdpConfig);
 
-  // 用户名验证
-  const usernameRules = [{
-    validator: (value, cb) => {
-      if (value && value.length > 128) {
-        cb('用户名长度不能大于128位');
-        return;
-      }
-      if (formModel.value.authType !== HostAuthType.IDENTITY && !value) {
-        cb('请输入用户名');
-        return;
-      }
-    }
-  }] as FieldRule[];
-
-  // 密码验证
-  const passwordRules = [{
-    validator: (value, cb) => {
-      if (value && value.length > 256) {
-        cb('密码长度不能大于256位');
-        return;
-      }
-      if (formModel.value.useNewPassword && !value) {
-        cb('请输入密码');
-        return;
-      }
-    }
-  }] as FieldRule[];
-
-  // 加载配置
-  const fetchHostConfig = async () => {
-    try {
-      setLoading(true);
-      // 加载配置
-      const { data } = await getHostConfig<HostRdpConfig>({
-        hostId: props.hostId,
-        type: HostType.RDP.value,
-      });
-      formModel.value = data;
-      // 使用新密码默认为不包含密码
-      formModel.value.useNewPassword = !formModel.value.hasPassword;
-    } catch ({ message }) {
-      Message.error(`配置加载失败 ${message}`);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // 测试连接
-  const testConnect = async () => {
-    // 验证参数
-    const error = await formRef.value.validate();
-    if (error) {
-      return;
-    }
-    try {
-      setConnectLoading(true);
-      // 测试连接
-      await testHostConnect({
-        id: props.hostId,
-        type: HostType.RDP.value,
-      });
-      Message.success('连接成功');
-    } catch (e) {
-    } finally {
-      setConnectLoading(false);
-    }
-  };
-
-  // 保存配置
-  const saveConfig = async () => {
-    // 验证参数
-    const error = await formRef.value.validate();
-    if (error) {
-      return;
-    }
-    // 加密参数
-    const requestData = { ...formModel.value };
-    try {
-      requestData.password = await encrypt(formModel.value.password);
-    } catch (e) {
-      return;
-    }
-    try {
-      setLoading(true);
-      // 更新
-      await updateHostConfig({
-        hostId: props.hostId,
-        type: HostType.RDP.value,
-        config: JSON.stringify(requestData),
-      });
-      Message.success('修改成功');
-    } catch (e) {
-    } finally {
-      setLoading(false);
-    }
-  };
+  const {
+    formRef,
+    formRules,
+    fetchHostConfig,
+    saveConfig,
+  } = useHostConfigForm({
+    type: HostType.RDP.value,
+    hostId: props.hostId,
+    rules: rdpFormRules,
+    formModel,
+    setLoading,
+  });
 
   onMounted(fetchHostConfig);
 
 </script>
 
 <style lang="less" scoped>
-  .auth-type-group {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-
-    :deep(.arco-radio-button) {
-      width: 50%;
-      text-align: center;
-    }
-  }
-
-  .password-switch {
-    width: 148px;
-    margin-left: 8px;
-  }
-
   .advanced-settings {
     margin-bottom: 16px;
 
@@ -339,5 +219,4 @@
       }
     }
   }
-
 </style>

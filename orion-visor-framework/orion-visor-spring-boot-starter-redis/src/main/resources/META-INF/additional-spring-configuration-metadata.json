@@ -26,9 +26,15 @@
       "defaultValue": "16"
     },
     {
-      "name": "no.redis",
+      "name": "spring.redis.data-version",
+      "type": "java.lang.String",
+      "description": "redis 数据版本.",
+      "defaultValue": "1"
+    },
+    {
+      "name": "spring.redis.mock",
       "type": "java.lang.Boolean",
-      "description": "是否无 redis.",
+      "description": "是否使用 mock redis, 一般用于无 redis 调试时使用.",
       "defaultValue": false
     }
   ]

@@ -79,13 +79,14 @@ export interface ISftpSessionHandler {
   resolveSftpSetContent: (result: string, msg: string, token: string) => void;
 }
 
-// rdp 会话视图处理器定义
-export interface IRdpSessionDisplayHandler {
+// guacd 会话视图处理器定义
+export interface IGuacdSessionDisplayHandler {
   displayWidth: number;
   displayHeight: number;
   displayDpi: number;
   autoFit: boolean;
   localCursor: boolean;
+  keyboardDownKeys: number[];
 
   // 初始化
   init: () => void;
@@ -101,8 +102,8 @@ export interface IRdpSessionDisplayHandler {
   setDisplaySize: (width: number, height: number) => void;
 }
 
-// rdp 会话剪切板处理器定义
-export interface IRdpSessionClipboardHandler {
+// guacd 会话剪切板处理器定义
+export interface IGuacdSessionClipboardHandler {
   // 发送数据到远程剪切板
   sendDataToRemoteClipboard: (data: string | File | Blob) => void;
   // 接收远程剪切板数据
