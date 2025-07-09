@@ -141,16 +141,18 @@ export default abstract class BaseGuacdSession extends BaseSession<GuacdReactive
   }
 
   // 粘贴
-  paste(data: string): void {
+  paste(data: string, sendPaste: boolean): void {
     if (!this.isWriteable()) {
       return;
     }
     // 发送至远程剪切板
     this.clipboardHandler?.sendDataToRemoteClipboard(data);
     // 发送粘贴命令
-    setTimeout(() => {
-      this.sendKeys([65507, 118]);
-    }, 100);
+    if (sendPaste) {
+      setTimeout(() => {
+        this.sendKeys([65507, 118]);
+      }, 100);
+    }
   }
 
   // 聚焦

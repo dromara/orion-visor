@@ -1,4 +1,5 @@
 import type { TableColumnData } from '@arco-design/web-vue';
+import { formatDuration } from '@/utils';
 
 export const logColumns = [
   {
@@ -45,6 +46,16 @@ export const logColumns = [
     width: 156,
     align: 'left',
     ellipsis: true,
+    default: true,
+  }, {
+    title: '持续时间',
+    dataIndex: 'duration',
+    slotName: 'duration',
+    align: 'left',
+    width: 142,
+    render: ({ record }) => {
+      return formatDuration(record.startTime, record.endTime, '-');
+    },
     default: true,
   }, {
     title: '连接时间',

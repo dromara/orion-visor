@@ -277,6 +277,9 @@ public class TerminalConnectHandler extends AbstractTerminalHandler<ITerminalSen
             } else if (TerminalConnectTypeEnum.RDP.name().equals(connectType)) {
                 // RDP
                 connectConfig = hostConnectApi.getRdpConnectConfig(host, userId);
+            } else if (TerminalConnectTypeEnum.VNC.name().equals(connectType)) {
+                // VNC
+                connectConfig = hostConnectApi.getVncConnectConfig(host, userId);
             } else {
                 throw Exceptions.unsupported();
             }

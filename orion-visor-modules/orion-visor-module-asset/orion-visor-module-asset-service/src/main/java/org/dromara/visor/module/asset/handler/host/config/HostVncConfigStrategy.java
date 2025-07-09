@@ -62,6 +62,7 @@ public class HostVncConfigStrategy extends AbstractHostConfigStrategy<HostVncCon
                 .authType(HostAuthTypeEnum.PASSWORD.name())
                 .noUsername(false)
                 .noPassword(false)
+                .timezone("Asia/Shanghai")
                 .clipboardEncoding(Const.UTF_8)
                 .build();
     }
@@ -94,7 +95,11 @@ public class HostVncConfigStrategy extends AbstractHostConfigStrategy<HostVncCon
             afterModel.setAuthType(HostAuthTypeEnum.PASSWORD.name());
         }
         // 加密密码
-        this.checkEncryptPassword(afterModel.getAuthType(), beforeModel, afterModel);
+        if (Booleans.isTrue(afterModel.getNoPassword())) {
+            afterModel.setPassword(beforeModel.getPassword());
+        } else {
+            this.checkEncryptPassword(afterModel.getAuthType(), beforeModel, afterModel);
+        }
         afterModel.setHasPassword(null);
         afterModel.setUseNewPassword(null);
     }

@@ -176,7 +176,7 @@ export interface IGuacdSession extends ITerminalSession<GuacdReactiveSessionStat
   // 发送键
   sendKeys: (keys: Array<number>) => void;
   // 粘贴
-  paste: (data: string) => void;
+  paste: (data: string, sendPaste: boolean) => void;
 }
 
 // RDP 会话定义
