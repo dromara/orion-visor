@@ -33,7 +33,7 @@ jobs:
         run: npm i -g pnpm
 
       - name: 📦 Build Java
-        run: mvn -U clean install -DskipTests
+        run: mvn -U clean install -DskipTests --settings=.github/settings/maven-settings.xml
 
       - name: 📦️ Build UI
         working-directory: ./orion-visor-ui
