@@ -96,12 +96,10 @@ export function formatSecond(second: number, p = 'HH:mm') {
 
 /**
  * 格式化持续时间
- * @param start
- * @param end
  */
-export function formatDuration(start: number, end?: number): string {
+export function formatDuration(start: number, end?: number, none: string = ''): string {
   if (!end) {
-    return '';
+    return none;
   }
   const duration = (end - start) / 1000;
   if (duration < 1) {

@@ -11,9 +11,17 @@
     </a-button>
     <a-button type="primary"
               size="small"
+              title="仅将文本发送到远程剪切板"
               :disabled="!clipboardData"
-              @click="sendClipboardData">
+              @click="sendClipboardData(false)">
       发送
+    </a-button>
+    <a-button type="primary"
+              size="small"
+              title="将文本发送到远程剪切板并执行粘贴操作"
+              :disabled="!clipboardData"
+              @click="sendClipboardData(true)">
+      粘贴
     </a-button>
   </a-space>
 </template>
@@ -38,8 +46,8 @@
   const clipboardData = ref('');
 
   // 发送剪切板数据
-  const sendClipboardData = () => {
-    props.session.paste(clipboardData.value);
+  const sendClipboardData = (sendPaste: boolean) => {
+    props.session.paste(clipboardData.value, sendPaste);
     emits('close');
   };
 
