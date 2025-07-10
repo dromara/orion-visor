@@ -1,4 +1,4 @@
-FROM --platform=$BUILDPLATFORM openjdk:8-jdk-alpine
+FROM --platform=$TARGETPLATFORM openjdk:8-jdk-alpine
 
 USER root
 

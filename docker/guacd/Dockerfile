@@ -1,4 +1,4 @@
-FROM --platform=$BUILDPLATFORM guacamole/guacd:1.6.0
+FROM --platform=$TARGETPLATFORM guacamole/guacd:1.6.0
 
 USER root
 

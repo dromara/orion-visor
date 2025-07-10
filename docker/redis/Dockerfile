@@ -1,4 +1,4 @@
-FROM --platform=$BUILDPLATFORM redis:6.0.16-alpine
+FROM --platform=$TARGETPLATFORM redis:6.0.16-alpine
 
 WORKDIR /data
 
