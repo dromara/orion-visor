@@ -20,5 +20,9 @@ RUN \
 # 复制 jar 包
 COPY ./service/orion-visor-launch.jar /app/app.jar
 
+# 启动检测
+HEALTHCHECK --interval=15s --timeout=5s --retries=5 --start-period=10s \
+  CMD wget -T5 -qO- http://127.0.0.1:9200/orion-visor/api/server/bootstrap/health | grep ok || exit 1
+
 # 启动
 CMD ["java", "-jar", "/app/app.jar"]

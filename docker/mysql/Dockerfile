@@ -1,4 +1,4 @@
-FROM --platform=$TARGETPLATFORM mysql:8.0.28
+FROM --platform=$TARGETPLATFORM mysql:8.4.5
 
 # 系统时区
 ARG TZ=Asia/Shanghai
@@ -12,3 +12,7 @@ COPY ./mysql/my.cnf /etc/mysql/conf.d/my.cnf
 
 # 复制初始化脚本
 COPY ./mysql/sql/init-*.sql /docker-entrypoint-initdb.d/
+
+# 心跳检测
+HEALTHCHECK --interval=10s --timeout=3s --start-period=3s --retries=3 \
+  CMD mysqladmin ping -h localhost -u root --password=${MYSQL_ROOT_PASSWORD} || exit 1
