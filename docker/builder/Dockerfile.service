@@ -1,3 +1,4 @@
+#FROM --platform=$BUILDPLATFORM maven:3.9.10-eclipse-temurin-8-alpine AS builder
 FROM maven:3.9.10-eclipse-temurin-8-alpine AS builder
 
 # 设置阿里云镜像加速

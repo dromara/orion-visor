@@ -1,4 +1,4 @@
-FROM --platform=$BUILDPLATFORM nginx:alpine
+FROM --platform=$TARGETPLATFORM nginx:alpine
 
 # 系统时区
 ARG TZ=Asia/Shanghai
