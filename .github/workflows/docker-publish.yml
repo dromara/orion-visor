@@ -117,11 +117,15 @@ jobs:
             type=semver,pattern={{major}}           
 
       - name: 🛠️ Build and push Docker image for orion-visor-${{ matrix.service }}
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ./docker
           file: ./docker/${{ matrix.service }}/Dockerfile
           push: true
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          platforms: linux/amd64,linux/arm64
+          labels: ${{ steps.meta.outputs.labels }}
           tags: |
             ${{ env.DOCKERHUB_NAMESPACE }}/orion-visor-${{ matrix.service }}:${{ steps.meta.outputs.version }}
             ${{ env.DOCKERHUB_NAMESPACE }}/orion-visor-${{ matrix.service }}:latest
@@ -129,5 +133,3 @@ jobs:
             ${{ env.GITHUB_REGISTRY }}/${{ github.repository_owner }}/orion-visor-${{ matrix.service }}:latest
             ${{ env.ALIYUN_REGISTRY }}/${{ env.ALIYUN_NAMESPACE }}/orion-visor-${{ matrix.service }}:${{ steps.meta.outputs.version }}
             ${{ env.ALIYUN_REGISTRY }}/${{ env.ALIYUN_NAMESPACE }}/orion-visor-${{ matrix.service }}:latest
-          labels: ${{ steps.meta.outputs.labels }}
-          platforms: linux/amd64,linux/arm64

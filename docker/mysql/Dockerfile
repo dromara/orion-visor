@@ -1,4 +1,4 @@
-FROM --platform=$TARGETPLATFORM mysql:8.4.5
+FROM --platform=$TARGETPLATFORM mysql:8.0.39
 
 # 系统时区
 ARG TZ=Asia/Shanghai
