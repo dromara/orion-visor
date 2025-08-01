@@ -76,11 +76,11 @@ docker compose up -d
 
 ## 项目文档
 
-* [文档地址](https://visor.dromara.org/)
-* [安装文档](https://visor.dromara.org/quickstart/docker.html)
-* [更新日志](https://visor.dromara.org/update/change-log.html)
-* [操作手册](https://visor.dromara.org/operator/asset.html)
-* [常见问题](https://visor.dromara.org/support/faq.html)
+* [文档地址](https://visor.orionsec.cn/)
+* [安装文档](https://visor.orionsec.cn/quickstart/docker.html)
+* [更新日志](https://visor.orionsec.cn/update/change-log.html)
+* [操作手册](https://visor.orionsec.cn/operator/asset.html)
+* [常见问题](https://visor.orionsec.cn/support/faq.html)
 
 ## 技术栈
 
