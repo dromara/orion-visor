@@ -52,6 +52,7 @@
 * **文件管理**：支持远程主机 SFTP 大文件的批量上传、下载和在线编辑等操作。
 * **批量操作**：支持批量执行主机命令、多主机文件分发等功能。
 * **计划任务**：支持配置 cron 表达式，定时执行主机命令。
+* **系统监控**：(开发中)。
 * **安全可靠**：动态配置权限，记录用户操作日志，提供简单的审计功能。
 
 ## 演示环境
@@ -62,7 +63,6 @@
   这对我很重要! [github](https://github.com/dromara/orion-visor) [gitee](https://gitee.com/dromara/orion-visor) [gitcode](https://gitcode.com/dromara/orion-visor)
 * 🌈 如果本项目对你有帮助请帮忙推广一下 让更多的人知道此项目!
 * 🎭 演示环境部分功能不可用, 完整功能请本地部署!
-* 📨 **作者随缘寻java高级/资深内推 望京/5号/10号线 有坑位的联系我哦** 微信: `ljh1553488`
 
 ## 快速开始
 
@@ -85,10 +85,10 @@ docker compose up -d
 
 ## 技术栈
 
-* SpringBoot 2.7.17
+* SpringBoot 2.7+
 * Mysql 8.0+
 * Redis 6.0+
-* Vue3 3.5+
+* Vue 3.5+
 * Arco Design 2.56+
 
 ## 主要功能预览
