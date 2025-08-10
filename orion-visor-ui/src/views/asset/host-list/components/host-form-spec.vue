@@ -32,12 +32,22 @@
       <!-- CPU核心数 -->
       <a-descriptions-item label="CPU核心数">
         <a-input-number v-if="editing"
-                        v-model="formModel.cpuCore"
+                        v-model="formModel.cpuPhysicalCore"
                         class="input"
                         size="mini"
                         hide-button
                         allow-clear />
-        <span v-else class="text">{{ formModel.cpuCore }}</span>
+        <span v-else class="text">{{ formModel.cpuPhysicalCore }}</span>
+      </a-descriptions-item>
+      <!-- CPU线程数 -->
+      <a-descriptions-item label="CPU线程数">
+        <a-input-number v-if="editing"
+                        v-model="formModel.cpuLogicalCore"
+                        class="input"
+                        size="mini"
+                        hide-button
+                        allow-clear />
+        <span v-else class="text">{{ formModel.cpuLogicalCore }}</span>
       </a-descriptions-item>
       <!-- CPU速率 -->
       <a-descriptions-item label="CPU速率">
@@ -111,43 +121,19 @@
       </a-descriptions-item>
       <!-- 公网地址 -->
       <a-descriptions-item label="公网地址" :span="2">
-        <a-select v-if="editing"
-                  v-model="formModel.publicIpAddress"
-                  class="input"
-                  size="mini"
-                  multiple
-                  hide-button
-                  allow-create
-                  allow-clear />
-        <a-space v-else-if="formModel.publicIpAddress?.length"
-                 class="text"
-                 style="margin-bottom: -8px;"
-                 wrap>
-          <a-tag v-for="addr in formModel.publicIpAddress">
-            {{ addr }}
-          </a-tag>
-        </a-space>
-        <span v-else class="text" />
+        <a-input-tag v-model="formModel.publicIpAddresses"
+                     :readonly="!editing"
+                     class="input"
+                     size="mini"
+                     allow-clear />
       </a-descriptions-item>
       <!-- 私网地址 -->
       <a-descriptions-item label="私网地址" :span="2">
-        <a-select v-if="editing"
-                  v-model="formModel.privateIpAddress"
-                  class="input"
-                  size="mini"
-                  multiple
-                  hide-button
-                  allow-create
-                  allow-clear />
-        <a-space v-else-if="formModel.privateIpAddress?.length"
-                 class="text"
-                 style="margin-bottom: -8px;"
-                 wrap>
-          <a-tag v-for="addr in formModel.privateIpAddress">
-            {{ addr }}
-          </a-tag>
-        </a-space>
-        <span v-else class="text" />
+        <a-input-tag v-model="formModel.privateIpAddresses"
+                     :readonly="!editing"
+                     class="input"
+                     size="mini"
+                     allow-clear />
       </a-descriptions-item>
       <!-- 负责人 -->
       <a-descriptions-item label="负责人" :span="2">
@@ -221,15 +207,23 @@
       <a-button v-if="!editing"
                 type="primary"
                 long
-                @click="toggleEditing()">
+                @click="toggleEditing">
         编辑
       </a-button>
       <!-- 保存 -->
-      <a-button v-else
+      <a-button v-if="editing"
                 type="primary"
                 long
                 @click="saveSpec">
         保存
+      </a-button>
+      <!-- 取消 -->
+      <a-button v-if="editing"
+                class="extra-button"
+                type="primary"
+                long
+                @click="fetchHostSpec">
+        取消
       </a-button>
       <!-- 新增规格 -->
       <a-button v-if="editing"
@@ -266,12 +260,12 @@
   const { loading, setLoading } = useLoading();
   const [editing, toggleEditing] = useToggle();
 
-  const formRef = ref();
   const formModel = ref<HostSpecExtraModel>({} as HostSpecExtraModel);
 
   // 加载配置
   const fetchHostSpec = async () => {
     setLoading(true);
+    editing.value = false;
     try {
       const { data } = await getHostExtraItem<HostSpecExtraModel>({ hostId: props.hostId, item: 'SPEC' });
       formModel.value = data;
@@ -298,6 +292,13 @@
   const saveSpec = async () => {
     setLoading(true);
     try {
+      // 设置额外配置的 key
+      if (formModel.value.items?.length) {
+        formModel.value.items.forEach(s => {
+          s.key = s.label;
+        });
+      }
+      // 更新
       await updateHostSpec({
         hostId: props.hostId,
         extra: JSON.stringify(formModel.value)

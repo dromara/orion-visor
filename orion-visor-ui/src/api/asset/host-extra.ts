@@ -50,20 +50,23 @@ export interface HostLabelExtraSettingModel {
 export interface HostSpecExtraModel {
   sn: string;
   osName: string;
-  cpuCore: number;
+  cpuCount: number;
+  cpuPhysicalCore: number;
+  cpuLogicalCore: number;
   cpuFrequency: number;
   cpuModel: string;
   memorySize: number;
   diskSize: number;
   inBandwidth: number;
   outBandwidth: number;
-  publicIpAddress: Array<string>;
-  privateIpAddress: Array<string>;
+  publicIpAddresses: Array<string>;
+  privateIpAddresses: Array<string>;
   chargePerson: string;
   createdTime: number;
   expiredTime: number;
   items: Array<{
     label: string;
+    key?: string;
     value: string;
   }>;
 }

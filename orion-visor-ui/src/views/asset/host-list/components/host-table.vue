@@ -191,7 +191,7 @@
             <span v-if="record.spec" class="spec-value text-ellipsis">
               {{
                 [
-                  addSuffix(record.spec.cpuCore, 'C'),
+                  addSuffix(record.spec.cpuPhysicalCore, 'C'),
                   addSuffix(record.spec.memorySize, 'G'),
                   addSuffix(record.spec.diskSize, 'G')
                 ].filter(Boolean).join(' / ') || '-'
