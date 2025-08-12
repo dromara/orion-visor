@@ -35,6 +35,7 @@ const columns = [
     render: ({ record }) => {
       return dateFormat(new Date(record.createTime));
     },
+    default: true,
   }, {
     title: '修改时间',
     dataIndex: 'updateTime',
@@ -48,6 +49,7 @@ const columns = [
     title: '创建人',
     dataIndex: 'creator',
     slotName: 'creator',
+    default: true,
   }, {
     title: '修改人',
     dataIndex: 'updater',
@@ -58,6 +60,7 @@ const columns = [
     width: 130,
     align: 'center',
     fixed: 'right',
+    default: true,
   },
 ] as TableColumnData[];
 
