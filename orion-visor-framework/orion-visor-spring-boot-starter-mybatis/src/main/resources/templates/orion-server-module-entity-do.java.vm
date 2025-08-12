@@ -60,6 +60,7 @@ public class ${entity} {
 #end
 ## ----------  BEGIN 字段循环遍历  ----------
 #foreach($field in ${table.fields})
+#if("$!field.propertyName" != "id")
 
 #if(${field.keyFlag})
 #set($keyPropertyName=${field.propertyName})
@@ -87,6 +88,7 @@ public class ${entity} {
     @TableLogic
 #end
     private ${field.propertyType} ${field.propertyName};
+#end
 #end
 
 }

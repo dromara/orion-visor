@@ -1,4 +1,4 @@
-export const TABLE_NAME = '$table.name';
+export const TableName = '$table.name';
 
 #if($dictMap.entrySet().size() > 0)
 #foreach($enumEntity in $dictMap.entrySet())

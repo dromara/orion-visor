@@ -23,10 +23,12 @@
 package org.dromara.visor.framework.mybatis.core.generator.core;
 
 import cn.orionsec.kit.lang.able.Executable;
+import cn.orionsec.kit.lang.constant.Const;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.generator.AutoGenerator;
 import com.baomidou.mybatisplus.generator.config.*;
 import com.baomidou.mybatisplus.generator.config.builder.CustomFile;
+import com.baomidou.mybatisplus.generator.config.builder.Entity;
 import com.baomidou.mybatisplus.generator.config.querys.MySqlQuery;
 import com.baomidou.mybatisplus.generator.config.rules.DateType;
 import com.baomidou.mybatisplus.generator.config.rules.DbColumnType;
@@ -134,6 +136,10 @@ public class CodeGenerator implements Executable {
                 .template(templateConfig)
                 // 整合注入配置
                 .injection(injectionConfig);
+
+        // 提前解析父类 并且排除父类的 id 字段
+        Entity entity = strategyConfig.entity();
+        entity.getSuperEntityColumns().remove(Const.ID);
 
         // 执行
         ag.execute(engine);
