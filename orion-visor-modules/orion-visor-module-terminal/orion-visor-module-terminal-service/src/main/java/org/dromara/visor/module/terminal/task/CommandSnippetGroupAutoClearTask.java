@@ -56,7 +56,7 @@ public class CommandSnippetGroupAutoClearTask {
     public void clear() {
         log.info("CommandSnippetGroupAutoClearTask.clear start");
         // 获取锁并执行
-        LockerUtils.tryLock(LOCK_KEY, commandSnippetGroupService::clearUnusedGroup);
+        LockerUtils.tryLockExecute(LOCK_KEY, commandSnippetGroupService::clearUnusedGroup);
         log.info("CommandSnippetGroupAutoClearTask.clear finish");
     }
 

@@ -39,7 +39,7 @@ import org.dromara.visor.common.constant.Const;
 import org.dromara.visor.common.constant.ErrorMessage;
 import org.dromara.visor.common.constant.FileConst;
 import org.dromara.visor.common.enums.EndpointDefine;
-import org.dromara.visor.common.interfaces.FileClient;
+import org.dromara.visor.common.file.FileClient;
 import org.dromara.visor.common.utils.SqlUtils;
 import org.dromara.visor.common.utils.Valid;
 import org.dromara.visor.framework.biz.operator.log.core.utils.OperatorLogs;

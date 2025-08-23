@@ -56,7 +56,7 @@ public class TagAutoClearTask {
     public void clear() {
         log.info("TagAutoClearTask.clear start");
         // 获取锁并执行
-        LockerUtils.tryLock(LOCK_KEY, tagService::clearUnusedTag);
+        LockerUtils.tryLockExecute(LOCK_KEY, tagService::clearUnusedTag);
         log.info("TagAutoClearTask.clear finish");
     }
 

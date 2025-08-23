@@ -20,38 +20,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.dromara.visor.common.interfaces;
-
-import cn.orionsec.kit.lang.utils.codec.Base62s;
-import cn.orionsec.kit.lang.utils.crypto.symmetric.SymmetricCrypto;
+package org.dromara.visor.common.cipher;
 
 /**
- * aes 加密器
+ * rsa 解密器
  *
  * @author Jiahang Li
  * @version 1.0.0
- * @since 2023/7/8 0:20
+ * @since 2025/1/5 20:58
  */
-public interface AesEncryptor extends SymmetricCrypto {
+public interface RsaDecryptor {
 
     /**
-     * 加密后 base62 编码
+     * 解密
      *
-     * @param plain 明文
-     * @return 密文
+     * @param value value
+     * @return value
      */
-    default String encryptBase62(String plain) {
-        return new String(Base62s.encode(this.encrypt(plain)));
-    }
-
-    /**
-     * base62 解码后解密
-     *
-     * @param text 密文
-     * @return 明文
-     */
-    default String decryptBase62(String text) {
-        return new String(this.decrypt(Base62s.decode(text)));
-    }
+    String decrypt(String value);
 
 }

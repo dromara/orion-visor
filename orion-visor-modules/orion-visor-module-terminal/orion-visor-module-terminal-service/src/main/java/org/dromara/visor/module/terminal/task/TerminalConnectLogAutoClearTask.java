@@ -70,7 +70,7 @@ public class TerminalConnectLogAutoClearTask {
             return;
         }
         // 获取锁并执行
-        LockerUtils.tryLock(LOCK_KEY, this::doClear);
+        LockerUtils.tryLockExecute(LOCK_KEY, this::doClear);
         log.info("TerminalConnectLogAutoClearTask.clear finish");
     }
 

@@ -24,8 +24,8 @@ package org.dromara.visor.framework.encrypt.configuration;
 
 import org.dromara.visor.common.config.ConfigStore;
 import org.dromara.visor.common.constant.AutoConfigureOrderConst;
-import org.dromara.visor.common.interfaces.AesEncryptor;
-import org.dromara.visor.common.interfaces.RsaDecryptor;
+import org.dromara.visor.common.cipher.AesEncryptor;
+import org.dromara.visor.common.cipher.RsaDecryptor;
 import org.dromara.visor.common.utils.AesEncryptUtils;
 import org.dromara.visor.common.utils.RsaParamDecryptUtils;
 import org.dromara.visor.framework.encrypt.configuration.config.AesEncryptConfig;

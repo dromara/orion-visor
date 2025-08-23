@@ -23,7 +23,7 @@
 package org.dromara.visor.framework.storage.configuration;
 
 import org.dromara.visor.common.constant.AutoConfigureOrderConst;
-import org.dromara.visor.common.interfaces.FileClient;
+import org.dromara.visor.common.file.FileClient;
 import org.dromara.visor.framework.storage.configuration.config.LocalStorageConfig;
 import org.dromara.visor.framework.storage.configuration.config.LogsStorageConfig;
 import org.dromara.visor.framework.storage.core.client.local.LocalFileClient;

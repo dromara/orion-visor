@@ -25,7 +25,7 @@ package org.dromara.visor.module.infra.handler.upload.handler;
 import cn.orionsec.kit.lang.utils.io.Streams;
 import com.alibaba.fastjson.JSON;
 import org.dromara.visor.common.constant.Const;
-import org.dromara.visor.common.interfaces.FileClient;
+import org.dromara.visor.common.file.FileClient;
 import org.dromara.visor.framework.websocket.core.utils.WebSockets;
 import org.dromara.visor.module.infra.handler.upload.enums.FileUploadReceiverType;
 import org.dromara.visor.module.infra.handler.upload.model.FileUploadResponse;

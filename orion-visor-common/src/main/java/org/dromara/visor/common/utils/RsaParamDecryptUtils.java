@@ -23,7 +23,7 @@
 package org.dromara.visor.common.utils;
 
 import cn.orionsec.kit.lang.utils.Exceptions;
-import org.dromara.visor.common.interfaces.RsaDecryptor;
+import org.dromara.visor.common.cipher.RsaDecryptor;
 
 /**
  * rsa 参数解密工具类

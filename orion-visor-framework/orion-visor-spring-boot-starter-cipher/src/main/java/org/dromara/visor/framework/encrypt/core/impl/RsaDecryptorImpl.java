@@ -26,7 +26,7 @@ import cn.orionsec.kit.lang.utils.crypto.RSA;
 import org.dromara.visor.common.config.ConfigRef;
 import org.dromara.visor.common.config.ConfigStore;
 import org.dromara.visor.common.constant.ConfigKeys;
-import org.dromara.visor.common.interfaces.RsaDecryptor;
+import org.dromara.visor.common.cipher.RsaDecryptor;
 
 import java.security.interfaces.RSAPrivateKey;
 import java.util.Arrays;

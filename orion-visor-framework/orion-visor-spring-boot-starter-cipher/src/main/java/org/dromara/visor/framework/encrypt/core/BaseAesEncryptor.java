@@ -22,7 +22,7 @@
  */
 package org.dromara.visor.framework.encrypt.core;
 
-import org.dromara.visor.common.interfaces.AesEncryptor;
+import org.dromara.visor.common.cipher.AesEncryptor;
 
 /**
  * 数据加密器

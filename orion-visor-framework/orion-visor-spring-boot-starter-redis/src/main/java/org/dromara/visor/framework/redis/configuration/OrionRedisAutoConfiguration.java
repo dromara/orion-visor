@@ -24,7 +24,7 @@ package org.dromara.visor.framework.redis.configuration;
 
 import cn.orionsec.kit.lang.define.cache.key.CacheKeyDefine;
 import org.dromara.visor.common.constant.AutoConfigureOrderConst;
-import org.dromara.visor.common.interfaces.Locker;
+import org.dromara.visor.common.lock.Locker;
 import org.dromara.visor.common.utils.LockerUtils;
 import org.dromara.visor.framework.redis.configuration.config.RedissonConfig;
 import org.dromara.visor.framework.redis.core.lock.RedisLocker;

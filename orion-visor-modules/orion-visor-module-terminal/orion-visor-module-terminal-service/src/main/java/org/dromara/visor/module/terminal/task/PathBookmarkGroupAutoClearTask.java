@@ -56,7 +56,7 @@ public class PathBookmarkGroupAutoClearTask {
     public void clear() {
         log.info("PathBookmarkGroupAutoClearTask.clear start");
         // 获取锁并执行
-        LockerUtils.tryLock(LOCK_KEY, pathBookmarkGroupService::clearUnusedGroup);
+        LockerUtils.tryLockExecute(LOCK_KEY, pathBookmarkGroupService::clearUnusedGroup);
         log.info("PathBookmarkGroupAutoClearTask.clear finish");
     }
 

@@ -35,7 +35,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.dromara.visor.common.constant.Const;
 import org.dromara.visor.common.constant.ErrorMessage;
 import org.dromara.visor.common.enums.EndpointDefine;
-import org.dromara.visor.common.interfaces.FileClient;
+import org.dromara.visor.common.file.FileClient;
 import org.dromara.visor.common.security.LoginUser;
 import org.dromara.visor.common.utils.SqlUtils;
 import org.dromara.visor.framework.biz.operator.log.core.utils.OperatorLogs;
