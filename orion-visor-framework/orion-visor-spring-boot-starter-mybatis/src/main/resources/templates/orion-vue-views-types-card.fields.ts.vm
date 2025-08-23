@@ -42,11 +42,17 @@ const fieldConfig = {
       label: '创建人',
       dataIndex: 'creator',
       slotName: 'creator',
+      width: 148,
+      ellipsis: true,
+      tooltip: true,
       default: true,
     }, {
       label: '修改人',
       dataIndex: 'updater',
       slotName: 'updater',
+      width: 148,
+      ellipsis: true,
+      tooltip: true,
     }
   ] as CardField[]
 } as CardFieldConfig;

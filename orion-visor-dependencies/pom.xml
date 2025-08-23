@@ -118,7 +118,7 @@
             </dependency>
             <dependency>
                 <groupId>org.dromara.visor</groupId>
-                <artifactId>orion-visor-spring-boot-starter-encrypt</artifactId>
+                <artifactId>orion-visor-spring-boot-starter-cipher</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>

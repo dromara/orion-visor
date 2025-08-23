@@ -73,7 +73,6 @@ public class OperatorLogAspect {
             .maxPoolSize(1)
             .useLinkedBlockingQueue()
             .allowCoreThreadTimeout()
-            .useLinkedBlockingQueue()
             .build();
 
     private final OperatorLogFrameworkService operatorLogFrameworkService;
