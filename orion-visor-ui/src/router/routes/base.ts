@@ -25,7 +25,8 @@ export const LOGIN_ROUTE: RouteRecordRaw = {
   path: '/login',
   name: LOGIN_ROUTE_NAME,
   meta: {
-    locale: '登录'
+    locale: '登录',
+    noAffix: true,
   },
   component: () => import('@/views/authentication/login/index.vue'),
 };
@@ -38,6 +39,7 @@ export const REDIRECT_ROUTE: RouteRecordRaw = {
   meta: {
     locale: '重定向',
     hideInMenu: true,
+    noAffix: true
   },
   children: [
     {
@@ -59,8 +61,8 @@ export const UPDATE_PASSWORD_ROUTE: RouteRecordRaw = {
   name: UPDATE_PASSWORD_ROUTE_NAME,
   component: () => import('@/views/base/update-password/index.vue'),
   meta: {
-    noAffix: true,
-    locale: '修改密码'
+    locale: '修改密码',
+    noAffix: true
   },
 };
 
@@ -70,8 +72,8 @@ export const FORBIDDEN_ROUTE: RouteRecordRaw = {
   name: FORBIDDEN_ROUTER_NAME,
   component: () => import('@/views/base/status/forbidden/index.vue'),
   meta: {
-    noAffix: true,
-    locale: '403'
+    locale: '403',
+    noAffix: true
   },
 };
 
@@ -82,8 +84,8 @@ export const NOT_FOUND_ROUTE: RouteRecordRaw = {
   name: NOT_FOUND_ROUTER_NAME,
   component: () => import('@/views/base/status/not-found/index.vue'),
   meta: {
-    noAffix: true,
-    locale: '404'
+    locale: '404',
+    noAffix: true
   },
 };
 
