@@ -83,10 +83,11 @@ public interface HostService {
     /**
      * 通过 id 查询主机
      *
-     * @param id id
+     * @param id   id
+     * @param base base
      * @return row
      */
-    HostVO getHostById(Long id);
+    HostVO getHostById(Long id, Boolean base);
 
     /**
      * 查询主机

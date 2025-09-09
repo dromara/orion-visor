@@ -76,6 +76,12 @@ public enum HostTypeEnum {
         return null;
     }
 
+    /**
+     * 获取类型
+     *
+     * @param types types
+     * @return types
+     */
     public static List<String> split(String types) {
         if (types == null) {
             return new ArrayList<>();
@@ -85,6 +91,16 @@ public enum HostTypeEnum {
                 .filter(Objects::nonNull)
                 .map(Enum::name)
                 .collect(Collectors.toList());
+    }
+
+    /**
+     * 是否包含此类型
+     *
+     * @param types types
+     * @return contains
+     */
+    public boolean contains(String types) {
+        return split(types).contains(this.name());
     }
 
     @SuppressWarnings("unchecked")

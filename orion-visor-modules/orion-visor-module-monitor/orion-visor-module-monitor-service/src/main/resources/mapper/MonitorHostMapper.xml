@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.dromara.visor.module.monitor.dao.MonitorHostDAO">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="org.dromara.visor.module.monitor.entity.domain.MonitorHostDO">
+        <id column="id" property="id"/>
+        <result column="host_id" property="hostId"/>
+        <result column="policy_id" property="policyId"/>
+        <result column="agent_key" property="agentKey"/>
+        <result column="alarm_switch" property="alarmSwitch"/>
+        <result column="owner_user_id" property="ownerUserId"/>
+        <result column="owner_username" property="ownerUsername"/>
+        <result column="monitor_meta" property="monitorMeta"/>
+        <result column="monitor_config" property="monitorConfig"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="creator" property="creator"/>
+        <result column="updater" property="updater"/>
+        <result column="deleted" property="deleted"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, host_id, policy_id, agent_key, alarm_switch, owner_user_id, owner_username, monitor_meta, monitor_config, create_time, update_time, creator, updater, deleted
+    </sql>
+
+</mapper>

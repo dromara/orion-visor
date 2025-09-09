@@ -1,4 +1,11 @@
 {
+  "groups": [
+    {
+      "name": "orion.api.expose",
+      "type": "org.dromara.visor.framework.web.configuration.config.ExposeApiConfig",
+      "sourceType": "org.dromara.visor.framework.web.configuration.config.ExposeApiConfig"
+    }
+  ],
   "properties": [
     {
       "name": "orion.version",
@@ -25,6 +32,16 @@
       "name": "orion.api.cors",
       "type": "java.lang.Boolean",
       "description": "是否开启 cors 过滤器."
+    },
+    {
+      "name": "orion.api.expose.header",
+      "type": "java.lang.String",
+      "description": "对外服务请求头."
+    },
+    {
+      "name": "orion.api.expose.token",
+      "type": "java.lang.String",
+      "description": "对外服务请求值."
     }
   ]
 }

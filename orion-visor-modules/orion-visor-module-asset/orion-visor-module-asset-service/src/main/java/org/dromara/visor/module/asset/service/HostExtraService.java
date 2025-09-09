@@ -22,6 +22,7 @@
  */
 package org.dromara.visor.module.asset.service;
 
+import com.alibaba.fastjson.JSONObject;
 import org.dromara.visor.common.handler.data.model.GenericsDataModel;
 import org.dromara.visor.module.asset.entity.request.host.HostExtraUpdateRequest;
 import org.dromara.visor.module.asset.handler.host.extra.HostExtraItemEnum;
@@ -82,5 +83,14 @@ public interface HostExtraService {
      * @param newId    newId
      */
     void copyHostExtra(Long originId, Long newId);
+
+    /**
+     * 同步主机规格
+     *
+     * @param key    key
+     * @param taskId taskId
+     * @param spec   spec
+     */
+    void syncHostSpec(String key, String taskId, JSONObject spec);
 
 }

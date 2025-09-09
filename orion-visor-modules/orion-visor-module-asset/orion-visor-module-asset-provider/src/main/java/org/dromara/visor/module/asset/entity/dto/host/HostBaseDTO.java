@@ -67,7 +67,7 @@ public class HostBaseDTO implements Serializable {
     @Schema(description = "主机地址")
     private String address;
 
-    @Schema(description = "主机端口")
-    private Integer port;
+    @Schema(description = "agentKey")
+    private String agentKey;
 
 }

@@ -77,8 +77,8 @@
         </a-input-number>
         <span v-else class="text">{{ addSuffix(formModel.memorySize, 'G') }}</span>
       </a-descriptions-item>
-      <!-- 硬盘 -->
-      <a-descriptions-item label="硬盘">
+      <!-- 磁盘 -->
+      <a-descriptions-item label="磁盘">
         <a-input-number v-if="editing"
                         v-model="formModel.diskSize"
                         class="input"
@@ -138,11 +138,11 @@
       <!-- 负责人 -->
       <a-descriptions-item label="负责人" :span="2">
         <a-input v-if="editing"
-                 v-model="formModel.chargePerson"
+                 v-model="formModel.ownerPerson"
                  class="input"
                  size="mini"
                  allow-clear />
-        <span v-else class="text">{{ formModel.chargePerson }}</span>
+        <span v-else class="text">{{ formModel.ownerPerson }}</span>
       </a-descriptions-item>
       <!-- 创建时间 -->
       <a-descriptions-item label="创建时间" :span="2">
@@ -203,36 +203,38 @@
     </a-descriptions>
     <!-- 操作 -->
     <div class="actions">
-      <!-- 编辑 -->
-      <a-button v-if="!editing"
-                type="primary"
-                long
-                @click="toggleEditing">
-        编辑
-      </a-button>
-      <!-- 保存 -->
-      <a-button v-if="editing"
-                type="primary"
-                long
-                @click="saveSpec">
-        保存
-      </a-button>
-      <!-- 取消 -->
-      <a-button v-if="editing"
-                class="extra-button"
-                type="primary"
-                long
-                @click="fetchHostSpec">
-        取消
-      </a-button>
-      <!-- 新增规格 -->
-      <a-button v-if="editing"
-                class="extra-button"
-                type="primary"
-                long
-                @click="addSpec">
-        新增规格
-      </a-button>
+      <!-- 未编辑 -->
+      <template v-if="!editing">
+        <!-- 编辑 -->
+        <a-button type="primary"
+                  long
+                  @click="() => toggleEditing()">
+          编辑
+        </a-button>
+      </template>
+      <!-- 编辑中 -->
+      <template v-else>
+        <!-- 保存 -->
+        <a-button type="primary"
+                  long
+                  @click="saveSpec">
+          保存
+        </a-button>
+        <!-- 取消 -->
+        <a-button class="extra-button"
+                  type="primary"
+                  long
+                  @click="fetchHostSpec">
+          取消
+        </a-button>
+        <!-- 新增规格 -->
+        <a-button class="extra-button"
+                  type="primary"
+                  long
+                  @click="addSpec">
+          新增规格
+        </a-button>
+      </template>
     </div>
   </a-spin>
 </template>
@@ -245,8 +247,9 @@
 
 <script lang="ts" setup>
   import type { HostSpecExtraModel } from '@/api/asset/host-extra';
+  import type { HostQueryResponse } from '@/api/asset/host';
   import { onMounted, ref } from 'vue';
-  import { updateHostSpec } from '@/api/asset/host';
+  import { getHost, updateHostSpec } from '@/api/asset/host';
   import { getHostExtraItem } from '@/api/asset/host-extra';
   import { addSuffix, dateFormat } from '@/utils';
   import { useToggle } from '@vueuse/core';
@@ -260,6 +263,7 @@
   const { loading, setLoading } = useLoading();
   const [editing, toggleEditing] = useToggle();
 
+  const hostRef = ref<HostQueryResponse>({} as HostQueryResponse);
   const formModel = ref<HostSpecExtraModel>({} as HostSpecExtraModel);
 
   // 加载配置
@@ -267,6 +271,10 @@
     setLoading(true);
     editing.value = false;
     try {
+      // 查询主机信息
+      const { data: host } = await getHost(props.hostId, true);
+      hostRef.value = host;
+      // 查询规格信息
       const { data } = await getHostExtraItem<HostSpecExtraModel>({ hostId: props.hostId, item: 'SPEC' });
       formModel.value = data;
     } catch (e) {

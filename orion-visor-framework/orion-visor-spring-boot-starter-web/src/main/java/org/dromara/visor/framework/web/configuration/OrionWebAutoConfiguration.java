@@ -28,7 +28,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.dromara.visor.common.constant.AutoConfigureOrderConst;
 import org.dromara.visor.common.constant.FilterOrderConst;
 import org.dromara.visor.common.web.WebFilterCreator;
+import org.dromara.visor.framework.web.configuration.config.ExposeApiConfig;
 import org.dromara.visor.framework.web.core.aspect.DemoDisableApiAspect;
+import org.dromara.visor.framework.web.core.aspect.ExposeApiAspect;
 import org.dromara.visor.framework.web.core.filter.TraceIdFilter;
 import org.dromara.visor.framework.web.core.handler.GlobalExceptionHandler;
 import org.dromara.visor.framework.web.core.handler.WrapperResultHandler;
@@ -37,6 +39,7 @@ import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.http.HttpMessageConverters;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.MediaType;
@@ -50,6 +53,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.nio.charset.StandardCharsets;
@@ -67,7 +71,11 @@ import java.util.List;
  */
 @AutoConfiguration
 @AutoConfigureOrder(AutoConfigureOrderConst.FRAMEWORK_WEB)
+@EnableConfigurationProperties(ExposeApiConfig.class)
 public class OrionWebAutoConfiguration implements WebMvcConfigurer {
+
+    @Value("${orion.prefix}")
+    private String orionPrefix;
 
     @Value("${orion.api.prefix}")
     private String orionApiPrefix;
@@ -77,7 +85,14 @@ public class OrionWebAutoConfiguration implements WebMvcConfigurer {
         // 公共 api 前缀
         AntPathMatcher antPathMatcher = new AntPathMatcher(".");
         configurer.addPathPrefix(orionApiPrefix, clazz -> clazz.isAnnotationPresent(RestController.class)
-                && antPathMatcher.match("org.dromara.visor.**.controller.**", clazz.getPackage().getName()));
+                && antPathMatcher.match("org.dromara.visor.module.**.controller.**", clazz.getPackage().getName()));
+    }
+
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        // 公共模板前缀
+        registry.addResourceHandler(orionPrefix + "/template/**")
+                .addResourceLocations("classpath:/public/template/");
     }
 
     /**
@@ -169,6 +184,15 @@ public class OrionWebAutoConfiguration implements WebMvcConfigurer {
     @ConditionalOnProperty(value = "orion.demo", havingValue = "true")
     public DemoDisableApiAspect demoDisableApiAspect() {
         return new DemoDisableApiAspect();
+    }
+
+    /**
+     * @param config config
+     * @return 对外服务 api 切面
+     */
+    @Bean
+    public ExposeApiAspect exposeApiAspect(ExposeApiConfig config) {
+        return new ExposeApiAspect(config);
     }
 
 }

@@ -48,6 +48,8 @@ public enum ErrorCode implements CodeInfo {
 
     UNAUTHORIZED(401, "当前认证信息已失效, 请重新登录"),
 
+    EXPOSE_UNAUTHORIZED(401, "当前认证信息错误, 请检查后重试"),
+
     FORBIDDEN(403, "无操作权限"),
 
     NOT_FOUND(404, "未找到该资源"),

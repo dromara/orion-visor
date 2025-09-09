@@ -6,6 +6,7 @@
           <div class="tags-wrap">
             <tab-item v-for="(tag, index) in tagList"
                       :key="tag.fullPath"
+                      :closeable="tagList.length > 1"
                       :index="index"
                       :item-data="tag" />
           </div>
@@ -18,15 +19,12 @@
 
 <script lang="ts" setup>
   import type { RouteLocationNormalized } from 'vue-router';
-  import { useRouter } from 'vue-router';
   import { computed, onUnmounted, ref, watch } from 'vue';
   import { getRouteTag, getRouteTitle } from '@/router';
   import { listenerRouteChange, removeRouteListener } from '@/utils/route-listener';
   import { useAppStore, useTabBarStore } from '@/store';
   import qs from 'query-string';
   import TabItem from './tab-item.vue';
-
-  const router = useRouter();
 
   const appStore = useAppStore();
   const tabBarStore = useTabBarStore();
@@ -50,12 +48,23 @@
     if (route.meta.noAffix) {
       return;
     }
+
     const tag = tagList.value.find((tag) => tag.path === route.path);
     if (tag) {
-      // 找到 更新信息
-      tag.fullPath = route.fullPath;
-      tag.query = qs.parseUrl(route.fullPath).query;
-      tag.title = getRouteTitle(route);
+      if (route.meta.multipleTab) {
+        // 找到 支持多标签 通过全路径去找
+        const fullTag = tagList.value.find((tag) => tag.fullPath === route.fullPath);
+        if (fullTag) {
+          return;
+        }
+        // 没有通过全路径找到则打开新的页签
+        tabBarStore.addTab(getRouteTag(route), route.meta?.ignoreCache as unknown as boolean);
+      } else {
+        // 找到 更新信息
+        tag.fullPath = route.fullPath;
+        tag.query = qs.parseUrl(route.fullPath).query;
+        tag.title = getRouteTitle(route);
+      }
     } else {
       // 未找到 添加标签
       tabBarStore.addTab(getRouteTag(route), route.meta?.ignoreCache as unknown as boolean);
@@ -95,12 +104,6 @@
             align-items: center;
             margin-right: 6px;
             cursor: pointer;
-
-            &:first-child {
-              .arco-tag-close-btn {
-                display: none;
-              }
-            }
 
             .tag-link {
               user-select: none;

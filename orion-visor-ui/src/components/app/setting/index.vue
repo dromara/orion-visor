@@ -152,6 +152,15 @@
       defaultVal: appStore.hostIdentityView,
       options: cardOptions,
     },
+    {
+      name: '主机监控',
+      key: 'monitorHostView',
+      type: 'radio-group',
+      margin: '0 0 4px 0',
+      permission: ['monitor:monitor-host:query'],
+      defaultVal: appStore.monitorHostView,
+      options: cardOptions,
+    },
   ]);
 
   // 是否展示创建 PWA 应用

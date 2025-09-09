@@ -23,7 +23,7 @@
 package org.dromara.visor.common.validator.group;
 
 /**
- * 分页验证分组
+ * id 验证分组
  *
  * @author Jiahang Li
  * @version 1.0.0

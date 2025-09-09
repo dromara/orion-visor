@@ -32,7 +32,9 @@ import org.springframework.beans.factory.support.BeanNameGenerator;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.core.type.AnnotationMetadata;
+import org.springframework.stereotype.Component;
 
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -60,7 +62,7 @@ public class LaunchApplication {
      */
     public static class CustomBeanNameGenerator implements BeanNameGenerator {
 
-        private static final String BEAN_ANNOTATION_CLASS_NAME = "org.springframework.stereotype.Component";
+        private static final String BEAN_ANNOTATION_CLASS_NAME = Component.class.getName();
 
         @Override
         public String generateBeanName(BeanDefinition definition, BeanDefinitionRegistry registry) {
@@ -68,12 +70,12 @@ public class LaunchApplication {
             if (definition instanceof AnnotatedBeanDefinition) {
                 AnnotationMetadata metadata = ((AnnotatedBeanDefinition) definition).getMetadata();
                 // 处理自定义 bean 名称
-                return Optional.of(metadata)
+                return Objects.requireNonNull(Optional.of(metadata)
                         .map(s -> s.getAnnotationAttributes(BEAN_ANNOTATION_CLASS_NAME))
                         .map(s -> s.get(Const.VALUE))
                         .map(Object::toString)
                         .filter(Strings::isNotBlank)
-                        .orElseGet(definition::getBeanClassName);
+                        .orElseGet(definition::getBeanClassName));
             } else {
                 // 非注解形式默认使用默认名称
                 return BeanDefinitionReaderUtils.generateBeanName(definition, registry);

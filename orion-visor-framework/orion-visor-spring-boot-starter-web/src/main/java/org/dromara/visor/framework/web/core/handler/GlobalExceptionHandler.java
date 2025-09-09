@@ -149,6 +149,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(value = {
+            LockException.class,
             TimeoutException.class,
             java.util.concurrent.TimeoutException.class
     })

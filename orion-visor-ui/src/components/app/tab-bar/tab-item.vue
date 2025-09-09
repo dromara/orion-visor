@@ -3,12 +3,13 @@
               :popup-max-height="false"
               @select="actionSelect">
     <span class="arco-tag arco-tag-size-medium arco-tag-checked"
-          :class="{ 'link-activated': itemData?.path === route.path }"
+          :class="{ 'link-activated': itemData?.fullPath === route.fullPath }"
           @click="goto(itemData as TagProps)">
       <span class="tag-link">
         {{ itemData.title }}
       </span>
-      <span class="arco-icon-hover arco-tag-icon-hover arco-icon-hover-size-medium arco-tag-close-btn"
+      <span v-if="closeable"
+            class="arco-icon-hover arco-tag-icon-hover arco-icon-hover-size-medium arco-tag-close-btn"
             @click.stop="tagClose(itemData as TagProps, index)">
         <icon-close />
       </span>
@@ -67,21 +68,23 @@
   const props = defineProps<{
     index: number;
     itemData: TagProps;
+    closeable: boolean;
   }>();
 
   const route = useRoute();
   const router = useRouter();
   const tabBarStore = useTabBarStore();
 
-  const goto = (tag: TagProps) => {
-    router.push({ ...tag });
+  const goto = async (tag: TagProps) => {
+    await router.push({ ...tag });
   };
+
   const tagList = computed(() => {
     return tabBarStore.getTabList;
   });
 
   const disabledReload = computed(() => {
-    return props.itemData.path !== route.path;
+    return props.itemData.fullPath !== route.fullPath;
   });
 
   const disabledCurrent = computed(() => {
@@ -97,18 +100,19 @@
   });
 
   // 关闭 tag
-  const tagClose = (tag: TagProps, idx: number) => {
+  const tagClose = async (tag: TagProps, idx: number) => {
     tabBarStore.deleteTab(idx, tag);
-    if (props.itemData.path === route.path) {
+
+    if (props.itemData.fullPath === route.fullPath) {
       // 获取队列的前一个 tab
       const latest = tagList.value[idx - 1];
-      router.push({ name: latest.name });
+      await goto(latest);
     }
   };
 
   // 获取当前路由索引
   const findCurrentRouteIndex = () => {
-    return tagList.value.findIndex((el) => el.path === route.path);
+    return tagList.value.findIndex((el) => el.fullPath === route.fullPath);
   };
 
   // 选择操作
@@ -121,10 +125,10 @@
     } else if (value === Option.left) {
       // 关闭左侧
       const currentRouteIdx = findCurrentRouteIndex();
-      copyTagList.splice(1, props.index - 1);
+      copyTagList.splice(0, props.index - 1);
       tabBarStore.freshTabList(copyTagList);
       if (currentRouteIdx < index) {
-        await router.push({ name: itemData.name });
+        await goto(itemData);
       }
     } else if (value === Option.right) {
       // 关闭右侧
@@ -132,15 +136,15 @@
       copyTagList.splice(props.index + 1);
       tabBarStore.freshTabList(copyTagList);
       if (currentRouteIdx > index) {
-        await router.push({ name: itemData.name });
+        await goto(itemData);
       }
     } else if (value === Option.others) {
       // 关闭其他
       const filterList = tagList.value.filter((el, idx) => {
-        return idx === 0 || idx === props.index;
+        return idx === props.index;
       });
       tabBarStore.freshTabList(filterList);
-      await router.push({ name: itemData.name });
+      await goto(itemData);
     } else if (value === Option.reload) {
       // 重新加载
       tabBarStore.deleteCache(itemData);

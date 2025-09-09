@@ -66,11 +66,11 @@ public class HostCacheDTO implements LongCacheIdModel, Serializable {
     @Schema(description = "主机地址")
     private String address;
 
-    @Schema(description = "主机端口")
-    private Integer port;
-
     @Schema(description = "主机状态")
     private String status;
+
+    @Schema(description = "agentKey")
+    private String agentKey;
 
     @Schema(description = "主机描述")
     private String description;

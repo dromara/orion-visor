@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <groupId>org.dromara.visor</groupId>
+        <artifactId>orion-visor-framework</artifactId>
+        <version>${revision}</version>
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>orion-visor-spring-boot-starter-influxdb</artifactId>
+    <name>${project.artifactId}</name>
+    <packaging>jar</packaging>
+
+    <description>项目 influxdb 配置包</description>
+    <url>https://github.com/dromara/orion-visor</url>
+
+    <dependencies>
+        <!-- common -->
+        <dependency>
+            <groupId>org.dromara.visor</groupId>
+            <artifactId>orion-visor-common</artifactId>
+        </dependency>
+
+        <!-- influxdb -->
+        <dependency>
+            <groupId>com.influxdb</groupId>
+            <artifactId>influxdb-client-java</artifactId>
+        </dependency>
+
+        <!-- web -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+    </dependencies>
+
+</project>

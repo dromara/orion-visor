@@ -19,6 +19,8 @@ const columns = [
     minWidth: 238,
     ellipsis: true,
     tooltip: true,
+    #elseif(${field.propertyType} == 'Integer' || ${field.propertyType} == 'Long')
+    width: 120,
     #elseif(${field.propertyType} == 'Date')
     width: 180,
     render: ({ record }) => {

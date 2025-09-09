@@ -1,0 +1,112 @@
+import type { TableColumnData } from '@arco-design/web-vue';
+
+const columns = [
+  {
+    title: '主机ID',
+    dataIndex: 'hostId',
+    slotName: 'hostId',
+    width: 80,
+    align: 'left',
+    fixed: 'left',
+    default: true,
+  }, {
+    title: '主机信息',
+    dataIndex: 'hostInfo',
+    slotName: 'hostInfo',
+    width: 248,
+    align: 'left',
+    fixed: 'left',
+    default: true,
+  }, {
+    title: '设备状态',
+    dataIndex: 'agentOnlineStatus',
+    slotName: 'agentOnlineStatus',
+    align: 'center',
+    width: 120,
+    default: true,
+  }, {
+    title: 'CPU',
+    dataIndex: 'cpuUsage',
+    slotName: 'cpuUsage',
+    align: 'left',
+    width: 198,
+    default: true,
+  }, {
+    title: '内存',
+    dataIndex: 'memoryUsage',
+    slotName: 'memoryUsage',
+    align: 'left',
+    width: 198,
+    default: true,
+  }, {
+    title: '磁盘',
+    dataIndex: 'diskUsage',
+    slotName: 'diskUsage',
+    align: 'left',
+    width: 198,
+    default: true,
+  }, {
+    title: '网络',
+    dataIndex: 'network',
+    slotName: 'network',
+    align: 'left',
+    width: 148,
+    default: true,
+  }, {
+    title: '负载',
+    dataIndex: 'load',
+    slotName: 'load',
+    align: 'left',
+    width: 148,
+    default: true,
+  }, {
+    title: '标签',
+    dataIndex: 'tags',
+    slotName: 'tags',
+    align: 'left',
+    minWidth: 148,
+    default: false,
+  }, {
+    title: 'agentKey',
+    dataIndex: 'agentKey',
+    slotName: 'agentKey',
+    align: 'left',
+    width: 288,
+    default: false,
+  }, {
+    // TODO
+    //   title: '告警策略',
+    //   dataIndex: 'alarmPolicy',
+    //   slotName: 'alarmPolicy',
+    //   align: 'left',
+    //   width: 120,
+    //   default: true,
+    // }, {
+    title: '负责人',
+    dataIndex: 'ownerUsername',
+    slotName: 'ownerUsername',
+    align: 'left',
+    width: 108,
+    ellipsis: true,
+    tooltip: true,
+    default: true,
+  }, {
+    title: '探针版本',
+    dataIndex: 'agentVersion',
+    slotName: 'agentVersion',
+    align: 'left',
+    width: 118,
+    ellipsis: true,
+    tooltip: true,
+    default: true,
+  }, {
+    title: '操作',
+    slotName: 'handle',
+    width: 128,
+    align: 'center',
+    fixed: 'right',
+    default: true,
+  },
+] as TableColumnData[];
+
+export default columns;

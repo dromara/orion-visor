@@ -59,6 +59,7 @@ export const UPDATE_PASSWORD_ROUTE: RouteRecordRaw = {
   name: UPDATE_PASSWORD_ROUTE_NAME,
   component: () => import('@/views/base/update-password/index.vue'),
   meta: {
+    noAffix: true,
     locale: '修改密码'
   },
 };
@@ -69,6 +70,7 @@ export const FORBIDDEN_ROUTE: RouteRecordRaw = {
   name: FORBIDDEN_ROUTER_NAME,
   component: () => import('@/views/base/status/forbidden/index.vue'),
   meta: {
+    noAffix: true,
     locale: '403'
   },
 };
@@ -80,6 +82,7 @@ export const NOT_FOUND_ROUTE: RouteRecordRaw = {
   name: NOT_FOUND_ROUTER_NAME,
   component: () => import('@/views/base/status/not-found/index.vue'),
   meta: {
+    noAffix: true,
     locale: '404'
   },
 };

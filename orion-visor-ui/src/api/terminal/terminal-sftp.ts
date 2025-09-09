@@ -20,7 +20,7 @@ export function setSftpFileContent(token: string, content: string) {
   formData.append('token', token);
   formData.append('file', new File([content], Date.now() + '', { type: 'text/plain' }));
   return axios.post<boolean>('/terminal/terminal-sftp/set-content', formData, {
-    timeout: 60000,
+    timeout: 120000,
     headers: {
       'Content-Type': 'multipart/form-data'
     }

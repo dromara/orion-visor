@@ -35,6 +35,8 @@ public interface ExtraFieldConst extends FieldConst {
 
     String TRACE_ID = "traceId";
 
+    String TASK_ID = "taskId";
+
     String IDENTITY = "identity";
 
     String GROUP_NAME = "groupName";
@@ -68,5 +70,7 @@ public interface ExtraFieldConst extends FieldConst {
     String LOG_ID = "logId";
 
     String DARK = "dark";
+
+    String AGENT_KEY = "agentKey";
 
 }

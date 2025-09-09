@@ -31,6 +31,7 @@
         <druid.version>1.2.16</druid.version>
         <redisson.version>3.18.0</redisson.version>
         <transmittable.thread.local.version>2.14.2</transmittable.thread.local.version>
+        <influxdb.client.version>6.6.0</influxdb.client.version>
         <mockito.inline.version>4.11.0</mockito.inline.version>
         <jedis.mock.version>1.0.7</jedis.mock.version>
         <podam.version>7.2.11.RELEASE</podam.version>
@@ -54,8 +55,12 @@
                 <version>${orion.kit.version}</version>
                 <exclusions>
                     <exclusion>
-                        <artifactId>orion-log</artifactId>
                         <groupId>cn.orionsec.kit</groupId>
+                        <artifactId>orion-log</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>cn.orionsec.kit</groupId>
+                        <artifactId>orion-generator</artifactId>
                     </exclusion>
                 </exclusions>
             </dependency>
@@ -144,6 +149,11 @@
             <dependency>
                 <groupId>org.dromara.visor</groupId>
                 <artifactId>orion-visor-spring-boot-starter-test</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.dromara.visor</groupId>
+                <artifactId>orion-visor-spring-boot-starter-influxdb</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>
@@ -270,6 +280,13 @@
                 <groupId>com.alibaba</groupId>
                 <artifactId>transmittable-thread-local</artifactId>
                 <version>${transmittable.thread.local.version}</version>
+            </dependency>
+
+            <!-- influxdb -->
+            <dependency>
+                <groupId>com.influxdb</groupId>
+                <artifactId>influxdb-client-java</artifactId>
+                <version>${influxdb.client.version}</version>
             </dependency>
 
             <!-- test -->

@@ -23,10 +23,15 @@
 package org.dromara.visor.module.asset.service.impl;
 
 import cn.orionsec.kit.lang.utils.Strings;
+import cn.orionsec.kit.lang.utils.collect.Lists;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import org.dromara.visor.common.constant.Const;
+import org.dromara.visor.common.constant.ErrorMessage;
 import org.dromara.visor.common.handler.data.model.GenericsDataModel;
 import org.dromara.visor.common.utils.Valid;
 import org.dromara.visor.framework.security.core.utils.SecurityUtils;
+import org.dromara.visor.module.asset.dao.HostDAO;
 import org.dromara.visor.module.asset.entity.request.host.HostExtraUpdateRequest;
 import org.dromara.visor.module.asset.handler.host.extra.HostExtraItemEnum;
 import org.dromara.visor.module.asset.handler.host.extra.model.HostSpecExtraModel;
@@ -52,6 +57,9 @@ import java.util.stream.Collectors;
  */
 @Service
 public class HostExtraServiceImpl implements HostExtraService {
+
+    @Resource
+    private HostDAO hostDAO;
 
     @Resource
     private DataExtraApi dataExtraApi;
@@ -144,6 +152,44 @@ public class HostExtraServiceImpl implements HostExtraService {
                         .build())
                 .collect(Collectors.toList());
         dataExtraApi.addExtraItems(newItems, DataExtraTypeEnum.HOST);
+    }
+
+    @Override
+    public void syncHostSpec(String key, String taskId, JSONObject spec) {
+        try {
+            // 查询主机id
+            Long id = hostDAO.selectIdByAgentKey(key);
+            Valid.notNull(id, ErrorMessage.HOST_ABSENT);
+            // 设置已同步标识
+            spec.put(Const.SYNCED, true);
+            // 查询配置信息
+            String newSpec;
+            HostSpecExtraModel beforeSpec = this.getHostSpecMap(Lists.singleton(id)).get(id);
+            if (beforeSpec == null) {
+                // 新增
+                newSpec = spec.toString();
+            } else {
+                // 合并
+                JSONObject beforeSpecValue = JSON.parseObject(beforeSpec.serial());
+                spec.forEach((k, v) -> {
+                    if (v != null) {
+                        beforeSpecValue.put(k, v);
+                    }
+                });
+                newSpec = beforeSpecValue.toJSONString();
+            }
+            // 修改规格
+            DataExtraSetDTO update = new DataExtraSetDTO();
+            update.setUserId(Const.SYSTEM_USER_ID);
+            update.setRelId(id);
+            update.setItem(HostExtraItemEnum.SPEC.name());
+            update.setValue(newSpec);
+            dataExtraApi.setExtraItem(update, DataExtraTypeEnum.HOST);
+            // 回调成功
+        } catch (Exception e) {
+            // 回调失败
+            throw e;
+        }
     }
 
     /**

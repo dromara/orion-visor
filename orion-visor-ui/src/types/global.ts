@@ -83,3 +83,10 @@ export interface PieChartData {
 export interface BarSingleChartData {
   data: Record<string, number>;
 }
+
+export interface TimeChartSeries {
+  name: string;
+  color: string;
+  tags: Record<string, any>;
+  data: Array<[number, number]>;
+}

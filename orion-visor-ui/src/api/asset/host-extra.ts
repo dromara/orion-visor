@@ -61,7 +61,7 @@ export interface HostSpecExtraModel {
   outBandwidth: number;
   publicIpAddresses: Array<string>;
   privateIpAddresses: Array<string>;
-  chargePerson: string;
+  ownerPerson: string;
   createdTime: number;
   expiredTime: number;
   items: Array<{

@@ -64,4 +64,12 @@ public interface HostCacheKeyDefine {
             .timeout(8, TimeUnit.HOURS)
             .build();
 
+    CacheKeyDefine HOST_INSTALL_LOG = new CacheKeyBuilder()
+            .key("host:inst-log:{}")
+            .desc("最新的主机安装记录 ${hostId}")
+            .noPrefix()
+            .type(Long.class)
+            .struct(RedisCacheStruct.STRING)
+            .build();
+
 }

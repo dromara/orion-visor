@@ -32,6 +32,8 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.dromara.visor.framework.mybatis.core.domain.BaseDO;
 
+import java.util.Date;
+
 /**
  * 主机 实体对象
  *
@@ -77,6 +79,26 @@ public class HostDO extends BaseDO {
     @Schema(description = "主机状态")
     @TableField("status")
     private String status;
+
+    @Schema(description = "agentKey")
+    @TableField("agent_key")
+    private String agentKey;
+
+    @Schema(description = "探针版本")
+    @TableField("agent_version")
+    private String agentVersion;
+
+    @Schema(description = "探针安装状态")
+    @TableField("agent_install_status")
+    private Integer agentInstallStatus;
+
+    @Schema(description = "探针在线状态")
+    @TableField("agent_online_status")
+    private Integer agentOnlineStatus;
+
+    @Schema(description = "探针切换在线状态时间")
+    @TableField("agent_online_change_time")
+    private Date agentOnlineChangeTime;
 
     @Schema(description = "主机描述")
     @TableField("description")

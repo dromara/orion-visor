@@ -21,6 +21,7 @@
         <module>orion-visor-module-asset</module>
         <module>orion-visor-module-exec</module>
         <module>orion-visor-module-terminal</module>
+        <module>orion-visor-module-monitor</module>
     </modules>
 
 </project>

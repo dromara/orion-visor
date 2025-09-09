@@ -1,44 +1,67 @@
-import type { LineSeriesOption } from 'echarts';
+import type { BarSeriesOption, LineSeriesOption } from 'echarts';
+import type { LineChartData, Options } from '@/types/global';
+
+type TimeSeriesType = 'line' | 'bar';
 
 /**
- * 折线图系列定义
+ * 时序系列定义
  */
-export interface LineSeriesColor {
+export interface TimeSeriesColor {
   lineColor: string;
   itemBorderColor: string;
 }
 
 /**
- * 折线图系列常量
+ * 时间系列配置
  */
-export const LineSeriesColors: Record<string, LineSeriesColor> = {
+export interface TimeSeriesOption {
+  name: string;
+  type: TimeSeriesType;
+  area: boolean;
+  lineColor: string;
+  itemBorderColor: string;
+  data: any[];
+}
+
+/**
+ * 时序系列常量
+ */
+export const TimeSeriesColors: Record<string, TimeSeriesColor> = {
   BLUE: {
     lineColor: '#4263EB',
     itemBorderColor: '#DBE4FF',
-  },
-  CYAN: {
-    lineColor: '#1098AD',
-    itemBorderColor: '#C5F6FA',
   },
   GREEN: {
     lineColor: '#37B24D',
     itemBorderColor: '#D3F9D8',
   },
+  CYAN: {
+    lineColor: '#1098AD',
+    itemBorderColor: '#C5F6FA',
+  },
+  YELLOW: {
+    lineColor: '#F59F00',
+    itemBorderColor: '#FFF3BF',
+  },
   PURPLE: {
     lineColor: '#AE3EC9',
     itemBorderColor: '#F3D9FA',
-  },
-  ORANGE: {
-    lineColor: '#F76707',
-    itemBorderColor: '#FFF3BF',
   },
   VIOLET: {
     lineColor: '#7048E8',
     itemBorderColor: '#E5DBFF',
   },
-  YELLOW: {
-    lineColor: '#F59F00',
+  LIME: {
+    lineColor: '#74B816',
+    itemBorderColor: '#E9FAC8',
+  },
+  ORANGE: {
+    lineColor: '#F76707',
     itemBorderColor: '#FFF3BF',
+  },
+  INDIGO: {
+    lineColor: '#4263EB',
+    itemBorderColor: '#DBE4FF',
   },
   TEAL: {
     lineColor: '#0CA678',
@@ -51,38 +74,80 @@ export const LineSeriesColors: Record<string, LineSeriesColor> = {
 };
 
 /**
- * 生成折线图系列
+ * 生成时序系列
  */
-export const createLineSeries = (name: string,
-                                 lineColor: string,
-                                 itemBorderColor: string,
-                                 data: number[]): LineSeriesOption => {
+export const generateTimeSeriesArr = (options: Array<Options>,
+                                      chartData: LineChartData,
+                                      type: TimeSeriesType = 'line'): Array<LineSeriesOption | BarSeriesOption> => {
+  const arr = [];
+  const optionLen = options.length;
+  for (let i = 0; i < optionLen; i++) {
+    // 选项
+    const option = options[i];
+    // 获取颜色
+    let color;
+    if (option.seriesColor) {
+      color = TimeSeriesColors[option.seriesColor as keyof typeof TimeSeriesColors];
+    }
+    if (!color) {
+      color = Object.values(TimeSeriesColors)[i % Object.keys(TimeSeriesColors).length];
+    }
+    // 获取数据
+    const data = chartData.data[option.value as keyof typeof chartData.data] || [];
+    // 生成系列
+    arr.push(createTimeSeries({
+      name: option.label,
+      area: true,
+      type,
+      lineColor: color.lineColor,
+      itemBorderColor: color.itemBorderColor,
+      data,
+    }));
+  }
+  return arr as Array<LineSeriesOption>;
+};
+
+/**
+ * 创建时序系列
+ */
+export const createTimeSeries = (option: Partial<TimeSeriesOption>): LineSeriesOption | BarSeriesOption => {
+  // 设置默认值
+  if (option.area === undefined) {
+    option.area = true;
+  }
+  if (option.lineColor === undefined) {
+    option.lineColor = TimeSeriesColors.BLUE.lineColor;
+  }
+  if (option.itemBorderColor === undefined) {
+    option.itemBorderColor = TimeSeriesColors.BLUE.itemBorderColor;
+  }
+  // 配置项
   return {
-    name,
-    data,
-    type: 'line',
+    name: option.name,
+    data: option.data || [],
+    type: option.type || 'line',
     smooth: true,
     symbol: 'circle',
     symbolSize: 10,
     itemStyle: {
-      color: lineColor,
+      color: option.lineColor,
     },
     emphasis: {
       focus: 'series',
       itemStyle: {
-        color: lineColor,
+        color: option.lineColor,
         borderWidth: 2,
-        borderColor: itemBorderColor,
+        borderColor: option.itemBorderColor,
       },
     },
     lineStyle: {
       width: 2,
-      color: lineColor,
+      color: option.lineColor,
     },
-    showSymbol: data.length === 1,
-    areaStyle: {
+    showSymbol: option.data?.length === 1,
+    areaStyle: option.area ? {
       opacity: 0.1,
-      color: lineColor,
-    },
+      color: option.lineColor,
+    } : undefined,
   };
 };

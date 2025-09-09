@@ -50,6 +50,12 @@ public class HostOperatorType extends InitializingOperatorTypes {
 
     public static final String UPDATE_SPEC = "host:update-spec";
 
+    public static final String INSTALL_AGENT = "host:install-agent";
+
+    public static final String UPDATE_AGENT_INSTALL_STATUS = "host:update-install-status";
+
+    public static final String UPLOAD_AGENT_RELEASE = "host:upload-agent-release";
+
     @Override
     public OperatorType[] types() {
         return new OperatorType[]{
@@ -59,6 +65,9 @@ public class HostOperatorType extends InitializingOperatorTypes {
                 new OperatorType(M, UPDATE_STATUS, "修改主机状态 <sb>${name}</sb> - <sb>${status}</sb>"),
                 new OperatorType(M, UPDATE_CONFIG, "修改主机配置 <sb>${name}</sb> - <sb>${type}</sb>"),
                 new OperatorType(M, UPDATE_SPEC, "修改主机规格信息 <sb>${name}</sb>"),
+                new OperatorType(L, INSTALL_AGENT, "安装主机探针"),
+                new OperatorType(L, UPDATE_AGENT_INSTALL_STATUS, "修改探针安装状态为 <sb>${status}</sb>"),
+                new OperatorType(H, UPLOAD_AGENT_RELEASE, "上传探针发布包 <sb>${name}</sb> <sb>${signShort}</sb>"),
         };
     }
 

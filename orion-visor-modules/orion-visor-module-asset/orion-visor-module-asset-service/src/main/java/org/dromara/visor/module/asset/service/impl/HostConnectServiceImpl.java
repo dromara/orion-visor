@@ -476,6 +476,7 @@ public class HostConnectServiceImpl implements HostConnectService {
         config.setHostName(host.getName());
         config.setHostCode(host.getCode());
         config.setHostAddress(host.getAddress());
+        config.setAgentKey(host.getAgentKey());
     }
 
 }

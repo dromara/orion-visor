@@ -166,6 +166,16 @@ public class DictTemplate extends Template {
     }
 
     /**
+     * 添加 loading
+     *
+     * @param loading loading
+     * @return this
+     */
+    public DictTemplate loading(Object... loading) {
+        return this.extra(Const.LOADING, loading);
+    }
+
+    /**
      * 添加额外值
      *
      * @param key    key

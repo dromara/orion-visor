@@ -1,0 +1,37 @@
+{
+  "groups": [
+    {
+      "name": "spring.influxdb",
+      "type": "org.dromara.visor.framework.influxdb.configuration.config.InfluxdbConfig",
+      "sourceType": "org.dromara.visor.framework.influxdb.configuration.config.InfluxdbConfig"
+    }
+  ],
+  "properties": [
+    {
+      "name": "spring.influxdb.enabled",
+      "type": "java.lang.Boolean",
+      "description": "是否启用 influxdb.",
+      "defaultValue": "false"
+    },
+    {
+      "name": "spring.influxdb.url",
+      "type": "java.lang.String",
+      "description": "influxdb 地址."
+    },
+    {
+      "name": "spring.influxdb.org",
+      "type": "java.lang.String",
+      "description": "influxdb org."
+    },
+    {
+      "name": "spring.influxdb.bucket",
+      "type": "java.lang.String",
+      "description": "influxdb bucket."
+    },
+    {
+      "name": "spring.influxdb.token",
+      "type": "java.lang.String",
+      "description": "influxdb token."
+    }
+  ]
+}

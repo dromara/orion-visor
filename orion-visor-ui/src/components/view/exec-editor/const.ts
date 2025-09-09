@@ -50,6 +50,9 @@ export const builtinParams: Array<TemplateParam> = [
     name: 'hostUsername',
     desc: '执行主机用户名'
   }, {
+    name: 'agentKey',
+    desc: 'agentKey'
+  }, {
     name: 'osType',
     desc: '执行主机系统类型'
   }, {

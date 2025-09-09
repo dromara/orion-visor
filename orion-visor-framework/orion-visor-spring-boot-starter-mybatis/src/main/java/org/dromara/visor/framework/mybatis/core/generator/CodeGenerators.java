@@ -54,12 +54,13 @@ public class CodeGenerators {
         // 作者
         String author = Const.ORION_AUTHOR;
         // 模块
-        String module = "infra";
+        String module = "asset";
         // 生成的表
         Table[] tables = {
                 // Template.create("dict_key", "字典配置项", "dict")
                 //         .enableProviderApi()
                 //         .disableUnitTest()
+                //         .enableDeleteUseBatch()
                 //         .cache("dict:keys", "字典配置项")
                 //         .expire(8, TimeUnit.HOURS)
                 //         .vue("system", "dict-key")
@@ -73,23 +74,28 @@ public class CodeGenerators {
                 //         .color("blue", "gray", "red", "green", "white")
                 //         .valueUseFields()
                 //         .build(),
-                // Template.create("exec_template_host", "执行模板主机", "exec")
-                //         .enableProviderApi()
-                //         .cache("sl", "22")
-                //         .vue("exec", "exec-template-host")
-                //         .build(),
-                Template.create("system_message", "系统消息", "message")
+
+                Template.create("host_agent_log", "主机探针日志", "agent")
                         .disableUnitTest()
-                        .enableProviderApi()
-                        .vue("system", "message")
-                        .dict("messageType", "type", "messageType")
-                        .comment("消息类型")
-                        .fields("EXEC_FAILED", "UPLOAD_FAILED")
-                        .labels("执行失败", "上传失败")
-                        .extra("tagLabel", "执行失败", "上传失败")
-                        .extra("tagVisible", true, true)
-                        .extra("tagColor", "red", "red")
+                        .vue("monitor", "monitor-host")
+                        .disableRowSelection()
+                        .enableCardView()
+                        .enableDrawerForm()
+
+                        .dict("agentLogType", "type")
+                        .comment("探针日志类型")
+                        .fields("OFFLINE", "ONLINE", "INSTALL", "START", "STOP")
+                        .labels("下线", "上线", "安装", "启动", "停止")
                         .valueUseFields()
+
+                        .dict("agentLogStatus", "status")
+                        .comment("探针日志状态")
+                        .fields("WAIT", "RUNNING", "SUCCESS", "FAILED")
+                        .labels("等待中", "运行中", "成功", "失败")
+                        .color("green", "green", "arcoblue", "red")
+                        .loading(true, true, false, false)
+                        .valueUseFields()
+
                         .build(),
         };
         // jdbc 配置 - 使用配置文件
@@ -98,7 +104,6 @@ public class CodeGenerators {
         String url = resolveConfigValue(yaml.getValue("spring.datasource.druid.url"));
         String username = resolveConfigValue(yaml.getValue("spring.datasource.druid.username"));
         String password = resolveConfigValue(yaml.getValue("spring.datasource.druid.password"));
-
         // 执行
         runGenerator(outputDir, author,
                 tables, module,

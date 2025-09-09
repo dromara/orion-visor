@@ -26,7 +26,7 @@
 
 <script lang="ts" setup>
   import type { WorkplaceStatisticsData } from '../types/const';
-  import { createLineSeries, LineSeriesColors } from '@/types/chart';
+  import { createTimeSeries } from '@/types/chart';
   import { useRouter } from 'vue-router';
   import useChartOption from '@/hooks/chart-option';
 
@@ -91,7 +91,10 @@
         trigger: 'axis',
       },
       series: [
-        createLineSeries('操作数量', LineSeriesColors.BLUE.lineColor, LineSeriesColors.BLUE.itemBorderColor, props.data.infra?.operatorChart.data || []),
+        createTimeSeries({
+          name: '操作数量',
+          data: props.data.infra?.operatorChart.data || []
+        }),
       ],
     };
   });

@@ -45,6 +45,16 @@ public class SystemUserApiImpl implements SystemUserApi {
     private SystemUserDAO systemUserDAO;
 
     @Override
+    public Long getIdByUsername(String username) {
+        return systemUserDAO.of()
+                .createWrapper()
+                .select(SystemUserDO::getId)
+                .eq(SystemUserDO::getUsername, username)
+                .then()
+                .getOne(SystemUserDO::getId);
+    }
+
+    @Override
     public String getUsernameById(Long id) {
         return systemUserDAO.of()
                 .createWrapper()

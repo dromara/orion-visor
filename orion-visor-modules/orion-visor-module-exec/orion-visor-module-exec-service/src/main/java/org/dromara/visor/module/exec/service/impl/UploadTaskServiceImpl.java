@@ -372,10 +372,9 @@ public class UploadTaskServiceImpl implements UploadTaskService {
         // 检查主机数量
         Valid.eq(hosts.size(), hostIdList.size(), ErrorMessage.HOST_ABSENT);
         // 检查主机状态
-        boolean allEnabled = hosts.stream()
-                .map(HostDTO::getStatus)
-                .allMatch(s -> HostStatusEnum.ENABLED.name().equals(s));
-        Valid.isTrue(allEnabled, ErrorMessage.HOST_NOT_ENABLED);
+        for (HostDTO host : hosts) {
+            Valid.eq(HostStatusEnum.ENABLED.name(), host.getStatus(), ErrorMessage.HOST_NOT_ENABLED, host.getName());
+        }
         return hosts;
     }
 

@@ -22,7 +22,9 @@
  */
 package org.dromara.visor.module.asset.api;
 
+import cn.orionsec.kit.lang.define.wrapper.DataGrid;
 import org.dromara.visor.module.asset.entity.dto.host.HostDTO;
+import org.dromara.visor.module.asset.entity.dto.host.HostQueryDTO;
 
 import java.util.List;
 
@@ -50,5 +52,38 @@ public interface HostApi {
      * @return rows
      */
     List<HostDTO> selectByIdList(List<Long> idList);
+
+    /**
+     * 通过 id 查询 agentKey
+     *
+     * @param id id
+     * @return agentKey
+     */
+    String selectAgentKeyById(Long id);
+
+    /**
+     * 分页查询主机信息
+     *
+     * @param query query
+     * @return rows
+     */
+    DataGrid<HostDTO> getHostPage(HostQueryDTO query);
+
+
+    /**
+     * 通过 agentKey 查询
+     *
+     * @param agentKey agentKey
+     * @return row
+     */
+    HostDTO selectByAgentKey(String agentKey);
+
+    /**
+     * 通过 agentKey 查询
+     *
+     * @param agentKeys agentKeys
+     * @return row
+     */
+    List<HostDTO> selectByAgentKeys(List<String> agentKeys);
 
 }

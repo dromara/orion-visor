@@ -46,6 +46,7 @@ public class AuthenticationEntryPointHandler implements AuthenticationEntryPoint
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException e) throws IOException {
+        log.warn("AuthenticationEntryPoint-commence-401 {}", request.getRequestURI());
         log.debug("AuthenticationEntryPoint-commence-unauthorized {}", request.getRequestURI(), e);
         Servlets.writeHttpWrapper(response, ErrorCode.UNAUTHORIZED.getWrapper());
     }

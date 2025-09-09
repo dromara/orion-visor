@@ -39,21 +39,23 @@ public enum HostOsTypeEnum {
     /**
      * linux
      */
-    LINUX(".sh"),
+    LINUX(".sh", ""),
 
     /**
      * windows
      */
-    WINDOWS(".cmd"),
+    WINDOWS(".cmd", ".exe"),
 
     /**
      * darwin
      */
-    DARWIN(".sh"),
+    DARWIN(".sh", ""),
 
     ;
 
     private final String scriptSuffix;
+
+    private final String binarySuffix;
 
     public boolean is(String type) {
         if (type == null) {

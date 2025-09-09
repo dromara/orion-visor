@@ -42,6 +42,11 @@ import java.util.List;
 public class HostSpecExtraModel implements GenericsDataModel {
 
     /**
+     * 是否已同步
+     */
+    private Boolean synced;
+
+    /**
      * sn
      */
     private String sn;
@@ -109,7 +114,7 @@ public class HostSpecExtraModel implements GenericsDataModel {
     /**
      * 负责人
      */
-    private String chargePerson;
+    private String ownerPerson;
 
     /**
      * 创建时间

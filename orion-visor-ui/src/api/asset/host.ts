@@ -69,6 +69,11 @@ export interface HostQueryBaseResponse {
   code: string;
   address: string;
   status: string;
+  agentKey: string;
+  agentVersion: string;
+  agentInstallStatus: number;
+  agentOnlineStatus: number;
+  agentOnlineChangeTime: number;
   description: string;
   createTime: number;
   updateTime: number;
@@ -143,8 +148,8 @@ export function updateHostSpec(request: Partial<HostExtraUpdateRequest>) {
 /**
  * 查询主机
  */
-export function getHost(id: number) {
-  return axios.get<HostQueryResponse>('/asset/host/get', { params: { id } });
+export function getHost(id: number, base = false) {
+  return axios.get<HostQueryResponse>('/asset/host/get', { params: { id, base } });
 }
 
 /**

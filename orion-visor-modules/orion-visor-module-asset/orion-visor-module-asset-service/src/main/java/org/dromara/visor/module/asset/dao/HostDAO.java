@@ -24,8 +24,10 @@ package org.dromara.visor.module.asset.dao;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.dromara.visor.framework.mybatis.core.mapper.IMapper;
+import org.dromara.visor.framework.mybatis.core.query.Conditions;
 import org.dromara.visor.module.asset.entity.domain.HostDO;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -55,6 +57,49 @@ public interface HostDAO extends IMapper<HostDO> {
                 .like(HostDO::getTypes, type)
                 .then()
                 .list(HostDO::getId);
+    }
+
+    /**
+     * 通过 agentKey 查询 id
+     *
+     * @param agentKey agentKey
+     * @return id
+     */
+    default Long selectIdByAgentKey(String agentKey) {
+        return this.of()
+                .createWrapper()
+                .select(HostDO::getId)
+                .eq(HostDO::getAgentKey, agentKey)
+                .then()
+                .getOne(HostDO::getId);
+    }
+
+    /**
+     * 通过 agentKey 查询 id
+     *
+     * @param agentKeys agentKeys
+     * @return id
+     */
+    default List<HostDO> selectIdByAgentKeys(List<String> agentKeys) {
+        return this.of()
+                .createWrapper()
+                .select(HostDO::getId, HostDO::getAgentKey)
+                .in(HostDO::getAgentKey, agentKeys)
+                .then()
+                .list();
+    }
+
+    /**
+     * 更新探针信息
+     *
+     * @param keys   agentKeyList
+     * @param update update
+     * @return effect
+     */
+    default int updateByAgentKeys(List<String> keys, HostDO update) {
+        update.setUpdateTime(new Date());
+        // 更新
+        return this.update(update, Conditions.in(HostDO::getAgentKey, keys));
     }
 
 }

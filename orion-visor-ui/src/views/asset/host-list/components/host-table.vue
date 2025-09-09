@@ -233,7 +233,7 @@
                  :wrap="true">
           <template v-for="groupId in record.groupIdList"
                     :key="groupId">
-            <a-tag>{{ hostGroupList.find(s => s.key === groupId)?.title || groupId }}</a-tag>
+            <a-tag>{{ hostGroupList.find((s: any) => s.key === groupId)?.title || groupId }}</a-tag>
           </template>
         </a-space>
       </template>
@@ -288,18 +288,6 @@
                     @click="emits('openUpdate', record)">
             修改
           </a-button>
-          <!-- 删除 -->
-          <a-popconfirm content="确认删除这条记录吗?"
-                        position="left"
-                        type="warning"
-                        @ok="deleteRow(record)">
-            <a-button v-permission="['asset:host:delete']"
-                      type="text"
-                      size="mini"
-                      status="danger">
-              删除
-            </a-button>
-          </a-popconfirm>
           <!-- 更多 -->
           <a-dropdown trigger="hover" :popup-max-height="false">
             <a-button type="text" size="mini">
@@ -313,6 +301,11 @@
                       :class="[toggleDictValue(hostStatusKey, record.status, 'status')]">
                   {{ toggleDictValue(hostStatusKey, record.status, 'label') }}
                 </span>
+              </a-doption>
+              <!-- 删除 -->
+              <a-doption v-permission="['asset:host:delete']"
+                         @click="deleteRow(record)">
+                <span class="more-doption error">删除</span>
               </a-doption>
               <!-- 复制 -->
               <a-doption v-permission="['asset:host:create']"
@@ -413,17 +406,25 @@
 
   // 删除当前行
   const deleteRow = async (record: HostQueryResponse) => {
-    try {
-      setLoading(true);
-      // 调用删除接口
-      await deleteHost(record.id);
-      Message.success('删除成功');
-      // 重新加载
-      reload();
-    } catch (e) {
-    } finally {
-      setLoading(false);
-    }
+    Modal.confirm({
+      title: '删除前确认!',
+      titleAlign: 'start',
+      content: '确定要删除这条记录吗?',
+      okText: '删除',
+      onOk: async () => {
+        try {
+          setLoading(true);
+          // 调用删除接口
+          await deleteHost(record.id);
+          Message.success('删除成功');
+          // 重新加载
+          reload();
+        } catch (e) {
+        } finally {
+          setLoading(false);
+        }
+      }
+    });
   };
 
   // 删除选中行

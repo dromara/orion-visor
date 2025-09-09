@@ -84,13 +84,11 @@ public class PrettyLogPrinterInterceptor extends AbstractLogPrinterInterceptor {
         if (request != null) {
             // remoteAddr
             requestLog.append("\tremoteAddr: ").append(IpUtils.getRemoteAddr(request)).append('\n');
-            // header
-            Servlets.getHeaderMap(request).forEach((hk, hv) -> {
-                if (headerFilter.test(hk.toLowerCase())) {
-                    requestLog.append('\t')
-                            .append(hk).append(": ")
-                            .append(hv).append('\n');
-                }
+            // headers
+            this.getHeaderMap(request).forEach((hk, hv) -> {
+                requestLog.append('\t')
+                        .append(hk).append(": ")
+                        .append(hv).append('\n');
             });
         }
         Method method = invocation.getMethod();

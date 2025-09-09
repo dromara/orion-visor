@@ -408,6 +408,8 @@ public abstract class BaseExecCommandHandler implements IExecCommandHandler {
         params.put("hostAddress", connectConfig.getHostAddress());
         params.put("hostPort", connectConfig.getHostPort());
         params.put("hostUsername", connectConfig.getUsername());
+        // TODO 文档
+        params.put("agentKey", connectConfig.getAgentKey());
         params.put("hostUuid", uuid);
         params.put("hostUuidShort", uuid.replace("-", Strings.EMPTY));
         params.put("osType", connectConfig.getOsType());
