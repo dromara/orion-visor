@@ -46,6 +46,7 @@ declare -A images=(
   ["./service/Dockerfile"]="orion-visor-service"
   ["./mysql/Dockerfile"]="orion-visor-mysql"
   ["./redis/Dockerfile"]="orion-visor-redis"
+  ["./influxdb/Dockerfile"]="orion-visor-influxdb"
   ["./adminer/Dockerfile"]="orion-visor-adminer"
   ["./guacd/Dockerfile"]="orion-visor-guacd"
 )
@@ -65,6 +66,30 @@ function prepare_app_jar() {
     fi
   else
     echo "$target_file 已存在, 无需复制."
+  fi
+}
+
+# 准备 instance-agent
+function prepare_instance_agent() {
+  local target_file="./service/instance-agent-release.tar.gz"
+  if [ ! -f "$target_file" ]; then
+    echo "警告: $target_file 不存在, 正在尝试从 Github Release 下载..."
+    # 尝试从 GitHub Release 下载
+    if curl -L --fail \
+         --connect-timeout 30 --max-time 30 \
+         https://github.com/lijiahangmax/orion-visor-agent/releases/latest/download/instance-agent-release.tar.gz \
+         -o "$target_file"; then
+      echo "已成功下载到 $target_file"
+    fi
+
+    # 如果下载失败, 提示用户手动下载
+    echo "错误: 无法从 Release 获取 instance-agent-release.tar.gz"
+    echo "请手动从以下地址下载, 并放置到 $target_file"
+    echo "   1) https://github.com/lijiahangmax/orion-visor-agent/raw/main/instance-agent-release.tar.gz"
+    echo "   2) https://gitee.com/lijiahangmax/orion-visor-agent/raw/main/instance-agent-release.tar.gz"
+    exit 1
+  else
+    echo "$target_file 已存在, 无需下载."
   fi
 }
 
@@ -185,6 +210,7 @@ fi
 # 检查资源
 echo "正在检查并准备必要的构建资源..."
 prepare_app_jar
+prepare_instance_agent
 prepare_dist_directory
 prepare_sql_directory
 echo "所有前置资源已准备完毕"

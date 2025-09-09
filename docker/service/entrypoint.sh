@@ -1,6 +1,6 @@
 #!/bin/sh
 
-AGENT_RELEASE_DIR="/root/orion/visor/instant-agent-release"
+AGENT_RELEASE_DIR="/root/orion/orion-visor/instant-agent-release"
 DEFAULT_AGENT_DIR="/app/instant-agent-release"
 
 # 确保父目录存在

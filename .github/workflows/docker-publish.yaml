@@ -41,6 +41,10 @@ jobs:
           pnpm install
           pnpm build
 
+      - name: 📦️ Download instant-agent
+        working-directory: ./docker/service
+        run: wget https://github.com/lijiahangmax/orion-visor-agent/releases/latest/download/instance-agent-release.tar.gz -O instance-agent-release.tar.gz
+
       - name: 📁 Prepare build context
         run: |
           cp -r ./sql ./docker/mysql/sql
@@ -62,7 +66,7 @@ jobs:
 
     strategy:
       matrix:
-        service: [ adminer, guacd, mysql, redis, service, ui ]
+        service: [ adminer, guacd, mysql, redis, influxdb, service, ui ]
 
     env:
       GITHUB_REGISTRY: ghcr.io

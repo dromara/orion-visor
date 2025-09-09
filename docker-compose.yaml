@@ -35,10 +35,18 @@ services:
       REDIS_PASSWORD: ${REDIS_PASSWORD:-Data@123456}
       REDIS_DATABASE: ${REDIS_DATABASE:-0}
       REDIS_DATA_VERSION: ${REDIS_DATA_VERSION:-1}
+      INFLUXDB_ENABLED: ${INFLUXDB_ENABLED:-true}
+      INFLUXDB_HOST: ${INFLUXDB_HOST:-influxdb}
+      INFLUXDB_PORT: ${INFLUXDB_PORT:-8086}
+      INFLUXDB_ORG: ${INFLUXDB_ORG:-orion-visor}
+      INFLUXDB_BUCKET: ${INFLUXDB_BUCKET:-metrics}
+      INFLUXDB_TOKEN: ${INFLUXDB_TOKEN:-Data@123456}
       GUACD_HOST: ${GUACD_HOST:-guacd}
       GUACD_PORT: ${GUACD_PORT:-4822}
       GUACD_DRIVE_PATH: ${GUACD_DRIVE_PATH:-/drive}
-      SECRET_KEY: ${SECRET_KEY:-uQeacXV8b3isvKLK}
+      SECRET_KEY: ${SECRET_KEY:-pmqeHOyZaumHm0Wt}
+      API_EXPOSE_TOKEN: ${API_EXPOSE_TOKEN:-uQeacXV8b3isvKLK}
+      API_CORS: ${API_CORS:-true}
       DEMO_MODE: ${DEMO_MODE:-false}
     volumes:
       - ${VOLUME_BASE:-/data/orion-visor-space/docker-volumes}/service/root-orion:/root/orion
@@ -53,6 +61,8 @@ services:
       mysql:
         condition: service_healthy
       redis:
+        condition: service_healthy
+      influxdb:
         condition: service_healthy
     networks:
       - orion-visor-net
@@ -93,6 +103,31 @@ services:
     restart: unless-stopped
     healthcheck:
       test: [ "CMD", "redis-cli", "--raw", "incr", "ping" ]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    networks:
+      - orion-visor-net
+
+  influxdb:
+    image: registry.cn-hangzhou.aliyuncs.com/orionsec/orion-visor-influxdb:latest
+    privileged: true
+    ports:
+      - "8086:8086"
+    environment:
+      DOCKER_INFLUXDB_INIT_MODE: setup
+      DOCKER_INFLUXDB_INIT_USERNAME: ${INFLUXDB_ADMIN_USERNAME:-admin}
+      DOCKER_INFLUXDB_INIT_PASSWORD: ${INFLUXDB_ADMIN_PASSWORD:-Data@123456}
+      DOCKER_INFLUXDB_INIT_ADMIN_TOKEN: ${INFLUXDB_TOKEN:-Data@123456}
+      DOCKER_INFLUXDB_INIT_ORG: ${INFLUXDB_ORG:-orion-visor}
+      DOCKER_INFLUXDB_INIT_BUCKET: ${INFLUXDB_BUCKET:-metrics}
+    volumes:
+      - ${VOLUME_BASE:-/data/orion-visor-space/docker-volumes}/influxdb/data:/var/lib/influxdb2
+      - ${VOLUME_BASE:-/data/orion-visor-space/docker-volumes}/influxdb/config:/etc/influxdb2
+    restart: unless-stopped
+    healthcheck:
+      test: [ "CMD", "bash", "-c", "cat < /dev/null > /dev/tcp/127.0.0.1/8086" ]
       interval: 15s
       timeout: 5s
       retries: 10
