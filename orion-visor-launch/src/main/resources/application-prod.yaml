@@ -30,6 +30,12 @@ spring:
     threads: 4
     netty-threads: 4
     minimum-idle-size: 4
+  influxdb:
+    enabled: ${INFLUXDB_ENABLED:true}
+    url: http://${INFLUXDB_HOST:127.0.0.1}:${INFLUXDB_PORT:8086}
+    org: ${INFLUXDB_ORG:orion-visor}
+    bucket: ${INFLUXDB_BUCKET:metrics}
+    token: ${INFLUXDB_TOKEN:Data@123456}
   quartz:
     properties:
       org:
@@ -65,9 +71,15 @@ knife4j:
 orion:
   # 是否为演示模式
   demo: ${DEMO_MODE:false}
+  api:
+    # 是否允许跨域
+    cors: ${API_CORS:true}
+    expose:
+      # 暴露接口请求头值
+      token: ${API_EXPOSE_TOKEN:pmqeHOyZaumHm0Wt}
   logging:
     printer:
-      mode: ROW
+      mode: PRETTY
   encrypt:
     aes:
       # 加密密钥

@@ -13,9 +13,9 @@ spring:
     # 文件上传相关配置项
     multipart:
       # 单个文件大小
-      max-file-size: 16MB
+      max-file-size: 128MB
       # 消息体大小
-      max-request-size: 32MB
+      max-request-size: 128MB
   mvc:
     pathmatch:
       matching-strategy: ANT_PATH_MATCHER
@@ -170,6 +170,12 @@ orion:
     prefix: ${orion.prefix}/api
     # 是否允许跨域
     cors: true
+    # 对外服务
+    expose:
+      # 暴露接口请求头
+      header: X-Server-Token
+      # 暴露接口请求头值
+      token: 96QEPoOChlMfAEPn
   websocket:
     # 公共 websocket 前缀
     prefix: ${orion.prefix}/keep-alive
@@ -202,14 +208,17 @@ orion:
       terminal:
         group: "terminal - 终端模块"
         path: "terminal"
+      monitor:
+        group: "monitor - 监控模块"
+        path: "monitor"
   logging:
     # 全局日志打印
     printer:
       mode: PRETTY
       expression: 'execution (* org.dromara.visor..*.controller..*.*(..))'
       headers:
-        - user-agent,accept
-        - content-type
+        - User-Agent,Accept
+        - X-Agent-Version
       # 下面引用了 需要注意
       field:
         ignore:
