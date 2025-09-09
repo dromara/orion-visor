@@ -1,0 +1,59 @@
+name: 错误报告
+description: File a bug report.
+title: "[错误报告]: "
+labels: [""]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        在提交前请确认: 
+         - 使用的是[最新版本](https://github.com/dromara/orion-visor/releases)
+         - 参考了[安装文档](https://visor.orionsec.cn/quickstart/docker.html)
+         - 查阅了[常见问题](https://visor.orionsec.cn/support/faq.html)
+         - 搜索了[已有 issue](https://github.com/dromara/orion-visor/issues)
+  - type: checkboxes
+    id: confirm
+    attributes:
+      label: 确认
+      description: 在提交 issue 之前, 请确认你已经阅读并确认以下内容
+      options:
+        - label: 我使用的是最新版本 [最新版](https://github.com/dromara/orion-visor/releases)
+          required: true
+        - label: 我使用官方文档进行部署 [安装文档](https://visor.orionsec.cn/quickstart/docker.html)
+          required: true
+        - label: 我已检查了 [常见问题](https://visor.orionsec.cn/support/faq.html) 并没有找到解决方法
+          required: true
+        - label: 我已搜索 [issue](https://github.com/dromara/orion-visor/issues) 并没有找到相关问题
+          required: true
+  - type: input
+    id: version
+    attributes:
+      label: 当前程序版本
+      description: 遇到问题时程序所在的版本号
+    validations:
+      required: true
+  - type: dropdown
+    id: install
+    attributes:
+      label: 安装方式
+      options:
+        - Docker
+        - 普通安装
+        - 其他
+    validations:
+      required: true
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: 问题描述
+      description: 请详细描述你碰到的问题
+      placeholder: "问题描述"
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: 详细日志
+      description: 问题出现时的程序日志
+      render: bash
