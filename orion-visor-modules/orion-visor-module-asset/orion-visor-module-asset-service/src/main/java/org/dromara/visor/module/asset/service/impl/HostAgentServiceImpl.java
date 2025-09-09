@@ -95,7 +95,7 @@ public class HostAgentServiceImpl implements HostAgentService {
     public void readLocalAgentVersion() {
         log.info("HostAgentService-readLocalAgentVersion start");
         // 文件路径
-        String path = PathUtils.getOrionPath(FileConst.AGENT_RELEASE + Const.SLASH + FileConst.VERSION);
+        String path = PathUtils.getOrionPath(FileConst.INSTANT_AGENT_RELEASE + Const.SLASH + FileConst.VERSION);
         log.info("HostAgentService-readLocalAgentVersion path: {}", path);
         try {
             if (!Files1.isFile(path)) {
@@ -191,9 +191,9 @@ public class HostAgentServiceImpl implements HostAgentService {
         Valid.notBlank(fileName, ErrorMessage.FILE_EXTENSION_TYPE);
         Valid.isTrue(fileName.endsWith(Const.SUFFIX_TAR_GZ), ErrorMessage.FILE_EXTENSION_TYPE);
         // 保存文件
-        String releaseDir = PathUtils.getOrionPath(FileConst.AGENT_RELEASE);
-        String releaseTempDir = PathUtils.getOrionPath(FileConst.AGENT_RELEASE_TEMP);
-        File releaseTempFile = new File(releaseTempDir + Const.SLASH + FileConst.AGENT_RELEASE_TAR_GZ);
+        String releaseDir = PathUtils.getOrionPath(FileConst.INSTANT_AGENT_RELEASE);
+        String releaseTempDir = PathUtils.getOrionPath(FileConst.INSTANT_AGENT_RELEASE_TEMP);
+        File releaseTempFile = new File(releaseTempDir + Const.SLASH + FileConst.INSTANT_AGENT_RELEASE_TAR_GZ);
         log.info("HostAgentService.installAgent start releaseTempDir: {}, releaseTempFile: {}", releaseTempDir, releaseTempFile.getAbsolutePath());
         try {
             // 创建目录
@@ -278,9 +278,9 @@ public class HostAgentServiceImpl implements HostAgentService {
                     .hostId(host.getId())
                     .osType(host.getOsType())
                     .agentKey(host.getAgentKey())
-                    .agentFilePath(PathUtils.getOrionPath(FileConst.AGENT_RELEASE + Const.SLASH + agentFileName))
-                    .configFilePath(PathUtils.getOrionPath(FileConst.AGENT_RELEASE + Const.SLASH + FileConst.CONFIG_YAML))
-                    .startScriptPath(PathUtils.getOrionPath(FileConst.AGENT_RELEASE + Const.SLASH + Const.START + os.getScriptSuffix()))
+                    .agentFilePath(PathUtils.getOrionPath(FileConst.INSTANT_AGENT_RELEASE + Const.SLASH + agentFileName))
+                    .configFilePath(PathUtils.getOrionPath(FileConst.INSTANT_AGENT_RELEASE + Const.SLASH + FileConst.CONFIG_YAML))
+                    .startScriptPath(PathUtils.getOrionPath(FileConst.INSTANT_AGENT_RELEASE + Const.SLASH + Const.START + os.getScriptSuffix()))
                     .build();
             taskParams.add(params);
             // 添加待检查文件
