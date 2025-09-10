@@ -317,14 +317,14 @@
                          @click="setInstallSuccess(record.installLog)">
                 <span class="more-doption normal">安装成功</span>
               </a-doption>
-              <!-- 报警开关 -->
+              <!-- 告警开关 -->
               <a-doption v-if="record.id"
                          v-permission="['monitor:monitor-host:update', 'monitor:monitor-host:update-switch']"
                          type="text"
                          size="mini"
                          @click="toggleAlarmSwitch(record)">
                 <span class="more-doption normal">
-                  {{ toggleDictValue(AlarmSwitchKey, record.alarmSwitch, 'label') + '报警' }}
+                  {{ toggleDictValue(AlarmSwitchKey, record.alarmSwitch, 'label') + '告警' }}
                 </span>
               </a-doption>
             </template>

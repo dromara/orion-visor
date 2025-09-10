@@ -24,7 +24,7 @@ RUN chmod +x /app/entrypoint.sh
 # 复制 jar 包
 COPY ./service/orion-visor-launch.jar /app/app.jar
 # 复制探针包
-ADD ./service/instant-agent-release.tar.gz /app/instant-agent-release
+ADD ./service/instance-agent-release.tar.gz /app/instance-agent-release
 
 # 启动检测
 HEALTHCHECK --interval=15s --timeout=5s --retries=5 --start-period=10s \

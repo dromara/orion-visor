@@ -41,7 +41,7 @@ jobs:
           pnpm install
           pnpm build
 
-      - name: 📦️ Download instant-agent
+      - name: 📦️ Download instance-agent
         working-directory: ./docker/service
         run: wget https://github.com/lijiahangmax/orion-visor-agent/releases/latest/download/instance-agent-release.tar.gz -O instance-agent-release.tar.gz
 

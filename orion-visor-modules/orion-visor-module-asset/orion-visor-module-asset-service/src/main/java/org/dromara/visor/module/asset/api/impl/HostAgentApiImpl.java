@@ -83,6 +83,9 @@ public class HostAgentApiImpl implements HostAgentApi {
                 .filter(Strings::isNotBlank)
                 .map(Long::parseLong)
                 .collect(Collectors.toList());
+        if (logIdList.isEmpty()) {
+            return Lists.empty();
+        }
         // 查询数据库
         return hostAgentLogDAO.selectBatchIds(logIdList)
                 .stream()

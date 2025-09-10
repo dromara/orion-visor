@@ -1,7 +1,7 @@
 name: 功能改进
 description: 提出新功能建议 (请提交到需求收集帖)
 title: "[功能建议]: "
-labels: [""]
+labels: [ "" ]
 body:
   - type: markdown
     attributes:

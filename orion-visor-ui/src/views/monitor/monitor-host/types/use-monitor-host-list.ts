@@ -107,13 +107,13 @@ export default function useMonitorHostList(options: UseMonitorHostListOptions) {
     });
   };
 
-  // 更新报警开关
+  // 更新告警开关
   const toggleAlarmSwitch = async (record: MonitorHostQueryResponse) => {
     const dict = toggleDict(AlarmSwitchKey, record.alarmSwitch);
     Modal.confirm({
       title: `${dict.label}确认`,
       titleAlign: 'start',
-      content: `确定要${dict.label}报警功能吗?`,
+      content: `确定要${dict.label}告警功能吗?`,
       okText: '确定',
       onOk: async () => {
         try {

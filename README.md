@@ -52,7 +52,7 @@
 * **文件管理**：支持远程主机 SFTP 大文件的批量上传、下载和在线编辑等操作。
 * **批量操作**：支持批量执行主机命令、多主机文件分发等功能。
 * **计划任务**：支持配置 cron 表达式，定时执行主机命令。
-* **系统监控**：(开发中)。
+* **系统监控**：支持对主机 CPU、内存、磁盘、网络等系统指标的监控和告警。
 * **安全可靠**：动态配置权限，记录用户操作日志，提供简单的审计功能。
 
 ## 演示环境
@@ -88,6 +88,7 @@ docker compose up -d
 * SpringBoot 2.7+
 * Mysql 8.0+
 * Redis 6.0+
+* InfluxDB 2.7+
 * Vue 3.5+
 * Arco Design 2.56+
 
@@ -154,6 +155,10 @@ QQ群: 755242157
 ## License
 
 本项目遵循 [Apache-2.0](https://github.com/dromara/orion-visor/blob/main/LICENSE) 开源许可证。
+
+## 贡献者
+
+[![Contributors](https://contri.buzz/api/wall?repo=dromara/orion-visor)](https://github.com/dromara/orion-visor, "Contributors")
 
 ## Gitee 最有价值的开源项目 GVP
 

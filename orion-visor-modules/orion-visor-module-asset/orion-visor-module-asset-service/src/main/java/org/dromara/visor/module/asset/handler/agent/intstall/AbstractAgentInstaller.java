@@ -86,7 +86,7 @@ public abstract class AbstractAgentInstaller implements AgentInstaller {
         this.params = params;
         this.logId = params.getLogId();
         this.startScriptName = Const.START + HostOsTypeEnum.of(params.getOsType()).getScriptSuffix();
-        this.uploadAgentName = FileConst.INSTANT_AGENT_NAME + HostOsTypeEnum.of(params.getOsType()).getBinarySuffix();
+        this.uploadAgentName = FileConst.INSTANCE_AGENT_NAME + HostOsTypeEnum.of(params.getOsType()).getBinarySuffix();
     }
 
     @Override
@@ -154,7 +154,7 @@ public abstract class AbstractAgentInstaller implements AgentInstaller {
     protected String getAgentHomePath() {
         return PathUtils.buildAppPath(HostOsTypeEnum.WINDOWS.name().equals(params.getOsType()),
                 sshConfig.getUsername(),
-                FileConst.INSTANT_AGENT_PATH) + Const.SLASH;
+                FileConst.INSTANCE_AGENT_PATH) + Const.SLASH;
     }
 
     /**

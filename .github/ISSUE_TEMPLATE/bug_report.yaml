@@ -1,7 +1,7 @@
 name: 错误报告
 description: File a bug report.
 title: "[错误报告]: "
-labels: [""]
+labels: [ "" ]
 body:
   - type: markdown
     attributes:
@@ -42,7 +42,6 @@ body:
         - 其他
     validations:
       required: true
-
   - type: textarea
     id: what-happened
     attributes:

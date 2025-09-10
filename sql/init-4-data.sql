@@ -664,6 +664,6 @@ INSERT INTO `system_menu` VALUES (287, 283, '删除监控指标', 'monitor:monit
 INSERT INTO `system_menu` VALUES (288, 282, '主机监控', NULL, 2, 10, 1, 1, 1, 0, 'IconComputer', NULL, 'monitorHost', '2025-08-23 17:02:02', '2025-08-24 22:47:03', 'admin', 'admin', 0);
 INSERT INTO `system_menu` VALUES (289, 288, '查询监控主机', 'monitor:monitor-host:query', 3, 10, 1, 1, 1, 0, NULL, NULL, NULL, '2025-08-23 17:02:02', '2025-08-23 17:02:02', 'admin', 'admin', 0);
 INSERT INTO `system_menu` VALUES (290, 288, '修改监控主机', 'monitor:monitor-host:update', 3, 20, 1, 1, 1, 0, NULL, NULL, NULL, '2025-08-23 17:02:02', '2025-08-23 17:03:56', 'admin', 'admin', 0);
-INSERT INTO `system_menu` VALUES (292, 288, '修改报警开关', 'monitor:monitor-host:update-switch', 3, 30, 1, 1, 1, 0, NULL, NULL, NULL, '2025-08-23 17:02:02', '2025-08-23 17:04:31', 'admin', 'admin', 0);
+INSERT INTO `system_menu` VALUES (292, 288, '修改告警开关', 'monitor:monitor-host:update-switch', 3, 30, 1, 1, 1, 0, NULL, NULL, NULL, '2025-08-23 17:02:02', '2025-08-23 17:04:31', 'admin', 'admin', 0);
 INSERT INTO `system_menu` VALUES (293, 64, '安装探针', 'asset:host:install-agent', 3, 110, 1, 1, 1, 0, NULL, NULL, NULL, '2025-08-31 20:18:14', '2025-08-31 20:18:14', 'admin', 'admin', 0);
 INSERT INTO `system_menu` VALUES (294, 282, '主机监控详情', NULL, 2, 20, 0, 1, 1, 0, 'IconComputer', '', 'monitorDetail', '2025-09-03 23:03:20', '2025-09-03 23:03:55', 'admin', 'admin', 0);

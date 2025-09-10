@@ -37,15 +37,17 @@ public interface FileConst {
 
     String SCRIPT = "script";
 
-    String INSTANT_AGENT_PATH = "instant-agent";
+    String INSTANCE_AGENT_PATH = "instance-agent";
 
-    String INSTANT_AGENT_NAME = "instant_agent";
+    String INSTANCE_AGENT_NAME = "instance_agent";
 
-    String INSTANT_AGENT_RELEASE = "instant-agent-release";
+    String INSTANCE_AGENT_FILE_FORMAT = "instance_agent_{}_{}{}";
 
-    String INSTANT_AGENT_RELEASE_TEMP = "instant-agent-release-temp";
+    String INSTANCE_AGENT_RELEASE = "instance-agent-release";
 
-    String INSTANT_AGENT_RELEASE_TAR_GZ = "instant-agent-release.tar.gz";
+    String INSTANCE_AGENT_RELEASE_TEMP = "instance-agent-release-temp";
+
+    String INSTANCE_AGENT_RELEASE_TAR_GZ = "instance-agent-release.tar.gz";
 
     String VERSION = ".version";
 
