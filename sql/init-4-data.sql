@@ -655,7 +655,7 @@ INSERT INTO `system_menu` VALUES (202, 198, '清理上传日志', 'exec:upload-t
 INSERT INTO `system_menu` VALUES (203, 12, '系统设置', NULL, 2, 40, 1, 1, 1, 0, 'IconSettings', NULL, 'systemSetting', '2024-06-17 20:46:15', '2024-06-17 20:46:15', 'admin', 'admin', 0);
 INSERT INTO `system_menu` VALUES (265, 203, '更新系统设置', 'infra:system-setting:update', 3, 20, 1, 1, 1, 0, NULL, NULL, NULL, '2024-10-09 19:25:28', '2025-01-02 22:14:45', 'admin', 'admin', 0);
 INSERT INTO `system_menu` VALUES (271, 177, '修改任务执行用户', 'exec:exec-job:update-exec-user', 3, 45, 1, 1, 1, 0, NULL, NULL, NULL, '2024-12-13 00:18:13', '2024-12-13 00:18:13', 'admin', 'admin', 0);
-INSERT INTO `system_menu` VALUES (282, 0, '主机监控', NULL, 1, 350, 1, 1, 1, 0, 'IconComputer', NULL, 'monitorModule', '2025-08-12 23:31:02', '2025-08-12 23:38:49', 'admin', 'admin', 0);
+INSERT INTO `system_menu` VALUES (282, 0, '系统监控', NULL, 1, 350, 1, 1, 1, 0, 'IconComputer', NULL, 'monitorModule', '2025-08-12 23:31:02', '2025-08-12 23:38:49', 'admin', 'admin', 0);
 INSERT INTO `system_menu` VALUES (283, 282, '监控指标', NULL, 2, 110, 1, 1, 1, 0, 'IconList', NULL, 'metrics', '2025-08-12 23:31:02', '2025-09-03 23:03:30', 'admin', 'admin', 0);
 INSERT INTO `system_menu` VALUES (284, 283, '查询监控指标', 'monitor:monitor-metrics:query', 3, 10, 1, 1, 1, 0, NULL, NULL, NULL, '2025-08-12 23:31:02', '2025-08-12 23:31:02', 'admin', 'admin', 0);
 INSERT INTO `system_menu` VALUES (285, 283, '创建监控指标', 'monitor:monitor-metrics:create', 3, 20, 1, 1, 1, 0, NULL, NULL, NULL, '2025-08-12 23:31:02', '2025-08-12 23:31:02', 'admin', 'admin', 0);
