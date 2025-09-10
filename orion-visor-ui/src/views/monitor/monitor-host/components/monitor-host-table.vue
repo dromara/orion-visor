@@ -145,7 +145,7 @@
       <!-- cpu -->
       <template #cpuUsage="{ record }">
         <monitor-cell :data-cell="true" :record="record">
-          <a-tooltip :content="'CPU' + record.config?.cpuName +': ' + record.metricsData?.cpuUsagePercent?.toFixed(2) + '%'" mini>
+          <a-tooltip :content="record.config?.cpuName +': ' + record.metricsData?.cpuUsagePercent?.toFixed(2) + '%'" mini>
             <a-progress size="large"
                         width="120px"
                         :animation="true"
@@ -300,6 +300,12 @@
                          size="mini"
                          @click="emits('openUpdate', record)">
                 <span class="more-doption normal">修改配置</span>
+              </a-doption>
+              <!-- 复制 Key -->
+              <a-doption type="text"
+                         size="mini"
+                         @click="copy(record.agentKey)">
+                <span class="more-doption normal">复制 Key</span>
               </a-doption>
               <!-- 安装探针 -->
               <a-doption v-permission="['asset:host:install-agent']"

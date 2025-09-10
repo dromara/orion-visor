@@ -110,6 +110,11 @@ docker compose up -d
 
 ![主机列表](docs/assets/screenshot/host-list.png?time=20250627 "主机列表")
 
+#### 主机监控
+
+![主机监控](docs/assets/screenshot/monitor-list.png?time=20250627 "主机监控")
+![监控详情](docs/assets/screenshot/monitor-detail.png?time=20250627 "监控详情")
+
 #### 批量执行
 
 ![批量执行](docs/assets/screenshot/exec-command.png?time=20250627 "批量执行")

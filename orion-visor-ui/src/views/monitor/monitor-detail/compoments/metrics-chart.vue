@@ -231,7 +231,7 @@
   }
 
   .nodata-chart {
-    padding-top: 42px;
+    padding-top: 76px;
     font-size: 16px;
     display: flex;
     align-items: center;
