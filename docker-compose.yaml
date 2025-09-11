@@ -44,8 +44,8 @@ services:
       GUACD_HOST: ${GUACD_HOST:-guacd}
       GUACD_PORT: ${GUACD_PORT:-4822}
       GUACD_DRIVE_PATH: ${GUACD_DRIVE_PATH:-/drive}
-      SECRET_KEY: ${SECRET_KEY:-pmqeHOyZaumHm0Wt}
-      API_EXPOSE_TOKEN: ${API_EXPOSE_TOKEN:-uQeacXV8b3isvKLK}
+      SECRET_KEY: ${SECRET_KEY:-uQeacXV8b3isvKLK}
+      API_EXPOSE_TOKEN: ${API_EXPOSE_TOKEN:-pmqeHOyZaumHm0Wt}
       API_CORS: ${API_CORS:-true}
       DEMO_MODE: ${DEMO_MODE:-false}
     volumes:
