@@ -206,7 +206,11 @@
 
   // 选择文件回调
   const onSelectFile = (files: Array<FileItem>) => {
-    fileList.value = [files[files.length - 1]];
+    if (files.length) {
+      fileList.value = [files[files.length - 1]];
+    } else {
+      fileList.value = [];
+    }
   };
 
   // 上传文件

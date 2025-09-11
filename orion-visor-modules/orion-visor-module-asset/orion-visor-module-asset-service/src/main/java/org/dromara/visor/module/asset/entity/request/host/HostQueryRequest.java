@@ -23,7 +23,8 @@
 package org.dromara.visor.module.asset.entity.request.host;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.dromara.visor.common.entity.BaseQueryRequest;
 
 import javax.validation.constraints.Size;
@@ -37,9 +38,6 @@ import java.util.List;
  * @since 2023-9-11 14:16
  */
 @Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @Schema(name = "HostQueryRequest", description = "主机 查询请求对象")
 public class HostQueryRequest extends BaseQueryRequest {
@@ -49,6 +47,9 @@ public class HostQueryRequest extends BaseQueryRequest {
 
     @Schema(description = "id")
     private Long id;
+
+    @Schema(description = "id")
+    private List<Long> idList;
 
     @Size(max = 8)
     @Schema(description = "主机类型")
@@ -78,12 +79,24 @@ public class HostQueryRequest extends BaseQueryRequest {
     @Schema(description = "主机状态")
     private String status;
 
-    @Schema(description = "tag")
-    private List<Long> tags;
-
     @Size(max = 255)
     @Schema(description = "描述")
     private String description;
+
+    @Schema(description = "agentKey")
+    private String agentKey;
+
+    @Schema(description = "探针安装状态")
+    private Integer agentInstallStatus;
+
+    @Schema(description = "探针在线状态")
+    private Integer agentOnlineStatus;
+
+    @Schema(description = "通过探针排序")
+    private Boolean orderByAgent;
+
+    @Schema(description = "tag")
+    private List<Long> tags;
 
     @Schema(description = "是否查询分组信息")
     private Boolean queryGroup;

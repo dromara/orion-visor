@@ -66,7 +66,7 @@ public class BaseDO implements Serializable {
     private String creator;
 
     @Schema(description = "修改人")
-    @TableField(fill = FieldFill.INSERT_UPDATE, jdbcType = JdbcType.VARCHAR)
+    @TableField(fill = FieldFill.INSERT_UPDATE, update = "IFNULL(#{et.updater}, updater)", jdbcType = JdbcType.VARCHAR)
     private String updater;
 
     /**

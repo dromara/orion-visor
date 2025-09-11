@@ -34,6 +34,14 @@ import org.dromara.visor.module.infra.entity.dto.user.SystemUserDTO;
 public interface SystemUserApi {
 
     /**
+     * 通过用户名查询 id
+     *
+     * @param username username
+     * @return id
+     */
+    Long getIdByUsername(String username);
+
+    /**
      * 通过 id 查询用户名
      *
      * @param id id

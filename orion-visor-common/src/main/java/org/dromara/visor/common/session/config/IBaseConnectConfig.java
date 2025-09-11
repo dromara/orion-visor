@@ -61,6 +61,10 @@ public interface IBaseConnectConfig {
 
     void setHostPort(Integer hostPort);
 
+    String getAgentKey();
+
+    void setAgentKey(String agentKey);
+
     String getUsername();
 
     void setUsername(String username);

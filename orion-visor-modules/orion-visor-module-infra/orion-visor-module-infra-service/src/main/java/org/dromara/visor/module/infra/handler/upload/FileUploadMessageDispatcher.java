@@ -27,7 +27,7 @@ import cn.orionsec.kit.lang.utils.io.Streams;
 import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.visor.common.constant.ExtraFieldConst;
-import org.dromara.visor.common.interfaces.FileClient;
+import org.dromara.visor.common.file.FileClient;
 import org.dromara.visor.framework.websocket.core.utils.WebSockets;
 import org.dromara.visor.module.infra.entity.dto.FileUploadTokenDTO;
 import org.dromara.visor.module.infra.handler.upload.enums.FileUploadOperatorType;

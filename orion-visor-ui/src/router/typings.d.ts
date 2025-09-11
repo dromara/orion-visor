@@ -22,7 +22,9 @@ declare module 'vue-router' {
     newWindow?: boolean;
     // 是否活跃
     activeMenu?: string;
+    // 是否允许打开多个 tag
+    multipleTab?: boolean;
     // 名称模板
-    localeTemplate?: (key: RouteLocationNormalized) => string;
+    localeTemplate?: (route: RouteLocationNormalized) => string | undefined;
   }
 }

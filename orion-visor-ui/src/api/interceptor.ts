@@ -6,7 +6,7 @@ import { getToken } from '@/utils/auth';
 import { httpBaseUrl } from '@/utils/env';
 import { reLoginTipsKey } from '@/types/symbol';
 
-axios.defaults.timeout = 10000;
+axios.defaults.timeout = 15000;
 axios.defaults.setAuthorization = true;
 axios.defaults.promptBizErrorMessage = true;
 axios.defaults.promptRequestErrorMessage = true;

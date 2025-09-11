@@ -207,7 +207,7 @@ export function getFileSize(size: number, scale: number = 2) {
     result = (size / 1024).toFixed(scale);
     unit = 'KB';
   } else {
-    result = size;
+    result = size.toFixed(scale);
     unit = 'B';
   }
   return `${result} ${unit}`;

@@ -23,7 +23,8 @@
 package org.dromara.visor.framework.test.configuration;
 
 import com.github.fppt.jedismock.RedisServer;
-import org.dromara.visor.common.interfaces.Locker;
+import org.dromara.visor.common.lock.EmptyLocker;
+import org.dromara.visor.common.lock.Locker;
 import org.dromara.visor.common.utils.LockerUtils;
 import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -33,7 +34,6 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Profile;
 
 import java.net.InetAddress;
-import java.util.function.Supplier;
 
 /**
  * 单元测试 redis mock server 初始化
@@ -66,18 +66,7 @@ public class OrionMockRedisTestConfiguration {
      */
     @Bean
     public Locker unitTestLocker() {
-        Locker locker = new Locker() {
-            @Override
-            public boolean tryLock(String key, Runnable run) {
-                run.run();
-                return true;
-            }
-
-            @Override
-            public <T> T tryLock(String key, Supplier<T> call) {
-                return call.get();
-            }
-        };
+        EmptyLocker locker = new EmptyLocker();
         LockerUtils.setDelegate(locker);
         return locker;
     }

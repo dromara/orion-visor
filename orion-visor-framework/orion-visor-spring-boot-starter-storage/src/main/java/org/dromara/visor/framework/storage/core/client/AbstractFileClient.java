@@ -26,7 +26,7 @@ import cn.orionsec.kit.lang.utils.io.Files1;
 import cn.orionsec.kit.lang.utils.io.Streams;
 import cn.orionsec.kit.lang.utils.time.Dates;
 import org.dromara.visor.common.constant.Const;
-import org.dromara.visor.common.interfaces.FileClient;
+import org.dromara.visor.common.file.FileClient;
 
 import java.io.InputStream;
 import java.io.OutputStream;

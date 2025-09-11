@@ -115,7 +115,7 @@
       word-break: break-all;
       white-space: pre-wrap;
       padding-right: 8px;
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 400;
     }
 

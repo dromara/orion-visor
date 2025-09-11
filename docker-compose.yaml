@@ -1,0 +1,174 @@
+version: '3.3'
+
+# latest = 2.5.0
+
+# 支持以下源
+# lijiahangmax/*
+# ghcr.io/dromara/*
+# registry.cn-hangzhou.aliyuncs.com/orionsec/*
+
+services:
+  ui:
+    image: registry.cn-hangzhou.aliyuncs.com/orionsec/orion-visor-ui:latest
+    ports:
+      - ${SERVICE_PORT:-1081}:80
+    restart: unless-stopped
+    depends_on:
+      service:
+        condition: service_healthy
+    networks:
+      - orion-visor-net
+
+  service:
+    image: registry.cn-hangzhou.aliyuncs.com/orionsec/orion-visor-service:latest
+    privileged: true
+    ports:
+      - "9200:9200"
+    environment:
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-prod}
+      MYSQL_HOST: ${MYSQL_HOST:-mysql}
+      MYSQL_PORT: ${MYSQL_PORT:-3306}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-orion_visor}
+      MYSQL_USER: ${MYSQL_USER:-root}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-Data@123456}
+      REDIS_HOST: ${REDIS_HOST:-redis}
+      REDIS_PASSWORD: ${REDIS_PASSWORD:-Data@123456}
+      REDIS_DATABASE: ${REDIS_DATABASE:-0}
+      REDIS_DATA_VERSION: ${REDIS_DATA_VERSION:-1}
+      INFLUXDB_ENABLED: ${INFLUXDB_ENABLED:-true}
+      INFLUXDB_HOST: ${INFLUXDB_HOST:-influxdb}
+      INFLUXDB_PORT: ${INFLUXDB_PORT:-8086}
+      INFLUXDB_ORG: ${INFLUXDB_ORG:-orion-visor}
+      INFLUXDB_BUCKET: ${INFLUXDB_BUCKET:-metrics}
+      INFLUXDB_TOKEN: ${INFLUXDB_TOKEN:-Data@123456}
+      GUACD_HOST: ${GUACD_HOST:-guacd}
+      GUACD_PORT: ${GUACD_PORT:-4822}
+      GUACD_DRIVE_PATH: ${GUACD_DRIVE_PATH:-/drive}
+      SECRET_KEY: ${SECRET_KEY:-pmqeHOyZaumHm0Wt}
+      API_EXPOSE_TOKEN: ${API_EXPOSE_TOKEN:-uQeacXV8b3isvKLK}
+      API_CORS: ${API_CORS:-true}
+      DEMO_MODE: ${DEMO_MODE:-false}
+    volumes:
+      - ${VOLUME_BASE:-/data/orion-visor-space/docker-volumes}/service/root-orion:/root/orion
+    restart: unless-stopped
+    healthcheck:
+      test: [ "CMD", "curl", "http://127.0.0.1:9200/orion-visor/api/server/bootstrap/health" ]
+      interval: 15s
+      timeout: 5s
+      retries: 15
+      start_period: 30s
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      influxdb:
+        condition: service_healthy
+    networks:
+      - orion-visor-net
+
+  mysql:
+    image: registry.cn-hangzhou.aliyuncs.com/orionsec/orion-visor-mysql:latest
+    privileged: true
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-orion_visor}
+      MYSQL_USER: ${MYSQL_USER:-orion}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-Data@123456}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-Data@123456}
+    volumes:
+      - ${VOLUME_BASE:-/data/orion-visor-space/docker-volumes}/mysql/var-lib-mysql:/var/lib/mysql
+      - ${VOLUME_BASE:-/data/orion-visor-space/docker-volumes}/mysql/var-lib-mysql-files:/var/lib/mysql-files
+    restart: unless-stopped
+    healthcheck:
+      test: [ "CMD", "bash", "-c", "cat < /dev/null > /dev/tcp/127.0.0.1/3306" ]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    networks:
+      - orion-visor-net
+
+  redis:
+    image: registry.cn-hangzhou.aliyuncs.com/orionsec/orion-visor-redis:latest
+    privileged: true
+    ports:
+      - "6380:6379"
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD:-Data@123456}
+    volumes:
+      - ${VOLUME_BASE:-/data/orion-visor-space/docker-volumes}/redis/data:/data
+    command: sh -c "redis-server /usr/local/redis.conf --requirepass $${REDIS_PASSWORD}"
+    restart: unless-stopped
+    healthcheck:
+      test: [ "CMD", "redis-cli", "--raw", "incr", "ping" ]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    networks:
+      - orion-visor-net
+
+  influxdb:
+    image: registry.cn-hangzhou.aliyuncs.com/orionsec/orion-visor-influxdb:latest
+    privileged: true
+    ports:
+      - "8086:8086"
+    environment:
+      DOCKER_INFLUXDB_INIT_MODE: setup
+      DOCKER_INFLUXDB_INIT_USERNAME: ${INFLUXDB_ADMIN_USERNAME:-admin}
+      DOCKER_INFLUXDB_INIT_PASSWORD: ${INFLUXDB_ADMIN_PASSWORD:-Data@123456}
+      DOCKER_INFLUXDB_INIT_ADMIN_TOKEN: ${INFLUXDB_TOKEN:-Data@123456}
+      DOCKER_INFLUXDB_INIT_ORG: ${INFLUXDB_ORG:-orion-visor}
+      DOCKER_INFLUXDB_INIT_BUCKET: ${INFLUXDB_BUCKET:-metrics}
+    volumes:
+      - ${VOLUME_BASE:-/data/orion-visor-space/docker-volumes}/influxdb/data:/var/lib/influxdb2
+      - ${VOLUME_BASE:-/data/orion-visor-space/docker-volumes}/influxdb/config:/etc/influxdb2
+    restart: unless-stopped
+    healthcheck:
+      test: [ "CMD", "bash", "-c", "cat < /dev/null > /dev/tcp/127.0.0.1/8086" ]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    networks:
+      - orion-visor-net
+
+  guacd:
+    image: registry.cn-hangzhou.aliyuncs.com/orionsec/orion-visor-guacd:latest
+    ports:
+      - "4822:4822"
+    environment:
+      GUACD_LOG_LEVEL: info
+      GUACD_LOG_FILE: /var/log/guacd.log
+    volumes:
+      - ${VOLUME_BASE:-/data/orion-visor-space/docker-volumes}/guacd/drive:${GUACD_DRIVE_PATH:-/drive}
+      - ${VOLUME_BASE:-/data/orion-visor-space/docker-volumes}/guacd/var-logs:/var/log
+      - ${VOLUME_BASE:-/data/orion-visor-space/docker-volumes}/guacd/local-guacamole-lib:/usr/local/guacamole/lib
+      - ${VOLUME_BASE:-/data/orion-visor-space/docker-volumes}/guacd/local-guacamole-extensions:/usr/local/guacamole/extensions
+    restart: unless-stopped
+    healthcheck:
+      test: [ "CMD", "nc", "-vz", "localhost", "4822" ]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    networks:
+      - orion-visor-net
+
+  adminer:
+    image: registry.cn-hangzhou.aliyuncs.com/orionsec/orion-visor-adminer:latest
+    ports:
+      - "8081:8080"
+    environment:
+      ADMINER_DEFAULT_SERVER: ${MYSQL_HOST:-mysql}
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - orion-visor-net
+
+networks:
+  orion-visor-net:
+    driver: bridge

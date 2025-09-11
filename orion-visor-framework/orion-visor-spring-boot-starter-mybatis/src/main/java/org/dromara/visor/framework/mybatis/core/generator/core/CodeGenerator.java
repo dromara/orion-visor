@@ -23,10 +23,12 @@
 package org.dromara.visor.framework.mybatis.core.generator.core;
 
 import cn.orionsec.kit.lang.able.Executable;
+import cn.orionsec.kit.lang.constant.Const;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.generator.AutoGenerator;
 import com.baomidou.mybatisplus.generator.config.*;
 import com.baomidou.mybatisplus.generator.config.builder.CustomFile;
+import com.baomidou.mybatisplus.generator.config.builder.Entity;
 import com.baomidou.mybatisplus.generator.config.querys.MySqlQuery;
 import com.baomidou.mybatisplus.generator.config.rules.DateType;
 import com.baomidou.mybatisplus.generator.config.rules.DbColumnType;
@@ -135,6 +137,10 @@ public class CodeGenerator implements Executable {
                 // 整合注入配置
                 .injection(injectionConfig);
 
+        // 提前解析父类 并且排除父类的 id 字段
+        Entity entity = strategyConfig.entity();
+        entity.getSuperEntityColumns().remove(Const.ID);
+
         // 执行
         ag.execute(engine);
     }
@@ -188,6 +194,8 @@ public class CodeGenerator implements Executable {
                         case Types.BIT:
                         case Types.TINYINT:
                             return DbColumnType.INTEGER;
+                        case Types.DOUBLE:
+                            return DbColumnType.DOUBLE;
                         default:
                             return typeRegistry.getColumnType(metaInfo);
                     }
@@ -321,9 +329,14 @@ public class CodeGenerator implements Executable {
      */
     private InjectionConfig getInjectionConfig() {
         String[][] customFileDefineArr = new String[][]{
-                // -------------------- 后端 - module --------------------
+                // -------------------- 后端 --------------------
                 // http 文件
                 new String[]{"/templates/orion-server-module-controller.http.vm", "${type}Controller.http", "controller"},
+                // operator log define 文件
+                new String[]{"/templates/orion-server-module-operator-key-define.java.vm", "${type}OperatorType.java", "define.operator"},
+                // convert 文件
+                new String[]{"/templates/orion-server-module-convert.java.vm", "${type}Convert.java", "convert"},
+                // -------------------- 后端 - 实体 --------------------
                 // vo 文件
                 new String[]{"/templates/orion-server-module-entity-vo.java.vm", "${type}VO.java", "entity.vo"},
                 // create request 文件
@@ -332,19 +345,19 @@ public class CodeGenerator implements Executable {
                 new String[]{"/templates/orion-server-module-entity-request-update.java.vm", "${type}UpdateRequest.java", "entity.request.${bizPackage}"},
                 // query request 文件
                 new String[]{"/templates/orion-server-module-entity-request-query.java.vm", "${type}QueryRequest.java", "entity.request.${bizPackage}"},
-                // convert 文件
-                new String[]{"/templates/orion-server-module-convert.java.vm", "${type}Convert.java", "convert"},
+                // -------------------- 后端 - 缓存 --------------------
                 // cache dto 文件
                 new String[]{"/templates/orion-server-module-cache-dto.java.vm", "${type}CacheDTO.java", "entity.dto"},
                 // cache key define 文件
                 new String[]{"/templates/orion-server-module-cache-key-define.java.vm", "${type}CacheKeyDefine.java", "define.cache"},
-                // operator log define 文件
-                new String[]{"/templates/orion-server-module-operator-key-define.java.vm", "${type}OperatorType.java", "define.operator"},
                 // -------------------- 后端 - provider --------------------
                 // api 文件
                 new String[]{"/templates/orion-server-provider-api.java.vm", "${type}Api.java", "api"},
                 // api impl 文件
                 new String[]{"/templates/orion-server-provider-api-impl.java.vm", "${type}ApiImpl.java", "api.impl"},
+                // convert 文件
+                new String[]{"/templates/orion-server-provider-convert.java.vm", "${type}ProviderConvert.java", "convert"},
+                // -------------------- 后端 - provider 实体 --------------------
                 // dto 文件
                 new String[]{"/templates/orion-server-provider-entity-dto.java.vm", "${type}DTO.java", "entity.dto.${bizPackage}"},
                 // create dto 文件
@@ -353,8 +366,6 @@ public class CodeGenerator implements Executable {
                 new String[]{"/templates/orion-server-provider-entity-dto-update.java.vm", "${type}UpdateDTO.java", "entity.dto.${bizPackage}"},
                 // query dto 文件
                 new String[]{"/templates/orion-server-provider-entity-dto-query.java.vm", "${type}QueryDTO.java", "entity.dto.${bizPackage}"},
-                // convert 文件
-                new String[]{"/templates/orion-server-provider-convert.java.vm", "${type}ProviderConvert.java", "convert"},
                 // -------------------- 后端 - test --------------------
                 // service unit test 文件
                 new String[]{"/templates/orion-server-test-service-impl-tests.java.vm", "${type}ServiceImplTests.java", "service.impl"},
@@ -369,22 +380,26 @@ public class CodeGenerator implements Executable {
                 new String[]{"/templates/orion-vue-router.ts.vm", "${feature}.ts", "vue/router/routes/modules"},
                 // views index.ts 文件
                 new String[]{"/templates/orion-vue-views-index.vue.vm", "index.vue", "vue/views/${module}/${feature}"},
+                // const.ts 文件
+                new String[]{"/templates/orion-vue-views-types-const.ts.vm", "const.ts", "vue/views/${module}/${feature}/types"},
+                // -------------------- 前端 - form --------------------
                 // form-modal.vue 文件
                 new String[]{"/templates/orion-vue-views-components-form-modal.vue.vm", "${feature}-form-modal.vue", "vue/views/${module}/${feature}/components"},
                 // form-drawer.vue 文件
                 new String[]{"/templates/orion-vue-views-components-form-drawer.vue.vm", "${feature}-form-drawer.vue", "vue/views/${module}/${feature}/components"},
-                // table.vue 文件
-                new String[]{"/templates/orion-vue-views-components-table.vue.vm", "${feature}-table.vue", "vue/views/${module}/${feature}/components"},
-                // card-list.vue 文件
-                new String[]{"/templates/orion-vue-views-components-card-list.vue.vm", "${feature}-card-list.vue", "vue/views/${module}/${feature}/components"},
-                // const.ts 文件
-                new String[]{"/templates/orion-vue-views-types-const.ts.vm", "const.ts", "vue/views/${module}/${feature}/types"},
                 // form.rules.ts 文件
                 new String[]{"/templates/orion-vue-views-types-form.rules.ts.vm", "form.rules.ts", "vue/views/${module}/${feature}/types"},
+                // -------------------- 前端 - table --------------------
+                // table.vue 文件
+                new String[]{"/templates/orion-vue-views-components-table.vue.vm", "${feature}-table.vue", "vue/views/${module}/${feature}/components"},
                 // table.columns.ts 文件
                 new String[]{"/templates/orion-vue-views-types-table.columns.ts.vm", "table.columns.ts", "vue/views/${module}/${feature}/types"},
+                // -------------------- 前端 - card --------------------
+                // card-list.vue 文件
+                new String[]{"/templates/orion-vue-views-components-card-list.vue.vm", "${feature}-card-list.vue", "vue/views/${module}/${feature}/components"},
                 // card.fields.ts 文件
                 new String[]{"/templates/orion-vue-views-types-card.fields.ts.vm", "card.fields.ts", "vue/views/${module}/${feature}/types"},
+                // -------------------- sql --------------------
                 // menu.sql 文件
                 new String[]{"/templates/orion-sql-menu.sql.vm", "${tableName}-menu.sql", "sql"},
                 // dict.sql 文件

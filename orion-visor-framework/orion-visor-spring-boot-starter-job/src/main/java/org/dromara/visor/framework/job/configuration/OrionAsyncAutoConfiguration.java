@@ -23,13 +23,13 @@
 package org.dromara.visor.framework.job.configuration;
 
 import org.dromara.visor.common.constant.AutoConfigureOrderConst;
+import org.dromara.visor.common.constant.Const;
 import org.dromara.visor.common.thread.ThreadPoolMdcTaskExecutor;
 import org.dromara.visor.framework.job.configuration.config.AsyncExecutorConfig;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Primary;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.scheduling.annotation.EnableAsync;
 
@@ -49,13 +49,10 @@ import java.util.concurrent.ThreadPoolExecutor;
 public class OrionAsyncAutoConfiguration {
 
     /**
-     * 支持 MDC 的异步线程池
-     * <p>
      * {@code @Async("asyncExecutor")}
      *
-     * @return 异步线程池
+     * @return 支持 MDC 的异步线程池
      */
-    @Primary
     @Bean(name = "asyncExecutor")
     public TaskExecutor asyncExecutor(AsyncExecutorConfig config) {
         ThreadPoolMdcTaskExecutor executor = new ThreadPoolMdcTaskExecutor();
@@ -70,6 +67,27 @@ public class OrionAsyncAutoConfiguration {
         // 以确保应用最后能够被关闭
         executor.setAwaitTerminationSeconds(60);
         // 调用者调用拒绝策略
+        executor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
+        executor.initialize();
+        return executor;
+    }
+
+    /**
+     * {@code @Async("metricsExecutor")}
+     *
+     * @return 指标线程池
+     */
+    @Bean(name = "metricsExecutor")
+    public TaskExecutor metricsExecutor() {
+        ThreadPoolMdcTaskExecutor executor = new ThreadPoolMdcTaskExecutor();
+        executor.setCorePoolSize(4);
+        executor.setMaxPoolSize(8);
+        executor.setQueueCapacity(1000);
+        executor.setKeepAliveSeconds(Const.MS_S_60);
+        executor.setAllowCoreThreadTimeOut(true);
+        executor.setThreadNamePrefix("metrics-task-");
+        executor.setWaitForTasksToCompleteOnShutdown(true);
+        executor.setAwaitTerminationSeconds(60);
         executor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
         executor.initialize();
         return executor;

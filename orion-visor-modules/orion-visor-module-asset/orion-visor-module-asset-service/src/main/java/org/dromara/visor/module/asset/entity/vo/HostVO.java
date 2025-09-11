@@ -72,11 +72,20 @@ public class HostVO implements Serializable {
     @Schema(description = "主机地址")
     private String address;
 
-    @Schema(description = "主机端口")
-    private Integer port;
-
     @Schema(description = "主机状态")
     private String status;
+
+    @Schema(description = "agentKey")
+    private String agentKey;
+
+    @Schema(description = "探针版本")
+    private String agentVersion;
+
+    @Schema(description = "探针安装状态")
+    private Integer agentInstallStatus;
+
+    @Schema(description = "探针在线状态")
+    private Integer agentOnlineStatus;
 
     @Schema(description = "描述")
     private String description;

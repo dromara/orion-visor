@@ -48,6 +48,7 @@ public interface HostIdentityDAO extends IMapper<HostIdentityDO> {
      */
     default int setKeyWithNull(List<Long> keyIdList) {
         LambdaUpdateWrapper<HostIdentityDO> updateWrapper = Wrappers.<HostIdentityDO>lambdaUpdate()
+                .setSql("type = IF(type = 'KEY', 'PASSWORD', type)")
                 .set(HostIdentityDO::getKeyId, null)
                 .in(HostIdentityDO::getKeyId, keyIdList);
         return this.update(null, updateWrapper);

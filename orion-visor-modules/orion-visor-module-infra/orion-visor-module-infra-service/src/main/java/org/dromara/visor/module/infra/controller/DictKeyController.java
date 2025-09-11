@@ -27,6 +27,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
+import org.dromara.visor.common.validator.group.Page;
 import org.dromara.visor.framework.biz.operator.log.core.annotation.OperatorLog;
 import org.dromara.visor.framework.log.core.annotation.IgnoreLog;
 import org.dromara.visor.framework.log.core.enums.IgnoreLogMode;
@@ -92,7 +93,7 @@ public class DictKeyController {
     @PostMapping("/query")
     @Operation(summary = "分页查询全部字典配置项")
     @PreAuthorize("@ss.hasPermission('infra:dict-key:query')")
-    public DataGrid<DictKeyVO> getDictKeyPage(@Validated @RequestBody DictKeyQueryRequest request) {
+    public DataGrid<DictKeyVO> getDictKeyPage(@Validated(Page.class) @RequestBody DictKeyQueryRequest request) {
         return dictKeyService.getDictKeyPage(request);
     }
 

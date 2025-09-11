@@ -45,11 +45,17 @@ public interface FieldConst {
 
     String LABEL = "label";
 
+    String FIELD = "field";
+
     String TYPE = "type";
 
     String COLOR = "color";
 
+    String LOADING = "loading";
+
     String STATUS = "status";
+
+    String SWITCH = "switch";
 
     String INFO = "info";
 
@@ -70,6 +76,8 @@ public interface FieldConst {
     String TOKEN = "token";
 
     String SEQ = "seq";
+
+    String START = "start";
 
     String PATH = "path";
 
@@ -118,5 +126,13 @@ public interface FieldConst {
     String RESULT = "result";
 
     String CONFIG = "config";
+
+    String VERSION = "version";
+
+    String SYNCED = "synced";
+
+    String SIGN = "sign";
+
+    String SIGN_SHORT = "signShort";
 
 }

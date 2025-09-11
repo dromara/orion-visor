@@ -56,7 +56,6 @@ export interface HostVncConfig extends HostBaseConfig {
   identityId?: number;
   noUsername?: boolean;
   noPassword?: boolean;
-  portForwardId?: number;
   timezone?: string;
   clipboardEncoding?: string;
 }

@@ -163,7 +163,7 @@
       <span v-if="record.spec">
         {{
           [
-            addSuffix(record.spec.cpuCore, 'C'),
+            addSuffix(record.spec.cpuPhysicalCore, 'C'),
             addSuffix(record.spec.memorySize, 'G'),
             addSuffix(record.spec.diskSize, 'G')
           ].filter(Boolean).join('/') || '-'
@@ -188,7 +188,7 @@
                :wrap="true">
         <template v-for="groupId in record.groupIdList"
                   :key="groupId">
-          <a-tag>{{ hostGroupList.find(s => s.key === groupId)?.title || groupId }}</a-tag>
+          <a-tag>{{ hostGroupList.find((s: HostGroupQueryResponse) => s.key === groupId)?.title || groupId }}</a-tag>
         </template>
       </a-space>
     </template>
@@ -211,6 +211,7 @@
         <!-- 单协议连接 -->
         <a-button v-if="record.types?.length === 1"
                   size="mini"
+                  type="text"
                   v-permission="['terminal:terminal:access']"
                   @click="openNewRoute({ name: 'terminal', query: { connect: record.id, type: record.types[0] } })">
           连接
@@ -219,7 +220,9 @@
         <a-popover v-if="(record.types?.length || 0) > 1"
                    :title="undefined"
                    :content-style="{ padding: '8px' }">
-          <a-button v-permission="['terminal:terminal:access']" size="mini">
+          <a-button v-permission="['terminal:terminal:access']"
+                    type="text"
+                    size="mini">
             连接
           </a-button>
           <template #content>
@@ -282,15 +285,15 @@
   import { addSuffix, dataColor, objectTruthKeyCount, resetObject } from '@/utils';
   import { deleteHost, getHostPage, updateHostStatus } from '@/api/asset/host';
   import { Message, Modal } from '@arco-design/web-vue';
-  import { getHostOsIcon, hostOsTypeKey, hostArchTypeKey, hostStatusKey, HostType, hostTypeKey, tagColor, TableName } from '../types/const';
+  import { getHostOsIcon, hostOsTypeKey, hostArchTypeKey, hostStatusKey, hostTypeKey, tagColor, TableName } from '../types/const';
   import { copy } from '@/hooks/copy';
   import { useCacheStore, useDictStore } from '@/store';
   import { useQueryOrder, ASC } from '@/hooks/query-order';
   import { GrantKey, GrantRouteName } from '@/views/asset/grant/types/const';
   import { useRouter } from 'vue-router';
+  import { openNewRoute } from '@/router';
   import useLoading from '@/hooks/loading';
   import fieldConfig from '../types/card.fields';
-  import { openNewRoute } from '@/router';
   import TagMultiSelector from '@/components/meta/tag/multi-selector/index.vue';
 
   const emits = defineEmits(['openAdd', 'openUpdate', 'openHostGroup', 'openCopy']);

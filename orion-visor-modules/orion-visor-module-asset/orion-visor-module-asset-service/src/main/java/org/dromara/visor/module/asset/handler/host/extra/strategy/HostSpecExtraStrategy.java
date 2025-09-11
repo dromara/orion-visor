@@ -45,4 +45,9 @@ public class HostSpecExtraStrategy extends AbstractGenericsDataStrategy<HostSpec
         return new HostSpecExtraModel();
     }
 
+    @Override
+    protected void updateFill(HostSpecExtraModel beforeModel, HostSpecExtraModel afterModel) {
+        afterModel.setSynced(beforeModel.getSynced());
+    }
+
 }

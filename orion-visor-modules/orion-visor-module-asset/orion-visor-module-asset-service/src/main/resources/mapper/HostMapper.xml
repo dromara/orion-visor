@@ -12,6 +12,11 @@
         <result column="code" property="code"/>
         <result column="address" property="address"/>
         <result column="status" property="status"/>
+        <result column="agent_key" property="agentKey"/>
+        <result column="agent_version" property="agentVersion"/>
+        <result column="agent_install_status" property="agentInstallStatus"/>
+        <result column="agent_online_status" property="agentOnlineStatus"/>
+        <result column="agent_online_change_time" property="agentOnlineChangeTime"/>
         <result column="description" property="description"/>
         <result column="create_time" property="createTime"/>
         <result column="update_time" property="updateTime"/>
@@ -22,7 +27,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, types, os_type, arch_type, name, code, address, status, description, create_time, update_time, creator, updater, deleted
+        id, types, os_type, arch_type, name, code, address, status, agent_key, agent_version, agent_install_status, agent_online_status, agent_online_change_time, description, create_time, update_time, creator, updater, deleted
     </sql>
 
 </mapper>

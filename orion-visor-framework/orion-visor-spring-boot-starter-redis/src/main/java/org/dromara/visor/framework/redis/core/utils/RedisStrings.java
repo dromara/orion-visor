@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -50,17 +51,49 @@ public class RedisStrings extends RedisUtils {
     }
 
     /**
+     * 获取值
+     *
+     * @param key key
+     * @return value
+     */
+    public static String get(String key) {
+        return redisTemplate.opsForValue().get(key);
+    }
+
+    /**
+     * 获取值
+     *
+     * @param define define
+     * @return value
+     */
+    public static String get(CacheKeyDefine define) {
+        return get(define.getKey());
+    }
+
+    /**
+     * 获取值
+     *
+     * @param key    key
+     * @param mapper mapper
+     * @param <T>    T
+     * @return value
+     */
+    public static <T> T get(String key, Function<String, T> mapper) {
+        String value = redisTemplate.opsForValue().get(key);
+        if (value == null) {
+            return null;
+        }
+        return mapper.apply(value);
+    }
+
+    /**
      * 获取 json
      *
      * @param key key
      * @return JSONObject
      */
     public static JSONObject getJson(String key) {
-        String value = redisTemplate.opsForValue().get(key);
-        if (value == null) {
-            return null;
-        }
-        return JSON.parseObject(value);
+        return get(key, JSON::parseObject);
     }
 
     /**
@@ -95,57 +128,7 @@ public class RedisStrings extends RedisUtils {
      * @return T
      */
     public static <T> T getJson(String key, Class<T> type) {
-        String value = redisTemplate.opsForValue().get(key);
-        if (value == null) {
-            return null;
-        }
-        return (T) JSON.parseObject(value, type);
-    }
-
-    /**
-     * 获取 json 列表
-     *
-     * @param keys keys
-     * @return cache
-     */
-    public static List<JSONObject> getJsonList(Collection<String> keys) {
-        List<String> values = redisTemplate.opsForValue().multiGet(keys);
-        if (values == null) {
-            return new ArrayList<>();
-        }
-        return values.stream()
-                .map(JSON::parseObject)
-                .collect(Collectors.toList());
-    }
-
-    /**
-     * 获取 json 列表
-     *
-     * @param keys   keys
-     * @param define define
-     * @param <T>    T
-     * @return cache
-     */
-    public static <T> List<T> getJsonList(Collection<String> keys, CacheKeyDefine define) {
-        return getJsonList(keys, (Class<T>) define.getType());
-    }
-
-    /**
-     * 获取 json 列表
-     *
-     * @param keys keys
-     * @param type type
-     * @param <T>  T
-     * @return cache
-     */
-    public static <T> List<T> getJsonList(Collection<String> keys, Class<T> type) {
-        List<String> values = redisTemplate.opsForValue().multiGet(keys);
-        if (values == null) {
-            return new ArrayList<>();
-        }
-        return values.stream()
-                .map(s -> JSON.parseObject(s, type))
-                .collect(Collectors.toList());
+        return get(key, s -> JSON.parseObject(s, type));
     }
 
     /**
@@ -155,11 +138,7 @@ public class RedisStrings extends RedisUtils {
      * @return JSONArray
      */
     public static JSONArray getJsonArray(String key) {
-        String value = redisTemplate.opsForValue().get(key);
-        if (value == null) {
-            return null;
-        }
-        return JSON.parseArray(value);
+        return get(key, JSON::parseArray);
     }
 
     /**
@@ -194,11 +173,69 @@ public class RedisStrings extends RedisUtils {
      * @return T
      */
     public static <T> List<T> getJsonArray(String key, Class<T> type) {
-        String value = redisTemplate.opsForValue().get(key);
-        if (value == null) {
-            return null;
+        return get(key, s -> JSON.parseArray(s, type));
+    }
+
+    /**
+     * 获取 json 列表
+     *
+     * @param keys keys
+     * @return cache
+     */
+    public static List<String> getList(Collection<String> keys) {
+        return getList(keys, Function.identity());
+    }
+
+    /**
+     * 获取 json 列表
+     *
+     * @param keys   keys
+     * @param mapper mapper
+     * @param <T>    T
+     * @return cache
+     */
+    public static <T> List<T> getList(Collection<String> keys, Function<String, T> mapper) {
+        List<String> values = redisTemplate.opsForValue().multiGet(keys);
+        if (values == null) {
+            return new ArrayList<>();
         }
-        return JSON.parseArray(value, type);
+        return values.stream()
+                .map(mapper)
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * 获取 json 列表
+     *
+     * @param keys keys
+     * @return cache
+     */
+    public static List<JSONObject> getJsonList(Collection<String> keys) {
+        return getList(keys, JSON::parseObject);
+    }
+
+    /**
+     * 获取 json 列表
+     *
+     * @param keys   keys
+     * @param define define
+     * @param <T>    T
+     * @return cache
+     */
+    public static <T> List<T> getJsonList(Collection<String> keys, CacheKeyDefine define) {
+        return getList(keys, s -> JSON.parseObject(s, (Class<T>) define.getType()));
+    }
+
+    /**
+     * 获取 json 列表
+     *
+     * @param keys keys
+     * @param type type
+     * @param <T>  T
+     * @return cache
+     */
+    public static <T> List<T> getJsonList(Collection<String> keys, Class<T> type) {
+        return getList(keys, s -> JSON.parseObject(s, type));
     }
 
     /**
@@ -208,13 +245,7 @@ public class RedisStrings extends RedisUtils {
      * @return cache
      */
     public static List<JSONArray> getJsonArrayList(Collection<String> keys) {
-        List<String> values = redisTemplate.opsForValue().multiGet(keys);
-        if (values == null) {
-            return new ArrayList<>();
-        }
-        return values.stream()
-                .map(JSON::parseArray)
-                .collect(Collectors.toList());
+        return getList(keys, JSON::parseArray);
     }
 
     /**
@@ -226,7 +257,7 @@ public class RedisStrings extends RedisUtils {
      * @return cache
      */
     public static <T> List<List<T>> getJsonArrayList(Collection<String> keys, CacheKeyDefine define) {
-        return getJsonArrayList(keys, (Class<T>) define.getType());
+        return getList(keys, s -> JSON.parseArray(s, (Class<T>) define.getType()));
     }
 
     /**
@@ -238,13 +269,7 @@ public class RedisStrings extends RedisUtils {
      * @return cache
      */
     public static <T> List<List<T>> getJsonArrayList(Collection<String> keys, Class<T> type) {
-        List<String> values = redisTemplate.opsForValue().multiGet(keys);
-        if (values == null) {
-            return new ArrayList<>();
-        }
-        return values.stream()
-                .map(s -> JSON.parseArray(s, type))
-                .collect(Collectors.toList());
+        return getList(keys, s -> JSON.parseArray(s, type));
     }
 
     /**

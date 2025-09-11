@@ -27,9 +27,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.dromara.visor.module.infra.entity.dto.tag.TagDTO;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -69,11 +71,23 @@ public class HostDTO implements Serializable {
     @Schema(description = "主机地址")
     private String address;
 
-    @Schema(description = "主机端口")
-    private Integer port;
-
     @Schema(description = "主机状态")
     private String status;
+
+    @Schema(description = "agentKey")
+    private String agentKey;
+
+    @Schema(description = "探针版本")
+    private String agentVersion;
+
+    @Schema(description = "探针安装状态")
+    private Integer agentInstallStatus;
+
+    @Schema(description = "探针在线状态")
+    private Integer agentOnlineStatus;
+
+    @Schema(description = "探针切换在线状态时间")
+    private Date agentOnlineChangeTime;
 
     @Schema(description = "描述")
     private String description;
@@ -92,6 +106,9 @@ public class HostDTO implements Serializable {
 
     @Schema(description = "是否收藏")
     private Boolean favorite;
+
+    @Schema(description = "tags")
+    private List<TagDTO> tags;
 
     @Schema(description = "分组 id")
     private Set<Long> groupIdList;
@@ -114,7 +131,7 @@ public class HostDTO implements Serializable {
                 .name(this.name)
                 .code(this.code)
                 .address(this.address)
-                .port(this.port)
+                .agentKey(this.agentKey)
                 .build();
     }
 

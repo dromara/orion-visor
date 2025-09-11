@@ -20,6 +20,12 @@ spring:
     threads: 2
     netty-threads: 2
     minimum-idle-size: 2
+  influxdb:
+    enabled: ${INFLUXDB_ENABLED:true}
+    url: http://${INFLUXDB_HOST:127.0.0.1}:${INFLUXDB_PORT:8086}
+    org: ${INFLUXDB_ORG:orion-visor}
+    bucket: ${INFLUXDB_BUCKET:metrics}
+    token: ${INFLUXDB_TOKEN:Data@123456}
   boot:
     admin:
       client:

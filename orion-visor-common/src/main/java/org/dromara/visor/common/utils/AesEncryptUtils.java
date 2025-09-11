@@ -23,7 +23,7 @@
 package org.dromara.visor.common.utils;
 
 import cn.orionsec.kit.lang.utils.Exceptions;
-import org.dromara.visor.common.interfaces.AesEncryptor;
+import org.dromara.visor.common.cipher.AesEncryptor;
 
 /**
  * aes 数据加密工具类

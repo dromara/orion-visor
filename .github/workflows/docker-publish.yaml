@@ -1,0 +1,139 @@
+name: Docker Publish
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+jobs:
+  build-project:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: 🌱 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: ⚙️ Set up JDK 8
+        uses: actions/setup-java@v4
+        with:
+          java-version: '8'
+          distribution: 'temurin'
+          cache: 'maven'
+
+      - name: ⚙️ Set up Node.js 18
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: 🔧 Install pnpm
+        run: npm i -g pnpm
+
+      - name: 📦 Build Java
+        run: mvn -U clean install -DskipTests --settings=.github/settings/maven-settings.xml
+
+      - name: 📦️ Build UI
+        working-directory: ./orion-visor-ui
+        run: |
+          pnpm install
+          pnpm build
+
+      - name: 📦️ Download instance-agent
+        working-directory: ./docker/service
+        run: wget https://github.com/lijiahangmax/orion-visor-agent/releases/latest/download/instance-agent-release.tar.gz -O instance-agent-release.tar.gz
+
+      - name: 📁 Prepare build context
+        run: |
+          cp -r ./sql ./docker/mysql/sql
+          cp -r ./orion-visor-ui/dist ./docker/ui/dist
+          cp ./orion-visor-launch/target/orion-visor-launch.jar ./docker/service/orion-visor-launch.jar
+
+      - name: 📤 Upload build context
+        uses: actions/upload-artifact@v4
+        with:
+          name: docker-context
+          path: docker
+
+  build-and-push:
+    needs: build-project
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    strategy:
+      matrix:
+        service: [ adminer, guacd, mysql, redis, influxdb, service, ui ]
+
+    env:
+      GITHUB_REGISTRY: ghcr.io
+      ALIYUN_REGISTRY: registry.cn-hangzhou.aliyuncs.com
+      ALIYUN_NAMESPACE: ${{ vars.ALIYUN_NAMESPACE }}
+      DOCKERHUB_NAMESPACE: ${{ vars.DOCKERHUB_NAMESPACE }}
+
+    steps:
+      - name: 📥 Download build context
+        uses: actions/download-artifact@v4
+        with:
+          name: docker-context
+          path: docker
+
+      - name: ⚙️ Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: 🔧 Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: 🐳 Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: 🐳 Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.GITHUB_REGISTRY }}
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: 🐳 Login to Aliyun Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.ALIYUN_REGISTRY }}
+          username: ${{ secrets.ALIYUN_USERNAME }}
+          password: ${{ secrets.ALIYUN_TOKEN }}
+
+      - name: 📦 Extract Docker metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            ${{ env.DOCKERHUB_NAMESPACE }}/orion-visor-${{ matrix.service }}
+            ${{ env.GITHUB_REGISTRY }}/${{ github.repository_owner }}/orion-visor-${{ matrix.service }}
+            ${{ env.ALIYUN_REGISTRY }}/${{ env.ALIYUN_NAMESPACE }}/orion-visor-${{ matrix.service }}
+          tags: |
+            type=semver,pattern={{version}}         
+            type=semver,pattern={{major}}.{{minor}} 
+            type=semver,pattern={{major}}           
+
+      - name: 🛠️ Build and push Docker image for orion-visor-${{ matrix.service }}
+        uses: docker/build-push-action@v6
+        with:
+          context: ./docker
+          file: ./docker/${{ matrix.service }}/Dockerfile
+          push: true
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          platforms: linux/amd64,linux/arm64
+          labels: ${{ steps.meta.outputs.labels }}
+          tags: |
+            ${{ env.DOCKERHUB_NAMESPACE }}/orion-visor-${{ matrix.service }}:${{ steps.meta.outputs.version }}
+            ${{ env.DOCKERHUB_NAMESPACE }}/orion-visor-${{ matrix.service }}:latest
+            ${{ env.GITHUB_REGISTRY }}/${{ github.repository_owner }}/orion-visor-${{ matrix.service }}:${{ steps.meta.outputs.version }}
+            ${{ env.GITHUB_REGISTRY }}/${{ github.repository_owner }}/orion-visor-${{ matrix.service }}:latest
+            ${{ env.ALIYUN_REGISTRY }}/${{ env.ALIYUN_NAMESPACE }}/orion-visor-${{ matrix.service }}:${{ steps.meta.outputs.version }}
+            ${{ env.ALIYUN_REGISTRY }}/${{ env.ALIYUN_NAMESPACE }}/orion-visor-${{ matrix.service }}:latest

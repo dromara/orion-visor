@@ -37,4 +37,20 @@ public interface FileConst {
 
     String SCRIPT = "script";
 
+    String INSTANCE_AGENT_PATH = "instance-agent";
+
+    String INSTANCE_AGENT_NAME = "instance_agent";
+
+    String INSTANCE_AGENT_FILE_FORMAT = "instance_agent_{}_{}{}";
+
+    String INSTANCE_AGENT_RELEASE = "instance-agent-release";
+
+    String INSTANCE_AGENT_RELEASE_TEMP = "instance-agent-release-temp";
+
+    String INSTANCE_AGENT_RELEASE_TAR_GZ = "instance-agent-release.tar.gz";
+
+    String VERSION = ".version";
+
+    String CONFIG_YAML = "config.yaml";
+
 }

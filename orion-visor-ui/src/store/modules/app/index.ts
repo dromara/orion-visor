@@ -23,6 +23,7 @@ const defaultConfig: AppState = {
   hostView: 'table',
   hostKeyView: 'table',
   hostIdentityView: 'table',
+  monitorHostView: 'table',
 };
 
 export default defineStore('app', {

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.dromara.visor.module.asset.dao.HostAgentLogDAO">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="org.dromara.visor.module.asset.entity.domain.HostAgentLogDO">
+        <id column="id" property="id"/>
+        <result column="host_id" property="hostId"/>
+        <result column="agent_key" property="agentKey"/>
+        <result column="type" property="type"/>
+        <result column="status" property="status"/>
+        <result column="message" property="message"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="creator" property="creator"/>
+        <result column="updater" property="updater"/>
+        <result column="deleted" property="deleted"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, host_id, agent_key, type, status, message, create_time, update_time, creator, updater, deleted
+    </sql>
+
+</mapper>

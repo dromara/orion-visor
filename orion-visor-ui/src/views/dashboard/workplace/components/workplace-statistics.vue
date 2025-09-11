@@ -80,6 +80,7 @@
   import type { WorkplaceStatisticsData } from '@/views/dashboard/workplace/types/const';
   import { computed } from 'vue';
   import { useRouter } from 'vue-router';
+  import { TimeSeriesColors } from '@/types/chart';
   import useThemes from '@/hooks/themes';
   import useChartOption from '@/hooks/chart-option';
 
@@ -165,7 +166,7 @@
         showSymbol: false,
         smooth: true,
         lineStyle: {
-          color: '#165DFF',
+          color: TimeSeriesColors.BLUE.lineColor,
           width: 3,
           type: 'dashed',
         },
@@ -202,7 +203,9 @@
             return {
               x: x[index],
               value: s,
-              itemStyle: { color: '#2CAB40' },
+              itemStyle: {
+                color: TimeSeriesColors.GREEN.lineColor,
+              },
             };
           }),
         type: 'bar',

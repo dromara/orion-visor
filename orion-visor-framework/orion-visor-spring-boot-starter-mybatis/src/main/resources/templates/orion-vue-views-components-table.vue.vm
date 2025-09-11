@@ -172,9 +172,9 @@
   const rowSelection = useRowSelection();
   #end
   const pagination = useTablePagination();
+  const { loading, setLoading } = useLoading();
   const queryOrder = useQueryOrder(TableName, ASC);
   const { tableColumns, columnsHook } = useTableColumns(TableName, columns);
-  const { loading, setLoading } = useLoading();
   #if($dictMap.entrySet().size() > 0)
   const { toOptions, getDictValue } = useDictStore();
   #end

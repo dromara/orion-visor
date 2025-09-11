@@ -37,6 +37,11 @@
             <artifactId>orion-visor-module-exec-provider</artifactId>
             <version>${revision}</version>
         </dependency>
+        <dependency>
+            <groupId>org.dromara.visor</groupId>
+            <artifactId>orion-visor-module-monitor-provider</artifactId>
+            <version>${revision}</version>
+        </dependency>
 
         <!-- framework starter -->
         <dependency>
@@ -61,7 +66,7 @@
         </dependency>
         <dependency>
             <groupId>org.dromara.visor</groupId>
-            <artifactId>orion-visor-spring-boot-starter-encrypt</artifactId>
+            <artifactId>orion-visor-spring-boot-starter-cipher</artifactId>
         </dependency>
         <dependency>
             <groupId>org.dromara.visor</groupId>

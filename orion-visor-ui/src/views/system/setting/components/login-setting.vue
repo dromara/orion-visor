@@ -35,7 +35,7 @@
                   checked-text="开启"
                   unchecked-text="关闭" />
         <template #extra>
-          开启后当凭证即将过期时，系统会自动续签
+          开启后当凭证即将过期时, 系统会自动续签
         </template>
       </a-form-item>
       <!-- 登录失败锁定 -->
@@ -105,7 +105,7 @@
           </template>
         </a-input-number>
         <template #extra>
-          当登录凭证过期但未超过续签间隔时，系统会自动续签
+          当登录凭证过期但未超过续签间隔时, 系统会自动续签
         </template>
       </a-form-item>
       <!-- 凭证续签最大次数 -->

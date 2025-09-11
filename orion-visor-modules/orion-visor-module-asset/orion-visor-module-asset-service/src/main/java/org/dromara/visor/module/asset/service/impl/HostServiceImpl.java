@@ -23,6 +23,7 @@
 package org.dromara.visor.module.asset.service.impl;
 
 import cn.orionsec.kit.lang.define.wrapper.DataGrid;
+import cn.orionsec.kit.lang.id.UUIds;
 import cn.orionsec.kit.lang.utils.Booleans;
 import cn.orionsec.kit.lang.utils.Strings;
 import cn.orionsec.kit.lang.utils.collect.Lists;
@@ -36,6 +37,7 @@ import org.dromara.visor.common.constant.ErrorMessage;
 import org.dromara.visor.common.enums.EnableStatus;
 import org.dromara.visor.common.utils.Valid;
 import org.dromara.visor.framework.biz.operator.log.core.utils.OperatorLogs;
+import org.dromara.visor.framework.mybatis.core.query.DataQuery;
 import org.dromara.visor.framework.redis.core.utils.RedisMaps;
 import org.dromara.visor.framework.redis.core.utils.barrier.CacheBarriers;
 import org.dromara.visor.module.asset.convert.HostConvert;
@@ -46,6 +48,7 @@ import org.dromara.visor.module.asset.entity.domain.HostDO;
 import org.dromara.visor.module.asset.entity.dto.HostCacheDTO;
 import org.dromara.visor.module.asset.entity.request.host.*;
 import org.dromara.visor.module.asset.entity.vo.HostVO;
+import org.dromara.visor.module.asset.enums.AgentInstallStatusEnum;
 import org.dromara.visor.module.asset.enums.HostStatusEnum;
 import org.dromara.visor.module.asset.handler.host.extra.HostExtraItemEnum;
 import org.dromara.visor.module.asset.handler.host.extra.model.HostSpecExtraModel;
@@ -63,6 +66,7 @@ import org.dromara.visor.module.infra.enums.DataExtraTypeEnum;
 import org.dromara.visor.module.infra.enums.DataGroupTypeEnum;
 import org.dromara.visor.module.infra.enums.FavoriteTypeEnum;
 import org.dromara.visor.module.infra.enums.TagTypeEnum;
+import org.dromara.visor.module.monitor.api.MonitorHostApi;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -116,13 +120,19 @@ public class HostServiceImpl implements HostService {
     @Resource
     private DataExtraApi dataExtraApi;
 
+    @Resource
+    private MonitorHostApi monitorHostApi;
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Long createHost(HostCreateRequest request) {
         log.info("HostService-createHost request: {}", JSON.toJSONString(request));
         // 转换
         HostDO record = HostConvert.MAPPER.to(request);
+        // 设置默认值
         record.setStatus(HostStatusEnum.ENABLED.name());
+        record.setAgentKey(UUIds.random32());
+        record.setAgentInstallStatus(AgentInstallStatusEnum.NOT_INSTALL.getStatus());
         // 查询数据是否冲突
         this.checkHostNamePresent(record);
         this.checkHostCodePresent(record);
@@ -230,7 +240,13 @@ public class HostServiceImpl implements HostService {
 
     @Override
     @SneakyThrows
-    public HostVO getHostById(Long id) {
+    public HostVO getHostById(Long id, Boolean base) {
+        // 查询主机基础信息
+        if (Booleans.isTrue(base)) {
+            HostDO record = hostDAO.selectById(id);
+            Valid.notNull(record, ErrorMessage.HOST_ABSENT);
+            return HostConvert.MAPPER.to(record);
+        }
         // 查询 tag 信息
         Future<List<TagDTO>> tagFuture = tagRelApi.getRelTagsAsync(TagTypeEnum.HOST, id);
         // 查询分组信息
@@ -238,10 +254,13 @@ public class HostServiceImpl implements HostService {
         // 查询主机
         HostDO record = hostDAO.selectById(id);
         Valid.notNull(record, ErrorMessage.HOST_ABSENT);
+        // 查询规格
+        HostSpecExtraModel spec = hostExtraService.getHostExtra(Const.SYSTEM_USER_ID, id, HostExtraItemEnum.SPEC);
         // 转换
         HostVO vo = HostConvert.MAPPER.to(record);
         vo.setTags(tagFuture.get());
         vo.setGroupIdList(groupIdFuture.get());
+        vo.setSpec(spec);
         return vo;
     }
 
@@ -283,12 +302,20 @@ public class HostServiceImpl implements HostService {
         if (wrapper == null) {
             return DataGrid.of(Lists.empty());
         }
-        // 查询
-        DataGrid<HostVO> hosts = hostDAO.of()
+        // 完整条件
+        DataQuery<HostDO> query = hostDAO.of()
                 .wrapper(wrapper)
-                .page(request)
-                .order(request, HostDO::getId)
-                .dataGrid(HostConvert.MAPPER::to);
+                .page(request);
+        if (Booleans.isTrue(request.getOrderByAgent())) {
+            // 通过 agentInstallStatus 进行排序
+            query.order(false, HostDO::getAgentInstallStatus);
+            query.order(false, HostDO::getAgentOnlineStatus);
+        } else {
+            // 通过 id 进行排序
+            query.order(request, HostDO::getId);
+        }
+        // 查询数据
+        DataGrid<HostVO> hosts = query.dataGrid(HostConvert.MAPPER::to);
         // 查询拓展信息
         this.setExtraInfo(request, hosts.getRows());
         return hosts;
@@ -343,6 +370,8 @@ public class HostServiceImpl implements HostService {
         favoriteApi.deleteByRelIdList(FavoriteTypeEnum.HOST, idList);
         // 删除额外配置
         dataExtraApi.deleteByRelIdList(DataExtraTypeEnum.HOST, idList);
+        // 删除监控主机
+        monitorHostApi.deleteByHostIdList(idList);
     }
 
     @Override
@@ -396,9 +425,13 @@ public class HostServiceImpl implements HostService {
         }
         // 基础条件
         wrapper.eq(HostDO::getId, request.getId())
+                .in(HostDO::getId, request.getIdList())
                 .eq(HostDO::getOsType, request.getOsType())
                 .eq(HostDO::getArchType, request.getArchType())
                 .eq(HostDO::getStatus, request.getStatus())
+                .eq(HostDO::getAgentKey, request.getAgentKey())
+                .eq(HostDO::getAgentInstallStatus, request.getAgentInstallStatus())
+                .eq(HostDO::getAgentOnlineStatus, request.getAgentOnlineStatus())
                 .like(HostDO::getName, request.getName())
                 .like(HostDO::getCode, request.getCode())
                 .like(HostDO::getAddress, request.getAddress())

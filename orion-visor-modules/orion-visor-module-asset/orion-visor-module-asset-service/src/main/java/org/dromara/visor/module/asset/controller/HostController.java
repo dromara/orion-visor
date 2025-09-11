@@ -118,8 +118,9 @@ public class HostController {
     @Operation(summary = "通过 id 查询主机")
     @Parameter(name = "id", description = "id", required = true)
     @PreAuthorize("@ss.hasPermission('asset:host:query')")
-    public HostVO getHost(@RequestParam("id") Long id) {
-        return hostService.getHostById(id);
+    public HostVO getHost(@RequestParam("id") Long id,
+                          @RequestParam(value = "base", required = false) Boolean base) {
+        return hostService.getHostById(id, base);
     }
 
     @IgnoreLog(IgnoreLogMode.RET)

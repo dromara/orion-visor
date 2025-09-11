@@ -32,23 +32,28 @@ package org.dromara.visor.common.constant;
 public interface BeanOrderConst {
 
     /**
-     * 公共返回值包装处理器
-     */
-    int RESPONSE_ADVICE_WRAPPER = Integer.MIN_VALUE + 1000;
-
-    /**
      * 演示模式切面
      */
-    int DEMO_DISABLE_API_ASPECT = Integer.MIN_VALUE + 10;
+    int DEMO_DISABLE_API_ASPECT = Integer.MIN_VALUE + 100;
 
     /**
      * 全局日志打印
      */
-    int LOG_PRINT_ASPECT = Integer.MIN_VALUE + 20;
+    int LOG_PRINT_ASPECT = Integer.MIN_VALUE + 200;
+
+    /**
+     * 暴露接口切面
+     */
+    int EXPOSE_API_ASPECT = Integer.MIN_VALUE + 300;
 
     /**
      * 操作日志切面
      */
-    int OPERATOR_LOG_ASPECT = Integer.MIN_VALUE + 30;
+    int OPERATOR_LOG_ASPECT = Integer.MIN_VALUE + 400;
+
+    /**
+     * 公共返回值包装处理器
+     */
+    int RESPONSE_ADVICE_WRAPPER = Integer.MIN_VALUE + 1000;
 
 }

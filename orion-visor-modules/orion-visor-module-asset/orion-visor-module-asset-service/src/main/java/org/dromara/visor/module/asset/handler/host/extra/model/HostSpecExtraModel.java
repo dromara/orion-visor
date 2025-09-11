@@ -42,6 +42,11 @@ import java.util.List;
 public class HostSpecExtraModel implements GenericsDataModel {
 
     /**
+     * 是否已同步
+     */
+    private Boolean synced;
+
+    /**
      * sn
      */
     private String sn;
@@ -52,9 +57,19 @@ public class HostSpecExtraModel implements GenericsDataModel {
     private String osName;
 
     /**
+     * cpu 数量
+     */
+    private String cpuCount;
+
+    /**
      * cpu 核心数
      */
-    private Integer cpuCore;
+    private Integer cpuPhysicalCore;
+
+    /**
+     * cpu 线程数
+     */
+    private Integer cpuLogicalCore;
 
     /**
      * cpu 频率
@@ -72,7 +87,7 @@ public class HostSpecExtraModel implements GenericsDataModel {
     private Double memorySize;
 
     /**
-     * 硬盘大小
+     * 磁盘大小
      */
     private Double diskSize;
 
@@ -89,17 +104,17 @@ public class HostSpecExtraModel implements GenericsDataModel {
     /**
      * 公网 ip 列表
      */
-    private List<String> publicIpAddress;
+    private List<String> publicIpAddresses;
 
     /**
      * 内网 ip 列表
      */
-    private List<String> privateIpAddress;
+    private List<String> privateIpAddresses;
 
     /**
      * 负责人
      */
-    private String chargePerson;
+    private String ownerPerson;
 
     /**
      * 创建时间
@@ -130,6 +145,11 @@ public class HostSpecExtraModel implements GenericsDataModel {
          * 标签
          */
         private String label;
+
+        /**
+         * 键
+         */
+        private String key;
 
         /**
          * 值

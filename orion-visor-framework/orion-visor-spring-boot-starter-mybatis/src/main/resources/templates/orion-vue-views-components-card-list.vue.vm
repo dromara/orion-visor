@@ -133,14 +133,14 @@
 
   const cardColLayout = useCardColLayout();
   const pagination = useCardPagination();
+  const { loading, setLoading } = useLoading();
   const queryOrder = useQueryOrder(TableName, ASC);
   const { cardFieldConfig, fieldsHook } = useCardFieldConfig(TableName, fieldConfig);
-  const { loading, setLoading } = useLoading();
   #if($dictMap.entrySet().size() > 0)
   const { toOptions, getDictValue } = useDictStore();
   #end
 
-  const list = ref<${vue.featureEntity}QueryResponse[]>([]);
+  const list = ref<Array<${vue.featureEntity}QueryResponse>>([]);
   const formRef = ref();
   const formModel = reactive<${vue.featureEntity}QueryRequest>({
     searchValue: undefined,

@@ -47,4 +47,5 @@ export interface UserPreferenceView {
   hostView: ViewType;
   hostKeyView: ViewType;
   hostIdentityView: ViewType;
+  monitorHostView: ViewType;
 }

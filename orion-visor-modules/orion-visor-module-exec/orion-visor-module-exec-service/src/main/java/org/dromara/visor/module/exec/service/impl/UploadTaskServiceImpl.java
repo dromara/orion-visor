@@ -35,7 +35,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.dromara.visor.common.constant.Const;
 import org.dromara.visor.common.constant.ErrorMessage;
 import org.dromara.visor.common.enums.EndpointDefine;
-import org.dromara.visor.common.interfaces.FileClient;
+import org.dromara.visor.common.file.FileClient;
 import org.dromara.visor.common.security.LoginUser;
 import org.dromara.visor.common.utils.SqlUtils;
 import org.dromara.visor.framework.biz.operator.log.core.utils.OperatorLogs;
@@ -372,10 +372,9 @@ public class UploadTaskServiceImpl implements UploadTaskService {
         // 检查主机数量
         Valid.eq(hosts.size(), hostIdList.size(), ErrorMessage.HOST_ABSENT);
         // 检查主机状态
-        boolean allEnabled = hosts.stream()
-                .map(HostDTO::getStatus)
-                .allMatch(s -> HostStatusEnum.ENABLED.name().equals(s));
-        Valid.isTrue(allEnabled, ErrorMessage.HOST_NOT_ENABLED);
+        for (HostDTO host : hosts) {
+            Valid.eq(HostStatusEnum.ENABLED.name(), host.getStatus(), ErrorMessage.HOST_NOT_ENABLED, host.getName());
+        }
         return hosts;
     }
 

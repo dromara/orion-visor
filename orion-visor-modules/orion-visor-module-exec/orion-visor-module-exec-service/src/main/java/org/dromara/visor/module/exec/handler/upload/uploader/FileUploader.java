@@ -35,7 +35,7 @@ import org.dromara.visor.common.constant.Const;
 import org.dromara.visor.common.constant.ErrorMessage;
 import org.dromara.visor.common.constant.ExtraFieldConst;
 import org.dromara.visor.common.enums.EndpointDefine;
-import org.dromara.visor.common.interfaces.FileClient;
+import org.dromara.visor.common.file.FileClient;
 import org.dromara.visor.common.session.config.SshConnectConfig;
 import org.dromara.visor.common.session.ssh.SessionStores;
 import org.dromara.visor.common.utils.PathUtils;

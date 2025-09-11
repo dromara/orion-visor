@@ -14,7 +14,7 @@ const columns = [
     title: '主机信息',
     dataIndex: 'hostInfo',
     slotName: 'hostInfo',
-    width: 288,
+    width: 248,
     align: 'left',
     fixed: 'left',
     default: true,
@@ -100,7 +100,7 @@ const columns = [
   }, {
     title: '操作',
     slotName: 'handle',
-    width: 198,
+    width: 168,
     align: 'center',
     fixed: 'right',
     default: true,

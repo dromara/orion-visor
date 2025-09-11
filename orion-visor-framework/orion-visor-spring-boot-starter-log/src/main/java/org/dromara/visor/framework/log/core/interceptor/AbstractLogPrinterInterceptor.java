@@ -22,6 +22,7 @@
  */
 package org.dromara.visor.framework.log.core.interceptor;
 
+import cn.orionsec.kit.lang.utils.Strings;
 import cn.orionsec.kit.lang.utils.collect.Maps;
 import cn.orionsec.kit.lang.utils.reflect.Classes;
 import com.alibaba.fastjson.JSON;
@@ -31,8 +32,8 @@ import com.alibaba.fastjson.serializer.ValueFilter;
 import org.aopalliance.intercept.MethodInvocation;
 import org.dromara.visor.common.json.FieldDesensitizeFilter;
 import org.dromara.visor.common.json.FieldIgnoreFilter;
-import org.dromara.visor.common.trace.TraceIdHolder;
 import org.dromara.visor.common.security.SecurityHolder;
+import org.dromara.visor.common.trace.TraceIdHolder;
 import org.dromara.visor.framework.log.configuration.config.LogPrinterConfig;
 import org.dromara.visor.framework.log.core.annotation.IgnoreLog;
 import org.dromara.visor.framework.log.core.enums.IgnoreLogMode;
@@ -42,12 +43,13 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.Predicate;
 
 /**
  * 日志打印拦截器 基类
@@ -59,11 +61,6 @@ import java.util.function.Predicate;
 public abstract class AbstractLogPrinterInterceptor implements LogPrinterInterceptor {
 
     private static final ThreadLocal<IgnoreLogMode> IGNORE_LOG_MODE = new ThreadLocal<>();
-
-    /**
-     * 请求头过滤器
-     */
-    protected Predicate<String> headerFilter;
 
     /**
      * 字段过滤器
@@ -93,8 +90,6 @@ public abstract class AbstractLogPrinterInterceptor implements LogPrinterInterce
 
     @Override
     public void init() {
-        // 请求头过滤器
-        this.headerFilter = header -> config.getHeaders().contains(header);
         // 参数过滤器
         this.serializeFilters = new SerializeFilter[]{
                 // 忽略字段过滤器
@@ -134,6 +129,24 @@ public abstract class AbstractLogPrinterInterceptor implements LogPrinterInterce
         } finally {
             IGNORE_LOG_MODE.remove();
         }
+    }
+
+    /**
+     * 获取请求头
+     *
+     * @param request request
+     * @return headers
+     */
+    protected Map<String, String> getHeaderMap(HttpServletRequest request) {
+        Map<String, String> headers = new LinkedHashMap<>();
+        for (String headerName : config.getHeaders()) {
+            String headerValue = request.getHeader(headerName);
+            if (Strings.isBlank(headerValue)) {
+                continue;
+            }
+            headers.put(headerName, headerValue);
+        }
+        return headers;
     }
 
     /**

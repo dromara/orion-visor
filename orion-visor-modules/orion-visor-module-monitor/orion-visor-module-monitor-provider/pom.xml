@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <groupId>org.dromara.visor</groupId>
+        <artifactId>orion-visor-module-monitor</artifactId>
+        <version>${revision}</version>
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>orion-visor-module-monitor-provider</artifactId>
+    <packaging>jar</packaging>
+
+    <description>项目监控模块</description>
+    <url>https://github.com/dromara/orion-visor</url>
+
+    <dependencies>
+        <!-- common -->
+        <dependency>
+            <groupId>org.dromara.visor</groupId>
+            <artifactId>orion-visor-common</artifactId>
+        </dependency>
+    </dependencies>
+
+</project>

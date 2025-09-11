@@ -85,14 +85,8 @@ public class RowLogPrinterInterceptor extends AbstractLogPrinterInterceptor impl
         if (request != null) {
             // remoteAddr
             fields.put(REMOTE_ADDR, IpUtils.getRemoteAddr(request));
-            // header
-            Map<String, Object> headers = new LinkedHashMap<>();
-            Servlets.getHeaderMap(request).forEach((hk, hv) -> {
-                if (headerFilter.test(hk.toLowerCase())) {
-                    headers.put(hk, hv);
-                }
-            });
-            fields.put(HEADERS, headers);
+            // headers
+            fields.put(HEADERS, this.getHeaderMap(request));
         }
         Method method = invocation.getMethod();
         // 方法签名

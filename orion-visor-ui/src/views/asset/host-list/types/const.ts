@@ -56,6 +56,18 @@ export const HostAuthType = {
   IDENTITY: 'IDENTITY'
 };
 
+// 探针安装状态
+export const AgentInstallStatus = {
+  NOT_INSTALL: 0,
+  INSTALLED: 1,
+};
+
+// 探针在线状态
+export const AgentOnlineStatus = {
+  OFFLINE: 0,
+  ONLINE: 1,
+};
+
 // 获取系统类型 icon
 export const getHostOsIcon = (osType: string) => {
   return HostOsType[osType as keyof typeof HostOsType]?.icon;

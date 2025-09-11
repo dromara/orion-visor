@@ -81,7 +81,7 @@ public class DictParser {
                 meta.setComment(Strings.def(tableField.getComment(), meta.getField()));
             }
             // 设置额外参数 schema
-            if (meta.getExtraValues().size() > 0) {
+            if (!meta.getExtraValues().isEmpty()) {
                 List<Map<String, String>> extraSchema = meta.getExtraValues().get(0)
                         .keySet()
                         .stream()

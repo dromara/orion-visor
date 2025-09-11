@@ -28,6 +28,7 @@ import org.dromara.visor.module.asset.entity.dto.HostCacheDTO;
 import org.dromara.visor.module.asset.entity.request.host.HostCreateRequest;
 import org.dromara.visor.module.asset.entity.request.host.HostQueryRequest;
 import org.dromara.visor.module.asset.entity.request.host.HostUpdateRequest;
+import org.dromara.visor.module.asset.entity.vo.HostAgentStatusVO;
 import org.dromara.visor.module.asset.entity.vo.HostBaseVO;
 import org.dromara.visor.module.asset.entity.vo.HostVO;
 import org.mapstruct.Mapper;
@@ -60,6 +61,8 @@ public interface HostConvert {
     HostCacheDTO toCache(HostDO domain);
 
     HostBaseVO toBase(HostDO domain);
+
+    HostAgentStatusVO toAgentStatus(HostDO domain);
 
     HostCreateRequest toCreate(HostUpdateRequest request);
 

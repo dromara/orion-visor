@@ -24,7 +24,8 @@ package org.dromara.visor.framework.redis.configuration;
 
 import com.github.fppt.jedismock.RedisServer;
 import org.dromara.visor.common.constant.AutoConfigureOrderConst;
-import org.dromara.visor.common.interfaces.Locker;
+import org.dromara.visor.common.lock.EmptyLocker;
+import org.dromara.visor.common.lock.Locker;
 import org.dromara.visor.common.utils.LockerUtils;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.AutoConfigureOrder;
@@ -35,7 +36,6 @@ import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 
 import java.net.InetAddress;
-import java.util.function.Supplier;
 
 /**
  * MockRedis
@@ -79,18 +79,7 @@ public class OrionMockRedisAutoConfiguration {
      */
     @Bean
     public Locker redisLocker() {
-        Locker locker = new Locker() {
-            @Override
-            public boolean tryLock(String key, Runnable run) {
-                run.run();
-                return true;
-            }
-
-            @Override
-            public <T> T tryLock(String key, Supplier<T> call) {
-                return call.get();
-            }
-        };
+        EmptyLocker locker = new EmptyLocker();
         LockerUtils.setDelegate(locker);
         return locker;
     }

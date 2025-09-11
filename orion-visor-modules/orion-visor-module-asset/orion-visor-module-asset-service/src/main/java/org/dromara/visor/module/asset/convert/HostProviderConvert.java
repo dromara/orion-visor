@@ -26,6 +26,8 @@ import org.dromara.visor.common.mapstruct.StringConversion;
 import org.dromara.visor.module.asset.entity.domain.HostDO;
 import org.dromara.visor.module.asset.entity.dto.host.HostBaseDTO;
 import org.dromara.visor.module.asset.entity.dto.host.HostDTO;
+import org.dromara.visor.module.asset.entity.dto.host.HostQueryDTO;
+import org.dromara.visor.module.asset.entity.request.host.HostQueryRequest;
 import org.dromara.visor.module.asset.entity.vo.HostVO;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
@@ -41,6 +43,8 @@ import org.mapstruct.factory.Mappers;
 public interface HostProviderConvert {
 
     HostProviderConvert MAPPER = Mappers.getMapper(HostProviderConvert.class);
+
+    HostQueryRequest to(HostQueryDTO dto);
 
     HostDO to(HostDTO host);
 

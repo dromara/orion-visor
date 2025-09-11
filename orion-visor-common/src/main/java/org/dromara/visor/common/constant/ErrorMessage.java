@@ -102,7 +102,7 @@ public interface ErrorMessage {
 
     String HOST_TYPE_ERROR = "主机类型错误";
 
-    String HOST_NOT_ENABLED = "主机未启用";
+    String HOST_NOT_ENABLED = "{} 主机未启用";
 
     String CONFIG_NOT_ENABLED = "配置未启用";
 
@@ -146,6 +146,8 @@ public interface ErrorMessage {
 
     String FILE_ABSENT = "文件不存在";
 
+    String FILE_EXTENSION_TYPE = "文件类型不正确";
+
     String FILE_ABSENT_CLEAR = "文件不存在 (可能已被清理)";
 
     String LOG_ABSENT = "日志不存在";
@@ -157,6 +159,8 @@ public interface ErrorMessage {
     String AUTH_ERROR = "认证失败";
 
     String FILE_UPLOAD_ERROR = "文件上传失败";
+
+    String CALC_SIGN_FAILED = "计算签名失败";
 
     String SCRIPT_UPLOAD_ERROR = "脚本上传失败";
 
@@ -181,6 +185,8 @@ public interface ErrorMessage {
     String DECOMPRESS_ERROR = "解压失败";
 
     String COMPRESS_FILE_ABSENT = "压缩文件不存在";
+
+    String DECOMPRESS_FILE_ABSENT = "压缩文件不存在";
 
     String UNABLE_DOWNLOAD_FOLDER = "无法下载文件夹";
 
@@ -212,11 +218,44 @@ public interface ErrorMessage {
     /**
      * 获取错误信息
      *
+     * @param ex ex
+     * @return message
+     */
+    static String getErrorMessage(Exception ex) {
+        return getErrorMessage(ex, ErrorMessage.EXEC_ERROR, 0);
+    }
+
+    /**
+     * 获取错误信息
+     *
+     * @param ex  ex
+     * @param len len
+     * @return message
+     */
+    static String getErrorMessage(Exception ex, int len) {
+        return getErrorMessage(ex, ErrorMessage.EXEC_ERROR, len);
+    }
+
+    /**
+     * 获取错误信息
+     *
      * @param ex         ex
      * @param defaultMsg defaultMsg
      * @return message
      */
     static String getErrorMessage(Exception ex, String defaultMsg) {
+        return getErrorMessage(ex, defaultMsg, 0);
+    }
+
+    /**
+     * 获取错误信息
+     *
+     * @param ex         ex
+     * @param defaultMsg defaultMsg
+     * @param len        len
+     * @return message
+     */
+    static String getErrorMessage(Exception ex, String defaultMsg, int len) {
         if (ex == null) {
             return null;
         }
@@ -226,7 +265,11 @@ public interface ErrorMessage {
         }
         // 业务异常
         if (isBizException(ex)) {
-            return message;
+            if (len > 0) {
+                return Strings.retain(message, len);
+            } else {
+                return message;
+            }
         }
         return defaultMsg;
     }

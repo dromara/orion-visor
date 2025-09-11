@@ -44,7 +44,7 @@ import org.dromara.visor.common.constant.ErrorMessage;
 import org.dromara.visor.common.constant.FileConst;
 import org.dromara.visor.common.enums.BooleanBit;
 import org.dromara.visor.common.enums.EndpointDefine;
-import org.dromara.visor.common.interfaces.FileClient;
+import org.dromara.visor.common.file.FileClient;
 import org.dromara.visor.common.session.config.SshConnectConfig;
 import org.dromara.visor.common.session.ssh.SessionStores;
 import org.dromara.visor.common.utils.PathUtils;
@@ -408,6 +408,7 @@ public abstract class BaseExecCommandHandler implements IExecCommandHandler {
         params.put("hostAddress", connectConfig.getHostAddress());
         params.put("hostPort", connectConfig.getHostPort());
         params.put("hostUsername", connectConfig.getUsername());
+        params.put("agentKey", connectConfig.getAgentKey());
         params.put("hostUuid", uuid);
         params.put("hostUuidShort", uuid.replace("-", Strings.EMPTY));
         params.put("osType", connectConfig.getOsType());

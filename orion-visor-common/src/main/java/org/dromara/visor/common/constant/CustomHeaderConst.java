@@ -33,4 +33,8 @@ public interface CustomHeaderConst {
 
     String APP_VERSION = "X-App-Version";
 
+    String AGENT_KEY_HEADER = "X-Agent-Key";
+
+    String AGENT_VERSION_HEADER = "X-Agent-Version";
+
 }

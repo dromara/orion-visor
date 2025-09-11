@@ -63,6 +63,9 @@ public class BaseConnectConfig implements IBaseConnectConfig {
     @Schema(description = "主机端口")
     private Integer hostPort;
 
+    @Schema(description = "agentKey")
+    private String agentKey;
+
     @Schema(description = "用户名")
     private String username;
 

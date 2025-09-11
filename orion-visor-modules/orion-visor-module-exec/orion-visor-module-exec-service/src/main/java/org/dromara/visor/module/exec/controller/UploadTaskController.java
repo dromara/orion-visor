@@ -113,7 +113,8 @@ public class UploadTaskController {
     @Operation(summary = "查询上传状态")
     @Parameter(name = "id", description = "id", required = true)
     @PreAuthorize("@ss.hasPermission('exec:upload-task:query')")
-    public List<UploadTaskStatusVO> getUploadTaskStatus(@RequestParam("idList") List<Long> idList, @RequestParam("queryFiles") Boolean queryFiles) {
+    public List<UploadTaskStatusVO> getUploadTaskStatus(@RequestParam("idList") List<Long> idList,
+                                                        @RequestParam("queryFiles") Boolean queryFiles) {
         return uploadTaskService.getUploadTaskStatus(idList, queryFiles);
     }
 

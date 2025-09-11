@@ -22,9 +22,10 @@
  */
 package org.dromara.visor.common.utils;
 
+import cn.orionsec.kit.lang.able.Executable;
 import cn.orionsec.kit.lang.utils.Exceptions;
 import lombok.extern.slf4j.Slf4j;
-import org.dromara.visor.common.interfaces.Locker;
+import org.dromara.visor.common.lock.Locker;
 
 import java.util.function.Supplier;
 
@@ -44,26 +45,97 @@ public class LockerUtils {
     }
 
     /**
-     * 尝试获取锁
+     * 尝试获取锁并执行
      *
-     * @param key key
-     * @param run run
+     * @param key        key
+     * @param executable exec
      * @return 是否获取到锁
      */
-    public static boolean tryLock(String key, Runnable run) {
-        return delegate.tryLock(key, run);
+    public static boolean tryLockExecute(String key, Executable executable) {
+        return delegate.tryLockExecute(key, executable);
     }
 
     /**
-     * 尝试获取锁
+     * 尝试获取锁并执行
      *
-     * @param key  key
-     * @param call call
-     * @param <T>  T
+     * @param key        key
+     * @param timeout    timeout
+     * @param executable exec
+     * @return 是否获取到锁
+     */
+    public static boolean tryLockExecute(String key, long timeout, Executable executable) {
+        return delegate.tryLockExecute(key, timeout, executable);
+    }
+
+    /**
+     * 尝试获取锁并执行 未获取到锁则抛出异常
+     *
+     * @param key      key
+     * @param callable callable
+     * @param <T>      T
      * @return 执行结果
      */
-    public static <T> T tryLock(String key, Supplier<T> call) {
-        return delegate.tryLock(key, call);
+    public static <T> T tryLockExecute(String key, Supplier<T> callable) {
+        return delegate.tryLockExecute(key, callable);
+    }
+
+    /**
+     * 尝试获取锁并执行 未获取到锁则抛出异常
+     *
+     * @param key      key
+     * @param timeout  timeout
+     * @param callable callable
+     * @param <T>      T
+     * @return 执行结果
+     */
+    public static <T> T tryLockExecute(String key, long timeout, Supplier<T> callable) {
+        return delegate.tryLockExecute(key, timeout, callable);
+    }
+
+    /**
+     * 阻塞获取锁并执行
+     *
+     * @param key        key
+     * @param executable exec
+     */
+    public static void lockExecute(String key, Executable executable) {
+        delegate.lockExecute(key, executable);
+    }
+
+    /**
+     * 阻塞获取锁并执行
+     *
+     * @param key        key
+     * @param timeout    timeout
+     * @param executable exec
+     */
+    public static void lockExecute(String key, long timeout, Executable executable) {
+        delegate.lockExecute(key, timeout, executable);
+    }
+
+    /**
+     * 阻塞获取锁并执行
+     *
+     * @param key      key
+     * @param callable callable
+     * @param <T>      T
+     * @return 执行结果
+     */
+    public static <T> T lockExecute(String key, Supplier<T> callable) {
+        return delegate.lockExecute(key, callable);
+    }
+
+    /**
+     * 阻塞获取锁并执行
+     *
+     * @param key      key
+     * @param timeout  timeout
+     * @param callable callable
+     * @param <T>      T
+     * @return 执行结果
+     */
+    public static <T> T lockExecute(String key, long timeout, Supplier<T> callable) {
+        return delegate.lockExecute(key, timeout, callable);
     }
 
     public static void setDelegate(Locker delegate) {

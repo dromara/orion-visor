@@ -63,6 +63,11 @@
             <artifactId>orion-visor-module-terminal-service</artifactId>
             <version>${revision}</version>
         </dependency>
+        <dependency>
+            <groupId>org.dromara.visor</groupId>
+            <artifactId>orion-visor-module-monitor-service</artifactId>
+            <version>${revision}</version>
+        </dependency>
 
         <!-- framework starter -->
         <dependency>
@@ -91,7 +96,7 @@
         </dependency>
         <dependency>
             <groupId>org.dromara.visor</groupId>
-            <artifactId>orion-visor-spring-boot-starter-encrypt</artifactId>
+            <artifactId>orion-visor-spring-boot-starter-cipher</artifactId>
         </dependency>
         <dependency>
             <groupId>org.dromara.visor</groupId>
@@ -124,6 +129,10 @@
         <dependency>
             <groupId>org.dromara.visor</groupId>
             <artifactId>orion-visor-spring-boot-starter-monitor</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.dromara.visor</groupId>
+            <artifactId>orion-visor-spring-boot-starter-influxdb</artifactId>
         </dependency>
         <dependency>
             <groupId>org.dromara.visor</groupId>

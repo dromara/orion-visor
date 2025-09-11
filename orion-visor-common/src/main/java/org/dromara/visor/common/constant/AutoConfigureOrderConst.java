@@ -53,21 +53,23 @@ public interface AutoConfigureOrderConst {
 
     int FRAMEWORK_REDIS_CACHE = Integer.MIN_VALUE + 2000;
 
-    int FRAMEWORK_CONFIG = Integer.MIN_VALUE + 2100;
+    int FRAMEWORK_INFLUXDB = Integer.MIN_VALUE + 2100;
 
-    int FRAMEWORK_ENCRYPT = Integer.MIN_VALUE + 2200;
+    int FRAMEWORK_CONFIG = Integer.MIN_VALUE + 2300;
 
-    int FRAMEWORK_STORAGE = Integer.MIN_VALUE + 2300;
+    int FRAMEWORK_CYPHER = Integer.MIN_VALUE + 2400;
 
-    int FRAMEWORK_JOB = Integer.MIN_VALUE + 2400;
+    int FRAMEWORK_STORAGE = Integer.MIN_VALUE + 2500;
 
-    int FRAMEWORK_JOB_QUARTZ = Integer.MIN_VALUE + 2500;
+    int FRAMEWORK_JOB = Integer.MIN_VALUE + 2600;
 
-    int FRAMEWORK_JOB_ASYNC = Integer.MIN_VALUE + 2600;
+    int FRAMEWORK_JOB_QUARTZ = Integer.MIN_VALUE + 2700;
 
-    int FRAMEWORK_MONITOR = Integer.MIN_VALUE + 2700;
+    int FRAMEWORK_JOB_ASYNC = Integer.MIN_VALUE + 2800;
 
-    int FRAMEWORK_BIZ_OPERATOR_LOG = Integer.MIN_VALUE + 2800;
+    int FRAMEWORK_MONITOR = Integer.MIN_VALUE + 2900;
+
+    int FRAMEWORK_BIZ_OPERATOR_LOG = Integer.MIN_VALUE + 3000;
 
     int FRAMEWORK_BANNER = Integer.MIN_VALUE + 10000;
 
