@@ -47,7 +47,7 @@
           <a-select v-model="chartRange"
                     style="width: 138px;"
                     :options="toOptions(ChartRangeKey)"
-                    @change="changeChartRange">
+                    @change="(s: any) => changeChartRange(s)">
             <template #prefix>
               区间
             </template>
