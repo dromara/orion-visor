@@ -3,14 +3,6 @@ description: File a bug report.
 title: "[错误报告]: "
 labels: [ "" ]
 body:
-  - type: markdown
-    attributes:
-      value: |
-        在提交前请确认: 
-         - 使用的是[最新版本](https://github.com/dromara/orion-visor/releases)
-         - 参考了[安装文档](https://visor.orionsec.cn/quickstart/docker.html)
-         - 查阅了[常见问题](https://visor.orionsec.cn/support/faq.html)
-         - 搜索了[已有 issue](https://github.com/dromara/orion-visor/issues)
   - type: checkboxes
     id: confirm
     attributes:
