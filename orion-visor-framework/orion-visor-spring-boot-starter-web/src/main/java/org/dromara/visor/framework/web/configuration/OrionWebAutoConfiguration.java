@@ -85,7 +85,7 @@ public class OrionWebAutoConfiguration implements WebMvcConfigurer {
         // 公共 api 前缀
         AntPathMatcher antPathMatcher = new AntPathMatcher(".");
         configurer.addPathPrefix(orionApiPrefix, clazz -> clazz.isAnnotationPresent(RestController.class)
-                && antPathMatcher.match("org.dromara.visor.module.**.controller.**", clazz.getPackage().getName()));
+                && antPathMatcher.match("org.dromara.visor.**.controller.**", clazz.getPackage().getName()));
     }
 
     @Override
