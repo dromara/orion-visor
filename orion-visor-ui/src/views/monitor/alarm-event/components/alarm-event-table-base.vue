@@ -146,6 +146,7 @@
           <!-- 处理 -->
           <a-button v-permission="['monitor:alarm-event:handle']"
                     type="text"
+                    size="mini"
                     @click="$emit('openHandle', [record.id])">
             处理
           </a-button>

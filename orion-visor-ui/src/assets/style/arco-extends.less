@@ -19,7 +19,25 @@
   font-size: 13px;
 }
 
-// 表格
+// 表格行
+.arco-table-tr-checked .arco-table-td {
+  background-color: rgb(var(--gray-1)) !important;
+}
+
+.arco-table-tr-checked .arco-table-td:hover {
+  background-color: rgb(var(--gray-1)) !important;
+}
+
+.arco-table-tr-checked.arco-table-tr:hover .arco-table-td {
+  background-color: rgb(var(--gray-2)) !important;
+}
+
+.arco-table-tr-checked .arco-table-td.arco-table-col-fixed-left::before,
+.arco-table-tr-checked .arco-table-td.arco-table-col-fixed-right::before {
+  background-color: rgb(var(--gray-2)) !important;
+}
+
+// 表格单元格
 .arco-table-cell {
   .circle {
     display: inline-block;
