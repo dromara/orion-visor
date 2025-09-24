@@ -104,7 +104,7 @@ public interface TerminalConnectLogService {
     Long getTerminalConnectLogCount(TerminalConnectLogQueryRequest request);
 
     /**
-     * 清空终端连接日志
+     * 清理终端连接日志
      *
      * @param request request
      * @return effect

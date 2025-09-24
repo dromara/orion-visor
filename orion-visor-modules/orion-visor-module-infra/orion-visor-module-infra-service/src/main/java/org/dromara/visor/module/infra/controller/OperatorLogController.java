@@ -88,7 +88,7 @@ public class OperatorLogController {
 
     @OperatorLog(OperatorLogOperatorType.CLEAR)
     @PostMapping("/clear")
-    @Operation(summary = "清空操作日志")
+    @Operation(summary = "清理操作日志")
     @PreAuthorize("@ss.hasPermission('infra:operator-log:management:clear')")
     public Integer clearOperatorLog(@Validated @RequestBody OperatorLogClearRequest request) {
         return operatorLogService.clearOperatorLog(request);

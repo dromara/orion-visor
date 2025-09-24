@@ -54,19 +54,19 @@ public class BaseDO implements Serializable {
     private Long id;
 
     @Schema(description = "创建时间")
-    @TableField(fill = FieldFill.INSERT)
+    @TableField(value = "create_time", fill = FieldFill.INSERT)
     private Date createTime;
 
     @Schema(description = "修改时间")
-    @TableField(fill = FieldFill.INSERT_UPDATE)
+    @TableField(value = "update_time", fill = FieldFill.INSERT_UPDATE)
     private Date updateTime;
 
     @Schema(description = "创建人")
-    @TableField(fill = FieldFill.INSERT, jdbcType = JdbcType.VARCHAR)
+    @TableField(value = "creator", fill = FieldFill.INSERT, jdbcType = JdbcType.VARCHAR)
     private String creator;
 
     @Schema(description = "修改人")
-    @TableField(fill = FieldFill.INSERT_UPDATE, update = "IFNULL(#{et.updater}, updater)", jdbcType = JdbcType.VARCHAR)
+    @TableField(value = "updater", fill = FieldFill.INSERT_UPDATE, update = "IFNULL(#{et.updater}, updater)", jdbcType = JdbcType.VARCHAR)
     private String updater;
 
     /**
@@ -75,7 +75,7 @@ public class BaseDO implements Serializable {
      */
     @Schema(description = "是否删除 0未删除 1已删除")
     @TableLogic
-    @TableField(fill = FieldFill.INSERT, jdbcType = JdbcType.TINYINT)
+    @TableField(value = "deleted", fill = FieldFill.INSERT, jdbcType = JdbcType.TINYINT)
     private Boolean deleted;
 
 }

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.dromara.visor.module.monitor.dao.AlarmEventDAO">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="org.dromara.visor.module.monitor.entity.domain.AlarmEventDO">
+        <id column="id" property="id"/>
+        <result column="host_id" property="hostId"/>
+        <result column="host_name" property="hostName"/>
+        <result column="host_address" property="hostAddress"/>
+        <result column="agent_key" property="agentKey"/>
+        <result column="policy_id" property="policyId"/>
+        <result column="policy_rule_id" property="policyRuleId"/>
+        <result column="metrics_id" property="metricsId"/>
+        <result column="metrics_measurement" property="metricsMeasurement"/>
+        <result column="alarm_tags" property="alarmTags"/>
+        <result column="alarm_value" property="alarmValue"/>
+        <result column="alarm_threshold" property="alarmThreshold"/>
+        <result column="alarm_info" property="alarmInfo"/>
+        <result column="alarm_level" property="alarmLevel"/>
+        <result column="trigger_condition" property="triggerCondition"/>
+        <result column="consecutive_count" property="consecutiveCount"/>
+        <result column="false_alarm" property="falseAlarm"/>
+        <result column="handle_status" property="handleStatus"/>
+        <result column="handle_time" property="handleTime"/>
+        <result column="handle_remark" property="handleRemark"/>
+        <result column="handle_user_id" property="handleUserId"/>
+        <result column="handle_username" property="handleUsername"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="creator" property="creator"/>
+        <result column="updater" property="updater"/>
+        <result column="deleted" property="deleted"/>
+    </resultMap>
+
+    <!-- 操作数量映射结果 -->
+    <resultMap id="CountResultMap" type="org.dromara.visor.module.monitor.entity.po.AlarmPolicyRuleCountPO">
+        <result column="policy_id" property="policyId"/>
+        <result column="total_count" property="count"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, host_id, host_name, host_address, agent_key, policy_id, policy_rule_id, metrics_id, metrics_measurement, alarm_tags, alarm_value, alarm_threshold, alarm_info, alarm_level, trigger_condition, consecutive_count, false_alarm, handle_status, handle_time, handle_remark, handle_user_id, handle_username, create_time, update_time, creator, updater, deleted
+    </sql>
+
+    <select id="selectPolicyEventCount" resultMap="CountResultMap">
+        SELECT policy_id, COUNT(1) total_count
+        FROM monitor_alarm_event
+        WHERE deleted = 0
+        AND policy_id IN
+        <foreach collection="policyIdList" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        <if test="createTimeStart != null">
+            AND create_time >= #{createTimeStart}
+        </if>
+        <if test="createTimeEnd != null">
+            <![CDATA[
+            AND create_time <= #{createTimeEnd}
+            ]]>
+        </if>
+        GROUP BY policy_id
+    </select>
+
+</mapper>

@@ -25,9 +25,11 @@ package org.dromara.visor.module.monitor.dao;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.dromara.visor.framework.mybatis.core.mapper.IMapper;
 import org.dromara.visor.framework.mybatis.core.query.Conditions;
 import org.dromara.visor.module.monitor.entity.domain.MonitorHostDO;
+import org.dromara.visor.module.monitor.entity.po.MonitorHostCountPO;
 
 import java.util.List;
 
@@ -105,5 +107,26 @@ public interface MonitorHostDAO extends IMapper<MonitorHostDO> {
                 .eq(MonitorHostDO::getPolicyId, policyId);
         return this.update(null, updateWrapper);
     }
+
+    /**
+     * 设置 policyId 为 null
+     *
+     * @param id id
+     * @return effect
+     */
+    default int setPolicyIdWithNullById(Long id) {
+        LambdaUpdateWrapper<MonitorHostDO> updateWrapper = Wrappers.<MonitorHostDO>lambdaUpdate()
+                .set(MonitorHostDO::getPolicyId, null)
+                .eq(MonitorHostDO::getId, id);
+        return this.update(null, updateWrapper);
+    }
+
+    /**
+     * 查询告警主机数量
+     *
+     * @param policyIdList policyIdList
+     * @return rows
+     */
+    List<MonitorHostCountPO> selectPolicyHostCount(@Param("policyIdList") List<Long> policyIdList);
 
 }

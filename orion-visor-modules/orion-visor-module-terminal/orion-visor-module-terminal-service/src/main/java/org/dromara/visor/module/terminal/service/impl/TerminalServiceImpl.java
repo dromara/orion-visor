@@ -27,7 +27,6 @@ import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.visor.common.constant.ExtraFieldConst;
 import org.dromara.visor.common.security.LoginUser;
-import org.dromara.visor.common.utils.Valid;
 import org.dromara.visor.framework.redis.core.utils.RedisStrings;
 import org.dromara.visor.framework.security.core.utils.SecurityUtils;
 import org.dromara.visor.module.infra.api.DictValueApi;
@@ -77,7 +76,7 @@ public class TerminalServiceImpl implements TerminalService {
 
     @Override
     public String getTerminalAccessToken(TerminalSessionAccessRequest request) {
-        LoginUser user = Valid.notNull(SecurityUtils.getLoginUser());
+        LoginUser user = SecurityUtils.getLoginUserNotNull();
         log.info("TerminalService.getHostAccessToken userId: {}", user.getId());
         String accessToken = UUIds.random19();
         TerminalAccessDTO access = TerminalAccessDTO.builder()
@@ -96,7 +95,7 @@ public class TerminalServiceImpl implements TerminalService {
 
     @Override
     public String getTerminalTransferToken() {
-        LoginUser user = Valid.notNull(SecurityUtils.getLoginUser());
+        LoginUser user = SecurityUtils.getLoginUserNotNull();
         log.info("TerminalService.getTerminalTransferToken userId: {}", user.getId());
         String transferToken = UUIds.random19();
         TerminalTransferDTO transfer = TerminalTransferDTO.builder()

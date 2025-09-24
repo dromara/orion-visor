@@ -63,13 +63,15 @@ public interface AutoConfigureOrderConst {
 
     int FRAMEWORK_JOB = Integer.MIN_VALUE + 2600;
 
-    int FRAMEWORK_JOB_QUARTZ = Integer.MIN_VALUE + 2700;
+    int FRAMEWORK_JOB_QUARTZ = Integer.MIN_VALUE + 2610;
 
-    int FRAMEWORK_JOB_ASYNC = Integer.MIN_VALUE + 2800;
+    int FRAMEWORK_JOB_ASYNC = Integer.MIN_VALUE + 2620;
 
-    int FRAMEWORK_MONITOR = Integer.MIN_VALUE + 2900;
+    int FRAMEWORK_BIZ_PUSH = Integer.MIN_VALUE + 2700;
 
-    int FRAMEWORK_BIZ_OPERATOR_LOG = Integer.MIN_VALUE + 3000;
+    int FRAMEWORK_BIZ_OPERATOR_LOG = Integer.MIN_VALUE + 7000;
+
+    int FRAMEWORK_MONITOR = Integer.MIN_VALUE + 9000;
 
     int FRAMEWORK_BANNER = Integer.MIN_VALUE + 10000;
 

@@ -45,6 +45,11 @@
             <artifactId>orion-visor-module-terminal-provider</artifactId>
             <version>${revision}</version>
         </dependency>
+        <dependency>
+            <groupId>org.dromara.visor</groupId>
+            <artifactId>orion-visor-module-monitor-provider</artifactId>
+            <version>${revision}</version>
+        </dependency>
 
         <!-- framework starter -->
         <dependency>
@@ -58,10 +63,6 @@
         <dependency>
             <groupId>org.dromara.visor</groupId>
             <artifactId>orion-visor-spring-boot-starter-log</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.dromara.visor</groupId>
-            <artifactId>orion-visor-spring-boot-starter-biz-operator-log</artifactId>
         </dependency>
         <dependency>
             <groupId>org.dromara.visor</groupId>
@@ -90,6 +91,14 @@
         <dependency>
             <groupId>org.dromara.visor</groupId>
             <artifactId>orion-visor-spring-boot-starter-test</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.dromara.visor</groupId>
+            <artifactId>orion-visor-spring-boot-starter-biz-push</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.dromara.visor</groupId>
+            <artifactId>orion-visor-spring-boot-starter-biz-operator-log</artifactId>
         </dependency>
     </dependencies>
 

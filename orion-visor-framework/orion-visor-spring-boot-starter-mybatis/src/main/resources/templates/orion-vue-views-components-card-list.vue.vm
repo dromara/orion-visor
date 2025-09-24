@@ -4,7 +4,7 @@
              :create-card-position="false"
              :loading="loading"
              :field-config="cardFieldConfig"
-             :list="list"
+             :list="renderList"
              :pagination="pagination"
              :card-layout-cols="cardColLayout"
              :filter-count="filterCount"
@@ -140,7 +140,7 @@
   const { toOptions, getDictValue } = useDictStore();
   #end
 
-  const list = ref<Array<${vue.featureEntity}QueryResponse>>([]);
+  const renderList = ref<Array<${vue.featureEntity}QueryResponse>>([]);
   const formRef = ref();
   const formModel = reactive<${vue.featureEntity}QueryRequest>({
     searchValue: undefined,
@@ -196,7 +196,7 @@
     try {
       setLoading(true);
       const { data } = await get${vue.featureEntity}Page(queryOrder.markOrderly(request));
-      list.value = data.rows;
+      renderList.value = data.rows;
       pagination.total = data.total;
       pagination.current = request.page;
       pagination.pageSize = request.limit;

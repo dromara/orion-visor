@@ -61,52 +61,6 @@
         </dependency>
         <dependency>
             <groupId>org.dromara.visor</groupId>
-            <artifactId>orion-visor-spring-boot-starter-biz-operator-log</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.dromara.visor</groupId>
-            <artifactId>orion-visor-spring-boot-starter-desensitize</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.dromara.visor</groupId>
-            <artifactId>orion-visor-spring-boot-starter-security</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.dromara.visor</groupId>
-            <artifactId>orion-visor-spring-boot-starter-redis</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.dromara.visor</groupId>
-            <artifactId>orion-visor-spring-boot-starter-mybatis</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.dromara.visor</groupId>
-            <artifactId>orion-visor-spring-boot-starter-storage</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.dromara.visor</groupId>
-            <artifactId>orion-visor-spring-boot-starter-test</artifactId>
-        </dependency>
-
-        <!-- framework starter -->
-        <dependency>
-            <groupId>org.dromara.visor</groupId>
-            <artifactId>orion-visor-spring-boot-starter-web</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.dromara.visor</groupId>
-            <artifactId>orion-visor-spring-boot-starter-websocket</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.dromara.visor</groupId>
-            <artifactId>orion-visor-spring-boot-starter-log</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.dromara.visor</groupId>
-            <artifactId>orion-visor-spring-boot-starter-biz-operator-log</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.dromara.visor</groupId>
             <artifactId>orion-visor-spring-boot-starter-desensitize</artifactId>
         </dependency>
         <dependency>
@@ -128,6 +82,18 @@
         <dependency>
             <groupId>org.dromara.visor</groupId>
             <artifactId>orion-visor-spring-boot-starter-job</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.dromara.visor</groupId>
+            <artifactId>orion-visor-spring-boot-starter-test</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.dromara.visor</groupId>
+            <artifactId>orion-visor-spring-boot-starter-biz-push</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.dromara.visor</groupId>
+            <artifactId>orion-visor-spring-boot-starter-biz-operator-log</artifactId>
         </dependency>
 
         <!-- guacd -->

@@ -11,13 +11,20 @@ RUN \
   ln -sf /usr/share/zoneinfo/${TZ} /etc/localtime && \
   echo "${TZ}" > /etc/timezone && \
   rm -rf /var/cache/apk/* && \
+  rm -rf /etc/nginx/nginx.conf && \
   rm -rf /etc/nginx/conf.d/*
 
-# 复制包
+# 复制前端静态文件
 COPY ./ui/dist /usr/share/nginx/html
 
 # 复制配置
-COPY ./ui/nginx.conf /etc/nginx/conf.d
+COPY ./ui/nginx.conf /etc/nginx
+COPY ./ui/service.conf /etc/nginx/conf.d
+
+# 复制启动脚本
+COPY ./ui/entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
 
 # 启动
+ENTRYPOINT ["/entrypoint.sh"]
 CMD ["nginx", "-g", "daemon off;"]

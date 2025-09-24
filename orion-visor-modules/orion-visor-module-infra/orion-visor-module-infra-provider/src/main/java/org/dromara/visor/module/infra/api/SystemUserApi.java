@@ -22,7 +22,10 @@
  */
 package org.dromara.visor.module.infra.api;
 
+import org.dromara.visor.common.entity.PushUser;
 import org.dromara.visor.module.infra.entity.dto.user.SystemUserDTO;
+
+import java.util.List;
 
 /**
  * 用户服务
@@ -64,5 +67,29 @@ public interface SystemUserApi {
      * @return user
      */
     SystemUserDTO getUserById(Long id);
+
+    /**
+     * 通过 id 查询用户
+     *
+     * @param idList idList
+     * @return user
+     */
+    List<SystemUserDTO> getUserByIdList(List<Long> idList);
+
+    /**
+     * 通过 id 查询推送用户
+     *
+     * @param id id
+     * @return user
+     */
+    PushUser getNotifyUserById(Long id);
+
+    /**
+     * 通过 id 查询推送用户
+     *
+     * @param idList idList
+     * @return user
+     */
+    List<PushUser> getNotifyUserByIdList(List<Long> idList);
 
 }

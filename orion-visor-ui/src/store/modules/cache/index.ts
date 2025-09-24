@@ -24,6 +24,9 @@ import { getExecJobList } from '@/api/exec/exec-job';
 import { getPathBookmarkGroupList } from '@/api/terminal/path-bookmark-group';
 import { getCommandSnippetList } from '@/api/terminal/command-snippet';
 import { getPathBookmarkList } from '@/api/terminal/path-bookmark';
+import { getNotifyTemplateList } from '@/api/system/notify-template';
+import { getAlarmPolicyList } from '@/api/monitor/alarm-policy';
+import { getMetricsList } from '@/api/monitor/metrics';
 
 export default defineStore('cache', {
   state: (): CacheState => ({}),
@@ -173,6 +176,21 @@ export default defineStore('cache', {
       return await this.load('execJob', getExecJobList, ['exec:exec-job:query'], force);
     },
 
+    // 查询监控告警策略列表
+    async loadMonitorAlarmPolicy(force = false) {
+      return await this.load('alarmPolicy', getAlarmPolicyList, ['monitor:alarm-policy:query'], force);
+    },
+
+    // 查询监控指标列表
+    async loadMonitorMetricsList(force = false) {
+      return await this.load('monitorMetrics', getMetricsList, ['monitor:monitor-metrics:query'], force);
+    },
+
+    // 查询通知模板列表
+    async loadNotifyTemplate(bizType: string, force = false) {
+      return await this.load(`notifyTemplate_${bizType}`, () => getNotifyTemplateList(bizType), ['infra:notify-template:query'], force);
+    },
+
     // 加载偏好
     async loadPreference<T>(type: PreferenceType, force = false) {
       return await this.load(`preference_${type}`, () => getPreference<T>(type), undefined, force, {});
@@ -185,8 +203,8 @@ export default defineStore('cache', {
 
     // 加载系统设置
     async loadSystemSetting(force = false) {
-      return await this.load(`system_setting`, getSystemAggregateSetting, undefined, force, {});
-    },
+      return await this.load('systemSetting', getSystemAggregateSetting, undefined, force, {});
+    }
 
   }
 });

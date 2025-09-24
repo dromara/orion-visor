@@ -16,7 +16,7 @@ export interface OperatorLogQueryRequest extends Pagination, OrderDirection {
 }
 
 /**
- * 操作日志清理参数
+ * 操作日志清空请求
  */
 export interface OperatorLogClearRequest extends OperatorLogQueryRequest, ClearRequest {
 }

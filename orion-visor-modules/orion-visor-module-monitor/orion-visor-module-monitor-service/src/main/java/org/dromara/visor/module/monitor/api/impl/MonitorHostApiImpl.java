@@ -22,12 +22,10 @@
  */
 package org.dromara.visor.module.monitor.api.impl;
 
-import cn.orionsec.kit.lang.utils.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
-import org.dromara.visor.common.constant.Const;
 import org.dromara.visor.module.monitor.api.MonitorHostApi;
-import org.dromara.visor.module.monitor.dao.MonitorHostDAO;
-import org.dromara.visor.module.monitor.define.context.MonitorContext;
+import org.dromara.visor.module.monitor.service.MonitorHostService;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -44,28 +42,13 @@ import java.util.List;
 @Service
 public class MonitorHostApiImpl implements MonitorHostApi {
 
+    @Lazy
     @Resource
-    private MonitorHostDAO monitorHostDAO;
-
-    @Resource
-    private MonitorContext monitorContext;
-
-    @Override
-    public void setAgentOffline(List<String> agentKeyList) {
-        // 下线后删除指标
-        agentKeyList.forEach(s -> monitorContext.setAgentMetrics(s, null));
-    }
+    private MonitorHostService monitorHostService;
 
     @Override
     public Integer deleteByHostIdList(List<Long> hostIdList) {
-        log.info("MonitorHostApi.deleteByHostIdList start hostIdList: {}", hostIdList);
-        if (Lists.isEmpty(hostIdList)) {
-            return Const.N_0;
-        }
-        // 通过 hostId 删除
-        int effect = monitorHostDAO.deleteByHostIdList(hostIdList);
-        log.info("MonitorHostApi.deleteByHostIdList finish effect: {}", effect);
-        return effect;
+        return monitorHostService.deleteByHostIdList(hostIdList);
     }
 
 }

@@ -74,7 +74,7 @@ public interface OperatorLogService {
     Long getOperatorLogCount(OperatorLogQueryRequest request);
 
     /**
-     * 清空操作日志
+     * 清理操作日志
      *
      * @param request request
      * @return effect

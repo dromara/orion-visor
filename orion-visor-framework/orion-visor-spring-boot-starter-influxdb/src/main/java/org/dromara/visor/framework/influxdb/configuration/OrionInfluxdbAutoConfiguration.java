@@ -54,8 +54,6 @@ import java.net.ConnectException;
 public class OrionInfluxdbAutoConfiguration {
 
     /**
-     * TODO 重连
-     *
      * @param config config
      * @return influxdb 客户端
      */

@@ -23,8 +23,11 @@
 package org.dromara.visor.framework.biz.operator.log.core.factory;
 
 import cn.orionsec.kit.lang.utils.Arrays1;
+import cn.orionsec.kit.spring.SpringHolder;
 import org.dromara.visor.framework.biz.operator.log.core.annotation.Module;
 import org.dromara.visor.framework.biz.operator.log.core.model.OperatorType;
+import org.springframework.beans.factory.BeanNameAware;
+import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 
 import javax.annotation.PostConstruct;
 
@@ -35,7 +38,14 @@ import javax.annotation.PostConstruct;
  * @version 1.0.0
  * @since 2023/10/13 17:45
  */
-public abstract class InitializingOperatorTypes implements OperatorTypeDefinition {
+public abstract class InitializingOperatorTypes implements OperatorTypeDefinition, BeanNameAware {
+
+    private String beanName;
+
+    @Override
+    public void setBeanName(String name) {
+        this.beanName = name;
+    }
 
     @PostConstruct
     public void init() {
@@ -55,6 +65,8 @@ public abstract class InitializingOperatorTypes implements OperatorTypeDefinitio
             type.setModule(module);
             OperatorTypeHolder.set(type);
         }
+        // 自动销毁
+        ((BeanDefinitionRegistry) SpringHolder.getBeanFactory()).removeBeanDefinition(beanName);
     }
 
 }

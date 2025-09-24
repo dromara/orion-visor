@@ -70,11 +70,11 @@
               <icon-thunderbolt />
             </template>
           </a-button>
-          <!-- 清空 -->
+          <!-- 清理 -->
           <a-button v-permission="['exec:exec-command-log:management:clear']"
                     status="danger"
                     @click="openClear">
-            清空
+            清理
             <template #icon>
               <icon-close />
             </template>

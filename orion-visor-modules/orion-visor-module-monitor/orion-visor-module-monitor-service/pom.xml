@@ -61,10 +61,6 @@
         </dependency>
         <dependency>
             <groupId>org.dromara.visor</groupId>
-            <artifactId>orion-visor-spring-boot-starter-biz-operator-log</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.dromara.visor</groupId>
             <artifactId>orion-visor-spring-boot-starter-desensitize</artifactId>
         </dependency>
         <dependency>
@@ -94,6 +90,14 @@
         <dependency>
             <groupId>org.dromara.visor</groupId>
             <artifactId>orion-visor-spring-boot-starter-influxdb</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.dromara.visor</groupId>
+            <artifactId>orion-visor-spring-boot-starter-biz-push</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.dromara.visor</groupId>
+            <artifactId>orion-visor-spring-boot-starter-biz-operator-log</artifactId>
         </dependency>
     </dependencies>
 

@@ -59,11 +59,6 @@ public class MonitorMetricsUpdateRequest implements Serializable {
     private String name;
 
     @NotBlank
-    @Size(max = 64)
-    @Schema(description = "数据集")
-    private String measurement;
-
-    @NotBlank
     @Size(max = 128)
     @Schema(description = "指标项")
     private String value;

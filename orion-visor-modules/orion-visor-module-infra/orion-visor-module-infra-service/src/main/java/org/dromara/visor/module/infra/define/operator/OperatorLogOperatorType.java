@@ -46,7 +46,7 @@ public class OperatorLogOperatorType extends InitializingOperatorTypes {
     public OperatorType[] types() {
         return new OperatorType[]{
                 new OperatorType(H, DELETE, "删除操作日志 <sb>${count}</sb> 条"),
-                new OperatorType(H, CLEAR, "清空操作日志 <sb>${count}</sb> 条"),
+                new OperatorType(H, CLEAR, "清理操作日志 <sb>${count}</sb> 条"),
         };
     }
 

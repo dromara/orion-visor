@@ -1,5 +1,8 @@
 import type { SelectOptionData, TreeNodeData } from '@arco-design/web-vue';
 
+// 表单操作
+export type FormHandle = 'add' | 'update' | 'copy' | 'view';
+
 // 通过 label 进行过滤
 export const labelFilter = (searchValue: string, option: { label: string }) => {
   return option.label.toLowerCase().includes(searchValue.toLowerCase());

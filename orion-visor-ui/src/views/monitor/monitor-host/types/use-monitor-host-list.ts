@@ -121,7 +121,7 @@ export default function useMonitorHostList(options: UseMonitorHostListOptions) {
           const newSwitch = dict.value as number;
           // 调用修改接口
           await updateMonitorHostAlarmSwitch({
-            id: record.id,
+            idList: [record.id],
             alarmSwitch: newSwitch,
           });
           record.alarmSwitch = newSwitch;

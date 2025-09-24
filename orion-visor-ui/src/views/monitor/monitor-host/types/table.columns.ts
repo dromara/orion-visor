@@ -18,6 +18,14 @@ const columns = [
     fixed: 'left',
     default: true,
   }, {
+    title: '告警策略',
+    dataIndex: 'alarmPolicy',
+    slotName: 'alarmPolicy',
+    align: 'left',
+    ellipsis: true,
+    width: 130,
+    default: true,
+  }, {
     title: '设备状态',
     dataIndex: 'agentOnlineStatus',
     slotName: 'agentOnlineStatus',
@@ -74,14 +82,6 @@ const columns = [
     width: 288,
     default: false,
   }, {
-    // TODO
-    //   title: '告警策略',
-    //   dataIndex: 'alarmPolicy',
-    //   slotName: 'alarmPolicy',
-    //   align: 'left',
-    //   width: 120,
-    //   default: true,
-    // }, {
     title: '负责人',
     dataIndex: 'ownerUsername',
     slotName: 'ownerUsername',

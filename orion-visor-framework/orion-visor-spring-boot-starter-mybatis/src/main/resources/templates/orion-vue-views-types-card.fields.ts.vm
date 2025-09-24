@@ -30,7 +30,6 @@ const fieldConfig = {
       render: ({ record }) => {
         return dateFormat(new Date(record.createTime));
       },
-      default: true,
     }, {
       label: '修改时间',
       dataIndex: 'updateTime',
@@ -38,6 +37,7 @@ const fieldConfig = {
       render: ({ record }) => {
         return dateFormat(new Date(record.updateTime));
       },
+      default: true,
     }, {
       label: '创建人',
       dataIndex: 'creator',
@@ -45,7 +45,6 @@ const fieldConfig = {
       width: 148,
       ellipsis: true,
       tooltip: true,
-      default: true,
     }, {
       label: '修改人',
       dataIndex: 'updater',
@@ -53,6 +52,7 @@ const fieldConfig = {
       width: 148,
       ellipsis: true,
       tooltip: true,
+      default: true,
     }
   ] as CardField[]
 } as CardFieldConfig;

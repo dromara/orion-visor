@@ -33,6 +33,7 @@
         <module>orion-visor-spring-boot-starter-monitor</module>
         <module>orion-visor-spring-boot-starter-test</module>
         <module>orion-visor-spring-boot-starter-influxdb</module>
+        <module>orion-visor-spring-boot-starter-biz-push</module>
         <module>orion-visor-spring-boot-starter-biz-operator-log</module>
     </modules>
 

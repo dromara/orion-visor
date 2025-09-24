@@ -57,10 +57,12 @@
 
 <script lang="ts" setup>
   import type { ${vue.featureEntity}UpdateRequest } from '@/api/${vue.module}/${vue.feature}';
+  import type { FormHandle } from '@/types/form';
   import { ref } from 'vue';
   import useLoading from '@/hooks/loading';
   import useVisible from '@/hooks/visible';
   import formRules from '../types/form.rules';
+  import { assignOmitRecord } from '@/utils';
   #if($dictMap.entrySet().size() > 0)
   import { #foreach($entry in ${dictMap.entrySet()})${entry.value.keyField}#if($foreach.hasNext), #end#end } from '../types/const';
   #else
@@ -81,14 +83,14 @@
   #end
 
   const title = ref<string>();
-  const isAddHandle = ref<boolean>(true);
+  const formHandle = ref<FormHandle>('add');
   const formRef = ref<any>();
   const formModel = ref<${vue.featureEntity}UpdateRequest>({});
 
   const defaultForm = (): ${vue.featureEntity}UpdateRequest => {
     return {
     #foreach($field in ${table.fields})
-      ${field.propertyName}: undefined,
+  ${field.propertyName}: undefined,
     #end
     };
   };
@@ -96,22 +98,17 @@
   // 打开新增
   const openAdd = () => {
     title.value = '添加${table.comment}';
-    isAddHandle.value = true;
-    renderForm({ ...defaultForm() });
+    formHandle.value = 'add';
+    formModel.value = assignOmitRecord({ ...defaultForm() });
     setVisible(true);
   };
 
   // 打开修改
   const openUpdate = (record: any) => {
     title.value = '修改${table.comment}';
-    isAddHandle.value = false;
-    renderForm({ ...defaultForm(), ...record });
+    formHandle.value = 'update';
+    formModel.value = assignOmitRecord({ ...defaultForm(), ...record });
     setVisible(true);
-  };
-
-  // 渲染表单
-  const renderForm = (record: any) => {
-    formModel.value = Object.assign({}, record);
   };
 
   defineExpose({ openAdd, openUpdate });
@@ -125,7 +122,7 @@
       if (error) {
         return false;
       }
-      if (isAddHandle.value) {
+      if (formHandle.value === 'add') {
         // 新增
         await create${vue.featureEntity}(formModel.value);
         Message.success('创建成功');

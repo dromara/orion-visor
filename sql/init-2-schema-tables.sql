@@ -541,6 +541,125 @@ CREATE TABLE `host_key`
   ROW_FORMAT = Dynamic;
 
 -- ----------------------------
+-- Table structure for monitor_alarm_event
+-- ----------------------------
+DROP TABLE IF EXISTS `monitor_alarm_event`;
+CREATE TABLE `monitor_alarm_event`
+(
+    `id`                  bigint(0)                                                      NOT NULL AUTO_INCREMENT COMMENT 'id',
+    `agent_key`           char(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci      NULL DEFAULT NULL COMMENT 'agentKey',
+    `host_id`             bigint(0)                                                      NULL DEFAULT NULL COMMENT '主机id',
+    `host_name`           varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci   NULL DEFAULT NULL COMMENT '主机名称',
+    `host_address`        varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  NULL DEFAULT NULL COMMENT '主机地址',
+    `policy_id`           bigint(0)                                                      NULL DEFAULT NULL COMMENT '策略id',
+    `policy_rule_id`      bigint(0)                                                      NULL DEFAULT NULL COMMENT '策略规则id',
+    `metrics_id`          bigint(0)                                                      NULL DEFAULT NULL COMMENT '指标id',
+    `metrics_measurement` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci   NULL DEFAULT NULL COMMENT '指标数据集',
+    `alarm_tags`          json                                                           NULL COMMENT '告警标签',
+    `alarm_value`         decimal(19, 4)                                                 NULL DEFAULT NULL COMMENT '告警值',
+    `alarm_threshold`     decimal(19, 4)                                                 NULL DEFAULT NULL COMMENT '告警阈值',
+    `alarm_info`          varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '告警摘要',
+    `alarm_level`         tinyint(0)                                                     NULL DEFAULT NULL COMMENT '告警级别',
+    `trigger_condition`   char(8) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci       NULL DEFAULT NULL COMMENT '告警条件',
+    `consecutive_count`   int(0)                                                         NULL DEFAULT NULL COMMENT '连续触发次数',
+    `false_alarm`         tinyint(0)                                                     NULL DEFAULT NULL COMMENT '是否误报',
+    `handle_status`       char(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci      NULL DEFAULT NULL COMMENT '处理状态',
+    `handle_time`         datetime(0)                                                    NULL DEFAULT NULL COMMENT '处理时间',
+    `handle_remark`       varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  NULL DEFAULT NULL COMMENT '处理备注',
+    `handle_user_id`      bigint(0)                                                      NULL DEFAULT NULL COMMENT '处理人id',
+    `handle_username`     varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci   NULL DEFAULT NULL COMMENT '处理人用户名',
+    `create_time`         datetime(0)                                                    NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `update_time`         datetime(0)                                                    NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '修改时间',
+    `creator`             varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci   NULL DEFAULT NULL COMMENT '创建人',
+    `updater`             varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci   NULL DEFAULT NULL COMMENT '更新人',
+    `deleted`             tinyint(0)                                                     NULL DEFAULT 0 COMMENT '是否删除 0未删除 1已删除',
+    PRIMARY KEY (`id`) USING BTREE,
+    INDEX `idx_host_id` (`host_id`) USING BTREE,
+    INDEX `idx_agent_key` (`agent_key`) USING BTREE,
+    INDEX `idx_handle_user` (`handle_user_id`) USING BTREE
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 1
+  CHARACTER SET = utf8mb4
+  COLLATE = utf8mb4_unicode_ci COMMENT = '监控告警记录'
+  ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for monitor_alarm_policy
+-- ----------------------------
+DROP TABLE IF EXISTS `monitor_alarm_policy`;
+CREATE TABLE `monitor_alarm_policy`
+(
+    `id`          bigint(0)                                                     NOT NULL AUTO_INCREMENT COMMENT 'id',
+    `name`        varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  NULL DEFAULT NULL COMMENT '策略名称',
+    `description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '策略描述',
+    `create_time` datetime(0)                                                   NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `update_time` datetime(0)                                                   NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '修改时间',
+    `creator`     varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  NULL DEFAULT NULL COMMENT '创建人',
+    `updater`     varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  NULL DEFAULT NULL COMMENT '更新人',
+    `deleted`     tinyint(0)                                                    NULL DEFAULT 0 COMMENT '是否删除 0未删除 1已删除',
+    PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 1
+  CHARACTER SET = utf8mb4
+  COLLATE = utf8mb4_unicode_ci COMMENT = '监控告警策略'
+  ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for monitor_alarm_policy_notify
+-- ----------------------------
+DROP TABLE IF EXISTS `monitor_alarm_policy_notify`;
+CREATE TABLE `monitor_alarm_policy_notify`
+(
+    `id`          bigint(0)                                                    NOT NULL AUTO_INCREMENT COMMENT 'id',
+    `policy_id`   bigint(0)                                                    NULL DEFAULT NULL COMMENT '策略id',
+    `notify_id`   bigint(0)                                                    NULL DEFAULT NULL COMMENT '通知id',
+    `create_time` datetime(0)                                                  NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `update_time` datetime(0)                                                  NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '修改时间',
+    `creator`     varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '创建人',
+    `updater`     varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '更新人',
+    `deleted`     tinyint(0)                                                   NULL DEFAULT 0 COMMENT '是否删除 0未删除 1已删除',
+    PRIMARY KEY (`id`) USING BTREE,
+    INDEX `idx_policy_id` (`policy_id`) USING BTREE
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 1
+  CHARACTER SET = utf8mb4
+  COLLATE = utf8mb4_unicode_ci COMMENT = '监控告警策略通知'
+  ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for monitor_alarm_policy_rule
+-- ----------------------------
+DROP TABLE IF EXISTS `monitor_alarm_policy_rule`;
+CREATE TABLE `monitor_alarm_policy_rule`
+(
+    `id`                  bigint(0)                                                     NOT NULL AUTO_INCREMENT COMMENT 'id',
+    `policy_id`           bigint(0)                                                     NULL DEFAULT NULL COMMENT '策略id',
+    `metrics_id`          bigint(0)                                                     NULL DEFAULT NULL COMMENT '指标id',
+    `metrics_measurement` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  NULL DEFAULT NULL COMMENT '指标数据集',
+    `tags`                json                                                          NULL COMMENT '指标标签',
+    `rule_switch`         tinyint(0)                                                    NULL DEFAULT NULL COMMENT '规则开关',
+    `all_effect`          tinyint(0)                                                    NULL DEFAULT 0 COMMENT '全部生效',
+    `level`               tinyint(0)                                                    NULL DEFAULT NULL COMMENT '告警级别',
+    `trigger_condition`   char(8) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci      NULL DEFAULT NULL COMMENT '告警条件',
+    `threshold`           decimal(19, 4)                                                NULL DEFAULT NULL COMMENT '触发阈值',
+    `silence_period`      int(0)                                                        NULL DEFAULT NULL COMMENT '静默时间',
+    `consecutive_count`   int(0)                                                        NULL DEFAULT NULL COMMENT '连续触发次数',
+    `description`         varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '规则描述',
+    `create_time`         datetime(0)                                                   NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `update_time`         datetime(0)                                                   NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '修改时间',
+    `creator`             varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  NULL DEFAULT NULL COMMENT '创建人',
+    `updater`             varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  NULL DEFAULT NULL COMMENT '更新人',
+    `deleted`             tinyint(0)                                                    NULL DEFAULT 0 COMMENT '是否删除 0未删除 1已删除',
+    PRIMARY KEY (`id`) USING BTREE,
+    INDEX `idx_policy_id` (`policy_id`) USING BTREE,
+    INDEX `idx_metric_id` (`metrics_id`) USING BTREE
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 1
+  CHARACTER SET = utf8mb4
+  COLLATE = utf8mb4_unicode_ci COMMENT = '监控告警策略指标'
+  ROW_FORMAT = Dynamic;
+
+-- ----------------------------
 -- Table structure for monitor_host
 -- ----------------------------
 DROP TABLE IF EXISTS `monitor_host`;
@@ -594,6 +713,32 @@ CREATE TABLE `monitor_metrics`
   AUTO_INCREMENT = 1
   CHARACTER SET = utf8mb4
   COLLATE = utf8mb4_unicode_ci COMMENT = '监控指标'
+  ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for notify_template
+-- ----------------------------
+DROP TABLE IF EXISTS `notify_template`;
+CREATE TABLE `notify_template`
+(
+    `id`               bigint(0)                                                     NOT NULL AUTO_INCREMENT COMMENT 'id',
+    `name`             varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  NULL DEFAULT NULL COMMENT '通知名称',
+    `biz_type`         char(12) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci     NULL DEFAULT NULL COMMENT '业务类型',
+    `channel_type`     char(12) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci     NULL DEFAULT NULL COMMENT '渠道类型',
+    `channel_config`   json                                                          NULL COMMENT '渠道配置',
+    `message_template` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci         NULL COMMENT '消息模板',
+    `description`      varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '描述',
+    `create_time`      datetime(0)                                                   NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `update_time`      datetime(0)                                                   NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '修改时间',
+    `creator`          varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  NULL DEFAULT NULL COMMENT '创建人',
+    `updater`          varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  NULL DEFAULT NULL COMMENT '更新人',
+    `deleted`          tinyint(0)                                                    NULL DEFAULT 0 COMMENT '是否删除 0未删除 1已删除',
+    PRIMARY KEY (`id`) USING BTREE,
+    INDEX `idx_biz_type` (`biz_type`) USING BTREE
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 1
+  CHARACTER SET = utf8mb4
+  COLLATE = utf8mb4_unicode_ci COMMENT = '通知模板'
   ROW_FORMAT = Dynamic;
 
 -- ----------------------------

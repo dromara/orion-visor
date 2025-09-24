@@ -73,12 +73,13 @@ public interface MonitorMetricsService {
     DataGrid<MonitorMetricsVO> getMonitorMetricsPage(MonitorMetricsQueryRequest request);
 
     /**
-     * 通过值获取监控指标名称
+     * 获取监控指标名称
      *
-     * @param value value
+     * @param measurement measurement
+     * @param value       value
      * @return name
      */
-    String getMetricName(String value);
+    String getMetricName(String measurement, String value);
 
     /**
      * 删除监控指标
@@ -87,14 +88,6 @@ public interface MonitorMetricsService {
      * @return effect
      */
     Integer deleteMonitorMetricsById(Long id);
-
-    /**
-     * 批量删除监控指标
-     *
-     * @param idList idList
-     * @return effect
-     */
-    Integer deleteMonitorMetricsByIdList(List<Long> idList);
 
     /**
      * 构建查询 wrapper

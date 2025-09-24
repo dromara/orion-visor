@@ -164,7 +164,7 @@ public class ExecCommandLogController {
 
     @OperatorLog(ExecCommandLogOperatorType.CLEAR)
     @PostMapping("/clear")
-    @Operation(summary = "清空批量执行日志")
+    @Operation(summary = "清理批量执行日志")
     @PreAuthorize("@ss.hasPermission('exec:exec-command-log:management:clear')")
     public Integer clearExecCommandLog(@Validated @RequestBody ExecLogClearRequest request) {
         request.setSource(SOURCE);

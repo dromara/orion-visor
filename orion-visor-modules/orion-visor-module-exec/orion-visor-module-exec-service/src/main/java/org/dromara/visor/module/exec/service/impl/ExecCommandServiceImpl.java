@@ -90,7 +90,7 @@ public class ExecCommandServiceImpl implements ExecCommandService {
     @Override
     public ExecLogVO execCommand(ExecCommandRequest request) {
         log.info("ExecService.execCommand start params: {}", JSON.toJSONString(request));
-        LoginUser user = Valid.notNull(SecurityUtils.getLoginUser());
+        LoginUser user = SecurityUtils.getLoginUserNotNull();
         Long userId = user.getId();
         List<Long> hostIdList = request.getHostIdList();
         // 检查主机权限

@@ -46,7 +46,7 @@ public class MonitorHostOperatorType extends InitializingOperatorTypes {
     public OperatorType[] types() {
         return new OperatorType[]{
                 new OperatorType(M, UPDATE, "更新监控配置 <sb>${name}</sb>"),
-                new OperatorType(M, UPDATE_SWITCH, "更新监控开关 <sb>${name}</sb> 为 <sb>${switch}</sb>"),
+                new OperatorType(M, UPDATE_SWITCH, "更新<sb>${count}</sb>个监控开关为 <sb>${switch}</sb>"),
         };
     }
 

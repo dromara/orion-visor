@@ -22,25 +22,25 @@
           <a-space>
             <!-- 状态 -->
             <a-switch v-model="queryUnread"
+                      style="margin-right: 4px;"
                       type="round"
                       checked-text="未读"
                       unchecked-text="全部"
                       @change="reloadAllMessage" />
-            <!-- 清空 -->
-            <a-button class="header-button"
-                      type="text"
-                      size="small"
-                      title="清空全部已读消息"
-                      @click="clearAllMessage">
-              清空
-            </a-button>
-            <!-- 全部已读 -->
-            <a-button class="header-button"
-                      type="text"
-                      size="small"
-                      @click="setAllRead">
-              全部已读
-            </a-button>
+            <!-- 更多操作 -->
+            <a-dropdown trigger="hover" :popup-max-height="false">
+              <icon-more class="card-extra-icon" />
+              <template #content>
+                <!-- 全部已读 -->
+                <a-doption title="=全部已读" @click="setAllRead">
+                  <span class="more-doption normal">全部已读</span>
+                </a-doption>
+                <!-- 清空已读 -->
+                <a-doption title="清空全部已读消息" @click="clearAllMessage">
+                  <span class="more-doption normal">清空已读</span>
+                </a-doption>
+              </template>
+            </a-dropdown>
           </a-space>
         </template>
       </a-tabs>
@@ -262,6 +262,10 @@
 
     .header-button {
       padding: 0 6px;
+    }
+
+    :deep(.arco-tabs-tab) {
+      margin: 0 6px 0 0 !important;
     }
   }
 

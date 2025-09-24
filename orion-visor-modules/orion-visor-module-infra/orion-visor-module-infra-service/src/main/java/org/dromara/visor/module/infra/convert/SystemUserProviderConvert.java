@@ -22,6 +22,7 @@
  */
 package org.dromara.visor.module.infra.convert;
 
+import org.dromara.visor.common.entity.PushUser;
 import org.dromara.visor.module.infra.entity.domain.SystemUserDO;
 import org.dromara.visor.module.infra.entity.dto.user.SystemUserDTO;
 import org.mapstruct.Mapper;
@@ -40,5 +41,7 @@ public interface SystemUserProviderConvert {
     SystemUserProviderConvert MAPPER = Mappers.getMapper(SystemUserProviderConvert.class);
 
     SystemUserDTO to(SystemUserDO domain);
+
+    PushUser toPush(SystemUserDO user);
 
 }

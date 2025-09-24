@@ -87,7 +87,7 @@ public class ExecHostLogServiceImpl implements ExecHostLogService {
         // 分批次删除
         List<List<Long>> partitions = Lists.partition(logIdList, 500);
         for (List<Long> batch : partitions) {
-            LambdaQueryWrapper<ExecHostLogDO> wrapper = execHostLogDAO.wrapper()
+            LambdaQueryWrapper<ExecHostLogDO> wrapper = execHostLogDAO.lambda()
                     .in(ExecHostLogDO::getLogId, batch);
             effect += execHostLogDAO.delete(wrapper);
         }

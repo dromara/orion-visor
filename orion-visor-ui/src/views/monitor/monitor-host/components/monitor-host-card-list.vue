@@ -4,7 +4,7 @@
              :create-card-position="false"
              :loading="loading"
              :field-config="cardFieldConfig"
-             :list="list"
+             :list="renderList"
              :pagination="pagination"
              :card-layout-cols="cardColLayout"
              :filter-count="filterCount"
@@ -101,7 +101,7 @@
     <!-- 在线状态 -->
     <template #agentOnlineStatus="{ record }">
       <monitor-cell :data-cell="false" :record="record">
-        <a-tooltip :content="'切换分区时间: ' + dateFormat(new Date(record.lastChangeOnlineTime))" mini>
+        <a-tooltip :content="'切换分区时间: ' + dateFormat(new Date(record.agentOnlineChangeTime))" mini>
           <a-tag :color="getDictValue(OnlineStatusKey, record.agentOnlineStatus, 'color')">
             <template #icon>
               <component :is="getDictValue(OnlineStatusKey, record.agentOnlineStatus, 'icon')" />
@@ -184,7 +184,11 @@
     <!-- 告警策略 -->
     <template #alarmPolicy="{ record }">
       <monitor-cell :data-cell="false" :record="record">
-        {{ getDictValue(AlarmSwitchKey, record.alarmSwitch) }}
+        <b class="pointer"
+           :style="{ color: record.alarmSwitch ? 'rgb(var(--green-6))' : 'rgb(var(--gray-6))' }"
+           @click="emits('toPolicy', record)">
+          {{ record.policyName || '-' }}
+        </b>
       </monitor-cell>
     </template>
     <!-- 告警负责人 -->
@@ -334,7 +338,7 @@
   import MonitorCell from './monitor-cell.vue';
   import UserSelector from '@/components/user/user/selector/index.vue';
 
-  const emits = defineEmits(['openUpdate', 'openUpload']);
+  const emits = defineEmits(['openUpdate', 'openUpload', 'toPolicy']);
 
   const cardColLayout = useCardColLayout();
   const pagination = useCardPagination();
@@ -342,7 +346,7 @@
   const { cardFieldConfig, fieldsHook } = useCardFieldConfig(TableName, fieldConfig);
   const { toOptions, getDictValue, toggleDictValue } = useDictStore();
 
-  const list = ref<Array<MonitorHostQueryResponse>>([]);
+  const renderList = ref<Array<MonitorHostQueryResponse>>([]);
   const formRef = ref();
   const formModel = reactive<MonitorHostQueryRequest>({
     searchValue: undefined,
@@ -379,7 +383,7 @@
     setInstallSuccess,
     toggleAlarmSwitch,
   } = useMonitorHostList({
-    hosts: list,
+    hosts: renderList,
     setLoading,
     reload,
   });
@@ -395,7 +399,7 @@
     try {
       setLoading(true);
       const { data } = await getMonitorHostPage(request);
-      list.value = data.rows;
+      renderList.value = data.rows;
       pagination.total = data.total;
       pagination.current = request.page;
       pagination.pageSize = request.limit;

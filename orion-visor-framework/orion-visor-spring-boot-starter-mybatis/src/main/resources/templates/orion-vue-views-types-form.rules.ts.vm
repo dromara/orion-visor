@@ -1,28 +1,17 @@
 import type { FieldRule } from '@arco-design/web-vue';
 
+const rules = {
 #foreach($field in ${table.fields})
 #if("$!field.propertyName" != "id")
-#if(${field.propertyType} == 'String' && "$field.metaInfo.jdbcType" != "LONGVARCHAR")
-export const ${field.propertyName} = [{
-  required: true,
-  message: '请输入${field.comment}'
-}, {
-  maxLength: $field.metaInfo.length,
-  message: '${field.comment}长度不能大于$field.metaInfo.length位'
-}] as FieldRule[];
-#else
-export const ${field.propertyName} = [{
-  required: true,
-  message: '请输入${field.comment}'
-}] as FieldRule[];
-#end
-#end
-
-#end
-export default {
-#foreach($field in ${table.fields})
-#if("$!field.propertyName" != "id")
-  ${field.propertyName},
+  ${field.propertyName}: [{
+    required: true,
+    message: '请输入${field.comment}'
+  }#if(${field.propertyType} == 'String' && "$field.metaInfo.jdbcType" != "LONGVARCHAR"), {
+    maxLength: $field.metaInfo.length,
+    message: '${field.comment}长度不能大于$field.metaInfo.length位'
+  }#end],
 #end
 #end
 } as Record<string, FieldRule | FieldRule[]>;
+
+export default rules;

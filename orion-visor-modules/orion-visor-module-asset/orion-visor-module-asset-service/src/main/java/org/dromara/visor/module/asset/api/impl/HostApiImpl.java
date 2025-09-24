@@ -33,6 +33,7 @@ import org.dromara.visor.module.asset.entity.dto.host.HostDTO;
 import org.dromara.visor.module.asset.entity.dto.host.HostQueryDTO;
 import org.dromara.visor.module.asset.entity.request.host.HostQueryRequest;
 import org.dromara.visor.module.asset.service.HostService;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -53,6 +54,7 @@ public class HostApiImpl implements HostApi {
     @Resource
     private HostDAO hostDAO;
 
+    @Lazy
     @Resource
     private HostService hostService;
 

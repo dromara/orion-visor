@@ -115,7 +115,7 @@ public class UploadTaskServiceImpl implements UploadTaskService {
     @Transactional(rollbackFor = Exception.class)
     @Override
     public UploadTaskCreateVO createUploadTask(UploadTaskCreateRequest request) {
-        LoginUser user = Valid.notNull(SecurityUtils.getLoginUser());
+        LoginUser user = SecurityUtils.getLoginUserNotNull();
         List<Long> hostIdList = request.getHostIdList();
         List<UploadTaskFileRequest> files = request.getFiles();
         log.info("UploadTaskService-createUploadTask request: {}", JSON.toJSONString(request));

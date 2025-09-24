@@ -7,10 +7,11 @@ export type CacheType = 'users' | 'menus' | 'roles'
   | 'authorizedHostKeys' | 'authorizedHostIdentities'
   | 'commandSnippetGroups' | 'pathBookmarkGroups'
   | 'commandSnippets' | 'pathBookmarks'
-  | 'system_setting'
+  | 'alarmPolicy' | 'monitorMetrics'
+  | 'systemSetting' | 'notifyTemplate*'
   | '*_Tags' | 'preference_*'
   | string
 
 export interface CacheState {
-  [key: CacheType]: unknown;
+  [key: CacheType]: any;
 }

@@ -62,6 +62,28 @@
       <!-- 右侧操作 -->
       <div class="table-right-bar-handle">
         <a-space>
+          <!-- 开启告警 -->
+          <a-button v-if="selectedKeys.length"
+                    v-permission="['monitor:monitor-host:update', 'monitor:monitor-host:update-switch']"
+                    type="primary"
+                    status="success"
+                    @click="toggleAlarmSwitchBatch(selectedKeys, AlarmSwitch.ON)">
+            开启告警
+            <template #icon>
+              <icon-play-arrow-fill />
+            </template>
+          </a-button>
+          <!-- 关闭告警 -->
+          <a-button v-if="selectedKeys.length"
+                    v-permission="['monitor:monitor-host:update', 'monitor:monitor-host:update-switch']"
+                    type="primary"
+                    status="warning"
+                    @click="toggleAlarmSwitchBatch(selectedKeys, AlarmSwitch.OFF)">
+            关闭告警
+            <template #icon>
+              <icon-pause />
+            </template>
+          </a-button>
           <!-- 安装 -->
           <a-button v-permission="['asset:host:install-agent']"
                     type="primary"
@@ -132,7 +154,7 @@
       <!-- 在线状态 -->
       <template #agentOnlineStatus="{ record }">
         <monitor-cell :data-cell="false" :record="record">
-          <a-tooltip :content="'切换分区时间: ' + dateFormat(new Date(record.lastChangeOnlineTime))" mini>
+          <a-tooltip :content="'切换分区时间: ' + dateFormat(new Date(record.agentOnlineChangeTime))" mini>
             <a-tag :color="getDictValue(OnlineStatusKey, record.agentOnlineStatus, 'color')">
               <template #icon>
                 <component :is="getDictValue(OnlineStatusKey, record.agentOnlineStatus, 'icon')" />
@@ -214,7 +236,11 @@
       <!-- 告警策略 -->
       <template #alarmPolicy="{ record }">
         <monitor-cell :data-cell="false" :record="record">
-          {{ getDictValue(AlarmSwitchKey, record.alarmSwitch) }}
+          <b class="pointer"
+             :style="{ color: record.alarmSwitch ? 'rgb(var(--green-6))' : 'rgb(var(--gray-6))' }"
+             @click="emits('toPolicy', record)">
+            {{ record.policyName || '-' }}
+          </b>
         </monitor-cell>
       </template>
       <!-- 告警负责人 -->
@@ -350,10 +376,10 @@
 <script lang="ts" setup>
   import type { MonitorHostQueryRequest, MonitorHostQueryResponse } from '@/api/monitor/monitor-host';
   import { reactive, ref, onMounted } from 'vue';
-  import { getMonitorHostPage } from '@/api/monitor/monitor-host';
+  import { getMonitorHostPage, updateMonitorHostAlarmSwitch } from '@/api/monitor/monitor-host';
   import useLoading from '@/hooks/loading';
   import columns from '../types/table.columns';
-  import { TableName, AlarmSwitchKey, OnlineStatusKey, InstallStatusKey, AgentLogStatus, AgentLogStatusKey } from '../types/const';
+  import { TableName, AlarmSwitch, AlarmSwitchKey, OnlineStatusKey, InstallStatusKey, AgentLogStatus, AgentLogStatusKey } from '../types/const';
   import { AgentInstallStatus, tagColor } from '@/views/asset/host-list/types/const';
   import { useTablePagination, useTableColumns, useRowSelection } from '@/hooks/table';
   import { useDictStore } from '@/store';
@@ -361,12 +387,13 @@
   import { getPercentProgressColor } from '@/utils/charts';
   import { getFileSize } from '@/utils/file';
   import { dateFormat, dataColor } from '@/utils';
+  import { Message, Modal } from '@arco-design/web-vue';
   import useMonitorHostList from '../types/use-monitor-host-list';
   import MonitorCell from './monitor-cell.vue';
   import TableAdjust from '@/components/app/table-adjust/index.vue';
   import UserSelector from '@/components/user/user/selector/index.vue';
 
-  const emits = defineEmits(['openUpdate', 'openUpload']);
+  const emits = defineEmits(['openUpdate', 'openUpload', 'toPolicy']);
 
   const rowSelection = useRowSelection();
   const pagination = useTablePagination();
@@ -415,7 +442,35 @@
     if (record.agentInstallStatus === AgentInstallStatus.NOT_INSTALL) {
       return 'not-install';
     }
-    return '';
+    return 'installed';
+  };
+
+  // 批量修改告警开关状态
+  const toggleAlarmSwitchBatch = async (hostIdList: Array<number>, alarmSwitch: number) => {
+    const label = getDictValue(AlarmSwitchKey, alarmSwitch);
+    Modal.confirm({
+      title: `${label}确认`,
+      titleAlign: 'start',
+      content: `确定要${label}告警功能吗?`,
+      okText: '确定',
+      onOk: async () => {
+        try {
+          setLoading(true);
+          const rows = tableRenderData.value.filter(s => hostIdList.includes(s.hostId));
+          if (!rows.length) {
+            return;
+          }
+          const idList = rows.map(s => s.id).filter(Boolean);
+          // 调用修改接口
+          await updateMonitorHostAlarmSwitch({ idList, alarmSwitch });
+          rows.forEach(s => s.alarmSwitch = alarmSwitch);
+          Message.success(`已${label}`);
+        } catch (e) {
+        } finally {
+          setLoading(false);
+        }
+      }
+    });
   };
 
   // 加载数据

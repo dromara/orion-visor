@@ -122,7 +122,7 @@
       // 获取总数量
       const { data } = await getUploadTaskCount(formModel.value);
       if (data) {
-        // 清空
+        // 清理
         doClear(data);
       } else {
         // 无数据
@@ -138,14 +138,14 @@
   // 执行删除
   const doClear = (count: number) => {
     Modal.confirm({
-      title: '删除清空',
+      title: '清理确认',
       content: `确定要删除 ${count} 条数据吗? 确定后将立即删除且无法恢复!`,
       onOk: async () => {
         setLoading(true);
         try {
-          // 调用清空
+          // 调用清理
           const { data } = await clearUploadTask(formModel.value);
-          Message.success(`已成功清空 ${data} 条数据`);
+          Message.success(`已成功清理 ${data} 条数据`);
           emits('clear');
           // 清空
           setVisible(false);

@@ -37,7 +37,6 @@ const columns = [
     render: ({ record }) => {
       return dateFormat(new Date(record.createTime));
     },
-    default: true,
   }, {
     title: '修改时间',
     dataIndex: 'updateTime',
@@ -47,15 +46,18 @@ const columns = [
     render: ({ record }) => {
       return dateFormat(new Date(record.updateTime));
     },
+    default: true,
   }, {
     title: '创建人',
     dataIndex: 'creator',
     slotName: 'creator',
-    default: true,
+    width: 148,
   }, {
     title: '修改人',
     dataIndex: 'updater',
     slotName: 'updater',
+    width: 148,
+    default: true,
   }, {
     title: '操作',
     slotName: 'handle',

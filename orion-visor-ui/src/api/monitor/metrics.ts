@@ -67,13 +67,6 @@ export function updateMetrics(request: MetricsUpdateRequest) {
 }
 
 /**
- * 查询监控指标
- */
-export function getMetrics(id: number) {
-  return axios.get<MetricsQueryResponse>('/monitor/monitor-metrics/get', { params: { id } });
-}
-
-/**
  * 查询全部监控指标
  */
 export function getMetricsList() {

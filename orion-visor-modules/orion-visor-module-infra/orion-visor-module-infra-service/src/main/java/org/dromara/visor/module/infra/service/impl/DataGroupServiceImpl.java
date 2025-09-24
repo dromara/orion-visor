@@ -285,11 +285,11 @@ public class DataGroupServiceImpl implements DataGroupService {
             return 0;
         }
         // 删除分组
-        LambdaQueryWrapper<DataGroupDO> deleteGroup = dataGroupDAO.wrapper()
+        LambdaQueryWrapper<DataGroupDO> deleteGroup = dataGroupDAO.lambda()
                 .in(DataGroupDO::getUserId, userIdList);
         int effect = dataGroupDAO.delete(deleteGroup);
         // 删除分组引用
-        LambdaQueryWrapper<DataGroupRelDO> deleteRel = dataGroupRelDAO.wrapper()
+        LambdaQueryWrapper<DataGroupRelDO> deleteRel = dataGroupRelDAO.lambda()
                 .in(DataGroupRelDO::getUserId, userIdList);
         effect += dataGroupRelDAO.delete(deleteRel);
         // 不删除缓存 让其自动过期

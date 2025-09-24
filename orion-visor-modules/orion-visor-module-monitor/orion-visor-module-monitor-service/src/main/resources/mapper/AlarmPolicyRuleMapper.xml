@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.dromara.visor.module.monitor.dao.AlarmPolicyRuleDAO">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="org.dromara.visor.module.monitor.entity.domain.AlarmPolicyRuleDO">
+        <id column="id" property="id"/>
+        <result column="policy_id" property="policyId"/>
+        <result column="metrics_id" property="metricsId"/>
+        <result column="metrics_measurement" property="metricsMeasurement"/>
+        <result column="tags" property="tags"/>
+        <result column="rule_switch" property="ruleSwitch"/>
+        <result column="level" property="level"/>
+        <result column="trigger_condition" property="triggerCondition"/>
+        <result column="threshold" property="threshold"/>
+        <result column="silence_period" property="silencePeriod"/>
+        <result column="consecutive_count" property="consecutiveCount"/>
+        <result column="all_effect" property="allEffect"/>
+        <result column="description" property="description"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="creator" property="creator"/>
+        <result column="updater" property="updater"/>
+        <result column="deleted" property="deleted"/>
+    </resultMap>
+
+    <!-- 操作数量映射结果 -->
+    <resultMap id="CountResultMap" type="org.dromara.visor.module.monitor.entity.po.AlarmPolicyRuleCountPO">
+        <result column="policy_id" property="policyId"/>
+        <result column="total_count" property="count"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, policy_id, metrics_id, metrics_measurement, tags, rule_switch, level, all_effect, trigger_condition, threshold, silence_period, consecutive_count, description, create_time, update_time, creator, updater, deleted
+    </sql>
+
+    <select id="selectPolicyRuleCount" resultMap="CountResultMap">
+        SELECT policy_id, COUNT(1) total_count
+        FROM monitor_alarm_policy_rule
+        WHERE deleted = 0
+        AND policy_id IN
+        <foreach collection="policyIdList" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        GROUP BY policy_id
+    </select>
+
+</mapper>

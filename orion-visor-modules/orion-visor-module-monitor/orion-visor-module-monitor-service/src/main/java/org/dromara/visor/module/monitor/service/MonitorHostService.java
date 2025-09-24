@@ -82,4 +82,12 @@ public interface MonitorHostService {
      */
     Integer updateMonitorHostAlarmSwitch(MonitorHostSwitchUpdateRequest request);
 
+    /**
+     * 删除监控主机
+     *
+     * @param hostIdList hostIdList
+     * @return effect
+     */
+    Integer deleteByHostIdList(List<Long> hostIdList);
+
 }

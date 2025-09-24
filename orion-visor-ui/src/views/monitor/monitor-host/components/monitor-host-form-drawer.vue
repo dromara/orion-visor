@@ -28,6 +28,12 @@
                          placeholder="请选择负责人"
                          allow-clear />
         </a-form-item>
+        <!-- 告警策略 -->
+        <a-form-item field="policyId" label="告警策略">
+          <alarm-policy-selector v-model="formModel.policyId"
+                                 placeholder="请选择告警策略"
+                                 allow-clear />
+        </a-form-item>
         <!-- 告警开关 -->
         <a-form-item field="alarmSwitch"
                      label="告警开关"
@@ -84,6 +90,7 @@
   import { updateMonitorHost } from '@/api/monitor/monitor-host';
   import { Message } from '@arco-design/web-vue';
   import UserSelector from '@/components/user/user/selector/index.vue';
+  import AlarmPolicySelector from '@/components/monitor/alarm-policy/selector/index.vue';
 
   const emits = defineEmits(['updated']);
 

@@ -27,6 +27,14 @@ const fieldConfig = {
       ellipsis: true,
       default: true,
     }, {
+      label: '告警策略',
+      dataIndex: 'alarmPolicy',
+      slotName: 'alarmPolicy',
+      align: 'left',
+      ellipsis: true,
+      width: 140,
+      default: true,
+    }, {
       label: '设备状态',
       dataIndex: 'agentOnlineStatus',
       slotName: 'agentOnlineStatus',

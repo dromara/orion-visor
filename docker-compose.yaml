@@ -1,6 +1,6 @@
 version: '3.3'
 
-# latest = 2.5.0
+# latest = 2.5.1
 
 # 支持以下源
 # lijiahangmax/*
@@ -12,6 +12,9 @@ services:
     image: registry.cn-hangzhou.aliyuncs.com/orionsec/orion-visor-ui:latest
     ports:
       - ${SERVICE_PORT:-1081}:80
+    environment:
+      NGINX_SERVICE_HOST: ${NGINX_SERVICE_HOST:-service}
+      NGINX_SERVICE_PORT: ${NGINX_SERVICE_PORT:-9200}
     restart: unless-stopped
     depends_on:
       service:

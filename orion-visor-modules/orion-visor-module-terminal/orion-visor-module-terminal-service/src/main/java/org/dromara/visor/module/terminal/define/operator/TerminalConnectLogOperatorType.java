@@ -49,7 +49,7 @@ public class TerminalConnectLogOperatorType extends InitializingOperatorTypes {
     public OperatorType[] types() {
         return new OperatorType[]{
                 new OperatorType(H, DELETE, "删除终端连接记录 <sb>${count}</sb> 条"),
-                new OperatorType(H, CLEAR, "清空终端连接记录 <sb>${count}</sb> 条"),
+                new OperatorType(H, CLEAR, "清理终端连接记录 <sb>${count}</sb> 条"),
                 new OperatorType(M, FORCE_OFFLINE, "强制下线终端连接 <sb>${hostName}</sb>"),
         };
     }
