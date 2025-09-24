@@ -112,7 +112,7 @@
             if (value === undefined || value === null) {
               displayValue = '-';
             } else {
-              displayValue = MetricUnitFormatter[props.option.unit](value, props.option.unitOption);
+              displayValue = MetricUnitFormatter[props.option.unit].format(value, props.option.unitOption);
             }
             headerNames.forEach((key, index) => {
               const cellValue = key === 'value' ? displayValue : (tags[key as any] || '-');
@@ -165,7 +165,7 @@
         type: 'value',
         axisLabel: {
           color: themeTextColor,
-          formatter: (s: number) => MetricUnitFormatter[props.option.unit](s, props.option.unitOption)
+          formatter: (s: number) => MetricUnitFormatter[props.option.unit].format(s, props.option.unitOption)
         },
         axisLine: {
           show: false,
@@ -178,7 +178,10 @@
       },
       legend: {
         show: props.option.legend === true,
-        type: 'scroll'
+        type: 'scroll',
+        textStyle: {
+          color: themeTextColor,
+        }
       },
       series: series.value.map((s, index) => {
         let colors = props.option.colors[index];

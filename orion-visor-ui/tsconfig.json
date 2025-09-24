@@ -13,7 +13,9 @@
       "@/*": ["src/*"]
     },
     "lib": ["es2021", "dom"],
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "verbatimModuleSyntax": true,
+    "importsNotUsedAsValues": "error"
   },
   "include": ["src/**/*", "src/**/*.vue"],
   "exclude": ["node_modules"]

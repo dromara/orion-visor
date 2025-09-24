@@ -27,7 +27,7 @@ export type WindowUnit =
 // 指标单位格式化选项
 export interface MetricUnitFormatOptions {
   // 小数位
-  digit?: number;
+  precision?: number;
   // 后缀
   suffix?: string;
   // 空转0
@@ -37,7 +37,12 @@ export interface MetricUnitFormatOptions {
 }
 
 // 指标单位格式化函数
-type MetricUnitFormatterFn = (value: number, option?: MetricUnitFormatOptions) => string;
+type MetricUnitFormatterOption = {
+  // 格式化单位
+  format: (value: number, option?: MetricUnitFormatOptions) => string;
+  // 获取阈值原始值
+  getThresholdOriginalValue: (value: number) => number;
+};
 
 // 指标单位格式化配置
 type WindowTimeFormatterOption = {
@@ -54,27 +59,57 @@ type WindowTimeFormatterOption = {
 };
 
 // 指标单位格式化
-export const MetricUnitFormatter: Record<MetricUnitType, MetricUnitFormatterFn> = {
+export const MetricUnitFormatter: Record<MetricUnitType, MetricUnitFormatterOption> = {
   // 字节
-  BYTES: formatBytes,
+  BYTES: {
+    format: formatBytes,
+    getThresholdOriginalValue: getByteThresholdOriginalValue,
+  },
   // 比特
-  BITS: formatBits,
+  BITS: {
+    format: formatBits,
+    getThresholdOriginalValue: getBitThresholdOriginalValue,
+  },
   // 次数
-  COUNT: formatCount,
+  COUNT: {
+    format: formatCount,
+    getThresholdOriginalValue: identity,
+  },
   // 秒
-  SECONDS: formatSeconds,
+  SECONDS: {
+    format: formatSeconds,
+    getThresholdOriginalValue: identity,
+  },
   // 百分比
-  PER: formatPer,
+  PER: {
+    format: formatPer,
+    getThresholdOriginalValue: identity,
+  },
   // 字节/秒
-  BYTES_S: (value, option) => formatBytes(value, option) + '/s',
+  BYTES_S: {
+    format: (value, option) => formatBytes(value, option) + '/s',
+    getThresholdOriginalValue: getByteThresholdOriginalValue,
+  },
   // 比特/秒
-  BITS_S: (value, option) => formatBits(value, option) + 'ps',
+  BITS_S: {
+    format: (value, option) => formatBits(value, option) + 'ps',
+    getThresholdOriginalValue: getBitThresholdOriginalValue,
+  },
   // 次数/秒
-  COUNT_S: (value, option) => formatCount(value, option) + '/s',
+  COUNT_S: {
+    format: (value, option) => formatCount(value, option) + '/s',
+    getThresholdOriginalValue: identity,
+  },
   // 文本
-  TEXT: formatText,
+  TEXT: {
+    format: formatText,
+    getThresholdOriginalValue: identity,
+  },
   // 无单位
-  NONE: (value, option) => formatNumber(value, option),
+  NONE: {
+    format: formatText,
+    getThresholdOriginalValue: identity,
+  },
 };
 
 // 窗口单位格式化
@@ -124,39 +159,26 @@ export const parseWindowUnit = (windowValue: string): [number, WindowUnit] => {
   }
 };
 
-// 安全取小数位
-function getFixed(option?: MetricUnitFormatOptions, defaultValue = 2): number {
-  return typeof option?.digit === 'number' ? option.digit : defaultValue;
+// 提取单位
+export function extractUnit(str: string): string {
+  const match = str.match(/[^\d.]+$/);
+  return match ? match[0] : '';
 }
 
-// 格式化数字
-function formatNumber(value: number, option?: MetricUnitFormatOptions): string {
-  const fixed = getFixed(option, 2);
-  const abs = Math.abs(value);
-  let result: string;
-
-  if (abs >= 1e9) {
-    result = (value / 1e9).toFixed(fixed);
-  } else if (abs >= 1_000_000) {
-    result = (value / 1_000_000).toFixed(fixed);
-  } else if (abs >= 1_000) {
-    result = (value / 1_000).toFixed(fixed);
-  } else {
-    result = value.toFixed(fixed);
-  }
-
-  return parseFloat(result).toString();
+// 安全取小数位
+function getPrecision(option?: MetricUnitFormatOptions, defaultValue = 2): number {
+  return typeof option?.precision === 'number' ? option.precision : defaultValue;
 }
 
 // 格式化百分比
 function formatPer(value: number, option?: MetricUnitFormatOptions): string {
-  const fixed = getFixed(option, 2);
+  const fixed = getPrecision(option, 2);
   return parseFloat((value).toFixed(fixed)) + '%';
 }
 
 // 格式化字节
-function formatBytes(value: number, option?: MetricUnitFormatOptions): string {
-  const fixed = getFixed(option, 2);
+export function formatBytes(value: number, option?: MetricUnitFormatOptions): string {
+  const fixed = getPrecision(option, 2);
   const units = ['B', 'KB', 'MB', 'GB', 'TB'];
   let v = Math.abs(value);
   let i = 0;
@@ -170,10 +192,10 @@ function formatBytes(value: number, option?: MetricUnitFormatOptions): string {
 }
 
 // 格式化比特
-function formatBits(value: number, option?: MetricUnitFormatOptions): string {
-  const fixed = getFixed(option, 2);
+export function formatBits(value: number, option?: MetricUnitFormatOptions): string {
+  const fixed = getPrecision(option, 2);
   const units = ['b', 'Kb', 'Mb', 'Gb'];
-  let v = Math.abs(value);
+  let v = Math.abs(value * 8);
   let i = 0;
   while (v >= 1000 && i < units.length - 1) {
     v /= 1000;
@@ -186,7 +208,7 @@ function formatBits(value: number, option?: MetricUnitFormatOptions): string {
 
 // 格式化次数
 function formatCount(value: number, option?: MetricUnitFormatOptions): string {
-  const fixed = getFixed(option, 2);
+  const fixed = getPrecision(option, 2);
   const abs = Math.abs(value);
   if (abs >= 1_000_000) {
     return parseFloat((value / 1_000_000).toFixed(fixed)) + 'M';
@@ -198,7 +220,7 @@ function formatCount(value: number, option?: MetricUnitFormatOptions): string {
 
 // 格式化时间
 function formatSeconds(value: number, option?: MetricUnitFormatOptions): string {
-  const fixed = getFixed(option, 2);
+  const fixed = getPrecision(option, 2);
   if (value >= 3600) {
     return parseFloat((value / 3600).toFixed(fixed)) + 'h';
   } else if (value >= 60) {
@@ -209,8 +231,23 @@ function formatSeconds(value: number, option?: MetricUnitFormatOptions): string 
 
 // 格式化文本
 function formatText(value: number, option?: MetricUnitFormatOptions): string {
-  const fixed = getFixed(option, 2);
+  const fixed = getPrecision(option, 2);
   const unitText = option?.suffix || '';
   const numStr = value.toFixed(fixed);
   return unitText ? `${numStr} ${unitText}` : numStr;
+}
+
+// 获取 byte 的阈值原值 MB > b
+function getByteThresholdOriginalValue(value: number) {
+  return value * 1024 * 1024;
+}
+
+// 获取 bit 的阈值原值 Mb > bit
+function getBitThresholdOriginalValue(value: number) {
+  return value / 8 * 1000 * 1000;
+}
+
+// 返回原值
+function identity(value: number): number {
+  return value;
 }

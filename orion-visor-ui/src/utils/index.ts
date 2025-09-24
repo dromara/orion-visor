@@ -239,6 +239,10 @@ export function replaceHtmlTag(message: string) {
     .replaceAll('&lt;sr 2&gt;', '<span class="span-red mx2">')
     .replaceAll('&lt;sr 4&gt;', '<span class="span-red mx4">')
     .replaceAll('&lt;/sr&gt;', '</span>')
+    .replaceAll('&lt;sg&gt;', '<span class="span-green mx0">')
+    .replaceAll('&lt;sg 2&gt;', '<span class="span-green mx2">')
+    .replaceAll('&lt;sg 4&gt;', '<span class="span-green mx4">')
+    .replaceAll('&lt;/sg&gt;', '</span>')
     .replaceAll('&lt;b&gt;', '<b>')
     .replaceAll('&lt;/b&gt;', '</b>');
 }
@@ -256,9 +260,24 @@ export function clearHtmlTag(message: string) {
     .replaceAll('&lt;sr 2&gt;', '')
     .replaceAll('&lt;sr&gt;', '')
     .replaceAll('&lt;/sr&gt;', '')
+    .replaceAll('&lt;sg 0&gt;', '')
+    .replaceAll('&lt;sg 2&gt;', '')
+    .replaceAll('&lt;sg&gt;', '')
+    .replaceAll('&lt;/sg&gt;', '')
     .replaceAll('&lt;b&gt;', '')
     .replaceAll('&lt;/b&gt;', '')
     .replaceAll('<br/>', '\n');
 }
+
+/**
+ * 分配记录 (忽略基础信息)
+ */
+export const assignOmitRecord = (record: any, ...omits: Array<string>) => {
+  const model = Object.assign({}, record);
+  for (const omitKey of [...omits, 'creator', 'updater', 'createTime', 'updateTime']) {
+    delete model[omitKey];
+  }
+  return model;
+};
 
 export default null;

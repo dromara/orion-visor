@@ -22,6 +22,7 @@ const columns = [
     title: '模板命令',
     dataIndex: 'command',
     slotName: 'command',
+    minWidth: 380,
     align: 'left',
     ellipsis: true,
     default: true,

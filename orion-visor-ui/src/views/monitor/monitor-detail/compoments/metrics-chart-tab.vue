@@ -18,7 +18,7 @@
 
 <script lang="ts" setup>
   import type { MetricsChartProps, MetricsChartOption } from '../types/const';
-  import { computed, ref } from 'vue';
+  import { computed, ref, onMounted } from 'vue';
   import { parseWindowUnit, MetricsUnit, type MetricUnitType } from '@/utils/metrics';
   import { TimeSeriesColors } from '@/types/chart';
   import MetricsChart from './metrics-chart.vue';
@@ -61,7 +61,7 @@
         colors: [[TimeSeriesColors.BLUE.lineColor, TimeSeriesColors.BLUE.itemBorderColor]],
         aggregate: 'mean',
         unit: MetricsUnit.PER as MetricUnitType,
-        unitOption: { digit: 3 }
+        unitOption: { precision: 3 }
       },
       {
         name: '内存使用率',
@@ -70,7 +70,7 @@
         colors: [[TimeSeriesColors.LIME.lineColor, TimeSeriesColors.LIME.itemBorderColor], [TimeSeriesColors.TEAL.lineColor, TimeSeriesColors.TEAL.itemBorderColor]],
         aggregate: 'mean',
         unit: MetricsUnit.PER as MetricUnitType,
-        unitOption: { digit: 3 }
+        unitOption: { precision: 3 }
       },
       {
         name: '内存使用量',
@@ -79,7 +79,7 @@
         colors: [[TimeSeriesColors.LIME.lineColor, TimeSeriesColors.LIME.itemBorderColor], [TimeSeriesColors.TEAL.lineColor, TimeSeriesColors.TEAL.itemBorderColor]],
         aggregate: 'mean',
         unit: MetricsUnit.BYTES as MetricUnitType,
-        unitOption: { digit: 2 }
+        unitOption: { precision: 2 }
       },
       {
         name: '系统负载',
@@ -91,7 +91,7 @@
         colors: [[TimeSeriesColors.LIME.lineColor, TimeSeriesColors.LIME.itemBorderColor], [TimeSeriesColors.RED.lineColor, TimeSeriesColors.RED.itemBorderColor], [TimeSeriesColors.BLUE.lineColor, TimeSeriesColors.BLUE.itemBorderColor]],
         aggregate: 'mean',
         unit: MetricsUnit.NONE as MetricUnitType,
-        unitOption: { digit: 2 }
+        unitOption: { precision: 2 }
       },
       {
         name: '磁盘使用率',
@@ -100,7 +100,7 @@
         colors: [[TimeSeriesColors.VIOLET.lineColor, TimeSeriesColors.VIOLET.itemBorderColor]],
         aggregate: 'mean',
         unit: MetricsUnit.PER as MetricUnitType,
-        unitOption: { digit: 2 }
+        unitOption: { precision: 2 }
       },
       {
         name: '磁盘使用量',
@@ -109,7 +109,7 @@
         colors: [[TimeSeriesColors.LIME.lineColor, TimeSeriesColors.LIME.itemBorderColor]],
         aggregate: 'mean',
         unit: MetricsUnit.BYTES as MetricUnitType,
-        unitOption: { digit: 2 }
+        unitOption: { precision: 2 }
       },
       {
         name: '网络连接数',
@@ -118,7 +118,7 @@
         colors: [[TimeSeriesColors.CYAN.lineColor, TimeSeriesColors.CYAN.itemBorderColor]],
         aggregate: 'mean',
         unit: MetricsUnit.COUNT as MetricUnitType,
-        unitOption: { digit: 0, suffix: '个' }
+        unitOption: { precision: 0, suffix: '个' }
       },
       {
         name: '网络带宽',
@@ -127,7 +127,7 @@
         colors: [[TimeSeriesColors.BLUE.lineColor, TimeSeriesColors.BLUE.itemBorderColor], [TimeSeriesColors.GREEN.lineColor, TimeSeriesColors.GREEN.itemBorderColor]],
         aggregate: 'mean',
         unit: MetricsUnit.BITS_S as MetricUnitType,
-        unitOption: { digit: 2 }
+        unitOption: { precision: 2 }
       },
       {
         name: '磁盘IO',
@@ -136,7 +136,7 @@
         colors: [[TimeSeriesColors.CYAN.lineColor, TimeSeriesColors.CYAN.itemBorderColor], [TimeSeriesColors.YELLOW.lineColor, TimeSeriesColors.YELLOW.itemBorderColor]],
         aggregate: 'mean',
         unit: MetricsUnit.BYTES_S as MetricUnitType,
-        unitOption: { digit: 2 }
+        unitOption: { precision: 2 }
       },
     ];
     return options.map(option => {
@@ -168,6 +168,8 @@
   };
 
   defineExpose({ reload });
+
+  onMounted(reload);
 
 </script>
 

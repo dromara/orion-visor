@@ -7,7 +7,9 @@
         <a-tabs v-model:active-key="activeKey"
                 type="rounded"
                 :hide-content="true">
+          <a-tab-pane :key="TabKeys.OVERVIEW" title="主机概览" />
           <a-tab-pane :key="TabKeys.CHART" title="监控图表" />
+          <a-tab-pane :key="TabKeys.ALARM" title="告警记录" />
         </a-tabs>
         <a-divider direction="vertical"
                    style="height: 22px; margin: 0 16px 0 8px;"
@@ -40,8 +42,12 @@
     </div>
     <!-- 右侧 -->
     <div class="header-right">
+      <!-- 告警记录标签 -->
+      <div v-if="activeKey === TabKeys.OVERVIEW" class="handle-wrapper">
+        <a-tag v-if="overrideTimestamp">更新时间: {{ dateFormat(new Date(overrideTimestamp)) }}</a-tag>
+      </div>
       <!-- 监控图表操作 -->
-      <div v-if="activeKey === TabKeys.CHART" class="chart-handle">
+      <div v-else-if="activeKey === TabKeys.CHART" class="handle-wrapper">
         <a-space>
           <!-- 表格时间区间 -->
           <a-select v-model="chartRange"
@@ -95,12 +101,14 @@
   import { ref, onMounted, nextTick } from 'vue';
   import { copy } from '@/hooks/copy';
   import { useDictStore } from '@/store';
+  import { dateFormat } from '@/utils';
   import { TabKeys, ChartRangeKey } from '../types/const';
   import { OnlineStatusKey } from '@/views/monitor/monitor-host/types/const';
   import { parseWindowUnit, WindowUnitFormatter } from '@/utils/metrics';
 
   defineProps<{
     host: HostQueryResponse;
+    overrideTimestamp: number;
   }>();
   const emits = defineEmits(['reloadChart']);
   const activeKey = defineModel('activeKey', { type: String });
@@ -199,7 +207,7 @@
   .header-right {
     padding-right: 16px;
 
-    .chart-handle {
+    .handle-wrapper {
       display: flex;
     }
   }

@@ -1,0 +1,146 @@
+import type { TableColumnData } from '@arco-design/web-vue';
+import { dateFormat } from '@/utils';
+
+const columns = [
+  {
+    title: 'id',
+    dataIndex: 'id',
+    slotName: 'id',
+    width: 98,
+    align: 'left',
+    fixed: 'left',
+    default: true,
+  }, {
+    title: '主机信息',
+    dataIndex: 'hostInfo',
+    slotName: 'hostInfo',
+    width: 248,
+    align: 'left',
+    fixed: 'left',
+    default: true,
+  }, {
+    title: '处理状态',
+    dataIndex: 'handleStatus',
+    slotName: 'handleStatus',
+    width: 108,
+    align: 'left',
+    fixed: 'left',
+    default: true,
+  }, {
+    title: '告警级别',
+    dataIndex: 'alarmLevel',
+    slotName: 'alarmLevel',
+    align: 'left',
+    width: 108,
+    default: true,
+  }, {
+    title: '告警策略',
+    dataIndex: 'policyId',
+    slotName: 'policyId',
+    align: 'left',
+    width: 120,
+    default: false,
+  }, {
+    title: '指标数据集',
+    dataIndex: 'metricsMeasurement',
+    slotName: 'metricsMeasurement',
+    align: 'left',
+    width: 108,
+    ellipsis: true,
+    tooltip: true,
+    default: false,
+  }, {
+    title: '告警指标',
+    dataIndex: 'metricsId',
+    slotName: 'metricsId',
+    align: 'left',
+    width: 184,
+    default: false,
+  }, {
+    title: '告警标签',
+    dataIndex: 'alarmTags',
+    slotName: 'alarmTags',
+    align: 'left',
+    minWidth: 168,
+    ellipsis: true,
+    tooltip: true,
+    default: true,
+  }, {
+    title: '告警值',
+    dataIndex: 'alarmValue',
+    slotName: 'alarmValue',
+    width: 148,
+    align: 'left',
+    default: true,
+  }, {
+    title: '告警阈值',
+    dataIndex: 'alarmThreshold',
+    slotName: 'alarmThreshold',
+    width: 148,
+    align: 'left',
+    default: false,
+  }, {
+    title: '告警摘要',
+    dataIndex: 'alarmInfo',
+    slotName: 'alarmInfo',
+    align: 'left',
+    width: 248,
+    tooltip: true,
+    default: true,
+  }, {
+    title: '连续触发次数',
+    dataIndex: 'consecutiveCount',
+    slotName: 'consecutiveCount',
+    align: 'left',
+    width: 116,
+    default: true,
+  }, {
+    title: '处理人',
+    dataIndex: 'handleUsername',
+    slotName: 'handleUsername',
+    align: 'left',
+    width: 138,
+    ellipsis: true,
+    tooltip: true,
+    default: true,
+  }, {
+    title: '处理备注',
+    dataIndex: 'handleRemark',
+    slotName: 'handleRemark',
+    align: 'left',
+    minWidth: 128,
+    ellipsis: true,
+    tooltip: true,
+    default: true,
+  }, {
+    title: '处理时间',
+    dataIndex: 'handleTime',
+    slotName: 'handleTime',
+    align: 'left',
+    width: 180,
+    render: ({ record }) => {
+      return record.handleTime && dateFormat(new Date(record.handleTime));
+    },
+    default: true,
+  }, {
+    title: '告警时间',
+    dataIndex: 'createTime',
+    slotName: 'createTime',
+    align: 'center',
+    width: 180,
+    render: ({ record }) => {
+      return dateFormat(new Date(record.createTime));
+    },
+    fixed: 'right',
+    default: true,
+  }, {
+    title: '操作',
+    slotName: 'handle',
+    width: 130,
+    align: 'center',
+    fixed: 'right',
+    default: true,
+  },
+] as TableColumnData[];
+
+export default columns;

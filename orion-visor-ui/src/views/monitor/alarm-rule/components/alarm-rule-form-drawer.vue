@@ -1,0 +1,368 @@
+<template>
+  <a-drawer v-model:visible="visible"
+            :title="title"
+            :width="590"
+            :mask-closable="false"
+            :unmount-on-close="true"
+            :ok-button-props="{ disabled: loading }"
+            :cancel-button-props="{ disabled: loading }"
+            :on-before-ok="handlerOk"
+            @cancel="handleClose">
+    <a-spin class="full drawer-form-large" :loading="loading">
+      <a-form :model="formModel"
+              ref="formRef"
+              label-align="right"
+              :auto-label-width="true"
+              :rules="formRules">
+        <!-- 监控指标 -->
+        <a-form-item field="metricsId" label="监控指标">
+          <monitor-metrics-selector v-model="formModel.metricsId"
+                                    class="metrics-selector"
+                                    placeholder="请选择监控指标"
+                                    allow-clear />
+          <!-- 添加标签 -->
+          <a-button title="添加标签"
+                    :disabled="formModel.allEffect === 1"
+                    @click="addTag">
+            <template #icon>
+              <icon-tags />
+            </template>
+          </a-button>
+        </a-form-item>
+        <!-- tags -->
+        <template v-for="(tag, index) in tags">
+          <a-form-item v-if="formModel.allEffect === 0"
+                       :field="'tag-' + (index + 1)"
+                       :label="'指标标签-' + (index + 1)">
+            <a-space :size="12">
+              <!-- 标签名称 -->
+              <a-input v-model="tag.key"
+                       style="width: 128px;"
+                       placeholder="指标标签名称" />
+              <!-- 标签值 -->
+              <a-select v-model="tag.value"
+                        class="tag-values"
+                        style="width: 260px"
+                        :max-tag-count="2"
+                        placeholder="标签值"
+                        tag-nowrap
+                        multiple
+                        allow-create />
+              <!-- 移除 -->
+              <a-button title="移除"
+                        style="width: 32px"
+                        @click="removeTag(index)">
+                <template #icon>
+                  <icon-minus />
+                </template>
+              </a-button>
+            </a-space>
+          </a-form-item>
+        </template>
+        <a-row>
+          <!-- 规则开关 -->
+          <a-col :span="12" style="padding-right: 24px;">
+            <a-form-item field="ruleSwitch"
+                         label="规则开关"
+                         hide-asterisk>
+              <a-switch v-model="formModel.ruleSwitch"
+                        type="round"
+                        :checked-value="1"
+                        :unchecked-value="0" />
+            </a-form-item>
+          </a-col>
+          <!-- 全部生效 -->
+          <a-col :span="12">
+            <a-form-item field="allEffect"
+                         label="全部生效"
+                         tooltip="开启后则忽略标签, 并生效与已配置标签的规则 (通常用于默认策略)"
+                         hide-asterisk>
+              <a-switch v-model="formModel.allEffect"
+                        type="round"
+                        :checked-value="1"
+                        :unchecked-value="0" />
+            </a-form-item>
+          </a-col>
+        </a-row>
+        <a-row>
+          <!-- 持续数据点 -->
+          <a-col :span="12" style="padding-right: 24px;">
+            <a-form-item field="silencePeriod"
+                         label="持续数据点"
+                         hide-asterisk>
+              <a-input-number v-model="formModel.consecutiveCount"
+                              :min="0"
+                              :max="100"
+                              placeholder="持续数据点"
+                              hide-button
+                              allow-clear>
+                <template #append>
+                  <span>个</span>
+                </template>
+              </a-input-number>
+            </a-form-item>
+          </a-col>
+          <!-- 静默时间 -->
+          <a-col :span="12">
+            <a-form-item field="silencePeriod"
+                         label="静默时间"
+                         tooltip="再次发生告警后沉默的时间"
+                         hide-asterisk>
+              <a-input-number v-model="formModel.silencePeriod"
+                              :min="0"
+                              placeholder="请输入静默时间"
+                              hide-button
+                              allow-clear>
+                <template #append>
+                  <span>分钟</span>
+                </template>
+              </a-input-number>
+            </a-form-item>
+          </a-col>
+        </a-row>
+        <!-- 告警条件 -->
+        <a-row>
+          <a-col :span="7">
+            <a-form-item field="level"
+                         label="告警条件"
+                         class="alarm-level-select">
+              <a-select v-model="formModel.level"
+                        style="padding: 0;"
+                        :options="toOptions(LevelKey)"
+                        :bordered="false"
+                        placeholder="级别">
+                <template #label="{ data: { label, value } }">
+                  <a-tag :color="getDictValue(LevelKey, value,'color')">{{ label }}</a-tag>
+                </template>
+                <template #option="{ data: { label, value } }">
+                  <a-tag style="padding: 0 3px;" :color="getDictValue(LevelKey, value,'color')">{{ label }}</a-tag>
+                </template>
+              </a-select>
+            </a-form-item>
+          </a-col>
+          <!-- 告警条件 -->
+          <a-col :span="6">
+            <a-form-item field="triggerCondition"
+                         class="condition-select"
+                         hide-label>
+              <a-select v-model="formModel.triggerCondition"
+                        :options="toOptions(TriggerConditionKey)"
+                        placeholder="请选择告警条件" />
+            </a-form-item>
+          </a-col>
+          <!-- 触发阈值 -->
+          <a-col :span="11">
+            <a-form-item field="threshold"
+                         style="padding-left: 16px;"
+                         hide-label>
+              <a-input-number v-model="formModel.threshold"
+                              :precision="4"
+                              placeholder="触发阈值"
+                              hide-button
+                              allow-clear>
+                <template v-if="metricsUnit" #append>
+                  {{ metricsUnit }}
+                </template>
+              </a-input-number>
+            </a-form-item>
+          </a-col>
+        </a-row>
+        <!-- 规则描述 -->
+        <a-form-item field="description" label="规则描述">
+          <a-textarea v-model="formModel.description"
+                      :auto-size="{ minRows: 4, maxRows: 4 }"
+                      placeholder="请输入规则描述"
+                      allow-clear />
+        </a-form-item>
+      </a-form>
+    </a-spin>
+  </a-drawer>
+</template>
+
+<script lang="ts">
+  export default {
+    name: 'alarmRuleFormDrawer'
+  };
+</script>
+
+<script lang="ts" setup>
+  import type { AlarmRuleUpdateRequest } from '@/api/monitor/alarm-rule';
+  import type { MetricsQueryResponse } from '@/api/monitor/metrics';
+  import type { RuleTag } from '../types/const';
+  import type { FormHandle } from '@/types/form';
+  import { ref, computed } from 'vue';
+  import useLoading from '@/hooks/loading';
+  import useVisible from '@/hooks/visible';
+  import formRules from '../types/form.rules';
+  import { MetricsUnitKey } from '../types/const';
+  import { assignOmitRecord } from '@/utils';
+  import { TriggerConditionKey, LevelKey, DefaultCondition, DefaultLevel, } from '../types/const';
+  import { createAlarmRule, updateAlarmRule } from '@/api/monitor/alarm-rule';
+  import { Message } from '@arco-design/web-vue';
+  import { useDictStore, useCacheStore } from '@/store';
+  import MonitorMetricsSelector from '@/components/monitor/metrics/selector/index.vue';
+
+  const emits = defineEmits(['added', 'updated']);
+
+  const { visible, setVisible } = useVisible();
+  const { loading, setLoading } = useLoading();
+  const { monitorMetrics } = useCacheStore();
+  const { getDictValue, toOptions } = useDictStore();
+
+  const title = ref<string>();
+  const formHandle = ref<FormHandle>('add');
+  const formRef = ref<any>();
+  const formModel = ref<AlarmRuleUpdateRequest>({});
+  const tags = ref<Array<RuleTag>>([]);
+
+  const defaultForm = (): AlarmRuleUpdateRequest => {
+    return {
+      id: undefined,
+      policyId: undefined,
+      metricsId: undefined,
+      tags: undefined,
+      level: DefaultLevel,
+      ruleSwitch: 1,
+      allEffect: 0,
+      triggerCondition: DefaultCondition,
+      threshold: undefined,
+      consecutiveCount: 1,
+      silencePeriod: 0,
+      description: undefined,
+    };
+  };
+
+  // 指标单位
+  const metricsUnit = computed(() => {
+    const metricsId = formModel.value.metricsId;
+    if (!metricsId) {
+      return '';
+    }
+    // 读取指标单位
+    const unit = (monitorMetrics as Array<MetricsQueryResponse>).find(m => m.id === metricsId)?.unit;
+    if (!unit) {
+      return '';
+    }
+    return getDictValue(MetricsUnitKey, unit, 'alarmUnit');
+  });
+
+  // 打开新增
+  const openAdd = (policyId: number) => {
+    title.value = '添加监控告警规则';
+    formHandle.value = 'add';
+    renderForm({ ...defaultForm(), policyId });
+    setVisible(true);
+  };
+
+  // 打开复制
+  const openCopy = (record: any) => {
+    title.value = '添加监控告警规则';
+    formHandle.value = 'add';
+    renderForm({ ...defaultForm(), ...record, id: undefined });
+    setVisible(true);
+  };
+
+  // 打开修改
+  const openUpdate = (record: any) => {
+    title.value = '修改监控告警规则';
+    formHandle.value = 'update';
+    renderForm({ ...defaultForm(), ...record });
+    setVisible(true);
+  };
+
+  // 渲染表单
+  const renderForm = (record: any) => {
+    formModel.value = assignOmitRecord({ ...defaultForm(), ...record }, 'tags');
+    if (record.tags) {
+      tags.value = JSON.parse(record.tags);
+    } else {
+      tags.value = [];
+    }
+  };
+
+  defineExpose({ openAdd, openCopy, openUpdate });
+
+  // 添加标签
+  const addTag = () => {
+    tags.value.push({ key: '', value: [] });
+  };
+
+  // 移除标签
+  const removeTag = (index: number) => {
+    tags.value.splice(index, 1);
+  };
+
+  // 确定
+  const handlerOk = async () => {
+    setLoading(true);
+    try {
+      // 验证参数
+      const error = await formRef.value.validate();
+      if (error) {
+        return false;
+      }
+      for (let tag of tags.value) {
+        if (!tag.key) {
+          Message.error('请输入标签名称');
+          return false;
+        }
+        if (!tag.value) {
+          Message.error('请输入标签值');
+          return false;
+        }
+      }
+      if (formHandle.value == 'add') {
+        // 新增
+        await createAlarmRule({
+          ...formModel.value,
+          tags: formModel.value.allEffect === 1 ? '[]' : JSON.stringify(tags.value)
+        });
+        Message.success('创建成功');
+        emits('added');
+      } else {
+        // 修改
+        await updateAlarmRule({
+          ...formModel.value,
+          tags: formModel.value.allEffect === 1 ? '[]' : JSON.stringify(tags.value)
+        });
+        Message.success('修改成功');
+        emits('updated');
+      }
+      // 清空
+      handlerClear();
+    } catch (e) {
+      return false;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // 关闭
+  const handleClose = () => {
+    handlerClear();
+  };
+
+  // 清空
+  const handlerClear = () => {
+    setLoading(false);
+  };
+
+</script>
+
+<style lang="less" scoped>
+  :deep(.metrics-selector) {
+    width: calc(100% - 42px);
+    margin-right: 12px;
+  }
+
+  .alarm-level-select, .condition-select {
+
+    :deep(.arco-select-view-suffix) {
+      display: none !important;
+    }
+  }
+
+  :deep(.tag-values .arco-select-view-inner) {
+    flex-wrap: nowrap !important;
+  }
+</style>

@@ -28,6 +28,7 @@
         <a-form-item field="measurement" label="数据集">
           <a-select v-model="formModel.measurement"
                     :options="toOptions(MeasurementKey)"
+                    :disabled="formHandle === 'update'"
                     placeholder="请选择数据集"
                     allow-clear />
         </a-form-item>
@@ -71,6 +72,7 @@
 </script>
 
 <script lang="ts" setup>
+  import type { FormHandle } from '@/types/form';
   import type { MetricsUpdateRequest } from '@/api/monitor/metrics';
   import { ref } from 'vue';
   import useLoading from '@/hooks/loading';
@@ -81,6 +83,7 @@
   import { Message } from '@arco-design/web-vue';
   import { useDictStore } from '@/store';
   import { MetricsUnit } from '@/utils/metrics';
+  import { assignOmitRecord } from '@/utils';
 
   const emits = defineEmits(['added', 'updated']);
 
@@ -89,7 +92,7 @@
   const { toOptions } = useDictStore();
 
   const title = ref<string>();
-  const isAddHandle = ref<boolean>(true);
+  const formHandle = ref<FormHandle>('add');
   const formRef = ref<any>();
   const formModel = ref<MetricsUpdateRequest>({});
 
@@ -108,22 +111,17 @@
   // 打开新增
   const openAdd = () => {
     title.value = '添加监控指标';
-    isAddHandle.value = true;
-    renderForm({ ...defaultForm() });
+    formHandle.value = 'add';
+    formModel.value = assignOmitRecord({ ...defaultForm() });
     setVisible(true);
   };
 
   // 打开修改
   const openUpdate = (record: any) => {
     title.value = '修改监控指标';
-    isAddHandle.value = false;
-    renderForm({ ...defaultForm(), ...record });
+    formHandle.value = 'update';
+    formModel.value = assignOmitRecord({ ...defaultForm(), ...record });
     setVisible(true);
-  };
-
-  // 渲染表单
-  const renderForm = (record: any) => {
-    formModel.value = Object.assign({}, record);
   };
 
   defineExpose({ openAdd, openUpdate });
@@ -141,7 +139,7 @@
       if (MetricsUnit.TEXT !== formModel.value.unit) {
         formModel.value.suffix = '';
       }
-      if (isAddHandle.value) {
+      if (formHandle.value === 'add') {
         // 新增
         await createMetrics(formModel.value);
         Message.success('创建成功');

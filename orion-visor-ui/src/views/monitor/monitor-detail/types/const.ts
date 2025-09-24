@@ -1,4 +1,5 @@
 import type { WindowUnit, MetricUnitType, MetricUnitFormatOptions } from '@/utils/metrics';
+import { dictKeys as alarmDictKeys } from '@/views/monitor/alarm-event/types/const';
 
 // 图表组件配置
 export interface MetricsChartProps {
@@ -26,8 +27,12 @@ export interface MetricsChartOption {
 
 // tab
 export const TabKeys = {
-  CHART: 'chart'
+  OVERVIEW: 'overview',
+  CHART: 'chart',
+  ALARM: 'alarm',
 };
+
+export const TableName = 'host_alarm_event';
 
 // 探针在线状态 字典项
 export const OnlineStatusKey = 'agentOnlineStatus';
@@ -42,4 +47,4 @@ export const ChartRangeKey = 'metricsChartRange';
 export const MetricsAggregateKey = 'metricsAggregate';
 
 // 加载的字典值
-export const dictKeys = [AlarmSwitchKey, OnlineStatusKey, ChartRangeKey, MetricsAggregateKey];
+export const dictKeys = [AlarmSwitchKey, OnlineStatusKey, ChartRangeKey, MetricsAggregateKey, ...alarmDictKeys];

@@ -3,11 +3,13 @@
     <!-- 列表-表格 -->
     <monitor-host-table v-if="renderTable"
                         ref="table"
+                        @to-policy="toPolicy"
                         @open-upload="() => uploadModal.open()"
                         @open-update="(e: any) => drawer.openUpdate(e)" />
     <!-- 列表-卡片 -->
     <monitor-host-card-list v-else
                             ref="card"
+                            @to-policy="toPolicy"
                             @open-upload="() => uploadModal.open()"
                             @open-update="(e: any) => drawer.openUpdate(e)" />
     <!-- 添加修改抽屉 -->
@@ -29,11 +31,13 @@
   import { computed, ref, onBeforeMount } from 'vue';
   import { useAppStore, useDictStore } from '@/store';
   import { dictKeys } from './types/const';
+  import { useRouter } from 'vue-router';
   import MonitorHostTable from './components/monitor-host-table.vue';
   import MonitorHostCardList from './components/monitor-host-card-list.vue';
   import MonitorHostFormDrawer from './components/monitor-host-form-drawer.vue';
   import ReleaseUploadModal from './components/release-upload-modal.vue';
 
+  const router = useRouter();
   const appStore = useAppStore();
 
   const renderTable = computed(() => appStore.monitorHostView === 'table');
@@ -51,6 +55,20 @@
     } else {
       card.value.reload();
     }
+  };
+
+  // 打开规则
+  const toPolicy = (e: any) => {
+    if (!e.policyId) {
+      return;
+    }
+    router.push({
+      name: 'alarmRule',
+      query: {
+        id: e.policyId,
+        name: e.policyName,
+      }
+    });
   };
 
   onBeforeMount(async () => {

@@ -20,7 +20,7 @@ export interface MonitorHostUpdateRequest {
  * 监控主机更新请求
  */
 export interface MonitorHostSwitchUpdateRequest {
-  id?: number;
+  idList?: Array<number>;
   alarmSwitch?: number;
 }
 
@@ -55,6 +55,23 @@ export interface MonitorHostChartRequest {
   range?: string;
   start?: string;
   end?: string;
+}
+
+/**
+ * 监控指标数据
+ */
+export interface MonitorMetricsData {
+  timestamp: number;
+  metrics: Array<MonitorMetrics>;
+}
+
+/**
+ * 监控指标
+ */
+export interface MonitorMetrics {
+  type: string;
+  tags: Record<string, string>;
+  values: Record<string, number>;
 }
 
 /**
@@ -137,6 +154,13 @@ export function getMonitorHostMetrics(agentKeyList: Array<string>) {
     promptBizErrorMessage: false,
     promptRequestErrorMessage: false,
   });
+}
+
+/**
+ * 获取监控主机概览
+ */
+export function getMonitorHostOverride(agentKey: string) {
+  return axios.get<MonitorMetricsData>('/monitor/monitor-host/override', { params: { agentKey } });
 }
 
 /**
