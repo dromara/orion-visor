@@ -100,6 +100,12 @@ public interface ErrorMessage {
 
     String GROUP_ABSENT = "分组不存在";
 
+    String METRICS_ABSENT = "指标不存在";
+
+    String RULE_ABSENT = "规则不存在";
+
+    String ALARM_POLICY_ABSENT = "告警策略不存在";
+
     String HOST_TYPE_ERROR = "主机类型错误";
 
     String HOST_NOT_ENABLED = "{} 主机未启用";
@@ -132,6 +138,8 @@ public interface ErrorMessage {
 
     String CURRENT_USER_UNSUPPORTED_OPT = "当前" + USER_UNSUPPORTED_OPT;
 
+    String PUSH_USER_NOT_EMPTY = "推送用户不能为空";
+
     String PATH_NOT_NORMALIZE = "路径不合法";
 
     String OPERATE_ERROR = "操作失败";
@@ -139,6 +147,8 @@ public interface ErrorMessage {
     String ENCRYPT_KEY_UNSET = "加密密钥未配置";
 
     String DECRYPT_ERROR = "数据解密失败";
+
+    String GET_REQUEST_URL_ERROR = "获取请求路径失败";
 
     String UNKNOWN_TYPE = "未知类型";
 

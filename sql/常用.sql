@@ -30,6 +30,7 @@ DELETE FROM exec_host_log WHERE deleted = 1;
 DELETE FROM terminal_connect_log WHERE deleted = 1;
 DELETE FROM upload_task WHERE deleted = 1;
 DELETE FROM upload_task_file WHERE deleted = 1;
+DELETE FROM monitor_alarm_event WHERE deleted = 1;
 
 -- 修改连接日志状态
 UPDATE terminal_connect_log l SET status = 'COMPLETE', end_time = l.start_time WHERE status = 'CONNECTING';
