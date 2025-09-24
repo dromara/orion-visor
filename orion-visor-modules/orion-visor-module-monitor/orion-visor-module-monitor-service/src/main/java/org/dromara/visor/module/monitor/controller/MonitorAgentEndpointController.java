@@ -30,8 +30,8 @@ import org.dromara.visor.framework.log.core.annotation.IgnoreLog;
 import org.dromara.visor.framework.log.core.enums.IgnoreLogMode;
 import org.dromara.visor.framework.web.core.annotation.ExposeApi;
 import org.dromara.visor.framework.web.core.annotation.RestWrapper;
+import org.dromara.visor.module.monitor.entity.dto.AgentMetricsDataDTO;
 import org.dromara.visor.module.monitor.entity.dto.HostMetaDTO;
-import org.dromara.visor.module.monitor.entity.dto.MetricsDataDTO;
 import org.dromara.visor.module.monitor.service.MonitorAgentEndpointService;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -61,7 +61,7 @@ public class MonitorAgentEndpointController {
     @PostMapping("/metrics")
     @Operation(summary = "上报指标数据")
     public Boolean addMetrics(@RequestHeader(CustomHeaderConst.AGENT_KEY_HEADER) String key,
-                              @RequestBody MetricsDataDTO data) {
+                              @RequestBody AgentMetricsDataDTO data) {
         monitorAgentEndpointService.addMetrics(key, data);
         return true;
     }

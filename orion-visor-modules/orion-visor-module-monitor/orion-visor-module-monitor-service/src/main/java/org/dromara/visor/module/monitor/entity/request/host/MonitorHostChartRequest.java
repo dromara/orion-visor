@@ -48,7 +48,7 @@ public class MonitorHostChartRequest extends BaseQueryRequest {
     private List<String> agentKeys;
 
     @NotBlank
-    @Schema(description = "表")
+    @Schema(description = "数据集")
     private String measurement;
 
     @NotEmpty

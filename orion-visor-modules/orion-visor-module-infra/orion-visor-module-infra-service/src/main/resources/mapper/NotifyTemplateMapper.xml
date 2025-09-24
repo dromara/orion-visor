@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.dromara.visor.module.infra.dao.NotifyTemplateDAO">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="org.dromara.visor.module.infra.entity.domain.NotifyTemplateDO">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="biz_type" property="bizType"/>
+        <result column="channel_type" property="channelType"/>
+        <result column="channel_config" property="channelConfig"/>
+        <result column="message_template" property="messageTemplate"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="creator" property="creator"/>
+        <result column="updater" property="updater"/>
+        <result column="deleted" property="deleted"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, name, biz_type, channel_type, channel_config, message_template, create_time, update_time, creator, updater, deleted
+    </sql>
+
+</mapper>

@@ -25,6 +25,7 @@ package org.dromara.visor.framework.security.core.utils;
 import cn.orionsec.kit.lang.constant.StandardHttpHeader;
 import cn.orionsec.kit.lang.utils.Strings;
 import org.dromara.visor.common.constant.Const;
+import org.dromara.visor.common.constant.ErrorCode;
 import org.dromara.visor.common.security.LoginUser;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -88,6 +89,19 @@ public class SecurityUtils {
             return null;
         }
         return authentication.getPrincipal() instanceof LoginUser ? (LoginUser) authentication.getPrincipal() : null;
+    }
+
+    /**
+     * 获取当前用户 不为空
+     *
+     * @return 当前用户
+     */
+    public static LoginUser getLoginUserNotNull() {
+        LoginUser user = getLoginUser();
+        if (user == null) {
+            throw ErrorCode.UNAUTHORIZED.exception();
+        }
+        return user;
     }
 
     /**

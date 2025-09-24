@@ -145,7 +145,7 @@ public class UploadTaskController {
 
     @OperatorLog(UploadTaskOperatorType.CLEAR)
     @PostMapping("/clear")
-    @Operation(summary = "清空上传任务")
+    @Operation(summary = "清理上传任务")
     @PreAuthorize("@ss.hasPermission('exec:upload-task:management:clear')")
     public Integer clearUploadTask(@Validated @RequestBody UploadTaskClearRequest request) {
         return uploadTaskService.clearUploadTask(request);

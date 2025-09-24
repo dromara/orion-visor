@@ -106,7 +106,7 @@ public class TerminalConnectLogController {
 
     @OperatorLog(TerminalConnectLogOperatorType.CLEAR)
     @PostMapping("/clear")
-    @Operation(summary = "清空终端连接日志")
+    @Operation(summary = "清理终端连接日志")
     @PreAuthorize("@ss.hasPermission('terminal:terminal-connect-log:management:clear')")
     public Integer clearTerminalConnectLog(@Validated @RequestBody TerminalConnectLogClearRequest request) {
         return terminalConnectLogService.clearTerminalConnectLog(request);

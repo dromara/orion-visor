@@ -30,7 +30,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
-import java.util.Date;
 
 /**
  * 监控指标 缓存对象
@@ -65,20 +64,5 @@ public class MonitorMetricsCacheDTO implements LongCacheIdModel, Serializable {
 
     @Schema(description = "后缀")
     private String suffix;
-
-    @Schema(description = "指标描述")
-    private String description;
-
-    @Schema(description = "创建时间")
-    private Date createTime;
-
-    @Schema(description = "修改时间")
-    private Date updateTime;
-
-    @Schema(description = "创建人")
-    private String creator;
-
-    @Schema(description = "修改人")
-    private String updater;
 
 }

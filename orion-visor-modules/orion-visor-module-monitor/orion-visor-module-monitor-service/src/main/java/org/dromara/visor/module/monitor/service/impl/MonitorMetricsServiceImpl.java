@@ -23,11 +23,9 @@
 package org.dromara.visor.module.monitor.service.impl;
 
 import cn.orionsec.kit.lang.define.wrapper.DataGrid;
-import cn.orionsec.kit.lang.utils.collect.Lists;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import lombok.extern.slf4j.Slf4j;
-import org.dromara.visor.common.constant.Const;
 import org.dromara.visor.common.constant.ErrorMessage;
 import org.dromara.visor.common.utils.Valid;
 import org.dromara.visor.framework.biz.operator.log.core.utils.OperatorLogs;
@@ -36,22 +34,22 @@ import org.dromara.visor.framework.redis.core.utils.barrier.CacheBarriers;
 import org.dromara.visor.module.monitor.convert.MonitorMetricsConvert;
 import org.dromara.visor.module.monitor.dao.MonitorMetricsDAO;
 import org.dromara.visor.module.monitor.define.cache.MonitorMetricsCacheKeyDefine;
+import org.dromara.visor.module.monitor.engine.MonitorContext;
 import org.dromara.visor.module.monitor.entity.domain.MonitorMetricsDO;
 import org.dromara.visor.module.monitor.entity.dto.MonitorMetricsCacheDTO;
+import org.dromara.visor.module.monitor.entity.dto.MonitorMetricsContextDTO;
 import org.dromara.visor.module.monitor.entity.request.metrics.MonitorMetricsCreateRequest;
 import org.dromara.visor.module.monitor.entity.request.metrics.MonitorMetricsQueryRequest;
 import org.dromara.visor.module.monitor.entity.request.metrics.MonitorMetricsUpdateRequest;
 import org.dromara.visor.module.monitor.entity.vo.MonitorMetricsVO;
+import org.dromara.visor.module.monitor.service.AlarmPolicyRuleService;
 import org.dromara.visor.module.monitor.service.MonitorMetricsService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -65,19 +63,14 @@ import java.util.stream.Collectors;
 @Service
 public class MonitorMetricsServiceImpl implements MonitorMetricsService {
 
-    private final Map<String, String> metricsNameMap = new HashMap<>();
-
     @Resource
     private MonitorMetricsDAO monitorMetricsDAO;
 
-    @PostConstruct
-    public void init() {
-        // 加载指标名称关联
-        List<MonitorMetricsDO> metricsList = monitorMetricsDAO.selectList(null);
-        for (MonitorMetricsDO metrics : metricsList) {
-            metricsNameMap.put(metrics.getValue(), metrics.getName());
-        }
-    }
+    @Resource
+    private AlarmPolicyRuleService alarmPolicyRuleService;
+
+    @Resource
+    private MonitorContext monitorContext;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -94,9 +87,8 @@ public class MonitorMetricsServiceImpl implements MonitorMetricsService {
         RedisMaps.delete(MonitorMetricsCacheKeyDefine.MONITOR_METRICS);
         // 设置日志参数
         OperatorLogs.add(OperatorLogs.ID, id);
-        // 修改本地缓存
-        metricsNameMap.remove(record.getValue());
-        metricsNameMap.put(request.getValue(), request.getName());
+        // 重新加载本地缓存
+        monitorContext.reloadMonitorMetrics(id);
         log.info("MonitorMetricsService-createMonitorMetrics id: {}, effect: {}", id, effect);
         return id;
     }
@@ -111,6 +103,7 @@ public class MonitorMetricsServiceImpl implements MonitorMetricsService {
         Valid.notNull(record, ErrorMessage.DATA_ABSENT);
         // 转换
         MonitorMetricsDO updateRecord = MonitorMetricsConvert.MAPPER.to(request);
+        updateRecord.setMeasurement(record.getMeasurement());
         // 查询数据是否冲突
         this.checkMonitorMetricsPresent(updateRecord);
         // 更新
@@ -118,8 +111,8 @@ public class MonitorMetricsServiceImpl implements MonitorMetricsService {
         log.info("MonitorMetricsService-updateMonitorMetricsById effect: {}", effect);
         // 删除缓存
         RedisMaps.delete(MonitorMetricsCacheKeyDefine.MONITOR_METRICS);
-        // 修改本地缓存
-        metricsNameMap.put(request.getValue(), request.getName());
+        // 重新加载本地缓存
+        monitorContext.reloadMonitorMetrics(id);
         return effect;
     }
 
@@ -140,7 +133,7 @@ public class MonitorMetricsServiceImpl implements MonitorMetricsService {
         // 转换
         return list.stream()
                 .map(MonitorMetricsConvert.MAPPER::to)
-                .sorted(Comparator.comparing(MonitorMetricsVO::getId).reversed())
+                .sorted(Comparator.comparing(MonitorMetricsVO::getId))
                 .collect(Collectors.toList());
     }
 
@@ -157,8 +150,12 @@ public class MonitorMetricsServiceImpl implements MonitorMetricsService {
     }
 
     @Override
-    public String getMetricName(String value) {
-        return metricsNameMap.getOrDefault(value, value);
+    public String getMetricName(String measurement, String value) {
+        MonitorMetricsContextDTO metrics = monitorContext.getMonitorMetrics(measurement, value);
+        if (metrics == null) {
+            return value;
+        }
+        return metrics.getName();
     }
 
     @Override
@@ -170,38 +167,25 @@ public class MonitorMetricsServiceImpl implements MonitorMetricsService {
         Valid.notNull(record, ErrorMessage.DATA_ABSENT);
         // 删除
         int effect = monitorMetricsDAO.deleteById(id);
+        // 删除规则
+        alarmPolicyRuleService.deleteByMetricsId(id);
         // 删除缓存
         RedisMaps.delete(MonitorMetricsCacheKeyDefine.MONITOR_METRICS, id);
+        // 重新加载本地缓存
+        monitorContext.reloadMonitorMetrics(id);
         // 设置日志参数
-        OperatorLogs.add(OperatorLogs.COUNT, effect);
+        OperatorLogs.add(OperatorLogs.NAME, record.getName());
         log.info("MonitorMetricsService-deleteMonitorMetricsById id: {}, effect: {}", id, effect);
-        return effect;
-    }
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public Integer deleteMonitorMetricsByIdList(List<Long> idList) {
-        if (Lists.isEmpty(idList)) {
-            OperatorLogs.add(OperatorLogs.COUNT, Const.N_0);
-            return Const.N_0;
-        }
-        log.info("MonitorMetricsService-deleteMonitorMetricsByIdList idList: {}", idList);
-        int effect = monitorMetricsDAO.deleteBatchIds(idList);
-        // 删除缓存
-        RedisMaps.delete(MonitorMetricsCacheKeyDefine.MONITOR_METRICS, idList);
-        // 设置日志参数
-        OperatorLogs.add(OperatorLogs.COUNT, effect);
-        log.info("MonitorMetricsService-deleteMonitorMetricsByIdList effect: {}", effect);
         return effect;
     }
 
     @Override
     public LambdaQueryWrapper<MonitorMetricsDO> buildQueryWrapper(MonitorMetricsQueryRequest request) {
         return monitorMetricsDAO.wrapper()
-                .eq(MonitorMetricsDO::getName, request.getName())
+                .like(MonitorMetricsDO::getName, request.getName())
                 .eq(MonitorMetricsDO::getMeasurement, request.getMeasurement())
                 .eq(MonitorMetricsDO::getValue, request.getValue())
-                .eq(MonitorMetricsDO::getDescription, request.getDescription());
+                .like(MonitorMetricsDO::getDescription, request.getDescription());
     }
 
     /**
@@ -215,7 +199,6 @@ public class MonitorMetricsServiceImpl implements MonitorMetricsService {
                 // 更新时忽略当前记录
                 .ne(MonitorMetricsDO::getId, domain.getId())
                 // 用其他字段做重复校验
-                .eq(MonitorMetricsDO::getName, domain.getName())
                 .eq(MonitorMetricsDO::getMeasurement, domain.getMeasurement())
                 .eq(MonitorMetricsDO::getValue, domain.getValue());
         // 检查是否存在

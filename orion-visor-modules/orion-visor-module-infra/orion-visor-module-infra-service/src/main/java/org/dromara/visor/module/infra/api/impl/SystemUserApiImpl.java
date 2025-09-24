@@ -22,6 +22,8 @@
  */
 package org.dromara.visor.module.infra.api.impl;
 
+import cn.orionsec.kit.lang.utils.collect.Lists;
+import org.dromara.visor.common.entity.PushUser;
 import org.dromara.visor.module.infra.api.SystemUserApi;
 import org.dromara.visor.module.infra.convert.SystemUserProviderConvert;
 import org.dromara.visor.module.infra.dao.SystemUserDAO;
@@ -30,6 +32,9 @@ import org.dromara.visor.module.infra.entity.dto.user.SystemUserDTO;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 用户服务实现
@@ -81,6 +86,37 @@ public class SystemUserApiImpl implements SystemUserApi {
             return null;
         }
         return SystemUserProviderConvert.MAPPER.to(user);
+    }
+
+    @Override
+    public List<SystemUserDTO> getUserByIdList(List<Long> idList) {
+        if (Lists.isEmpty(idList)) {
+            return Collections.emptyList();
+        }
+        return systemUserDAO.selectBatchIds(idList)
+                .stream()
+                .map(SystemUserProviderConvert.MAPPER::to)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public PushUser getNotifyUserById(Long idList) {
+        SystemUserDO user = systemUserDAO.selectById(idList);
+        if (user == null) {
+            return null;
+        }
+        return SystemUserProviderConvert.MAPPER.toPush(user);
+    }
+
+    @Override
+    public List<PushUser> getNotifyUserByIdList(List<Long> idList) {
+        if (Lists.isEmpty(idList)) {
+            return Collections.emptyList();
+        }
+        return systemUserDAO.selectBatchIds(idList)
+                .stream()
+                .map(SystemUserProviderConvert.MAPPER::toPush)
+                .collect(Collectors.toList());
     }
 
 }

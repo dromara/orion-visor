@@ -50,6 +50,26 @@ public class RedisUtils {
     }
 
     /**
+     * 是否包含 key
+     *
+     * @param define define
+     * @return has
+     */
+    public static boolean hasKey(CacheKeyDefine define) {
+        return hasKey(define.getKey());
+    }
+
+    /**
+     * 是否包含 key
+     *
+     * @param key key
+     * @return has
+     */
+    public static boolean hasKey(String key) {
+        return redisTemplate.hasKey(key);
+    }
+
+    /**
      * 扫描 key
      *
      * @param match 匹配值

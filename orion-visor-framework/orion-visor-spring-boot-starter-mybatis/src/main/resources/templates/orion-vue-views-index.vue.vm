@@ -5,17 +5,17 @@
     <${vue.feature}-table v-if="renderTable"
                   ref="table"
                   @open-add="() =>#if($vue.enableDrawerForm) drawer#else modal#end.openAdd()"
-                  @open-update="(e) =>#if($vue.enableDrawerForm) drawer#else modal#end.openUpdate(e)" />
+                  @open-update="(e: any) =>#if($vue.enableDrawerForm) drawer#else modal#end.openUpdate(e)" />
     <!-- 列表-卡片 -->
     <${vue.feature}-card-list v-else
                   ref="card"
                   @open-add="() =>#if($vue.enableDrawerForm) drawer#else modal#end.openAdd()"
-                  @open-update="(e) =>#if($vue.enableDrawerForm) drawer#else modal#end.openUpdate(e)" />
+                  @open-update="(e: any) =>#if($vue.enableDrawerForm) drawer#else modal#end.openUpdate(e)" />
     #else
     <!-- 列表-表格 -->
     <${vue.feature}-table ref="table"
                   @open-add="() =>#if($vue.enableDrawerForm) drawer#else modal#end.openAdd()"
-                  @open-update="(e) =>#if($vue.enableDrawerForm) drawer#else modal#end.openUpdate(e)" />
+                  @open-update="(e: any) =>#if($vue.enableDrawerForm) drawer#else modal#end.openUpdate(e)" />
     #end
     #if($vue.enableDrawerForm)
     <!-- 添加修改抽屉 -->

@@ -153,7 +153,7 @@ public class ExecJobLogController {
 
     @OperatorLog(ExecJobLogOperatorType.CLEAR)
     @PostMapping("/clear")
-    @Operation(summary = "清空计划任务日志")
+    @Operation(summary = "清理计划任务日志")
     @PreAuthorize("@ss.hasPermission('exec:exec-job-log:management:clear')")
     public Integer clearExecJobLog(@Validated @RequestBody ExecLogClearRequest request) {
         request.setSource(SOURCE);

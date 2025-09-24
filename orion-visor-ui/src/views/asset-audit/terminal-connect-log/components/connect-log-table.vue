@@ -63,11 +63,11 @@
       <!-- 右侧操作 -->
       <div class="table-right-bar-handle">
         <a-space>
-          <!-- 清空 -->
+          <!-- 清理 -->
           <a-button v-permission="['terminal:terminal-connect-log:management:clear']"
                     status="danger"
                     @click="openClear">
-            清空
+            清理
             <template #icon>
               <icon-close />
             </template>

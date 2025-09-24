@@ -24,6 +24,7 @@ package org.dromara.visor.module.monitor.controller;
 
 import cn.orionsec.kit.lang.define.wrapper.DataGrid;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.visor.common.entity.chart.TimeChartSeries;
@@ -35,6 +36,8 @@ import org.dromara.visor.framework.log.core.enums.IgnoreLogMode;
 import org.dromara.visor.framework.web.core.annotation.DemoDisableApi;
 import org.dromara.visor.framework.web.core.annotation.RestWrapper;
 import org.dromara.visor.module.monitor.define.operator.MonitorHostOperatorType;
+import org.dromara.visor.module.monitor.engine.MonitorContext;
+import org.dromara.visor.module.monitor.entity.dto.AgentMetricsDataDTO;
 import org.dromara.visor.module.monitor.entity.request.host.MonitorHostChartRequest;
 import org.dromara.visor.module.monitor.entity.request.host.MonitorHostQueryRequest;
 import org.dromara.visor.module.monitor.entity.request.host.MonitorHostSwitchUpdateRequest;
@@ -67,12 +70,24 @@ public class MonitorHostController {
     @Resource
     private MonitorHostService monitorHostService;
 
+    @Resource
+    private MonitorContext monitorContext;
+
     @IgnoreLog(IgnoreLogMode.RET)
     @PostMapping("/query")
     @Operation(summary = "分页查询监控主机")
     @PreAuthorize("@ss.hasPermission('monitor:monitor-host:query')")
     public DataGrid<MonitorHostVO> getMonitorHostPage(@Validated(Page.class) @RequestBody MonitorHostQueryRequest request) {
         return monitorHostService.getMonitorHostPage(request);
+    }
+
+    @IgnoreLog(IgnoreLogMode.RET)
+    @GetMapping("/override")
+    @Operation(summary = "查询监控主机概览")
+    @Parameter(name = "agentKey", description = "agentKey", required = true)
+    @PreAuthorize("@ss.hasPermission('monitor:monitor-host:query')")
+    public AgentMetricsDataDTO getMonitorHostOverride(@RequestParam("agentKey") String agentKey) {
+        return monitorContext.getAgentMetrics(agentKey);
     }
 
     @IgnoreLog(IgnoreLogMode.RET)

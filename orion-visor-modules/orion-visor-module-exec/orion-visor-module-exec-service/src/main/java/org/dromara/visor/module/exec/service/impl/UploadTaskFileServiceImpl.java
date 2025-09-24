@@ -61,7 +61,7 @@ public class UploadTaskFileServiceImpl implements UploadTaskFileService {
     @Override
     public Integer deleteFileByTaskId(Long taskId) {
         log.info("UploadTaskFileService-deleteFileByTaskId id: {}", taskId);
-        LambdaQueryWrapper<UploadTaskFileDO> wrapper = uploadTaskFileDAO.wrapper()
+        LambdaQueryWrapper<UploadTaskFileDO> wrapper = uploadTaskFileDAO.lambda()
                 .eq(UploadTaskFileDO::getTaskId, taskId);
         int effect = uploadTaskFileDAO.delete(wrapper);
         log.info("UploadTaskFileService-deleteFileByTaskId id: {}, effect: {}", taskId, effect);
@@ -71,7 +71,7 @@ public class UploadTaskFileServiceImpl implements UploadTaskFileService {
     @Override
     public Integer deleteFileByTaskIdList(List<Long> taskIdList) {
         log.info("UploadTaskFileService-deleteFileByTaskIdList idList: {}", taskIdList);
-        LambdaQueryWrapper<UploadTaskFileDO> wrapper = uploadTaskFileDAO.wrapper()
+        LambdaQueryWrapper<UploadTaskFileDO> wrapper = uploadTaskFileDAO.lambda()
                 .in(UploadTaskFileDO::getTaskId, taskIdList);
         int effect = uploadTaskFileDAO.delete(wrapper);
         log.info("UploadTaskFileService-deleteFileByTaskIdList effect: {}", effect);

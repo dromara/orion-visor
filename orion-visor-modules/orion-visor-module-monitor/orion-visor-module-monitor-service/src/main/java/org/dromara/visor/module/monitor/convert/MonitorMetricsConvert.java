@@ -24,6 +24,7 @@ package org.dromara.visor.module.monitor.convert;
 
 import org.dromara.visor.module.monitor.entity.domain.MonitorMetricsDO;
 import org.dromara.visor.module.monitor.entity.dto.MonitorMetricsCacheDTO;
+import org.dromara.visor.module.monitor.entity.dto.MonitorMetricsContextDTO;
 import org.dromara.visor.module.monitor.entity.request.metrics.MonitorMetricsCreateRequest;
 import org.dromara.visor.module.monitor.entity.request.metrics.MonitorMetricsQueryRequest;
 import org.dromara.visor.module.monitor.entity.request.metrics.MonitorMetricsUpdateRequest;
@@ -58,5 +59,7 @@ public interface MonitorMetricsConvert {
     MonitorMetricsVO to(MonitorMetricsCacheDTO cache);
 
     MonitorMetricsCacheDTO toCache(MonitorMetricsDO domain);
+
+    MonitorMetricsContextDTO toContext(MonitorMetricsDO domain);
 
 }

@@ -20,9 +20,26 @@
         <result column="deleted" property="deleted"/>
     </resultMap>
 
+    <!-- 操作数量映射结果 -->
+    <resultMap id="CountResultMap" type="org.dromara.visor.module.monitor.entity.po.MonitorHostCountPO">
+        <result column="policy_id" property="policyId"/>
+        <result column="total_count" property="count"/>
+    </resultMap>
+
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         id, host_id, policy_id, agent_key, alarm_switch, owner_user_id, owner_username, monitor_meta, monitor_config, create_time, update_time, creator, updater, deleted
     </sql>
+
+    <select id="selectPolicyHostCount" resultMap="CountResultMap">
+        SELECT policy_id, COUNT(1) total_count
+        FROM monitor_host
+        WHERE deleted = 0
+        AND policy_id IN
+        <foreach collection="policyIdList" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        GROUP BY policy_id
+    </select>
 
 </mapper>

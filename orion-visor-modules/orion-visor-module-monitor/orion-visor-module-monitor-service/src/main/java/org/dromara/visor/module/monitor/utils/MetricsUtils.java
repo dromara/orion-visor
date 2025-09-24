@@ -25,7 +25,7 @@ package org.dromara.visor.module.monitor.utils;
 import cn.orionsec.kit.lang.utils.Strings;
 import com.alibaba.fastjson.JSONObject;
 import com.influxdb.client.write.Point;
-import org.dromara.visor.module.monitor.enums.MeasurementFieldEnum;
+import org.dromara.visor.module.monitor.enums.MeasurementEnum;
 
 /**
  * 指标值工具类
@@ -52,7 +52,7 @@ public class MetricsUtils {
         // 设置数据值
         for (String field : values.keySet()) {
             // 数据类型
-            Class<?> dataType = MeasurementFieldEnum.getMetricsValueType(type, field);
+            Class<?> dataType = MeasurementEnum.getMetricsValueType(type, field);
             if (dataType == null) {
                 continue;
             }

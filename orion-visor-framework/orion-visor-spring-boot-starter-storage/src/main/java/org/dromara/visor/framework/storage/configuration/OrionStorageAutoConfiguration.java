@@ -39,8 +39,6 @@ import org.springframework.context.annotation.Bean;
  * @author Jiahang Li
  * @version 1.0.0
  * @since 2023/6/30 16:21
- * <p>
- * TODO 后续添加 FAST MINIO OSS 等
  */
 @AutoConfiguration
 @AutoConfigureOrder(AutoConfigureOrderConst.FRAMEWORK_STORAGE)

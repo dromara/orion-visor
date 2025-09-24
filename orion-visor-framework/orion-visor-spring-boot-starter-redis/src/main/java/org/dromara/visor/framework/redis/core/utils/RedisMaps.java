@@ -357,8 +357,6 @@ public class RedisMaps extends RedisUtils {
      *
      * @param key       key
      * @param hashKeys  hashKeys
-     * @param keyMapper keyMapper
-     * @param <K>       K
      * @param <V>       V
      * @return values
      */
@@ -371,9 +369,7 @@ public class RedisMaps extends RedisUtils {
      *
      * @param key       key
      * @param hashKeys  hashKeys
-     * @param keyMapper keyMapper
      * @param clazz     clazz
-     * @param <K>       K
      * @param <V>       V
      * @return values
      */

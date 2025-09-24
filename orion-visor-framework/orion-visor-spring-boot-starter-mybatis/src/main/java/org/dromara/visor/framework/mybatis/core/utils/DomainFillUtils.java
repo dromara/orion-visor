@@ -90,6 +90,20 @@ public class DomainFillUtils {
         }
     }
 
+    /**
+     * 清空基础字段
+     *
+     * @param baseDO baseDO
+     */
+    public static void clearBaseFields(BaseDO baseDO) {
+        baseDO.setId(null);
+        baseDO.setCreateTime(null);
+        baseDO.setUpdateTime(null);
+        baseDO.setCreator(null);
+        baseDO.setUpdater(null);
+        baseDO.setDeleted(null);
+    }
+
     public static void setSecurityHolder(SecurityHolder securityHolder) {
         if (DomainFillUtils.securityHolder != null) {
             // unmodified

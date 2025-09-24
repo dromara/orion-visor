@@ -47,9 +47,9 @@ public class MonitorMetricsOperatorType extends InitializingOperatorTypes {
     @Override
     public OperatorType[] types() {
         return new OperatorType[]{
-                new OperatorType(L, CREATE, "创建监控指标 <sb>${name}<sb/>"),
-                new OperatorType(M, UPDATE, "更新监控指标 <sb>${name}<sb/>"),
-                new OperatorType(H, DELETE, "删除监控指标 <sb>${count}</sb> 条"),
+                new OperatorType(L, CREATE, "创建监控指标 <sb>${name}</sb>"),
+                new OperatorType(M, UPDATE, "更新监控指标 <sb>${name}</sb>"),
+                new OperatorType(H, DELETE, "删除监控指标 <sb>${name}</sb>"),
         };
     }
 

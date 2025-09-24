@@ -39,6 +39,7 @@ import org.dromara.visor.common.utils.Valid;
 import org.dromara.visor.framework.biz.operator.log.core.utils.OperatorLogs;
 import org.dromara.visor.framework.influxdb.core.query.FluxQueryBuilder;
 import org.dromara.visor.framework.influxdb.core.utils.InfluxdbUtils;
+import org.dromara.visor.framework.mybatis.core.query.Conditions;
 import org.dromara.visor.module.asset.api.HostAgentApi;
 import org.dromara.visor.module.asset.api.HostApi;
 import org.dromara.visor.module.asset.entity.dto.host.HostAgentLogDTO;
@@ -48,21 +49,20 @@ import org.dromara.visor.module.asset.enums.AgentOnlineStatusEnum;
 import org.dromara.visor.module.infra.api.SystemUserApi;
 import org.dromara.visor.module.monitor.constant.MetricsConst;
 import org.dromara.visor.module.monitor.convert.MonitorHostConvert;
+import org.dromara.visor.module.monitor.dao.AlarmPolicyDAO;
 import org.dromara.visor.module.monitor.dao.MonitorHostDAO;
-import org.dromara.visor.module.monitor.define.context.MonitorContext;
+import org.dromara.visor.module.monitor.engine.MonitorContext;
+import org.dromara.visor.module.monitor.entity.domain.AlarmPolicyDO;
 import org.dromara.visor.module.monitor.entity.domain.MonitorHostDO;
-import org.dromara.visor.module.monitor.entity.dto.MetricsDTO;
-import org.dromara.visor.module.monitor.entity.dto.MetricsDataDTO;
-import org.dromara.visor.module.monitor.entity.dto.MonitorHostConfigDTO;
-import org.dromara.visor.module.monitor.entity.dto.MonitorHostMetaDTO;
+import org.dromara.visor.module.monitor.entity.dto.*;
 import org.dromara.visor.module.monitor.entity.request.host.MonitorHostChartRequest;
 import org.dromara.visor.module.monitor.entity.request.host.MonitorHostQueryRequest;
 import org.dromara.visor.module.monitor.entity.request.host.MonitorHostSwitchUpdateRequest;
 import org.dromara.visor.module.monitor.entity.request.host.MonitorHostUpdateRequest;
 import org.dromara.visor.module.monitor.entity.vo.MonitorHostMetricsDataVO;
 import org.dromara.visor.module.monitor.entity.vo.MonitorHostVO;
-import org.dromara.visor.module.monitor.enums.MeasurementFieldEnum;
-import org.dromara.visor.module.monitor.enums.MonitorAlarmSwitchEnum;
+import org.dromara.visor.module.monitor.enums.AlarmSwitchEnum;
+import org.dromara.visor.module.monitor.enums.MeasurementEnum;
 import org.dromara.visor.module.monitor.service.MonitorHostService;
 import org.dromara.visor.module.monitor.service.MonitorMetricsService;
 import org.springframework.stereotype.Service;
@@ -88,6 +88,9 @@ public class MonitorHostServiceImpl implements MonitorHostService {
 
     @Resource
     private MonitorHostDAO monitorHostDAO;
+
+    @Resource
+    private AlarmPolicyDAO alarmPolicyDAO;
 
     @Resource
     private HostApi hostApi;
@@ -144,8 +147,6 @@ public class MonitorHostServiceImpl implements MonitorHostService {
                 .collect(Collectors.toMap(MonitorHostDO::getHostId,
                         Function.identity(),
                         Functions.right()));
-        // TODO 查询策略名称
-
         // 查询安装日志
         Map<Long, HostAgentLogDTO> agentInstallLogMap = hostAgentApi.selectAgentInstallLog(hostIdList)
                 .stream()
@@ -154,7 +155,7 @@ public class MonitorHostServiceImpl implements MonitorHostService {
                         Functions.right()));
         String latestVersion = hostAgentApi.getAgentVersion();
         // 给主机进行赋值
-        return hosts.map(s -> {
+        DataGrid<MonitorHostVO> dataGrid = hosts.map(s -> {
             MonitorHostVO vo = MonitorHostConvert.MAPPER.to(s);
             // 设置监控信息
             MonitorHostDO monitorHost = monitorHostMap.get(s.getId());
@@ -181,6 +182,9 @@ public class MonitorHostServiceImpl implements MonitorHostService {
             }
             return vo;
         });
+        // 查询策略名称
+        this.setAlarmPolicyName(dataGrid.getRows());
+        return dataGrid;
     }
 
     @Override
@@ -196,13 +200,13 @@ public class MonitorHostServiceImpl implements MonitorHostService {
         List<String> fields = request.getFields();
         List<TimeChartSeries> seriesList = this.getChartSeries(request);
         // 查询 agentKey 对应的名称
-        Map<String, String> cacheNameByAgentKey = hostAgentApi.getCacheNameByAgentKey(agentKeys);
+        Map<String, String> cacheNameByAgentKey = hostAgentApi.getNameCacheByAgentKey(agentKeys);
         // 封装数据
         for (TimeChartSeries series : seriesList) {
             Map<String, Object> tags = series.getTags();
             Map<String, Object> sortedTags = new LinkedHashMap<>();
             String key = (String) tags.get(Const.KEY);
-            String field = monitorMetricsService.getMetricName((String) tags.get(Const.FIELD));
+            String field = monitorMetricsService.getMetricName(request.getMeasurement(), (String) tags.get(Const.FIELD));
             tags.remove(Const.KEY);
             tags.remove(Const.FIELD);
             // 设置主机名称
@@ -249,9 +253,9 @@ public class MonitorHostServiceImpl implements MonitorHostService {
                 .ifPresent(request::setOwnerUsername);
         // 设置日志参数
         OperatorLogs.add(OperatorLogs.NAME, host.getName());
-        // 查询策略是否存在 TODO
+        // 查询策略是否存在
         if (policyId != null) {
-
+            Valid.notNull(alarmPolicyDAO.selectById(policyId), ErrorMessage.ALARM_POLICY_ABSENT);
         }
         // 转换
         MonitorHostDO updateRecord = MonitorHostConvert.MAPPER.to(request);
@@ -264,33 +268,83 @@ public class MonitorHostServiceImpl implements MonitorHostService {
         updateRecord.setMonitorConfig(JSON.toJSONString(config));
         // 更新
         int effect = monitorHostDAO.updateById(updateRecord);
+        // 更新策略为空
+        if (policyId == null) {
+            monitorHostDAO.setPolicyIdWithNullById(id);
+        }
         // 更新缓存
-        monitorContext.setMonitorHostConfig(host.getAgentKey(), config);
+        monitorContext.reloadMonitorHost(host.getAgentKey());
         log.info("MonitorHostService-updateMonitorHostById effect: {}", effect);
         return effect;
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Integer updateMonitorHostAlarmSwitch(MonitorHostSwitchUpdateRequest request) {
-        Long id = request.getId();
-        MonitorAlarmSwitchEnum alarmSwitch = MonitorAlarmSwitchEnum.of(request.getAlarmSwitch());
+        List<Long> idList = request.getIdList();
+        AlarmSwitchEnum alarmSwitch = AlarmSwitchEnum.of(request.getAlarmSwitch());
         // 查询数据
-        MonitorHostDO monitorHost = monitorHostDAO.selectById(id);
-        Valid.notNull(monitorHost, ErrorMessage.DATA_ABSENT);
+        List<MonitorHostDO> monitorHostList = monitorHostDAO.selectBatchIds(idList);
+        Valid.notEmpty(monitorHostList, ErrorMessage.DATA_ABSENT);
         // 查询主机信息
-        HostDTO host = hostApi.selectById(monitorHost.getHostId());
-        Valid.notNull(host, ErrorMessage.HOST_ABSENT);
+        List<HostDTO> hostList = hostApi.selectByIdList(Lists.map(monitorHostList, MonitorHostDO::getHostId));
+        Valid.notEmpty(hostList, ErrorMessage.HOST_ABSENT);
         // 设置日志参数
-        OperatorLogs.add(OperatorLogs.NAME, host.getName());
+        OperatorLogs.add(OperatorLogs.COUNT, hostList.size());
         OperatorLogs.add(OperatorLogs.SWITCH, alarmSwitch.name());
         // 修改数据
         MonitorHostDO update = new MonitorHostDO();
-        update.setId(id);
         update.setAlarmSwitch(alarmSwitch.getValue());
-        int effect = monitorHostDAO.updateById(update);
+        int effect = monitorHostDAO.update(update, Conditions.in(MonitorHostDO::getId, idList));
         log.info("MonitorHostService-updateMonitorHostAlarmSwitch effect: {}", effect);
-        // todo 咋更新缓存
+        // 更新缓存
+        for (HostDTO host : hostList) {
+            monitorContext.reloadMonitorHost(host.getAgentKey());
+        }
         return effect;
+    }
+
+    @Override
+    public Integer deleteByHostIdList(List<Long> hostIdList) {
+        log.info("MonitorHostService.deleteByHostIdList start hostIdList: {}", hostIdList);
+        if (Lists.isEmpty(hostIdList)) {
+            return Const.N_0;
+        }
+        // 通过 hostId 查询
+        List<MonitorHostDO> hosts = monitorHostDAO.selectByHostIdList(hostIdList);
+        // 删除
+        int effect = monitorHostDAO.deleteByHostIdList(hostIdList);
+        // 删除缓存
+        hosts.forEach(s -> monitorContext.removeMonitorHost(s.getAgentKey()));
+        log.info("MonitorHostService.deleteByHostIdList finish effect: {}", effect);
+        return effect;
+    }
+
+    /**
+     * 设置告警策略名称
+     *
+     * @param list list
+     */
+    private void setAlarmPolicyName(List<MonitorHostVO> list) {
+        List<Long> policyIdList = list.stream()
+                .map(MonitorHostVO::getPolicyId)
+                .filter(Objects::nonNull)
+                .distinct()
+                .collect(Collectors.toList());
+        if (policyIdList.isEmpty()) {
+            return;
+        }
+        // 查询告警策略
+        Map<Long, String> policyMap = alarmPolicyDAO.of()
+                .createWrapper()
+                .select(AlarmPolicyDO::getId, AlarmPolicyDO::getName)
+                .in(AlarmPolicyDO::getId, policyIdList)
+                .then()
+                .stream()
+                .collect(Collectors.toMap(AlarmPolicyDO::getId, AlarmPolicyDO::getName));
+        list.forEach(host -> {
+            host.setPolicyName(policyMap.get(host.getPolicyId()));
+        });
     }
 
     /**
@@ -305,7 +359,8 @@ public class MonitorHostServiceImpl implements MonitorHostService {
         List<String> fields = request.getFields();
         // 获取配置信息
         List<MonitorHostConfigDTO> configList = agentKeys.stream()
-                .map(monitorContext::getMonitorHostConfig)
+                .map(monitorContext::getMonitorHost)
+                .map(MonitorHostContextDTO::getConfig)
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
         // 查询主机信息
@@ -320,15 +375,15 @@ public class MonitorHostServiceImpl implements MonitorHostService {
         }
         // 设置名称
         Set<String> names = null;
-        if (MeasurementFieldEnum.CPU.getMeasurement().equals(measurement)) {
+        if (MeasurementEnum.CPU.getMeasurement().equals(measurement)) {
             names = configList.stream()
                     .map(MonitorHostConfigDTO::getCpuName)
                     .collect(Collectors.toSet());
-        } else if (MeasurementFieldEnum.DISK.getMeasurement().equals(measurement)) {
+        } else if (MeasurementEnum.DISK.getMeasurement().equals(measurement)) {
             names = configList.stream()
                     .map(MonitorHostConfigDTO::getDiskName)
                     .collect(Collectors.toSet());
-        } else if (MeasurementFieldEnum.NETWORK.getMeasurement().equals(measurement)) {
+        } else if (MeasurementEnum.NETWORK.getMeasurement().equals(measurement)) {
             names = configList.stream()
                     .map(MonitorHostConfigDTO::getNetworkName)
                     .collect(Collectors.toSet());
@@ -355,38 +410,41 @@ public class MonitorHostServiceImpl implements MonitorHostService {
      * @return data
      */
     public MonitorHostMetricsDataVO getHostMetricsData(String agentKey, MonitorHostConfigDTO config) {
-        MetricsDataDTO metrics = monitorContext.getAgentMetrics(agentKey);
+        AgentMetricsDataDTO metrics = monitorContext.getAgentMetrics(agentKey);
         // 无数据
         if (metrics == null) {
             return MonitorHostMetricsDataVO.noData(agentKey);
         }
         // 从缓存中获取配置
         if (config == null) {
-            config = monitorContext.getMonitorHostConfig(agentKey);
+            config = Optional.of(agentKey)
+                    .map(monitorContext::getMonitorHost)
+                    .map(MonitorHostContextDTO::getConfig)
+                    .orElse(null);
         }
         // 获取名称
         LinkedHashMap<String, String> metricDefaultNameMap = metrics.getMetrics()
                 .stream()
                 .collect(Collectors.toMap(
-                        MetricsDTO::getType,
+                        AgentMetricsDTO::getType,
                         s -> Strings.def(Maps.get(s.getTags(), Const.NAME)),
                         Functions.left(),
                         LinkedHashMap::new));
         String cpuName = Optional.ofNullable(config)
                 .map(MonitorHostConfigDTO::getCpuName)
-                .orElse(metricDefaultNameMap.get(MeasurementFieldEnum.CPU.getMeasurement()));
+                .orElse(metricDefaultNameMap.get(MeasurementEnum.CPU.getMeasurement()));
         String diskName = Optional.ofNullable(config)
                 .map(MonitorHostConfigDTO::getDiskName)
-                .orElse(metricDefaultNameMap.get(MeasurementFieldEnum.DISK.getMeasurement()));
+                .orElse(metricDefaultNameMap.get(MeasurementEnum.DISK.getMeasurement()));
         String networkName = Optional.ofNullable(config)
                 .map(MonitorHostConfigDTO::getNetworkName)
-                .orElse(metricDefaultNameMap.get(MeasurementFieldEnum.NETWORK.getMeasurement()));
+                .orElse(metricDefaultNameMap.get(MeasurementEnum.NETWORK.getMeasurement()));
         // 指标缓存
         Map<String, JSONObject> metricTypeMap = metrics.getMetrics()
                 .stream()
                 .collect(Collectors.toMap(
                         s -> s.getType() + "_" + Strings.def(Maps.get(s.getTags(), Const.NAME)),
-                        MetricsDTO::getValues,
+                        AgentMetricsDTO::getValues,
                         Functions.right(),
                         LinkedHashMap::new));
         MonitorHostMetricsDataVO data = MonitorHostMetricsDataVO.builder()
@@ -398,43 +456,43 @@ public class MonitorHostServiceImpl implements MonitorHostService {
                 .timestamp(metrics.getTimestamp())
                 .build();
         // 组装指标
-        this.setNamedMetricValue(metricTypeMap, MeasurementFieldEnum.CPU,
+        this.setNamedMetricValue(metricTypeMap, MeasurementEnum.CPU,
                 cpuName, MetricsConst.CPU_TOTAL_SECONDS_TOTAL, 0D,
                 JSONObject::getDouble,
                 data::setCpuUsagePercent);
-        this.setNamedMetricValue(metricTypeMap, MeasurementFieldEnum.MEMORY,
+        this.setNamedMetricValue(metricTypeMap, MeasurementEnum.MEMORY,
                 null, MetricsConst.MEM_USED_BYTES_TOTAL, 0L,
                 JSONObject::getLong,
                 data::setMemoryUsageBytes);
-        this.setNamedMetricValue(metricTypeMap, MeasurementFieldEnum.MEMORY,
+        this.setNamedMetricValue(metricTypeMap, MeasurementEnum.MEMORY,
                 null, MetricsConst.MEM_USED_PERCENT, 0D,
                 JSONObject::getDouble,
                 data::setMemoryUsagePercent);
-        this.setNamedMetricValue(metricTypeMap, MeasurementFieldEnum.LOAD,
+        this.setNamedMetricValue(metricTypeMap, MeasurementEnum.LOAD,
                 null, MetricsConst.LOAD1, 0D,
                 JSONObject::getDouble,
                 data::setLoad1);
-        this.setNamedMetricValue(metricTypeMap, MeasurementFieldEnum.LOAD,
+        this.setNamedMetricValue(metricTypeMap, MeasurementEnum.LOAD,
                 null, MetricsConst.LOAD5, 0D,
                 JSONObject::getDouble,
                 data::setLoad5);
-        this.setNamedMetricValue(metricTypeMap, MeasurementFieldEnum.LOAD,
+        this.setNamedMetricValue(metricTypeMap, MeasurementEnum.LOAD,
                 null, MetricsConst.LOAD15, 0D,
                 JSONObject::getDouble,
                 data::setLoad15);
-        this.setNamedMetricValue(metricTypeMap, MeasurementFieldEnum.DISK,
+        this.setNamedMetricValue(metricTypeMap, MeasurementEnum.DISK,
                 diskName, MetricsConst.DISK_FS_USED_PERCENT, 0D,
                 JSONObject::getDouble,
                 data::setDiskUsagePercent);
-        this.setNamedMetricValue(metricTypeMap, MeasurementFieldEnum.DISK,
+        this.setNamedMetricValue(metricTypeMap, MeasurementEnum.DISK,
                 diskName, MetricsConst.DISK_FS_USED_BYTES_TOTAL, 0L,
                 JSONObject::getLong,
                 data::setDiskUsageBytes);
-        this.setNamedMetricValue(metricTypeMap, MeasurementFieldEnum.NETWORK,
+        this.setNamedMetricValue(metricTypeMap, MeasurementEnum.NETWORK,
                 networkName, MetricsConst.NET_SENT_BYTES_PER_SECOND, 0D,
                 JSONObject::getDouble,
                 data::setNetworkSentPreBytes);
-        this.setNamedMetricValue(metricTypeMap, MeasurementFieldEnum.NETWORK,
+        this.setNamedMetricValue(metricTypeMap, MeasurementEnum.NETWORK,
                 networkName, MetricsConst.NET_RECV_BYTES_PER_SECOND, 0D,
                 JSONObject::getDouble,
                 data::setNetworkRecvPreBytes);
@@ -445,7 +503,7 @@ public class MonitorHostServiceImpl implements MonitorHostService {
      * 设置指标值
      *
      * @param metricTypeMap metricTypeMap
-     * @param type          type
+     * @param measurement   measurement
      * @param name          name
      * @param field         field
      * @param defaultValue  defaultValue
@@ -454,14 +512,14 @@ public class MonitorHostServiceImpl implements MonitorHostService {
      * @param <T>           T
      */
     private <T> void setNamedMetricValue(Map<String, JSONObject> metricTypeMap,
-                                         MeasurementFieldEnum type,
+                                         MeasurementEnum measurement,
                                          String name,
                                          String field,
                                          T defaultValue,
                                          BiFunction<JSONObject, String, T> getter,
                                          Consumer<T> setter) {
         // 获取值
-        T value = Optional.of(type.getMeasurement() + "_" + Strings.def(name))
+        T value = Optional.of(measurement.getMeasurement() + "_" + Strings.def(name))
                 .map(metricTypeMap::get)
                 .map(s -> getter.apply(s, field))
                 .orElse(defaultValue);

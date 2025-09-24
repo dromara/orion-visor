@@ -67,7 +67,7 @@ public interface AutoConfigureOrderConst {
 
     int FRAMEWORK_JOB_ASYNC = Integer.MIN_VALUE + 2620;
 
-    int FRAMEWORK_PUSH = Integer.MIN_VALUE + 2700;
+    int FRAMEWORK_BIZ_PUSH = Integer.MIN_VALUE + 2700;
 
     int FRAMEWORK_BIZ_OPERATOR_LOG = Integer.MIN_VALUE + 7000;
 

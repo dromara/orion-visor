@@ -79,7 +79,7 @@ public class ExecTemplateHostServiceImpl implements ExecTemplateHostService {
 
     @Override
     public void setTemplateHost(Long templateId, List<Long> hostList) {
-        LambdaQueryWrapper<ExecTemplateHostDO> wrapper = execTemplateHostDAO.wrapper()
+        LambdaQueryWrapper<ExecTemplateHostDO> wrapper = execTemplateHostDAO.lambda()
                 .eq(ExecTemplateHostDO::getTemplateId, templateId);
         if (Lists.isEmpty(hostList)) {
             // 为空移除

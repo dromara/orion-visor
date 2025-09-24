@@ -62,8 +62,6 @@ import java.util.List;
 
 /**
  * web 配置类
- * <p>
- * TODO XSS 后续选择性的配置
  *
  * @author Jiahang Li
  * @version 1.0.0

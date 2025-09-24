@@ -23,6 +23,7 @@
 package org.dromara.visor.module.asset.api;
 
 import org.dromara.visor.module.asset.entity.dto.host.HostAgentLogDTO;
+import org.dromara.visor.module.asset.entity.dto.host.HostBaseDTO;
 
 import java.util.List;
 import java.util.Map;
@@ -50,7 +51,15 @@ public interface HostAgentApi {
      * @param agentKeyList agentKeyList
      * @return nameMap
      */
-    Map<String, String> getCacheNameByAgentKey(List<String> agentKeyList);
+    Map<String, String> getNameCacheByAgentKey(List<String> agentKeyList);
+
+    /**
+     * 获取缓存名称
+     *
+     * @param agentKey agentKey
+     * @return nameMap
+     */
+    HostBaseDTO getHostCacheByAgentKey(String agentKey);
 
     /**
      * 获取探针版本

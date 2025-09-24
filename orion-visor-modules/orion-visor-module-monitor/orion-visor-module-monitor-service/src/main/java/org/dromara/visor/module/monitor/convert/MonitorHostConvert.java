@@ -25,6 +25,7 @@ package org.dromara.visor.module.monitor.convert;
 import org.dromara.visor.module.asset.entity.dto.host.HostDTO;
 import org.dromara.visor.module.asset.entity.dto.host.HostQueryDTO;
 import org.dromara.visor.module.monitor.entity.domain.MonitorHostDO;
+import org.dromara.visor.module.monitor.entity.dto.MonitorHostContextDTO;
 import org.dromara.visor.module.monitor.entity.request.host.MonitorHostQueryRequest;
 import org.dromara.visor.module.monitor.entity.request.host.MonitorHostUpdateRequest;
 import org.dromara.visor.module.monitor.entity.vo.MonitorHostVO;
@@ -51,6 +52,9 @@ public interface MonitorHostConvert {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "hostId", source = "id")
     MonitorHostVO to(HostDTO dto);
+
+    @Mapping(target = "config", ignore = true)
+    MonitorHostContextDTO toContext(MonitorHostDO domain);
 
     HostQueryDTO toHostQuery(MonitorHostQueryRequest request);
 

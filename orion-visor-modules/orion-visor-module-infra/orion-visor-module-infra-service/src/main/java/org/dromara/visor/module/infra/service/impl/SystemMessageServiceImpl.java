@@ -146,7 +146,7 @@ public class SystemMessageServiceImpl implements SystemMessageService {
         // 修改状态
         SystemMessageDO update = new SystemMessageDO();
         update.setStatus(MessageStatusEnum.READ.getStatus());
-        LambdaQueryWrapper<SystemMessageDO> wrapper = systemMessageDAO.wrapper()
+        LambdaQueryWrapper<SystemMessageDO> wrapper = systemMessageDAO.lambda()
                 .eq(SystemMessageDO::getId, id)
                 .eq(SystemMessageDO::getReceiverId, userId);
         int effect = systemMessageDAO.update(update, wrapper);
@@ -161,7 +161,7 @@ public class SystemMessageServiceImpl implements SystemMessageService {
         // 修改状态
         SystemMessageDO update = new SystemMessageDO();
         update.setStatus(MessageStatusEnum.READ.getStatus());
-        LambdaQueryWrapper<SystemMessageDO> wrapper = systemMessageDAO.wrapper()
+        LambdaQueryWrapper<SystemMessageDO> wrapper = systemMessageDAO.lambda()
                 .eq(SystemMessageDO::getReceiverId, userId)
                 .eq(SystemMessageDO::getClassify, classify)
                 .eq(SystemMessageDO::getStatus, MessageStatusEnum.UNREAD.getStatus());
@@ -174,7 +174,7 @@ public class SystemMessageServiceImpl implements SystemMessageService {
     public Integer deleteSystemMessageById(Long id) {
         log.info("SystemMessageService-deleteSystemMessageById id: {}", id);
         // 删除
-        LambdaQueryWrapper<SystemMessageDO> wrapper = systemMessageDAO.wrapper()
+        LambdaQueryWrapper<SystemMessageDO> wrapper = systemMessageDAO.lambda()
                 .eq(SystemMessageDO::getId, id)
                 .eq(SystemMessageDO::getReceiverId, SecurityUtils.getLoginUserId());
         int effect = systemMessageDAO.delete(wrapper);
@@ -187,7 +187,7 @@ public class SystemMessageServiceImpl implements SystemMessageService {
         Long userId = SecurityUtils.getLoginUserId();
         log.info("SystemMessageService-clearSystemMessage classify: {}, userId: {}", classify, userId);
         // 删除
-        LambdaQueryWrapper<SystemMessageDO> wrapper = systemMessageDAO.wrapper()
+        LambdaQueryWrapper<SystemMessageDO> wrapper = systemMessageDAO.lambda()
                 .eq(SystemMessageDO::getReceiverId, userId)
                 .eq(SystemMessageDO::getClassify, classify)
                 .eq(SystemMessageDO::getStatus, MessageStatusEnum.READ.getStatus());

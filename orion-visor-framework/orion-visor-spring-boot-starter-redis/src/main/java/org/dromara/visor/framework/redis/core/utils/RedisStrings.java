@@ -275,6 +275,16 @@ public class RedisStrings extends RedisUtils {
     /**
      * 设置值
      *
+     * @param key   key
+     * @param value value
+     */
+    public static void set(String key, Object value) {
+        set(key, null, value);
+    }
+
+    /**
+     * 设置值
+     *
      * @param define define
      * @param value  value
      */

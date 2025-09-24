@@ -22,6 +22,7 @@
  */
 package org.dromara.visor.module.monitor.entity.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -35,21 +36,16 @@ import java.util.List;
  * @since 2025/8/11 22:01
  */
 @Data
+@Schema(name = "HostMetaDTO", description = "主机元数据")
 public class HostMetaDTO implements Serializable {
 
-    /**
-     * CPU 列表
-     */
+    @Schema(description = "CPU 列表")
     private List<String> cpus;
 
-    /**
-     * 磁盘名称列表
-     */
+    @Schema(description = "磁盘名称列表")
     private List<String> disks;
 
-    /**
-     * 网卡名称列表
-     */
+    @Schema(description = "网卡名称列表")
     private List<String> nets;
 
 }

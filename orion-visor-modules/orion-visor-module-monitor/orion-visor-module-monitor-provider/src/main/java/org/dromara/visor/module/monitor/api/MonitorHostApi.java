@@ -34,13 +34,6 @@ import java.util.List;
 public interface MonitorHostApi {
 
     /**
-     * 设置探针为下线状态
-     *
-     * @param agentKeyList agentKeyList
-     */
-    void setAgentOffline(List<String> agentKeyList);
-
-    /**
      * 删除监控主机
      *
      * @param hostIdList hostIdList

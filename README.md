@@ -113,7 +113,9 @@ docker compose up -d
 #### 主机监控
 
 ![主机监控](docs/assets/screenshot/monitor-list.png?time=20250627 "主机监控")
-![监控详情](docs/assets/screenshot/monitor-detail.png?time=20250627 "监控详情")
+![监控概览](docs/assets/screenshot/monitor-override.png?time=20250627 "监控概览")
+![监控详情](docs/assets/screenshot/monitor-chart.png?time=20250627 "监控表格")
+![告警通知](docs/assets/screenshot/monitor-alarm.png?time=20250627 "告警通知")
 
 #### 批量执行
 

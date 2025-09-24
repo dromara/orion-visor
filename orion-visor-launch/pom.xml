@@ -136,6 +136,10 @@
         </dependency>
         <dependency>
             <groupId>org.dromara.visor</groupId>
+            <artifactId>orion-visor-spring-boot-starter-biz-push</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.dromara.visor</groupId>
             <artifactId>orion-visor-spring-boot-starter-biz-operator-log</artifactId>
         </dependency>
     </dependencies>

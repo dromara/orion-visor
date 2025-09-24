@@ -108,7 +108,7 @@ public class ExecJobServiceImpl implements ExecJobService {
     @Transactional(rollbackFor = Exception.class)
     public Long createExecJob(ExecJobCreateRequest request) {
         log.info("ExecJobService-createExecJob request: {}", JSON.toJSONString(request));
-        LoginUser loginUser = SecurityUtils.getLoginUser();
+        LoginUser loginUser = SecurityUtils.getLoginUserNotNull();
         // 验证表达式是否正确
         Cron.of(request.getExpression());
         // 转换
@@ -119,10 +119,8 @@ public class ExecJobServiceImpl implements ExecJobService {
         this.checkHostPermission(request.getHostIdList());
         // 插入任务
         record.setStatus(ExecJobStatusEnum.DISABLED.getStatus());
-        if (loginUser != null) {
-            record.setExecUserId(loginUser.getId());
-            record.setExecUsername(loginUser.getUsername());
-        }
+        record.setExecUserId(loginUser.getId());
+        record.setExecUsername(loginUser.getUsername());
         int effect = execJobDAO.insert(record);
         Long id = record.getId();
         // 设置任务主机
@@ -340,11 +338,9 @@ public class ExecJobServiceImpl implements ExecJobService {
         request.setId(id);
         request.setExecMode(ExecModeEnum.MANUAL.name());
         // 设置执行用户
-        LoginUser user = SecurityUtils.getLoginUser();
-        if (user != null) {
-            request.setUserId(user.getId());
-            request.setUsername(user.getUsername());
-        }
+        LoginUser user = SecurityUtils.getLoginUserNotNull();
+        request.setUserId(user.getId());
+        request.setUsername(user.getUsername());
         // 上下文触发任务
         SpringHolder.getBean(ExecJobService.class).triggerExecJob(request, job);
     }

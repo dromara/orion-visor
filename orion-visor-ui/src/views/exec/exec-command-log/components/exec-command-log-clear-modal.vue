@@ -2,12 +2,12 @@
   <a-modal v-model:visible="visible"
            modal-class="modal-form-large"
            title-align="start"
-           title="清空批量执行日志"
+           title="清理批量执行日志"
            :align-center="false"
            :draggable="true"
            :mask-closable="false"
            :unmount-on-close="true"
-           ok-text="清空"
+           ok-text="清理"
            :ok-button-props="{ disabled: loading }"
            :cancel-button-props="{ disabled: loading }"
            :on-before-ok="handlerOk"
@@ -123,7 +123,7 @@
       // 获取总数量
       const { data } = await getExecCommandLogCount(formModel.value);
       if (data) {
-        // 清空
+        // 清理
         doClear(data);
       } else {
         // 无数据
@@ -139,14 +139,14 @@
   // 执行删除
   const doClear = (count: number) => {
     Modal.confirm({
-      title: '删除清空',
+      title: '清理确认',
       content: `确定要删除 ${count} 条数据吗? 确定后将立即删除且无法恢复!`,
       onOk: async () => {
         setLoading(true);
         try {
-          // 调用清空
+          // 调用清理
           const { data } = await clearExecCommandLog(formModel.value);
-          Message.success(`已成功清空 ${data} 条数据`);
+          Message.success(`已成功清理 ${data} 条数据`);
           emits('clear');
           // 清空
           setVisible(false);

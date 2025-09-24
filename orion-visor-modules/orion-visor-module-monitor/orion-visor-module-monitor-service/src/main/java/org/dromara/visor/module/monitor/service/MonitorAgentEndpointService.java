@@ -22,8 +22,8 @@
  */
 package org.dromara.visor.module.monitor.service;
 
+import org.dromara.visor.module.monitor.entity.dto.AgentMetricsDataDTO;
 import org.dromara.visor.module.monitor.entity.dto.HostMetaDTO;
-import org.dromara.visor.module.monitor.entity.dto.MetricsDataDTO;
 
 /**
  * 监控探针端点 服务类
@@ -40,7 +40,7 @@ public interface MonitorAgentEndpointService {
      * @param agentKey agentKey
      * @param data     data
      */
-    void addMetrics(String agentKey, MetricsDataDTO data);
+    void addMetrics(String agentKey, AgentMetricsDataDTO data);
 
     /**
      * 上线时同步元数据

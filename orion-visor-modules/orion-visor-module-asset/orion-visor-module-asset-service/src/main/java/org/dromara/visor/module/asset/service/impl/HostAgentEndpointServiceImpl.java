@@ -25,6 +25,7 @@ package org.dromara.visor.module.asset.service.impl;
 import cn.orionsec.kit.lang.utils.Booleans;
 import cn.orionsec.kit.lang.utils.Valid;
 import cn.orionsec.kit.lang.utils.collect.Lists;
+import cn.orionsec.kit.spring.SpringHolder;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.visor.common.constant.Const;
 import org.dromara.visor.common.constant.ErrorMessage;
@@ -32,6 +33,7 @@ import org.dromara.visor.module.asset.dao.HostAgentLogDAO;
 import org.dromara.visor.module.asset.dao.HostDAO;
 import org.dromara.visor.module.asset.entity.domain.HostAgentLogDO;
 import org.dromara.visor.module.asset.entity.domain.HostDO;
+import org.dromara.visor.module.asset.entity.event.AgentOfflineEvent;
 import org.dromara.visor.module.asset.entity.vo.HostOnlineAgentConfigVO;
 import org.dromara.visor.module.asset.enums.AgentInstallStatusEnum;
 import org.dromara.visor.module.asset.enums.AgentLogStatusEnum;
@@ -41,7 +43,6 @@ import org.dromara.visor.module.asset.handler.host.extra.HostExtraItemEnum;
 import org.dromara.visor.module.asset.handler.host.extra.model.HostSpecExtraModel;
 import org.dromara.visor.module.asset.service.HostAgentEndpointService;
 import org.dromara.visor.module.asset.service.HostExtraService;
-import org.dromara.visor.module.monitor.api.MonitorHostApi;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -83,14 +84,12 @@ public class HostAgentEndpointServiceImpl implements HostAgentEndpointService {
     @Resource
     private HostExtraService hostExtraService;
 
-    @Resource
-    private MonitorHostApi monitorHostApi;
-
     /**
      * 初始化主机在线状态
      */
     @PostConstruct
     public void initHostOnlineStatus() {
+        log.info("HostAgentEndpointService-initHostOnlineStatus start.");
         List<HostDO> hosts = hostDAO.selectList(null);
         for (HostDO host : hosts) {
             Integer agentOnlineStatus = host.getAgentOnlineStatus();
@@ -98,6 +97,7 @@ public class HostAgentEndpointServiceImpl implements HostAgentEndpointService {
                 ONLINE_STATUS_CACHE.put(host.getAgentKey(), agentOnlineStatus);
             }
         }
+        log.info("HostAgentEndpointService-initHostOnlineStatus end.");
     }
 
     @Override
@@ -167,8 +167,8 @@ public class HostAgentEndpointServiceImpl implements HostAgentEndpointService {
                 .status(AgentLogStatusEnum.SUCCESS.name())
                 .build();
         hostAgentLogDAO.insert(agentLog);
-        // 设置监控上下文为已下线
-        monitorHostApi.setAgentOffline(Lists.singleton(agentKey));
+        // 发送已下线事件
+        SpringHolder.publishEvent(new AgentOfflineEvent(agentKey));
     }
 
     @Override
@@ -248,9 +248,9 @@ public class HostAgentEndpointServiceImpl implements HostAgentEndpointService {
         if (!logList.isEmpty()) {
             hostAgentLogDAO.insertBatch(logList);
         }
-        // 设置监控上下文为已下线
+        // 发送已下线事件
         if (AgentOnlineStatusEnum.OFFLINE.equals(status)) {
-            monitorHostApi.setAgentOffline(agentKeyList);
+            SpringHolder.publishEvent(new AgentOfflineEvent(agentKeyList));
         }
     }
 

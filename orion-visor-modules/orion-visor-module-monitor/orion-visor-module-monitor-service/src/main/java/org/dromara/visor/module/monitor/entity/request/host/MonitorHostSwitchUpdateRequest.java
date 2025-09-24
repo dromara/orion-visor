@@ -28,8 +28,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * 监控主机 更新告警开关请求对象
@@ -47,9 +49,9 @@ public class MonitorHostSwitchUpdateRequest implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @NotNull
-    @Schema(description = "id")
-    private Long id;
+    @NotEmpty
+    @Schema(description = "idList")
+    private List<Long> idList;
 
     @NotNull
     @Schema(description = "告警开关")

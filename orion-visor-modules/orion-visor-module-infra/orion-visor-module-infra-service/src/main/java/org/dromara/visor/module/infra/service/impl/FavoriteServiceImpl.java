@@ -22,7 +22,6 @@
  */
 package org.dromara.visor.module.infra.service.impl;
 
-import cn.orionsec.kit.lang.annotation.Keep;
 import cn.orionsec.kit.lang.utils.collect.Lists;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import lombok.extern.slf4j.Slf4j;
@@ -39,7 +38,6 @@ import org.dromara.visor.module.infra.entity.request.favorite.FavoriteQueryReque
 import org.dromara.visor.module.infra.entity.vo.FavoriteVO;
 import org.dromara.visor.module.infra.enums.FavoriteTypeEnum;
 import org.dromara.visor.module.infra.service.FavoriteService;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -59,10 +57,6 @@ public class FavoriteServiceImpl implements FavoriteService {
 
     @Resource
     private FavoriteDAO favoriteDAO;
-
-    @Keep
-    @Resource
-    private RedisTemplate<String, String> redisTemplate;
 
     @Override
     public Long addFavorite(FavoriteOperatorRequest request) {

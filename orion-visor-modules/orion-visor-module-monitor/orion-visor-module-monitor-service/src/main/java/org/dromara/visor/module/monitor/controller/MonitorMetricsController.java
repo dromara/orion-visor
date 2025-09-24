@@ -108,15 +108,5 @@ public class MonitorMetricsController {
         return monitorMetricsService.deleteMonitorMetricsById(id);
     }
 
-    @DemoDisableApi
-    @OperatorLog(MonitorMetricsOperatorType.DELETE)
-    @DeleteMapping("/batch-delete")
-    @Operation(summary = "批量删除监控指标")
-    @Parameter(name = "idList", description = "idList", required = true)
-    @PreAuthorize("@ss.hasPermission('monitor:monitor-metrics:delete')")
-    public Integer batchDeleteMonitorMetrics(@RequestParam("idList") List<Long> idList) {
-        return monitorMetricsService.deleteMonitorMetricsByIdList(idList);
-    }
-
 }
 

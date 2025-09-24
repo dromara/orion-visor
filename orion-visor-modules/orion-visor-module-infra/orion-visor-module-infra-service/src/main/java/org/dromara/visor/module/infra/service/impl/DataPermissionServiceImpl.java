@@ -232,7 +232,7 @@ public class DataPermissionServiceImpl implements DataPermissionService {
         if (Lists.isEmpty(relIdList)) {
             return 0;
         }
-        LambdaQueryWrapper<DataPermissionDO> wrapper = dataPermissionDAO.wrapper()
+        LambdaQueryWrapper<DataPermissionDO> wrapper = dataPermissionDAO.lambda()
                 .eq(DataPermissionDO::getType, type)
                 .in(DataPermissionDO::getRelId, relIdList);
         // 查询
