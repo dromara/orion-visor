@@ -51,7 +51,7 @@ public class FileUploadInterceptor implements HandshakeInterceptor {
     private FileUploadService fileUploadService;
 
     @Override
-    public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler, Map<String, Object> attributes) throws Exception {
+    public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler, Map<String, Object> attributes) {
         // 获取 uploadToken
         String uploadToken = Urls.getUrlSource(request.getURI().getPath());
         log.info("FileUploadInterceptor-beforeHandshake start uploadToken: {}", uploadToken);
