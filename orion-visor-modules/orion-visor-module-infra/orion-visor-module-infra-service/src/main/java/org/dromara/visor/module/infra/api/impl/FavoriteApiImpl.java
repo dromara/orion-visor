@@ -22,7 +22,7 @@
  */
 package org.dromara.visor.module.infra.api.impl;
 
-import org.dromara.visor.common.utils.Valid;
+import org.dromara.visor.common.utils.Assert;
 import org.dromara.visor.module.infra.api.FavoriteApi;
 import org.dromara.visor.module.infra.dao.FavoriteDAO;
 import org.dromara.visor.module.infra.entity.request.favorite.FavoriteQueryRequest;
@@ -54,7 +54,7 @@ public class FavoriteApiImpl implements FavoriteApi {
 
     @Override
     public List<Long> getFavoriteRelIdList(FavoriteTypeEnum type, Long userId) {
-        Valid.allNotNull(type, userId);
+        Assert.allNotNull(type, userId);
         // 查询
         FavoriteQueryRequest request = new FavoriteQueryRequest();
         request.setType(type.name());
@@ -65,21 +65,21 @@ public class FavoriteApiImpl implements FavoriteApi {
     @Override
     @Async("asyncExecutor")
     public Future<List<Long>> getFavoriteRelIdListAsync(FavoriteTypeEnum type, Long userId) {
-        Valid.allNotNull(type, userId);
+        Assert.allNotNull(type, userId);
         // 查询
         return CompletableFuture.completedFuture(this.getFavoriteRelIdList(type, userId));
     }
 
     @Override
     public void deleteByRelId(FavoriteTypeEnum type, Long relId) {
-        Valid.allNotNull(type, relId);
+        Assert.allNotNull(type, relId);
         favoriteDAO.deleteFavoriteByRelId(type.name(), relId);
     }
 
     @Override
     public void deleteByRelIdList(FavoriteTypeEnum type, List<Long> relIdList) {
-        Valid.notNull(type);
-        Valid.notEmpty(relIdList);
+        Assert.notNull(type);
+        Assert.notEmpty(relIdList);
         favoriteDAO.deleteFavoriteByRelIdList(type.name(), relIdList);
     }
 

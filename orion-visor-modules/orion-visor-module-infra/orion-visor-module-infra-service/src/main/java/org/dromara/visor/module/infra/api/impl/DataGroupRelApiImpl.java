@@ -24,7 +24,7 @@ package org.dromara.visor.module.infra.api.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.visor.common.constant.Const;
-import org.dromara.visor.common.utils.Valid;
+import org.dromara.visor.common.utils.Assert;
 import org.dromara.visor.module.infra.api.DataGroupRelApi;
 import org.dromara.visor.module.infra.entity.domain.DataGroupRelDO;
 import org.dromara.visor.module.infra.entity.dto.DataGroupRelCacheDTO;
@@ -58,26 +58,26 @@ public class DataGroupRelApiImpl implements DataGroupRelApi {
 
     @Override
     public void updateGroupRel(Long groupId, List<Long> relIdList) {
-        Valid.notNull(groupId);
+        Assert.notNull(groupId);
         dataGroupRelService.updateGroupRel(groupId, relIdList);
     }
 
     @Override
     public void updateRelGroup(DataGroupTypeEnum type, List<Long> groupIdList, Long relId) {
-        Valid.notNull(relId);
+        Assert.notNull(relId);
         dataGroupRelService.updateRelGroup(type.name(), Const.SYSTEM_USER_ID, groupIdList, relId);
     }
 
     @Override
     public void addGroupRel(DataGroupTypeEnum type, Long groupId, Long relId) {
-        Valid.notNull(groupId);
-        Valid.notNull(relId);
+        Assert.notNull(groupId);
+        Assert.notNull(relId);
         dataGroupRelService.addGroupRel(type.name(), groupId, Const.SYSTEM_USER_ID, relId);
     }
 
     @Override
     public void addGroupRel(DataGroupTypeEnum type, Map<Long, List<Long>> groupRelListMap) {
-        Valid.notEmpty(groupRelListMap);
+        Assert.notEmpty(groupRelListMap);
         dataGroupRelService.addGroupRel(type.name(), Const.SYSTEM_USER_ID, groupRelListMap);
     }
 

@@ -38,7 +38,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.apache.ibatis.annotations.Mapper;
-import org.dromara.visor.common.utils.Valid;
+import org.dromara.visor.common.utils.Assert;
 import org.dromara.visor.framework.mybatis.core.domain.BaseDO;
 import org.dromara.visor.framework.mybatis.core.generator.template.Table;
 import org.dromara.visor.framework.mybatis.core.mapper.IMapper;
@@ -101,7 +101,7 @@ public class CodeGenerator implements Executable {
      */
     @Override
     public void exec() {
-        Valid.notEmpty(tables, "请先配置需要生成的表");
+        Assert.notEmpty(tables, "请先配置需要生成的表");
 
         // 创建引擎
         VelocityTemplateEngine engine = this.getEngine(tables);

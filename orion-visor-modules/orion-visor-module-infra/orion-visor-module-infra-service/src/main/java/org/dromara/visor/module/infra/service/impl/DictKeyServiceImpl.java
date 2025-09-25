@@ -33,7 +33,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.visor.common.constant.Const;
 import org.dromara.visor.common.constant.ErrorMessage;
-import org.dromara.visor.common.utils.Valid;
+import org.dromara.visor.common.utils.Assert;
 import org.dromara.visor.framework.biz.operator.log.core.utils.OperatorLogs;
 import org.dromara.visor.framework.redis.core.utils.RedisMaps;
 import org.dromara.visor.framework.redis.core.utils.RedisStrings;
@@ -82,7 +82,7 @@ public class DictKeyServiceImpl implements DictKeyService {
     @Override
     public Long createDictKey(DictKeyCreateRequest request) {
         log.info("DictKeyService-createDictKey request: {}", JSON.toJSONString(request));
-        Valid.valid(DictValueTypeEnum::of, request.getValueType());
+        Assert.valid(DictValueTypeEnum::of, request.getValueType());
         // 转换
         DictKeyDO record = DictKeyConvert.MAPPER.to(request);
         // 查询数据是否冲突
@@ -99,12 +99,12 @@ public class DictKeyServiceImpl implements DictKeyService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Integer updateDictKeyById(DictKeyUpdateRequest request) {
-        Long id = Valid.notNull(request.getId(), ErrorMessage.ID_MISSING);
+        Long id = Assert.notNull(request.getId(), ErrorMessage.ID_MISSING);
         log.info("DictKeyService-updateDictKeyById id: {}, request: {}", id, JSON.toJSONString(request));
-        Valid.valid(DictValueTypeEnum::of, request.getValueType());
+        Assert.valid(DictValueTypeEnum::of, request.getValueType());
         // 查询
         DictKeyDO record = dictKeyDAO.selectById(id);
-        Valid.notNull(record, ErrorMessage.CONFIG_ABSENT);
+        Assert.notNull(record, ErrorMessage.CONFIG_ABSENT);
         // 转换
         DictKeyDO updateRecord = DictKeyConvert.MAPPER.to(request);
         // 查询数据是否冲突
@@ -248,7 +248,7 @@ public class DictKeyServiceImpl implements DictKeyService {
                 .eq(DictKeyDO::getKeyName, domain.getKeyName());
         // 检查是否存在
         boolean present = dictKeyDAO.of(wrapper).present();
-        Valid.isFalse(present, ErrorMessage.DATA_PRESENT);
+        Assert.isFalse(present, ErrorMessage.DATA_PRESENT);
     }
 
     /**

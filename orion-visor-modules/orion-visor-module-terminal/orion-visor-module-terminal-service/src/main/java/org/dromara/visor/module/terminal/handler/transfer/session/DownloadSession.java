@@ -24,7 +24,6 @@ package org.dromara.visor.module.terminal.handler.transfer.session;
 
 import cn.orionsec.kit.lang.define.wrapper.Ref;
 import cn.orionsec.kit.lang.utils.Threads;
-import cn.orionsec.kit.lang.utils.Valid;
 import cn.orionsec.kit.lang.utils.collect.Lists;
 import cn.orionsec.kit.lang.utils.io.Streams;
 import cn.orionsec.kit.net.host.SessionStore;
@@ -33,6 +32,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.dromara.visor.common.constant.Const;
 import org.dromara.visor.common.constant.ErrorMessage;
 import org.dromara.visor.common.session.config.SshConnectConfig;
+import org.dromara.visor.common.utils.Assert;
 import org.dromara.visor.module.terminal.define.TerminalThreadPools;
 import org.dromara.visor.module.terminal.define.operator.TerminalOperatorType;
 import org.dromara.visor.module.terminal.handler.transfer.enums.TransferReceiver;
@@ -78,9 +78,9 @@ public class DownloadSession extends TransferSession implements StreamingRespons
             this.init();
             // 检查文件是否存在
             SftpFile file = executor.getFile(path);
-            Valid.notNull(file, ErrorMessage.FILE_ABSENT);
+            Assert.notNull(file, ErrorMessage.FILE_ABSENT);
             // 验证非文件夹
-            Valid.isTrue(!file.isDirectory(), ErrorMessage.UNABLE_DOWNLOAD_FOLDER);
+            Assert.isTrue(!file.isDirectory(), ErrorMessage.UNABLE_DOWNLOAD_FOLDER);
             if ((this.fileSize = file.getSize()) == 0L) {
                 // 文件为空
                 log.info("DownloadSession.startDownload file empty channelId: {}, path: {}", channelId, path);

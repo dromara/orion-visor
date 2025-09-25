@@ -25,7 +25,7 @@ package org.dromara.visor.module.infra.service.impl;
 import cn.orionsec.kit.lang.utils.collect.Lists;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import lombok.extern.slf4j.Slf4j;
-import org.dromara.visor.common.utils.Valid;
+import org.dromara.visor.common.utils.Assert;
 import org.dromara.visor.framework.redis.core.utils.RedisLists;
 import org.dromara.visor.framework.redis.core.utils.barrier.CacheBarriers;
 import org.dromara.visor.framework.security.core.utils.SecurityUtils;
@@ -60,7 +60,7 @@ public class FavoriteServiceImpl implements FavoriteService {
 
     @Override
     public Long addFavorite(FavoriteOperatorRequest request) {
-        String type = Valid.valid(FavoriteTypeEnum::of, request.getType()).name();
+        String type = Assert.valid(FavoriteTypeEnum::of, request.getType()).name();
         Long userId = SecurityUtils.getLoginUserId();
         // 检查是否存在
         FavoriteDO check = favoriteDAO.of()
@@ -85,7 +85,7 @@ public class FavoriteServiceImpl implements FavoriteService {
 
     @Override
     public Integer cancelFavorite(FavoriteOperatorRequest request) {
-        String type = Valid.valid(FavoriteTypeEnum::of, request.getType()).name();
+        String type = Assert.valid(FavoriteTypeEnum::of, request.getType()).name();
         Long userId = SecurityUtils.getLoginUserId();
         Long relId = request.getRelId();
         // 删除库

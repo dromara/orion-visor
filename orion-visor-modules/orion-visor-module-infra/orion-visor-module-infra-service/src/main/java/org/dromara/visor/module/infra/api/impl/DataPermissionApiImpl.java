@@ -24,7 +24,7 @@ package org.dromara.visor.module.infra.api.impl;
 
 import cn.orionsec.kit.lang.utils.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
-import org.dromara.visor.common.utils.Valid;
+import org.dromara.visor.common.utils.Assert;
 import org.dromara.visor.module.infra.api.DataPermissionApi;
 import org.dromara.visor.module.infra.entity.dto.data.DataPermissionBatchUpdateDTO;
 import org.dromara.visor.module.infra.entity.dto.data.DataPermissionUpdateDTO;
@@ -55,7 +55,7 @@ public class DataPermissionApiImpl implements DataPermissionApi {
         Long userId = dto.getUserId();
         Long roleId = dto.getRoleId();
         // 校验参数
-        Valid.isTrue(userId != null || roleId != null);
+        Assert.isTrue(userId != null || roleId != null);
         // 修改权限
         DataPermissionUpdateRequest request = DataPermissionUpdateRequest.builder()
                 .type(type.name())
@@ -75,7 +75,7 @@ public class DataPermissionApiImpl implements DataPermissionApi {
         List<Long> userIdList = dto.getUserIdList();
         List<Long> roleIdList = dto.getRoleIdList();
         // 校验参数
-        Valid.isTrue(Lists.isNotEmpty(userIdList) || Lists.isNotEmpty(roleIdList));
+        Assert.isTrue(Lists.isNotEmpty(userIdList) || Lists.isNotEmpty(roleIdList));
         // 修改权限
         DataPermissionUpdateRequest request = DataPermissionUpdateRequest.builder()
                 .type(type.name())
@@ -88,7 +88,7 @@ public class DataPermissionApiImpl implements DataPermissionApi {
 
     @Override
     public boolean hasPermission(DataPermissionTypeEnum type, Long userId, Long relId) {
-        Valid.allNotNull(userId, relId);
+        Assert.allNotNull(userId, relId);
         return dataPermissionService.hasPermission(type.name(), userId, relId);
     }
 

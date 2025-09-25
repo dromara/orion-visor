@@ -25,9 +25,9 @@ package org.dromara.visor.framework.biz.push.core.service;
 import cn.orionsec.kit.http.ok.OkRequests;
 import cn.orionsec.kit.http.ok.OkResponse;
 import cn.orionsec.kit.lang.constant.StandardContentType;
+import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.Exceptions;
 import cn.orionsec.kit.lang.utils.Strings;
-import cn.orionsec.kit.lang.utils.Valid;
 import cn.orionsec.kit.lang.utils.codec.Base64s;
 import cn.orionsec.kit.lang.utils.crypto.Signatures;
 import cn.orionsec.kit.lang.utils.math.Hex;
@@ -108,7 +108,7 @@ public class DingPushService extends BasePushService<DingPushMessage> {
         OkResponse response = OkRequests.post(url, StandardContentType.APPLICATION_JSON_UTF8, body);
         DingResponseBody responseBody = JSON.parseObject(response.getBodyString(), DingResponseBody.class);
         // 验证发送结果
-        Valid.eq(responseBody.getErrCode(), SUCCESS_CODE, responseBody.getErrMsg());
+        Assert.eq(responseBody.getErrCode(), SUCCESS_CODE, responseBody.getErrMsg());
     }
 
 }

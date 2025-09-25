@@ -22,8 +22,8 @@
  */
 package org.dromara.visor.framework.security.core.context;
 
-import cn.orionsec.kit.lang.utils.Valid;
 import com.alibaba.ttl.TransmittableThreadLocal;
+import org.dromara.visor.common.utils.Assert;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolderStrategy;
 import org.springframework.security.core.context.SecurityContextImpl;
@@ -60,7 +60,7 @@ public class TransmittableThreadLocalSecurityContextHolderStrategy implements Se
 
     @Override
     public void setContext(SecurityContext context) {
-        Valid.notNull(context, "only non-null SecurityContext instances are permitted");
+        Assert.notNull(context, "only non-null SecurityContext instances are permitted");
         CONTEXT_HOLDER.set(context);
     }
 

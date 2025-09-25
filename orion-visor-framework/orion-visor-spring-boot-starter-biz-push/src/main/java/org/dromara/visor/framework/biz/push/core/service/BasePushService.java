@@ -28,7 +28,7 @@ import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.visor.common.constant.Const;
 import org.dromara.visor.common.entity.PushUser;
-import org.dromara.visor.common.utils.Valid;
+import org.dromara.visor.common.utils.Assert;
 import org.dromara.visor.framework.biz.push.core.message.PushMessage;
 
 import java.util.stream.Collectors;
@@ -67,7 +67,7 @@ public abstract class BasePushService<Message extends PushMessage> implements IP
      */
     protected void validateMessage(Message message) {
         // 验证消息
-        Valid.valid(message);
+        Assert.valid(message);
     }
 
     /**

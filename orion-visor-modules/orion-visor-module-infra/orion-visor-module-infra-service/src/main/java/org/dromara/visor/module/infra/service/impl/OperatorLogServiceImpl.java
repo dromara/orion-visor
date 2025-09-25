@@ -24,11 +24,11 @@ package org.dromara.visor.module.infra.service.impl;
 
 import cn.orionsec.kit.lang.define.wrapper.DataGrid;
 import cn.orionsec.kit.lang.utils.Arrays1;
-import cn.orionsec.kit.lang.utils.Valid;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.visor.common.constant.ErrorMessage;
+import org.dromara.visor.common.utils.Assert;
 import org.dromara.visor.common.utils.SqlUtils;
 import org.dromara.visor.framework.biz.operator.log.core.model.OperatorLogModel;
 import org.dromara.visor.framework.biz.operator.log.core.utils.OperatorLogs;
@@ -117,7 +117,7 @@ public class OperatorLogServiceImpl implements OperatorLogService {
 
     @Override
     public List<LoginHistoryVO> getLoginHistory(String username, Integer count) {
-        Valid.inRange(count, 0, 100, ErrorMessage.PARAM_ERROR);
+        Assert.inRange(count, 0, 100, ErrorMessage.PARAM_ERROR);
         // 查询
         return operatorLogDAO.of()
                 .createWrapper()

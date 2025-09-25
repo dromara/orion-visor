@@ -23,7 +23,7 @@
 package org.dromara.visor.module.infra.api.impl;
 
 import lombok.extern.slf4j.Slf4j;
-import org.dromara.visor.common.utils.Valid;
+import org.dromara.visor.common.utils.Assert;
 import org.dromara.visor.module.infra.api.DataExtraApi;
 import org.dromara.visor.module.infra.convert.DataExtraProviderConvert;
 import org.dromara.visor.module.infra.dao.DataExtraDAO;
@@ -63,7 +63,7 @@ public class DataExtraApiImpl implements DataExtraApi {
 
     @Override
     public Integer setExtraItem(DataExtraSetDTO dto, DataExtraTypeEnum type) {
-        Valid.valid(dto);
+        Assert.valid(dto);
         // 更新
         DataExtraSetRequest request = DataExtraProviderConvert.MAPPER.to(dto);
         request.setType(type.name());
@@ -72,7 +72,7 @@ public class DataExtraApiImpl implements DataExtraApi {
 
     @Override
     public Long addExtraItem(DataExtraSetDTO dto, DataExtraTypeEnum type) {
-        Valid.valid(dto);
+        Assert.valid(dto);
         // 更新
         DataExtraSetRequest request = DataExtraProviderConvert.MAPPER.to(dto);
         request.setType(type.name());
@@ -82,7 +82,7 @@ public class DataExtraApiImpl implements DataExtraApi {
     @Override
     public void addExtraItems(List<DataExtraSetDTO> rows, DataExtraTypeEnum type) {
         for (DataExtraSetDTO row : rows) {
-            Valid.valid(row);
+            Assert.valid(row);
         }
         List<DataExtraSetRequest> extras = rows.stream()
                 .map(DataExtraProviderConvert.MAPPER::to)
@@ -103,7 +103,7 @@ public class DataExtraApiImpl implements DataExtraApi {
 
     @Override
     public String getExtraValue(DataExtraQueryDTO dto, DataExtraTypeEnum type) {
-        Valid.allNotNull(dto.getUserId(), dto.getRelId(), dto.getItem());
+        Assert.allNotNull(dto.getUserId(), dto.getRelId(), dto.getItem());
         // 查询
         DataExtraQueryRequest request = DataExtraProviderConvert.MAPPER.to(dto);
         request.setType(type.name());
@@ -112,7 +112,7 @@ public class DataExtraApiImpl implements DataExtraApi {
 
     @Override
     public Map<Long, String> getExtraItemValues(DataExtraQueryDTO dto, DataExtraTypeEnum type) {
-        Valid.allNotNull(dto.getUserId(), dto.getRelIdList(), dto.getItem());
+        Assert.allNotNull(dto.getUserId(), dto.getRelIdList(), dto.getItem());
         // 查询
         DataExtraQueryRequest request = DataExtraProviderConvert.MAPPER.to(dto);
         request.setType(type.name());
@@ -121,13 +121,13 @@ public class DataExtraApiImpl implements DataExtraApi {
 
     @Override
     public String getExtraItemValueByCache(Long userId, DataExtraTypeEnum type, String item, Long relId) {
-        Valid.allNotNull(userId, type, item, relId);
+        Assert.allNotNull(userId, type, item, relId);
         return dataExtraService.getExtraItemValueByCache(userId, type.name(), item, relId);
     }
 
     @Override
     public Map<Long, String> getExtraItemValuesByCache(Long userId, DataExtraTypeEnum type, String item) {
-        Valid.allNotNull(userId, type, item);
+        Assert.allNotNull(userId, type, item);
         return dataExtraService.getExtraItemValuesByCache(userId, type.name(), item);
     }
 
@@ -138,14 +138,14 @@ public class DataExtraApiImpl implements DataExtraApi {
 
     @Override
     public Future<List<Map<Long, String>>> getExtraItemsValuesByCacheAsync(Long userId, DataExtraTypeEnum type, List<String> items) {
-        Valid.allNotNull(userId, type);
-        Valid.notEmpty(items);
+        Assert.allNotNull(userId, type);
+        Assert.notEmpty(items);
         return CompletableFuture.completedFuture(dataExtraService.getExtraItemsValuesByCache(userId, type.name(), items));
     }
 
     @Override
     public DataExtraDTO getExtraItem(DataExtraQueryDTO dto, DataExtraTypeEnum type) {
-        Valid.allNotNull(dto.getUserId(), dto.getRelId(), dto.getItem());
+        Assert.allNotNull(dto.getUserId(), dto.getRelId(), dto.getItem());
         DataExtraQueryRequest request = DataExtraProviderConvert.MAPPER.to(dto);
         request.setType(type.name());
         DataExtraDO extraItem = dataExtraService.getExtraItem(request);
@@ -174,13 +174,13 @@ public class DataExtraApiImpl implements DataExtraApi {
 
     @Override
     public int deleteHostKeyExtra(List<Long> keyIdList) {
-        Valid.notEmpty(keyIdList);
+        Assert.notEmpty(keyIdList);
         return dataExtraDAO.deleteHostKey(keyIdList);
     }
 
     @Override
     public int deleteHostIdentityExtra(List<Long> identityIdList) {
-        Valid.notEmpty(identityIdList);
+        Assert.notEmpty(identityIdList);
         return dataExtraDAO.deleteHostIdentity(identityIdList);
     }
 

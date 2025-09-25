@@ -28,8 +28,8 @@ import cn.orionsec.kit.lang.utils.collect.Maps;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.visor.common.constant.Const;
+import org.dromara.visor.common.utils.Assert;
 import org.dromara.visor.common.utils.TreeUtils;
-import org.dromara.visor.common.utils.Valid;
 import org.dromara.visor.module.asset.convert.HostGroupConvert;
 import org.dromara.visor.module.asset.dao.HostDAO;
 import org.dromara.visor.module.asset.entity.request.asset.AssetAuthorizedDataQueryRequest;
@@ -98,7 +98,7 @@ public class AssetAuthorizedDataServiceImpl implements AssetAuthorizedDataServic
     public List<Long> getAuthorizedDataRelId(DataPermissionTypeEnum type, AssetAuthorizedDataQueryRequest request) {
         Long userId = request.getUserId();
         Long roleId = request.getRoleId();
-        Valid.isTrue(userId != null || roleId != null);
+        Assert.isTrue(userId != null || roleId != null);
         if (userId != null) {
             // 查询用户数据
             return dataPermissionApi.getRelIdListByUserId(type, userId);

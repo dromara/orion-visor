@@ -40,8 +40,8 @@ import org.dromara.visor.common.constant.ExtraFieldConst;
 import org.dromara.visor.common.security.LoginUser;
 import org.dromara.visor.common.security.UserRole;
 import org.dromara.visor.common.utils.AesEncryptUtils;
+import org.dromara.visor.common.utils.Assert;
 import org.dromara.visor.common.utils.IpUtils;
-import org.dromara.visor.common.utils.Valid;
 import org.dromara.visor.framework.biz.operator.log.core.utils.OperatorLogs;
 import org.dromara.visor.framework.redis.core.utils.RedisStrings;
 import org.dromara.visor.framework.redis.core.utils.RedisUtils;
@@ -129,7 +129,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         boolean passRight = this.checkUserPassword(user, request.getPassword(), true);
         // 发送站内信
         this.sendLoginFailedErrorMessage(passRight, user, remoteAddr, location);
-        Valid.isTrue(passRight, ErrorMessage.USERNAME_PASSWORD_ERROR);
+        Assert.isTrue(passRight, ErrorMessage.USERNAME_PASSWORD_ERROR);
         // 用户状态校验
         this.checkUserStatus(user);
         Long id = user.getId();
@@ -249,7 +249,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .eq(SystemUserDO::getUsername, username)
                 .then()
                 .getOne();
-        Valid.notNull(user, ErrorMessage.USERNAME_PASSWORD_ERROR);
+        Assert.notNull(user, ErrorMessage.USERNAME_PASSWORD_ERROR);
         return user;
     }
 

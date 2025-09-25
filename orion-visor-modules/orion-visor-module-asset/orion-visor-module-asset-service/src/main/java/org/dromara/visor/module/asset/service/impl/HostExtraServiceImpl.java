@@ -29,7 +29,7 @@ import com.alibaba.fastjson.JSONObject;
 import org.dromara.visor.common.constant.Const;
 import org.dromara.visor.common.constant.ErrorMessage;
 import org.dromara.visor.common.handler.data.model.GenericsDataModel;
-import org.dromara.visor.common.utils.Valid;
+import org.dromara.visor.common.utils.Assert;
 import org.dromara.visor.framework.security.core.utils.SecurityUtils;
 import org.dromara.visor.module.asset.dao.HostDAO;
 import org.dromara.visor.module.asset.entity.request.host.HostExtraUpdateRequest;
@@ -66,7 +66,7 @@ public class HostExtraServiceImpl implements HostExtraService {
 
     @Override
     public Map<String, Object> getHostExtraView(Long hostId, String item) {
-        HostExtraItemEnum extraItem = Valid.valid(HostExtraItemEnum::of, item);
+        HostExtraItemEnum extraItem = Assert.valid(HostExtraItemEnum::of, item);
         Long userId = this.getExtraUserId(extraItem);
         // 查询配置项
         DataExtraQueryDTO query = DataExtraQueryDTO.builder()
@@ -108,7 +108,7 @@ public class HostExtraServiceImpl implements HostExtraService {
 
     @Override
     public Integer updateHostExtra(HostExtraUpdateRequest request) {
-        HostExtraItemEnum item = Valid.valid(HostExtraItemEnum::of, request.getItem());
+        HostExtraItemEnum item = Assert.valid(HostExtraItemEnum::of, request.getItem());
         Long hostId = request.getHostId();
         Long userId = this.getExtraUserId(item);
         // 查询原始配置
@@ -159,7 +159,7 @@ public class HostExtraServiceImpl implements HostExtraService {
         try {
             // 查询主机id
             Long id = hostDAO.selectIdByAgentKey(key);
-            Valid.notNull(id, ErrorMessage.HOST_ABSENT);
+            Assert.notNull(id, ErrorMessage.HOST_ABSENT);
             // 设置已同步标识
             spec.put(Const.SYNCED, true);
             // 查询配置信息

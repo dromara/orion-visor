@@ -28,7 +28,7 @@ import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.visor.common.constant.ErrorMessage;
-import org.dromara.visor.common.utils.Valid;
+import org.dromara.visor.common.utils.Assert;
 import org.dromara.visor.framework.biz.operator.log.core.utils.OperatorLogs;
 import org.dromara.visor.module.infra.convert.SystemRoleConvert;
 import org.dromara.visor.module.infra.dao.SystemRoleDAO;
@@ -101,9 +101,9 @@ public class SystemRoleServiceImpl implements SystemRoleService {
     @Override
     public Integer updateSystemRoleById(SystemRoleUpdateRequest request) {
         // 查询
-        Long id = Valid.notNull(request.getId(), ErrorMessage.ID_MISSING);
+        Long id = Assert.notNull(request.getId(), ErrorMessage.ID_MISSING);
         SystemRoleDO record = systemRoleDAO.selectById(id);
-        Valid.notNull(record, ErrorMessage.ROLE_ABSENT);
+        Assert.notNull(record, ErrorMessage.ROLE_ABSENT);
         // 添加日志参数
         OperatorLogs.add(OperatorLogs.CODE, record.getCode());
         // 转换
@@ -122,15 +122,15 @@ public class SystemRoleServiceImpl implements SystemRoleService {
     @Override
     public Integer updateRoleStatus(SystemRoleStatusRequest request) {
         // 查询
-        Long id = Valid.notNull(request.getId(), ErrorMessage.ID_MISSING);
+        Long id = Assert.notNull(request.getId(), ErrorMessage.ID_MISSING);
         SystemRoleDO record = systemRoleDAO.selectById(id);
-        Valid.notNull(record, ErrorMessage.DATA_ABSENT);
+        Assert.notNull(record, ErrorMessage.DATA_ABSENT);
         // 检查是否为管理员角色
-        Valid.isTrue(!RoleDefine.isAdmin(record.getCode()), ErrorMessage.UNABLE_OPERATE_ADMIN_ROLE);
+        Assert.isTrue(!RoleDefine.isAdmin(record.getCode()), ErrorMessage.UNABLE_OPERATE_ADMIN_ROLE);
         // 转换
         SystemRoleDO updateRecord = SystemRoleConvert.MAPPER.to(request);
         Integer status = updateRecord.getStatus();
-        RoleStatusEnum statusEnum = Valid.valid(RoleStatusEnum::of, status);
+        RoleStatusEnum statusEnum = Assert.valid(RoleStatusEnum::of, status);
         // 添加日志参数
         OperatorLogs.add(OperatorLogs.CODE, record.getCode());
         OperatorLogs.add(OperatorLogs.NAME, record.getName());
@@ -150,7 +150,7 @@ public class SystemRoleServiceImpl implements SystemRoleService {
     public SystemRoleVO getSystemRoleById(Long id) {
         // 查询角色
         SystemRoleDO record = systemRoleDAO.selectById(id);
-        Valid.notNull(record, ErrorMessage.ROLE_ABSENT);
+        Assert.notNull(record, ErrorMessage.ROLE_ABSENT);
         // 转换
         return SystemRoleConvert.MAPPER.to(record);
     }
@@ -188,13 +188,13 @@ public class SystemRoleServiceImpl implements SystemRoleService {
     public Integer deleteSystemRoleById(Long id) {
         // 查询角色
         SystemRoleDO record = systemRoleDAO.selectById(id);
-        Valid.notNull(record, ErrorMessage.DATA_ABSENT);
+        Assert.notNull(record, ErrorMessage.DATA_ABSENT);
         String code = record.getCode();
         // 添加日志参数
         OperatorLogs.add(OperatorLogs.CODE, code);
         OperatorLogs.add(OperatorLogs.NAME, record.getName());
         // 检查是否为管理员角色
-        Valid.isTrue(!RoleDefine.isAdmin(code), ErrorMessage.UNABLE_OPERATE_ADMIN_ROLE);
+        Assert.isTrue(!RoleDefine.isAdmin(code), ErrorMessage.UNABLE_OPERATE_ADMIN_ROLE);
         // 删除角色
         int effect = systemRoleDAO.deleteById(id);
         log.info("SystemRoleService-deleteSystemRole id: {}, effect: {}", id, effect);
@@ -228,7 +228,7 @@ public class SystemRoleServiceImpl implements SystemRoleService {
                 .eq(SystemRoleDO::getName, domain.getName());
         // 检查是否存在
         boolean present = systemRoleDAO.of(wrapper).present();
-        Valid.isFalse(present, ErrorMessage.NAME_PRESENT);
+        Assert.isFalse(present, ErrorMessage.NAME_PRESENT);
     }
 
     /**
@@ -244,7 +244,7 @@ public class SystemRoleServiceImpl implements SystemRoleService {
                 .eq(SystemRoleDO::getCode, domain.getCode());
         // 检查是否存在
         boolean present = systemRoleDAO.of(wrapper).present();
-        Valid.isFalse(present, ErrorMessage.CODE_PRESENT);
+        Assert.isFalse(present, ErrorMessage.CODE_PRESENT);
     }
 
 }

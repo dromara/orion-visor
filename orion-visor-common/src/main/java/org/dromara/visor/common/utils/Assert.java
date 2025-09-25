@@ -37,13 +37,13 @@ import java.util.Set;
 import java.util.function.Function;
 
 /**
- * 验证器
+ * 断言
  *
  * @author Jiahang Li
  * @version 1.0.0
  * @since 2023/7/18 11:23
  */
-public class Valid extends cn.orionsec.kit.lang.utils.Valid {
+public class Assert extends cn.orionsec.kit.lang.utils.Assert {
 
     private static final Validator validator = SpringHolder.getBean(Validator.class);
 
@@ -155,8 +155,8 @@ public class Valid extends cn.orionsec.kit.lang.utils.Valid {
      * @param path path
      */
     public static String checkNormalize(String path) {
-        Valid.notBlank(path);
-        Valid.isTrue(Files1.isNormalize(path), ErrorMessage.PATH_NOT_NORMALIZE);
+        Assert.notBlank(path);
+        Assert.isTrue(Files1.isNormalize(path), ErrorMessage.PATH_NOT_NORMALIZE);
         return Files1.getPath(path);
     }
 
@@ -168,8 +168,8 @@ public class Valid extends cn.orionsec.kit.lang.utils.Valid {
      * @return file
      */
     public static String checkSuffix(String file, String suffix) {
-        Valid.notBlank(file);
-        Valid.isTrue(file.toLowerCase().endsWith(Const.DOT + suffix), ErrorMessage.PLEASE_SELECT_SUFFIX_FILE, suffix);
+        Assert.notBlank(file);
+        Assert.isTrue(file.toLowerCase().endsWith(Const.DOT + suffix), ErrorMessage.PLEASE_SELECT_SUFFIX_FILE, suffix);
         return file;
     }
 

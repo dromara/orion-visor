@@ -27,7 +27,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
-import org.dromara.visor.common.utils.Valid;
+import org.dromara.visor.common.utils.Assert;
 import org.dromara.visor.common.validator.group.Page;
 import org.dromara.visor.framework.biz.operator.log.core.annotation.OperatorLog;
 import org.dromara.visor.framework.log.core.annotation.IgnoreLog;
@@ -192,7 +192,7 @@ public class ExecCommandLogController {
     @Operation(summary = "中断批量执行命令")
     @PreAuthorize("@ss.hasPermission('exec:exec-command-log:interrupt')")
     public Boolean interruptExecCommand(@RequestBody ExecInterruptRequest request) {
-        Long logId = Valid.notNull(request.getLogId());
+        Long logId = Assert.notNull(request.getLogId());
         execLogService.interruptExec(logId, SOURCE);
         return true;
     }
@@ -202,7 +202,7 @@ public class ExecCommandLogController {
     @Operation(summary = "中断批量执行主机命令")
     @PreAuthorize("@ss.hasPermission('exec:exec-command-log:interrupt')")
     public Boolean interruptHostExecCommand(@RequestBody ExecInterruptRequest request) {
-        Long hostLogId = Valid.notNull(request.getHostLogId());
+        Long hostLogId = Assert.notNull(request.getHostLogId());
         execLogService.interruptHostExec(hostLogId, SOURCE);
         return true;
     }

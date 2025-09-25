@@ -23,12 +23,12 @@
 package org.dromara.visor.module.asset.service.impl;
 
 import cn.orionsec.kit.lang.utils.Booleans;
-import cn.orionsec.kit.lang.utils.Valid;
 import cn.orionsec.kit.lang.utils.collect.Lists;
 import cn.orionsec.kit.spring.SpringHolder;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.visor.common.constant.Const;
 import org.dromara.visor.common.constant.ErrorMessage;
+import org.dromara.visor.common.utils.Assert;
 import org.dromara.visor.module.asset.dao.HostAgentLogDAO;
 import org.dromara.visor.module.asset.dao.HostDAO;
 import org.dromara.visor.module.asset.entity.domain.HostAgentLogDO;
@@ -106,7 +106,7 @@ public class HostAgentEndpointServiceImpl implements HostAgentEndpointService {
         try {
             // 查询主机信息
             Long hostId = hostDAO.selectIdByAgentKey(agentKey);
-            Valid.notNull(hostId, ErrorMessage.HOST_ABSENT);
+            Assert.notNull(hostId, ErrorMessage.HOST_ABSENT);
             // 查询主机规格信息
             HostSpecExtraModel spec = hostExtraService.getHostExtra(Const.SYSTEM_USER_ID, hostId, HostExtraItemEnum.SPEC);
             Boolean synced = Optional.ofNullable(spec)
@@ -149,7 +149,7 @@ public class HostAgentEndpointServiceImpl implements HostAgentEndpointService {
         log.info("HostAgentEndpointService setAgentOffline agentKey: {}", agentKey);
         // 查询主机信息
         Long hostId = hostDAO.selectIdByAgentKey(agentKey);
-        Valid.notNull(hostId, ErrorMessage.HOST_ABSENT);
+        Assert.notNull(hostId, ErrorMessage.HOST_ABSENT);
         // 修改缓存
         ONLINE_STATUS_CACHE.put(agentKey, AgentOnlineStatusEnum.OFFLINE.getValue());
         HEARTBEAT_RECV_CACHE.put(agentKey, 0L);

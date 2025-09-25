@@ -24,7 +24,7 @@ package org.dromara.visor.module.asset.handler.host.extra.strategy;
 
 import org.dromara.visor.common.constant.ErrorMessage;
 import org.dromara.visor.common.handler.data.strategy.AbstractGenericsDataStrategy;
-import org.dromara.visor.common.utils.Valid;
+import org.dromara.visor.common.utils.Assert;
 import org.dromara.visor.framework.security.core.utils.SecurityUtils;
 import org.dromara.visor.module.asset.dao.HostIdentityDAO;
 import org.dromara.visor.module.asset.dao.HostKeyDAO;
@@ -68,34 +68,34 @@ public class HostSshExtraStrategy extends AbstractGenericsDataStrategy<HostSshEx
 
     @Override
     public void preValid(HostSshExtraModel model) {
-        HostExtraAuthTypeEnum authType = Valid.valid(HostExtraAuthTypeEnum::of, model.getAuthType());
+        HostExtraAuthTypeEnum authType = Assert.valid(HostExtraAuthTypeEnum::of, model.getAuthType());
         model.setAuthType(authType.name());
         Long keyId = model.getKeyId();
         Long identityId = model.getIdentityId();
         // 必填验证
         if (HostExtraAuthTypeEnum.CUSTOM_KEY.equals(authType)) {
-            Valid.notNull(keyId);
+            Assert.notNull(keyId);
         } else if (HostExtraAuthTypeEnum.CUSTOM_IDENTITY.equals(authType)) {
-            Valid.notNull(identityId);
+            Assert.notNull(identityId);
         }
         // 验证主机密钥是否存在
         if (keyId != null) {
-            Valid.notNull(hostKeyDAO.selectById(keyId), ErrorMessage.KEY_ABSENT);
+            Assert.notNull(hostKeyDAO.selectById(keyId), ErrorMessage.KEY_ABSENT);
         }
         // 验证主机身份是否存在
         if (identityId != null) {
-            Valid.notNull(hostIdentityDAO.selectById(identityId), ErrorMessage.IDENTITY_ABSENT);
+            Assert.notNull(hostIdentityDAO.selectById(identityId), ErrorMessage.IDENTITY_ABSENT);
         }
         Long userId = SecurityUtils.getLoginUserId();
         // 验证主机密钥是否有权限
         if (keyId != null) {
-            Valid.isTrue(dataPermissionApi.hasPermission(DataPermissionTypeEnum.HOST_KEY, userId, keyId),
+            Assert.isTrue(dataPermissionApi.hasPermission(DataPermissionTypeEnum.HOST_KEY, userId, keyId),
                     ErrorMessage.ANY_NO_PERMISSION,
                     DataPermissionTypeEnum.HOST_KEY.getPermissionName());
         }
         // 验证主机身份是否有权限
         if (identityId != null) {
-            Valid.isTrue(dataPermissionApi.hasPermission(DataPermissionTypeEnum.HOST_IDENTITY, userId, identityId),
+            Assert.isTrue(dataPermissionApi.hasPermission(DataPermissionTypeEnum.HOST_IDENTITY, userId, identityId),
                     ErrorMessage.ANY_NO_PERMISSION,
                     DataPermissionTypeEnum.HOST_IDENTITY.getPermissionName());
         }

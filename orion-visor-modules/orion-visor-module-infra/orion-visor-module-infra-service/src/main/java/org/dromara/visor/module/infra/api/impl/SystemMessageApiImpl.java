@@ -23,7 +23,7 @@
 package org.dromara.visor.module.infra.api.impl;
 
 import lombok.extern.slf4j.Slf4j;
-import org.dromara.visor.common.utils.Valid;
+import org.dromara.visor.common.utils.Assert;
 import org.dromara.visor.module.infra.api.SystemMessageApi;
 import org.dromara.visor.module.infra.convert.SystemMessageProviderConvert;
 import org.dromara.visor.module.infra.define.SystemMessageDefine;
@@ -52,7 +52,7 @@ public class SystemMessageApiImpl implements SystemMessageApi {
 
     @Override
     public Long create(SystemMessageDefine define, SystemMessageDTO dto) {
-        Valid.valid(dto);
+        Assert.valid(dto);
         // 转换
         SystemMessageCreateRequest request = SystemMessageCreateRequest.builder()
                 .classify(define.getClassify().name())
@@ -70,7 +70,7 @@ public class SystemMessageApiImpl implements SystemMessageApi {
     @Override
     public Long create(MessageClassifyEnum classify, SystemMessageCreateDTO dto) {
         dto.setClassify(classify.name());
-        Valid.valid(dto);
+        Assert.valid(dto);
         // 转换
         SystemMessageCreateRequest request = SystemMessageProviderConvert.MAPPER.toRequest(dto);
         // 创建

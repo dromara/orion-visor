@@ -39,7 +39,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.dromara.visor.common.constant.Const;
 import org.dromara.visor.common.constant.ErrorMessage;
 import org.dromara.visor.common.file.FileClient;
-import org.dromara.visor.common.utils.Valid;
+import org.dromara.visor.common.utils.Assert;
 import org.dromara.visor.framework.websocket.core.utils.WebSockets;
 import org.dromara.visor.module.common.config.AppLogConfig;
 import org.dromara.visor.module.exec.dao.ExecHostLogDAO;
@@ -128,12 +128,12 @@ public class ExecLogTracker implements IExecLogTracker {
     private void initData() {
         // 读取数据
         this.execHostLog = execHostLogDAO.selectByIdAndLogId(execHostId, execId);
-        Valid.notNull(execHostLog, ErrorMessage.DATA_ABSENT);
+        Assert.notNull(execHostLog, ErrorMessage.DATA_ABSENT);
         // 检查任务状态
-        Valid.neq(execHostLog.getStatus(), ExecHostStatusEnum.WAITING.name(), ErrorMessage.ILLEGAL_STATUS);
+        Assert.neq(execHostLog.getStatus(), ExecHostStatusEnum.WAITING.name(), ErrorMessage.ILLEGAL_STATUS);
         // 获取文件路径
         this.absolutePath = localFileClient.getAbsolutePath(execHostLog.getLogPath());
-        Valid.isTrue(Files1.isFile(absolutePath), ErrorMessage.FILE_ABSENT);
+        Assert.isTrue(Files1.isFile(absolutePath), ErrorMessage.FILE_ABSENT);
         // 获取编码集
         this.charset = Charsets.of(this.getCharset());
     }

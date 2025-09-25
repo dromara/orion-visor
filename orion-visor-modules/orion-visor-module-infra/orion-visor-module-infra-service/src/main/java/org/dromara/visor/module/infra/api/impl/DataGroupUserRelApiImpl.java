@@ -23,7 +23,7 @@
 package org.dromara.visor.module.infra.api.impl;
 
 import lombok.extern.slf4j.Slf4j;
-import org.dromara.visor.common.utils.Valid;
+import org.dromara.visor.common.utils.Assert;
 import org.dromara.visor.module.infra.api.DataGroupUserRelApi;
 import org.dromara.visor.module.infra.entity.domain.DataGroupRelDO;
 import org.dromara.visor.module.infra.entity.dto.DataGroupRelCacheDTO;
@@ -57,20 +57,20 @@ public class DataGroupUserRelApiImpl implements DataGroupUserRelApi {
 
     @Override
     public void updateGroupRel(DataGroupTypeEnum type, Long userId, List<Long> groupIdList, Long relId) {
-        Valid.notNull(relId);
+        Assert.notNull(relId);
         dataGroupRelService.updateRelGroup(type.name(), userId, groupIdList, relId);
     }
 
     @Override
     public void addGroupRel(DataGroupTypeEnum type, Long userId, Long groupId, Long relId) {
-        Valid.notNull(groupId);
-        Valid.notNull(relId);
+        Assert.notNull(groupId);
+        Assert.notNull(relId);
         dataGroupRelService.addGroupRel(type.name(), userId, groupId, relId);
     }
 
     @Override
     public void addGroupRel(DataGroupTypeEnum type, Long userId, Map<Long, List<Long>> groupRelListMap) {
-        Valid.notEmpty(groupRelListMap);
+        Assert.notEmpty(groupRelListMap);
         dataGroupRelService.addGroupRel(type.name(), userId, groupRelListMap);
     }
 

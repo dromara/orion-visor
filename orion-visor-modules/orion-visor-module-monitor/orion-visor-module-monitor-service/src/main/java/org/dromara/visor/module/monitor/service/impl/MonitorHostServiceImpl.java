@@ -35,7 +35,7 @@ import org.dromara.visor.common.constant.Const;
 import org.dromara.visor.common.constant.ErrorMessage;
 import org.dromara.visor.common.constant.ExtraFieldConst;
 import org.dromara.visor.common.entity.chart.TimeChartSeries;
-import org.dromara.visor.common.utils.Valid;
+import org.dromara.visor.common.utils.Assert;
 import org.dromara.visor.framework.biz.operator.log.core.utils.OperatorLogs;
 import org.dromara.visor.framework.influxdb.core.query.FluxQueryBuilder;
 import org.dromara.visor.framework.influxdb.core.utils.InfluxdbUtils;
@@ -238,15 +238,15 @@ public class MonitorHostServiceImpl implements MonitorHostService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Integer updateMonitorHostById(MonitorHostUpdateRequest request) {
-        Long id = Valid.notNull(request.getId(), ErrorMessage.ID_MISSING);
+        Long id = Assert.notNull(request.getId(), ErrorMessage.ID_MISSING);
         Long policyId = request.getPolicyId();
         log.info("MonitorHostService-updateMonitorHostById id: {}, request: {}", id, JSON.toJSONString(request));
         // 查询数据
         MonitorHostDO monitorHost = monitorHostDAO.selectById(id);
-        Valid.notNull(monitorHost, ErrorMessage.DATA_ABSENT);
+        Assert.notNull(monitorHost, ErrorMessage.DATA_ABSENT);
         // 查询主机信息
         HostDTO host = hostApi.selectById(monitorHost.getHostId());
-        Valid.notNull(host, ErrorMessage.HOST_ABSENT);
+        Assert.notNull(host, ErrorMessage.HOST_ABSENT);
         // 查询用户信息
         Optional.ofNullable(request.getOwnerUserId())
                 .map(systemUserApi::getUsernameById)
@@ -255,7 +255,7 @@ public class MonitorHostServiceImpl implements MonitorHostService {
         OperatorLogs.add(OperatorLogs.NAME, host.getName());
         // 查询策略是否存在
         if (policyId != null) {
-            Valid.notNull(alarmPolicyDAO.selectById(policyId), ErrorMessage.ALARM_POLICY_ABSENT);
+            Assert.notNull(alarmPolicyDAO.selectById(policyId), ErrorMessage.ALARM_POLICY_ABSENT);
         }
         // 转换
         MonitorHostDO updateRecord = MonitorHostConvert.MAPPER.to(request);
@@ -285,10 +285,10 @@ public class MonitorHostServiceImpl implements MonitorHostService {
         AlarmSwitchEnum alarmSwitch = AlarmSwitchEnum.of(request.getAlarmSwitch());
         // 查询数据
         List<MonitorHostDO> monitorHostList = monitorHostDAO.selectBatchIds(idList);
-        Valid.notEmpty(monitorHostList, ErrorMessage.DATA_ABSENT);
+        Assert.notEmpty(monitorHostList, ErrorMessage.DATA_ABSENT);
         // 查询主机信息
         List<HostDTO> hostList = hostApi.selectByIdList(Lists.map(monitorHostList, MonitorHostDO::getHostId));
-        Valid.notEmpty(hostList, ErrorMessage.HOST_ABSENT);
+        Assert.notEmpty(hostList, ErrorMessage.HOST_ABSENT);
         // 设置日志参数
         OperatorLogs.add(OperatorLogs.COUNT, hostList.size());
         OperatorLogs.add(OperatorLogs.SWITCH, alarmSwitch.name());
@@ -370,8 +370,8 @@ public class MonitorHostServiceImpl implements MonitorHostService {
         if (range != null) {
             query.range(range);
         } else {
-            Valid.notNull(request.getStart(), ErrorMessage.PARAM_MISSING);
-            Valid.notNull(request.getEnd(), ErrorMessage.PARAM_MISSING);
+            Assert.notNull(request.getStart(), ErrorMessage.PARAM_MISSING);
+            Assert.notNull(request.getEnd(), ErrorMessage.PARAM_MISSING);
         }
         // 设置名称
         Set<String> names = null;

@@ -24,7 +24,6 @@ package org.dromara.visor.module.terminal.handler.guacd;
 
 import cn.orionsec.kit.lang.support.Attempt;
 import cn.orionsec.kit.lang.utils.Objects1;
-import cn.orionsec.kit.lang.utils.Valid;
 import cn.orionsec.kit.lang.utils.collect.Lists;
 import cn.orionsec.kit.lang.utils.io.Streams;
 import lombok.Getter;
@@ -36,6 +35,7 @@ import org.apache.guacamole.net.GuacamoleTunnel;
 import org.apache.guacamole.net.InetGuacamoleSocket;
 import org.apache.guacamole.protocol.*;
 import org.dromara.visor.common.constant.Const;
+import org.dromara.visor.common.utils.Assert;
 import org.dromara.visor.module.terminal.handler.guacd.constant.GuacdConst;
 import org.dromara.visor.module.terminal.handler.guacd.constant.GuacdProtocol;
 
@@ -103,8 +103,8 @@ public class GuacdTunnel implements IGuacdTunnel {
 
     @Override
     public void exec() throws GuacdException {
-        Valid.notNull(socket, "server is null");
-        Valid.notNull(streamHandler, "streamHandler is null");
+        Assert.notNull(socket, "server is null");
+        Assert.notNull(streamHandler, "streamHandler is null");
         // 读取
         try {
             GuacamoleReader reader = tunnel.acquireReader();

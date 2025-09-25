@@ -27,7 +27,7 @@ import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.visor.common.constant.Const;
 import org.dromara.visor.common.constant.ErrorMessage;
-import org.dromara.visor.common.utils.Valid;
+import org.dromara.visor.common.utils.Assert;
 import org.dromara.visor.framework.security.core.utils.SecurityUtils;
 import org.dromara.visor.module.infra.api.DataGroupApi;
 import org.dromara.visor.module.infra.api.DataGroupUserApi;
@@ -88,7 +88,7 @@ public class CommandSnippetGroupServiceImpl implements CommandSnippetGroupServic
 
     @Override
     public Integer updateCommandSnippetGroupById(CommandSnippetGroupUpdateRequest request) {
-        Long id = Valid.notNull(request.getId(), ErrorMessage.ID_MISSING);
+        Long id = Assert.notNull(request.getId(), ErrorMessage.ID_MISSING);
         log.info("CommandSnippetGroupService-updateCommandSnippetGroupById id: {}, request: {}", id, JSON.toJSONString(request));
         // 重命名
         DataGroupRenameDTO rename = CommandSnippetGroupConvert.MAPPER.to(request);

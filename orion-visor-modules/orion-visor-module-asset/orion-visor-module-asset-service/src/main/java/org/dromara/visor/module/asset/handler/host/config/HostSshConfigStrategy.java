@@ -25,7 +25,7 @@ package org.dromara.visor.module.asset.handler.host.config;
 import cn.orionsec.kit.lang.utils.Strings;
 import org.dromara.visor.common.constant.Const;
 import org.dromara.visor.common.constant.ErrorMessage;
-import org.dromara.visor.common.utils.Valid;
+import org.dromara.visor.common.utils.Assert;
 import org.dromara.visor.module.asset.dao.HostIdentityDAO;
 import org.dromara.visor.module.asset.dao.HostKeyDAO;
 import org.dromara.visor.module.asset.entity.dto.host.HostSshConfigDTO;
@@ -77,19 +77,19 @@ public class HostSshConfigStrategy extends AbstractHostConfigStrategy<HostSshCon
         // 检查主机密钥是否存在
         Long keyId = model.getKeyId();
         if (keyId != null) {
-            Valid.notNull(hostKeyDAO.selectById(keyId), ErrorMessage.KEY_ABSENT);
+            Assert.notNull(hostKeyDAO.selectById(keyId), ErrorMessage.KEY_ABSENT);
         }
         // 检查主机身份是否存在
         Long identityId = model.getIdentityId();
         if (identityId != null) {
-            Valid.notNull(hostIdentityDAO.selectById(identityId), ErrorMessage.IDENTITY_ABSENT);
+            Assert.notNull(hostIdentityDAO.selectById(identityId), ErrorMessage.IDENTITY_ABSENT);
         }
     }
 
     @Override
     protected void valid(HostSshConfigDTO model) {
         // 验证填充后的参数
-        Valid.valid(model);
+        Assert.valid(model);
     }
 
     @Override

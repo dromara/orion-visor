@@ -33,7 +33,7 @@ import cn.orionsec.kit.net.host.sftp.SftpFile;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.visor.common.constant.Const;
 import org.dromara.visor.common.constant.ErrorMessage;
-import org.dromara.visor.common.utils.Valid;
+import org.dromara.visor.common.utils.Assert;
 import org.dromara.visor.module.terminal.handler.terminal.model.TerminalChannelProps;
 import org.dromara.visor.module.terminal.handler.terminal.model.config.TerminalSessionSftpConfig;
 import org.dromara.visor.module.terminal.handler.terminal.model.response.SftpFileVO;
@@ -100,14 +100,14 @@ public class SftpSession extends AbstractTerminalSession<ISftpTerminalSender, Te
 
     @Override
     public void mkdir(String path) {
-        path = Valid.checkNormalize(path);
+        path = Assert.checkNormalize(path);
         // 创建文件夹
         executor.makeDirectories(path);
     }
 
     @Override
     public void touch(String path) {
-        path = Valid.checkNormalize(path);
+        path = Assert.checkNormalize(path);
         // 创建文件
         executor.touch(path);
     }
@@ -115,7 +115,7 @@ public class SftpSession extends AbstractTerminalSession<ISftpTerminalSender, Te
     @Override
     public void move(String source, String target) {
         // 计算路径
-        source = Valid.checkNormalize(source);
+        source = Assert.checkNormalize(source);
         target = SftpFileUtils.getAbsoluteTargetPath(source, target);
         // 移动
         executor.move(source, target);
@@ -125,34 +125,34 @@ public class SftpSession extends AbstractTerminalSession<ISftpTerminalSender, Te
     public void remove(String[] paths) {
         // 删除
         Arrays.stream(paths)
-                .map(Valid::checkNormalize)
+                .map(Assert::checkNormalize)
                 .forEach(executor::remove);
     }
 
     @Override
     public void truncate(String path) {
-        path = Valid.checkNormalize(path);
+        path = Assert.checkNormalize(path);
         // 截断
         executor.truncate(path);
     }
 
     @Override
     public void changeMode(String path, int mod) {
-        path = Valid.checkNormalize(path);
+        path = Assert.checkNormalize(path);
         // 修改权限
         executor.changeMode(path, mod);
     }
 
     @Override
     public void changeOwner(String path, int uid) {
-        path = Valid.checkNormalize(path);
+        path = Assert.checkNormalize(path);
         // 修改归属
         executor.changeOwner(path, uid);
     }
 
     @Override
     public void changeGroup(String path, int gid) {
-        path = Valid.checkNormalize(path);
+        path = Assert.checkNormalize(path);
         // 修改分组
         executor.changeGroup(path, gid);
     }
@@ -169,7 +169,7 @@ public class SftpSession extends AbstractTerminalSession<ISftpTerminalSender, Te
 
     @Override
     public String getContent(String path) {
-        path = Valid.checkNormalize(path);
+        path = Assert.checkNormalize(path);
         try {
             // 获取文件
             SftpFile file = executor.getFile(path);
@@ -190,7 +190,7 @@ public class SftpSession extends AbstractTerminalSession<ISftpTerminalSender, Te
 
     @Override
     public void setContent(String path, String content) {
-        path = Valid.checkNormalize(path);
+        path = Assert.checkNormalize(path);
         // 写入
         try {
             executor.write(path, Strings.bytes(content, config.getFileContentCharset()));
@@ -201,9 +201,9 @@ public class SftpSession extends AbstractTerminalSession<ISftpTerminalSender, Te
 
     @Override
     public void checkEditPermission(String path) {
-        path = Valid.checkNormalize(path);
+        path = Assert.checkNormalize(path);
         // 检查文件是否存在
-        Valid.isTrue(executor.isExist(path), ErrorMessage.FILE_ABSENT);
+        Assert.isTrue(executor.isExist(path), ErrorMessage.FILE_ABSENT);
     }
 
     @Override

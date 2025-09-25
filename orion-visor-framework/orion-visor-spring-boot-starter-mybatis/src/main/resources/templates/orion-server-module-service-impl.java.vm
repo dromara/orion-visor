@@ -29,7 +29,7 @@ import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.visor.common.constant.ErrorMessage;
-import org.dromara.visor.common.utils.Valid;
+import org.dromara.visor.common.utils.Assert;
 #if($meta.enableCache)
 import org.dromara.visor.framework.redis.core.utils.RedisMaps;
 import org.dromara.visor.framework.redis.core.utils.barrier.CacheBarriers;
@@ -84,11 +84,11 @@ public class ${table.serviceImplName} implements ${table.serviceName} {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Integer update${type}ById(${type}UpdateRequest request) {
-        Long id = Valid.notNull(request.getId(), ErrorMessage.ID_MISSING);
+        Long id = Assert.notNull(request.getId(), ErrorMessage.ID_MISSING);
         log.info("${type}Service-update${type}ById id: {}, request: {}", id, JSON.toJSONString(request));
         // 查询
         ${type}DO record = ${typeLower}DAO.selectById(id);
-        Valid.notNull(record, ErrorMessage.DATA_ABSENT);
+        Assert.notNull(record, ErrorMessage.DATA_ABSENT);
         // 转换
         ${type}DO updateRecord = ${type}Convert.MAPPER.to(request);
         // 查询数据是否冲突
@@ -125,7 +125,7 @@ public class ${table.serviceImplName} implements ${table.serviceName} {
     public ${type}VO get${type}ById(Long id) {
         // 查询
         ${type}DO record = ${typeLower}DAO.selectById(id);
-        Valid.notNull(record, ErrorMessage.DATA_ABSENT);
+        Assert.notNull(record, ErrorMessage.DATA_ABSENT);
         // 转换
         return ${type}Convert.MAPPER.to(record);
     }
@@ -202,7 +202,7 @@ public class ${table.serviceImplName} implements ${table.serviceName} {
         log.info("${type}Service-delete${type}ById id: {}", id);
         // 检查数据是否存在
         ${type}DO record = ${typeLower}DAO.selectById(id);
-        Valid.notNull(record, ErrorMessage.DATA_ABSENT);
+        Assert.notNull(record, ErrorMessage.DATA_ABSENT);
         // 删除
         int effect = ${typeLower}DAO.deleteById(id);
         log.info("${type}Service-delete${type}ById id: {}, effect: {}", id, effect);
@@ -260,7 +260,7 @@ public class ${table.serviceImplName} implements ${table.serviceName} {
                 #end
         // 检查是否存在
         boolean present = ${typeLower}DAO.of(wrapper).present();
-        Valid.isFalse(present, ErrorMessage.DATA_PRESENT);
+        Assert.isFalse(present, ErrorMessage.DATA_PRESENT);
     }
 
     @Override

@@ -28,7 +28,7 @@ import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.visor.common.constant.ErrorMessage;
-import org.dromara.visor.common.utils.Valid;
+import org.dromara.visor.common.utils.Assert;
 import org.dromara.visor.framework.biz.operator.log.core.utils.OperatorLogs;
 import org.dromara.visor.framework.redis.core.utils.RedisMaps;
 import org.dromara.visor.framework.redis.core.utils.barrier.CacheBarriers;
@@ -121,11 +121,11 @@ public class AlarmPolicyServiceImpl implements AlarmPolicyService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Long copyAlarmPolicy(AlarmPolicyCopyRequest request) {
-        Long id = Valid.notNull(request.getId(), ErrorMessage.ID_MISSING);
+        Long id = Assert.notNull(request.getId(), ErrorMessage.ID_MISSING);
         log.info("AlarmPolicyService-copyAlarmPolicy id: {}, request: {}", id, JSON.toJSONString(request));
         // 查询
         AlarmPolicyDO record = alarmPolicyDAO.selectById(id);
-        Valid.notNull(record, ErrorMessage.DATA_ABSENT);
+        Assert.notNull(record, ErrorMessage.DATA_ABSENT);
         // 创建策略
         Long newId = this.createAlarmPolicy(request);
         // 复制策略规则
@@ -136,11 +136,11 @@ public class AlarmPolicyServiceImpl implements AlarmPolicyService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Integer updateAlarmPolicyById(AlarmPolicyUpdateRequest request) {
-        Long id = Valid.notNull(request.getId(), ErrorMessage.ID_MISSING);
+        Long id = Assert.notNull(request.getId(), ErrorMessage.ID_MISSING);
         log.info("AlarmPolicyService-updateAlarmPolicyById id: {}, request: {}", id, JSON.toJSONString(request));
         // 查询
         AlarmPolicyDO record = alarmPolicyDAO.selectById(id);
-        Valid.notNull(record, ErrorMessage.DATA_ABSENT);
+        Assert.notNull(record, ErrorMessage.DATA_ABSENT);
         // 转换
         AlarmPolicyDO updateRecord = AlarmPolicyConvert.MAPPER.to(request);
         // 查询数据是否冲突
@@ -161,7 +161,7 @@ public class AlarmPolicyServiceImpl implements AlarmPolicyService {
     public AlarmPolicyVO getAlarmPolicyById(Long id) {
         // 查询
         AlarmPolicyDO record = alarmPolicyDAO.selectById(id);
-        Valid.notNull(record, ErrorMessage.DATA_ABSENT);
+        Assert.notNull(record, ErrorMessage.DATA_ABSENT);
         // 查询通知策略
         List<Long> notifyIdList = alarmPolicyNotifyService.getAlarmPolicyNotify(id);
         // 转换
@@ -238,7 +238,7 @@ public class AlarmPolicyServiceImpl implements AlarmPolicyService {
         log.info("AlarmPolicyService-deleteAlarmPolicyById id: {}", id);
         // 查询数据
         AlarmPolicyDO record = alarmPolicyDAO.selectById(id);
-        Valid.notNull(record, ErrorMessage.DATA_ABSENT);
+        Assert.notNull(record, ErrorMessage.DATA_ABSENT);
         // 删除主表
         int effect = alarmPolicyDAO.deleteById(id);
         // 设置日志参数
@@ -277,7 +277,7 @@ public class AlarmPolicyServiceImpl implements AlarmPolicyService {
                 .eq(AlarmPolicyDO::getName, domain.getName());
         // 检查是否存在
         boolean present = alarmPolicyDAO.of(wrapper).present();
-        Valid.isFalse(present, ErrorMessage.DATA_PRESENT);
+        Assert.isFalse(present, ErrorMessage.DATA_PRESENT);
     }
 
 }

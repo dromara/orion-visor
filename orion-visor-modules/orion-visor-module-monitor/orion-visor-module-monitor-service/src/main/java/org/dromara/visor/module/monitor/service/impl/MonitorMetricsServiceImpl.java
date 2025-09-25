@@ -27,7 +27,7 @@ import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.visor.common.constant.ErrorMessage;
-import org.dromara.visor.common.utils.Valid;
+import org.dromara.visor.common.utils.Assert;
 import org.dromara.visor.framework.biz.operator.log.core.utils.OperatorLogs;
 import org.dromara.visor.framework.redis.core.utils.RedisMaps;
 import org.dromara.visor.framework.redis.core.utils.barrier.CacheBarriers;
@@ -96,11 +96,11 @@ public class MonitorMetricsServiceImpl implements MonitorMetricsService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Integer updateMonitorMetricsById(MonitorMetricsUpdateRequest request) {
-        Long id = Valid.notNull(request.getId(), ErrorMessage.ID_MISSING);
+        Long id = Assert.notNull(request.getId(), ErrorMessage.ID_MISSING);
         log.info("MonitorMetricsService-updateMonitorMetricsById id: {}, request: {}", id, JSON.toJSONString(request));
         // 查询
         MonitorMetricsDO record = monitorMetricsDAO.selectById(id);
-        Valid.notNull(record, ErrorMessage.DATA_ABSENT);
+        Assert.notNull(record, ErrorMessage.DATA_ABSENT);
         // 转换
         MonitorMetricsDO updateRecord = MonitorMetricsConvert.MAPPER.to(request);
         updateRecord.setMeasurement(record.getMeasurement());
@@ -164,7 +164,7 @@ public class MonitorMetricsServiceImpl implements MonitorMetricsService {
         log.info("MonitorMetricsService-deleteMonitorMetricsById id: {}", id);
         // 检查数据是否存在
         MonitorMetricsDO record = monitorMetricsDAO.selectById(id);
-        Valid.notNull(record, ErrorMessage.DATA_ABSENT);
+        Assert.notNull(record, ErrorMessage.DATA_ABSENT);
         // 删除
         int effect = monitorMetricsDAO.deleteById(id);
         // 删除规则
@@ -203,7 +203,7 @@ public class MonitorMetricsServiceImpl implements MonitorMetricsService {
                 .eq(MonitorMetricsDO::getValue, domain.getValue());
         // 检查是否存在
         boolean present = monitorMetricsDAO.of(wrapper).present();
-        Valid.isFalse(present, ErrorMessage.DATA_PRESENT);
+        Assert.isFalse(present, ErrorMessage.DATA_PRESENT);
     }
 
 }

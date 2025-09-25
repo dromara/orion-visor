@@ -24,7 +24,7 @@ package org.dromara.visor.module.asset.handler.host.extra.strategy;
 
 import org.dromara.visor.common.constant.ErrorMessage;
 import org.dromara.visor.common.handler.data.strategy.AbstractGenericsDataStrategy;
-import org.dromara.visor.common.utils.Valid;
+import org.dromara.visor.common.utils.Assert;
 import org.dromara.visor.framework.security.core.utils.SecurityUtils;
 import org.dromara.visor.module.asset.dao.HostIdentityDAO;
 import org.dromara.visor.module.asset.enums.HostExtraAuthTypeEnum;
@@ -65,17 +65,17 @@ public class HostRdpExtraStrategy extends AbstractGenericsDataStrategy<HostRdpEx
 
     @Override
     public void preValid(HostRdpExtraModel model) {
-        HostExtraAuthTypeEnum authType = Valid.valid(HostExtraAuthTypeEnum::of, model.getAuthType());
+        HostExtraAuthTypeEnum authType = Assert.valid(HostExtraAuthTypeEnum::of, model.getAuthType());
         model.setAuthType(authType.name());
         Long identityId = model.getIdentityId();
         Long userId = SecurityUtils.getLoginUserId();
         // 必填验证
         if (HostExtraAuthTypeEnum.CUSTOM_IDENTITY.equals(authType)) {
-            Valid.notNull(identityId);
+            Assert.notNull(identityId);
             // 验证主机身份是否存在
-            Valid.notNull(hostIdentityDAO.selectById(identityId), ErrorMessage.IDENTITY_ABSENT);
+            Assert.notNull(hostIdentityDAO.selectById(identityId), ErrorMessage.IDENTITY_ABSENT);
             // 验证主机身份是否有权限
-            Valid.isTrue(dataPermissionApi.hasPermission(DataPermissionTypeEnum.HOST_IDENTITY, userId, identityId),
+            Assert.isTrue(dataPermissionApi.hasPermission(DataPermissionTypeEnum.HOST_IDENTITY, userId, identityId),
                     ErrorMessage.ANY_NO_PERMISSION,
                     DataPermissionTypeEnum.HOST_IDENTITY.getPermissionName());
         }

@@ -47,8 +47,8 @@ import org.dromara.visor.common.enums.EndpointDefine;
 import org.dromara.visor.common.file.FileClient;
 import org.dromara.visor.common.session.config.SshConnectConfig;
 import org.dromara.visor.common.session.ssh.SessionStores;
+import org.dromara.visor.common.utils.Assert;
 import org.dromara.visor.common.utils.PathUtils;
-import org.dromara.visor.common.utils.Valid;
 import org.dromara.visor.module.asset.api.HostConnectApi;
 import org.dromara.visor.module.asset.enums.HostOsTypeEnum;
 import org.dromara.visor.module.exec.dao.ExecHostLogDAO;
@@ -161,10 +161,10 @@ public abstract class BaseExecCommandHandler implements IExecCommandHandler {
         try {
             // 查询任务
             this.execHostLog = execHostLogDAO.selectById(id);
-            Valid.notNull(this.execHostLog, ErrorMessage.TASK_ABSENT);
+            Assert.notNull(this.execHostLog, ErrorMessage.TASK_ABSENT);
             // 检查任务状态
             this.status = ExecHostStatusEnum.of(execHostLog.getStatus());
-            Valid.eq(this.status, ExecHostStatusEnum.WAITING, ErrorMessage.TASK_ABSENT, ErrorMessage.ILLEGAL_STATUS);
+            Assert.eq(this.status, ExecHostStatusEnum.WAITING, ErrorMessage.TASK_ABSENT, ErrorMessage.ILLEGAL_STATUS);
             // 获取主机会话
             this.connectConfig = hostConnectApi.getSshConnectConfig(execHostLog.getHostId(), execLog.getUserId());
             // 设置日志路径
