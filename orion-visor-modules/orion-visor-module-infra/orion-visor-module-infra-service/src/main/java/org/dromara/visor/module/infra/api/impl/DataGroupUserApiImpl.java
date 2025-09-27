@@ -23,7 +23,7 @@
 package org.dromara.visor.module.infra.api.impl;
 
 import lombok.extern.slf4j.Slf4j;
-import org.dromara.visor.common.utils.Valid;
+import org.dromara.visor.common.utils.Assert;
 import org.dromara.visor.module.infra.api.DataGroupUserApi;
 import org.dromara.visor.module.infra.convert.DataGroupProviderConvert;
 import org.dromara.visor.module.infra.entity.dto.DataGroupCacheDTO;
@@ -53,7 +53,7 @@ public class DataGroupUserApiImpl implements DataGroupUserApi {
 
     @Override
     public Long createDataGroup(DataGroupTypeEnum type, Long userId, DataGroupCreateDTO dto) {
-        Valid.valid(dto);
+        Assert.valid(dto);
         DataGroupCreateRequest request = DataGroupProviderConvert.MAPPER.toRequest(dto);
         request.setType(type.name());
         request.setUserId(userId);

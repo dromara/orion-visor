@@ -25,7 +25,7 @@ package org.dromara.visor.module.infra.service.impl;
 import cn.orionsec.kit.lang.utils.collect.Lists;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import lombok.extern.slf4j.Slf4j;
-import org.dromara.visor.common.utils.Valid;
+import org.dromara.visor.common.utils.Assert;
 import org.dromara.visor.framework.mybatis.core.query.Conditions;
 import org.dromara.visor.framework.redis.core.utils.RedisLists;
 import org.dromara.visor.framework.redis.core.utils.RedisUtils;
@@ -181,7 +181,7 @@ public class DataPermissionServiceImpl implements DataPermissionService {
 
     @Override
     public List<Long> getUserAuthorizedRelIdList(String type, Long userId) {
-        DataPermissionTypeEnum dataType = Valid.valid(DataPermissionTypeEnum::of, type);
+        DataPermissionTypeEnum dataType = Assert.valid(DataPermissionTypeEnum::of, type);
         String cacheKey = DataPermissionCacheKeyDefine.DATA_PERMISSION_USER.format(type, userId);
         // 获取缓存
         List<Long> list = RedisLists.range(cacheKey, Long::valueOf);

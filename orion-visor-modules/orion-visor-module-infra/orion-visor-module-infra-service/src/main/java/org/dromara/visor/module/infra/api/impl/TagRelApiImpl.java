@@ -24,7 +24,7 @@ package org.dromara.visor.module.infra.api.impl;
 
 import cn.orionsec.kit.lang.utils.collect.Lists;
 import cn.orionsec.kit.lang.utils.collect.Maps;
-import org.dromara.visor.common.utils.Valid;
+import org.dromara.visor.common.utils.Assert;
 import org.dromara.visor.module.infra.api.TagRelApi;
 import org.dromara.visor.module.infra.convert.TagProviderConvert;
 import org.dromara.visor.module.infra.entity.dto.TagCacheDTO;
@@ -56,7 +56,7 @@ public class TagRelApiImpl implements TagRelApi {
 
     @Override
     public void addTagRel(TagTypeEnum type, Long relId, List<Long> tagIdList) {
-        Valid.notNull(relId);
+        Assert.notNull(relId);
         if (Lists.isEmpty(tagIdList)) {
             return;
         }
@@ -73,7 +73,7 @@ public class TagRelApiImpl implements TagRelApi {
 
     @Override
     public void setTagRel(TagTypeEnum type, Long relId, List<Long> tagIdList) {
-        Valid.notNull(relId);
+        Assert.notNull(relId);
         tagRelService.setTagRel(type.name(), relId, tagIdList);
     }
 

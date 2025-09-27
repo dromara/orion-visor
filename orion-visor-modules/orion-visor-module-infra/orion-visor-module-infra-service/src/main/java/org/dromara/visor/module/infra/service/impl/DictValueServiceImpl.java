@@ -32,7 +32,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.dromara.visor.common.constant.Const;
 import org.dromara.visor.common.constant.ErrorMessage;
 import org.dromara.visor.common.constant.FieldConst;
-import org.dromara.visor.common.utils.Valid;
+import org.dromara.visor.common.utils.Assert;
 import org.dromara.visor.framework.biz.operator.log.core.utils.OperatorLogs;
 import org.dromara.visor.framework.mybatis.core.query.Conditions;
 import org.dromara.visor.framework.redis.core.utils.RedisStrings;
@@ -91,7 +91,7 @@ public class DictValueServiceImpl implements DictValueService {
         DictValueDO record = DictValueConvert.MAPPER.to(request);
         // 查询 dictKey 是否存在
         DictKeyDO dictKey = dictKeyDAO.selectById(request.getKeyId());
-        String key = Valid.notNull(dictKey, ErrorMessage.CONFIG_ABSENT).getKeyName();
+        String key = Assert.notNull(dictKey, ErrorMessage.CONFIG_ABSENT).getKeyName();
         // 查询数据是否冲突
         this.checkDictValuePresent(record);
         // 插入
@@ -109,12 +109,12 @@ public class DictValueServiceImpl implements DictValueService {
     public Integer updateDictValueById(DictValueUpdateRequest request) {
         log.info("DictValueService-updateDictValueById id: {}, request: {}", request.getId(), JSON.toJSONString(request));
         // 查询
-        Long id = Valid.notNull(request.getId(), ErrorMessage.ID_MISSING);
+        Long id = Assert.notNull(request.getId(), ErrorMessage.ID_MISSING);
         DictValueDO record = dictValueDAO.selectById(id);
-        Valid.notNull(record, ErrorMessage.CONFIG_ABSENT);
+        Assert.notNull(record, ErrorMessage.CONFIG_ABSENT);
         // 查询 dictKey 是否存在
         DictKeyDO dictKey = dictKeyDAO.selectById(request.getKeyId());
-        String key = Valid.notNull(dictKey, ErrorMessage.CONFIG_ABSENT).getKeyName();
+        String key = Assert.notNull(dictKey, ErrorMessage.CONFIG_ABSENT).getKeyName();
         // 转换
         DictValueDO updateRecord = DictValueConvert.MAPPER.to(request);
         // 查询数据是否冲突
@@ -138,10 +138,10 @@ public class DictValueServiceImpl implements DictValueService {
         log.info("DictValueService-updateDictValueById id: {}, request: {}", id, JSON.toJSONString(request));
         // 查询
         DictValueDO record = dictValueDAO.selectById(id);
-        Valid.notNull(record, ErrorMessage.CONFIG_ABSENT);
+        Assert.notNull(record, ErrorMessage.CONFIG_ABSENT);
         // 查询历史值
         HistoryValueDO history = historyValueService.getHistoryByRelId(request.getValueId(), id, HistoryValueTypeEnum.DICT.name());
-        Valid.notNull(history, ErrorMessage.HISTORY_ABSENT);
+        Assert.notNull(history, ErrorMessage.HISTORY_ABSENT);
         JSONObject historyValue = JSON.parseObject(history.getBeforeValue());
         String label = (String) historyValue.remove(OperatorLogs.LABEL);
         String value = (String) historyValue.remove(OperatorLogs.VALUE);
@@ -273,7 +273,7 @@ public class DictValueServiceImpl implements DictValueService {
         log.info("DictValueService-deleteDictValueById id: {}", id);
         // 检查数据是否存在
         DictValueDO record = dictValueDAO.selectById(id);
-        Valid.notNull(record, ErrorMessage.CONFIG_ABSENT);
+        Assert.notNull(record, ErrorMessage.CONFIG_ABSENT);
         // 添加日志参数
         OperatorLogs.add(OperatorLogs.VALUE, record.getKeyName() + "-" + record.getLabel());
         // 删除
@@ -395,7 +395,7 @@ public class DictValueServiceImpl implements DictValueService {
                 .eq(DictValueDO::getValue, domain.getValue());
         // 检查是否存在
         boolean present = dictValueDAO.of(wrapper).present();
-        Valid.isFalse(present, ErrorMessage.CONFIG_PRESENT);
+        Assert.isFalse(present, ErrorMessage.CONFIG_PRESENT);
     }
 
     /**

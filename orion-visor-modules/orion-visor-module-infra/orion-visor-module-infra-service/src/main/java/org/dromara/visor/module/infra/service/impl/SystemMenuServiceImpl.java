@@ -28,7 +28,7 @@ import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.visor.common.constant.Const;
 import org.dromara.visor.common.constant.ErrorMessage;
-import org.dromara.visor.common.utils.Valid;
+import org.dromara.visor.common.utils.Assert;
 import org.dromara.visor.framework.biz.operator.log.core.utils.OperatorLogs;
 import org.dromara.visor.framework.mybatis.core.query.Conditions;
 import org.dromara.visor.module.infra.convert.SystemMenuConvert;
@@ -98,9 +98,9 @@ public class SystemMenuServiceImpl implements SystemMenuService {
     @Override
     public Integer updateSystemMenuById(SystemMenuUpdateRequest request) {
         // 查询
-        Long id = Valid.notNull(request.getId(), ErrorMessage.ID_MISSING);
+        Long id = Assert.notNull(request.getId(), ErrorMessage.ID_MISSING);
         SystemMenuDO record = systemMenuDAO.selectById(id);
-        Valid.notNull(record, ErrorMessage.DATA_ABSENT);
+        Assert.notNull(record, ErrorMessage.DATA_ABSENT);
         // 转换
         SystemMenuDO updateRecord = SystemMenuConvert.MAPPER.to(request);
         // 验证参数
@@ -126,7 +126,7 @@ public class SystemMenuServiceImpl implements SystemMenuService {
     public SystemMenuVO getSystemMenuById(Long id) {
         // 查询
         SystemMenuDO record = systemMenuDAO.selectById(id);
-        Valid.notNull(record, ErrorMessage.DATA_ABSENT);
+        Assert.notNull(record, ErrorMessage.DATA_ABSENT);
         // 转换
         return SystemMenuConvert.MAPPER.to(record);
     }
@@ -204,18 +204,18 @@ public class SystemMenuServiceImpl implements SystemMenuService {
         Integer status = request.getStatus();
         Integer visible = request.getVisible();
         if (status != null) {
-            MenuStatusEnum statusEnum = Valid.valid(MenuStatusEnum::of, status);
+            MenuStatusEnum statusEnum = Assert.valid(MenuStatusEnum::of, status);
             // 添加日志参数
             OperatorLogs.add(OperatorLogs.LABEL, statusEnum.name());
         }
         if (visible != null) {
-            MenuVisibleEnum visibleEnum = Valid.valid(MenuVisibleEnum::of, visible);
+            MenuVisibleEnum visibleEnum = Assert.valid(MenuVisibleEnum::of, visible);
             // 添加日志参数
             OperatorLogs.add(OperatorLogs.LABEL, visibleEnum.name());
         }
         // 查询
         SystemMenuDO record = systemMenuDAO.selectById(id);
-        Valid.notNull(record, ErrorMessage.DATA_ABSENT);
+        Assert.notNull(record, ErrorMessage.DATA_ABSENT);
         // 添加日志参数
         OperatorLogs.add(OperatorLogs.NAME, record.getName());
         // 从缓存中查询
@@ -247,7 +247,7 @@ public class SystemMenuServiceImpl implements SystemMenuService {
     public Integer deleteSystemMenu(Long id) {
         // 查询
         SystemMenuDO record = systemMenuDAO.selectById(id);
-        Valid.notNull(record, ErrorMessage.DATA_ABSENT);
+        Assert.notNull(record, ErrorMessage.DATA_ABSENT);
         // 添加日志参数
         OperatorLogs.add(OperatorLogs.NAME, record.getName());
         // 从缓存中查询
@@ -311,30 +311,30 @@ public class SystemMenuServiceImpl implements SystemMenuService {
      */
     private void validateRequest(SystemMenuDO domain, Integer menuType) {
         // 父id不能为当前id
-        Valid.isFalse(Objects.equals(domain.getParentId(), domain.getId()), ErrorMessage.INVALID_PARENT_MENU);
+        Assert.isFalse(Objects.equals(domain.getParentId(), domain.getId()), ErrorMessage.INVALID_PARENT_MENU);
         // 检查菜单类型
-        MenuTypeEnum type = Valid.valid(MenuTypeEnum::of, menuType);
+        MenuTypeEnum type = Assert.valid(MenuTypeEnum::of, menuType);
         // 验证父菜单参数
         if (MenuTypeEnum.PARENT_MENU.equals(type)) {
             // 父菜单创建的 parentId 为 0
             domain.setParentId(Const.ROOT_PARENT_ID);
             // 验证必填参数
-            Valid.valid(SystemMenuConvert.MAPPER.toMenuValidate(domain));
+            Assert.valid(SystemMenuConvert.MAPPER.toMenuValidate(domain));
             return;
         }
         // 验证 parentId 是否存在
-        SystemMenuDO parent = Valid.notNull(systemMenuDAO.selectById(domain.getParentId()), ErrorMessage.PARENT_MENU_ABSENT);
+        SystemMenuDO parent = Assert.notNull(systemMenuDAO.selectById(domain.getParentId()), ErrorMessage.PARENT_MENU_ABSENT);
         // 验证子菜单/功能参数
         if (MenuTypeEnum.SUB_MENU.equals(type)) {
             // 验证必填参数
-            Valid.valid(SystemMenuConvert.MAPPER.toMenuValidate(domain));
+            Assert.valid(SystemMenuConvert.MAPPER.toMenuValidate(domain));
             // 父级必须为父菜单
-            Valid.eq(parent.getType(), MenuTypeEnum.PARENT_MENU.getType(), ErrorMessage.INVALID_PARENT_MENU);
+            Assert.eq(parent.getType(), MenuTypeEnum.PARENT_MENU.getType(), ErrorMessage.INVALID_PARENT_MENU);
         } else if (MenuTypeEnum.FUNCTION.equals(type)) {
             // 验证必填参数
-            Valid.valid(SystemMenuConvert.MAPPER.toFunctionValidate(domain));
+            Assert.valid(SystemMenuConvert.MAPPER.toFunctionValidate(domain));
             // 父级必须不能为自己
-            Valid.neq(parent.getType(), MenuTypeEnum.FUNCTION.getType(), ErrorMessage.INVALID_PARENT_MENU);
+            Assert.neq(parent.getType(), MenuTypeEnum.FUNCTION.getType(), ErrorMessage.INVALID_PARENT_MENU);
         }
     }
 

@@ -30,8 +30,8 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.visor.common.constant.Const;
 import org.dromara.visor.common.constant.ErrorMessage;
+import org.dromara.visor.common.utils.Assert;
 import org.dromara.visor.common.utils.SqlUtils;
-import org.dromara.visor.common.utils.Valid;
 import org.dromara.visor.framework.biz.operator.log.core.utils.OperatorLogs;
 import org.dromara.visor.framework.security.core.utils.SecurityUtils;
 import org.dromara.visor.module.terminal.convert.TerminalConnectLogConvert;
@@ -221,8 +221,8 @@ public class TerminalConnectLogServiceImpl implements TerminalConnectLogService 
         Long id = request.getId();
         // 查询数据是否存在
         TerminalConnectLogDO record = terminalConnectLogDAO.selectById(id);
-        Valid.notNull(record, ErrorMessage.LOG_ABSENT);
-        Valid.eq(record.getStatus(), TerminalConnectStatusEnum.CONNECTING.name(), ErrorMessage.ILLEGAL_STATUS);
+        Assert.notNull(record, ErrorMessage.LOG_ABSENT);
+        Assert.eq(record.getStatus(), TerminalConnectStatusEnum.CONNECTING.name(), ErrorMessage.ILLEGAL_STATUS);
         // 设置日志参数
         OperatorLogs.add(OperatorLogs.HOST_NAME, record.getHostName());
         // 获取会话

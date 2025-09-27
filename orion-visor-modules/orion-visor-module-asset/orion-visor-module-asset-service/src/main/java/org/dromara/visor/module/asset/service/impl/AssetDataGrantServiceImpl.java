@@ -27,7 +27,7 @@ import cn.orionsec.kit.spring.SpringHolder;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.visor.common.constant.Const;
 import org.dromara.visor.common.constant.ErrorMessage;
-import org.dromara.visor.common.utils.Valid;
+import org.dromara.visor.common.utils.Assert;
 import org.dromara.visor.framework.biz.operator.log.core.utils.OperatorLogs;
 import org.dromara.visor.module.asset.dao.HostIdentityDAO;
 import org.dromara.visor.module.asset.dao.HostKeyDAO;
@@ -150,18 +150,18 @@ public class AssetDataGrantServiceImpl implements AssetDataGrantService {
     private void checkGrantIdentity(AssetDataGrantRequest request) {
         Long userId = request.getUserId();
         Long roleId = request.getRoleId();
-        Valid.isTrue(userId != null || roleId != null);
+        Assert.isTrue(userId != null || roleId != null);
         if (userId != null) {
             // 检测用户是否存在
             SystemUserDTO user = systemUserApi.getUserById(userId);
-            Valid.notNull(user, ErrorMessage.USER_ABSENT);
+            Assert.notNull(user, ErrorMessage.USER_ABSENT);
             OperatorLogs.add(OperatorLogs.GRANT_TYPE, Const.CN_USER);
             OperatorLogs.add(OperatorLogs.GRANT_NAME, user.getNickname() + "(" + user.getUsername() + ")");
         }
         if (roleId != null) {
             // 检测角色是否存在
             SystemRoleDTO role = systemRoleApi.getRoleById(roleId);
-            Valid.notNull(role, ErrorMessage.ROLE_ABSENT);
+            Assert.notNull(role, ErrorMessage.ROLE_ABSENT);
             OperatorLogs.add(OperatorLogs.GRANT_TYPE, Const.CN_ROLE);
             OperatorLogs.add(OperatorLogs.GRANT_NAME, role.getName() + "(" + role.getCode() + ")");
         }

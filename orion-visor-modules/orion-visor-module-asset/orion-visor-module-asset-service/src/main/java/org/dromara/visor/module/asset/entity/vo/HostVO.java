@@ -87,6 +87,9 @@ public class HostVO implements Serializable {
     @Schema(description = "探针在线状态")
     private Integer agentOnlineStatus;
 
+    @Schema(description = "探针切换在线状态时间")
+    private Date agentOnlineChangeTime;
+
     @Schema(description = "描述")
     private String description;
 

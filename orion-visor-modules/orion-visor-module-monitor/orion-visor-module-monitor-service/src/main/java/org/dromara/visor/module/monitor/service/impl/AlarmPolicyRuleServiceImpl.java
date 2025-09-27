@@ -27,7 +27,7 @@ import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.visor.common.constant.ErrorMessage;
-import org.dromara.visor.common.utils.Valid;
+import org.dromara.visor.common.utils.Assert;
 import org.dromara.visor.framework.biz.operator.log.core.utils.OperatorLogs;
 import org.dromara.visor.framework.mybatis.core.query.Conditions;
 import org.dromara.visor.framework.mybatis.core.utils.DomainFillUtils;
@@ -81,10 +81,10 @@ public class AlarmPolicyRuleServiceImpl implements AlarmPolicyRuleService {
         log.info("AlarmPolicyRuleService-createAlarmPolicyRule request: {}", JSON.toJSONString(request));
         // 检查指标是否存在
         MonitorMetricsDO metrics = monitorMetricsDAO.selectById(request.getMetricsId());
-        Valid.notNull(metrics, ErrorMessage.METRICS_ABSENT);
+        Assert.notNull(metrics, ErrorMessage.METRICS_ABSENT);
         // 检查告警策略是否存在
         AlarmPolicyDO alarmPolicy = alarmPolicyDAO.selectById(request.getPolicyId());
-        Valid.notNull(alarmPolicy, ErrorMessage.ALARM_POLICY_ABSENT);
+        Assert.notNull(alarmPolicy, ErrorMessage.ALARM_POLICY_ABSENT);
         // 转换
         AlarmPolicyRuleDO record = AlarmPolicyRuleConvert.MAPPER.to(request);
         record.setMetricsMeasurement(metrics.getMeasurement());
@@ -102,14 +102,14 @@ public class AlarmPolicyRuleServiceImpl implements AlarmPolicyRuleService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Integer updateAlarmPolicyRuleById(AlarmPolicyRuleUpdateRequest request) {
-        Long id = Valid.notNull(request.getId(), ErrorMessage.ID_MISSING);
+        Long id = Assert.notNull(request.getId(), ErrorMessage.ID_MISSING);
         log.info("AlarmPolicyRuleService-updateAlarmPolicyRuleById id: {}, request: {}", id, JSON.toJSONString(request));
         // 检查指标是否存在
         MonitorMetricsDO metrics = monitorMetricsDAO.selectById(request.getMetricsId());
-        Valid.notNull(metrics, ErrorMessage.METRICS_ABSENT);
+        Assert.notNull(metrics, ErrorMessage.METRICS_ABSENT);
         // 查询
         AlarmPolicyRuleDO record = alarmPolicyRuleDAO.selectById(id);
-        Valid.notNull(record, ErrorMessage.DATA_ABSENT);
+        Assert.notNull(record, ErrorMessage.DATA_ABSENT);
         // 转换
         AlarmPolicyRuleDO updateRecord = AlarmPolicyRuleConvert.MAPPER.to(request);
         updateRecord.setMetricsMeasurement(metrics.getMeasurement());
@@ -128,7 +128,7 @@ public class AlarmPolicyRuleServiceImpl implements AlarmPolicyRuleService {
         log.info("AlarmPolicyRuleService-updateAlarmPolicyRuleSwitch id: {}, request: {}", id, JSON.toJSONString(request));
         // 查询
         AlarmPolicyRuleDO record = alarmPolicyRuleDAO.selectById(id);
-        Valid.notNull(record, ErrorMessage.DATA_ABSENT);
+        Assert.notNull(record, ErrorMessage.DATA_ABSENT);
         // 设置日志参数
         OperatorLogs.add(OperatorLogs.SWITCH, switchEnum.name());
         // 更新

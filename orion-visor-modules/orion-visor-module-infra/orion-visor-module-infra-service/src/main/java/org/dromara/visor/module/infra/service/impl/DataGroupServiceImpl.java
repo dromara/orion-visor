@@ -29,8 +29,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.dromara.visor.common.constant.Const;
 import org.dromara.visor.common.constant.ErrorMessage;
 import org.dromara.visor.common.enums.MovePosition;
+import org.dromara.visor.common.utils.Assert;
 import org.dromara.visor.common.utils.TreeUtils;
-import org.dromara.visor.common.utils.Valid;
 import org.dromara.visor.framework.biz.operator.log.core.utils.OperatorLogs;
 import org.dromara.visor.framework.redis.core.utils.RedisStrings;
 import org.dromara.visor.framework.redis.core.utils.barrier.CacheBarriers;
@@ -95,11 +95,11 @@ public class DataGroupServiceImpl implements DataGroupService {
 
     @Override
     public Integer renameDataGroup(DataGroupRenameRequest request) {
-        Long id = Valid.notNull(request.getId(), ErrorMessage.ID_MISSING);
-        String name = Valid.notBlank(request.getName());
+        Long id = Assert.notNull(request.getId(), ErrorMessage.ID_MISSING);
+        String name = Assert.notBlank(request.getName());
         // 查询
         DataGroupDO record = dataGroupDAO.selectById(id);
-        Valid.notNull(record, ErrorMessage.GROUP_ABSENT);
+        Assert.notNull(record, ErrorMessage.GROUP_ABSENT);
         // 转换
         DataGroupDO updateRecord = DataGroupDO.builder()
                 .id(id)
@@ -122,12 +122,12 @@ public class DataGroupServiceImpl implements DataGroupService {
     public Integer moveDataGroup(DataGroupMoveRequest request) {
         Long id = request.getId();
         Long targetId = request.getTargetId();
-        MovePosition position = Valid.valid(MovePosition::of, request.getPosition());
+        MovePosition position = Assert.valid(MovePosition::of, request.getPosition());
         // 查询节点是否存在
         DataGroupDO moveRecord = dataGroupDAO.selectById(id);
         DataGroupDO targetRecord = dataGroupDAO.selectById(targetId);
-        Valid.notNull(moveRecord, ErrorMessage.GROUP_ABSENT);
-        Valid.notNull(targetRecord, ErrorMessage.GROUP_ABSENT);
+        Assert.notNull(moveRecord, ErrorMessage.GROUP_ABSENT);
+        Assert.notNull(targetRecord, ErrorMessage.GROUP_ABSENT);
         // 更新
         String type = moveRecord.getType();
         Long targetParentId = targetRecord.getParentId();
@@ -231,7 +231,7 @@ public class DataGroupServiceImpl implements DataGroupService {
         log.info("DataGroupService-deleteDataGroupById id: {}", id);
         // 检查数据是否存在
         DataGroupDO record = dataGroupDAO.selectById(id);
-        Valid.notNull(record, ErrorMessage.GROUP_ABSENT);
+        Assert.notNull(record, ErrorMessage.GROUP_ABSENT);
         String type = record.getType();
         // 查询子级
         List<Long> deleteIdList = Lists.of(id);
@@ -334,7 +334,7 @@ public class DataGroupServiceImpl implements DataGroupService {
                 .eq(DataGroupDO::getName, domain.getName());
         // 检查是否存在
         boolean present = dataGroupDAO.of(wrapper).present();
-        Valid.isFalse(present, ErrorMessage.DATA_PRESENT);
+        Assert.isFalse(present, ErrorMessage.DATA_PRESENT);
     }
 
     /**

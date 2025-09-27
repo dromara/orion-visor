@@ -28,7 +28,7 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.visor.common.constant.ErrorMessage;
-import org.dromara.visor.common.utils.Valid;
+import org.dromara.visor.common.utils.Assert;
 import org.dromara.visor.framework.redis.core.utils.RedisMaps;
 import org.dromara.visor.framework.redis.core.utils.barrier.CacheBarriers;
 import org.dromara.visor.framework.security.core.utils.SecurityUtils;
@@ -90,12 +90,12 @@ public class CommandSnippetServiceImpl implements CommandSnippetService {
 
     @Override
     public Integer updateCommandSnippetById(CommandSnippetUpdateRequest request) {
-        Long id = Valid.notNull(request.getId(), ErrorMessage.ID_MISSING);
+        Long id = Assert.notNull(request.getId(), ErrorMessage.ID_MISSING);
         Long userId = SecurityUtils.getLoginUserId();
         log.info("CommandSnippetService-updateCommandSnippetById id: {}, request: {}", id, JSON.toJSONString(request));
         // 查询
         CommandSnippetDO record = commandSnippetDAO.selectById(id);
-        Valid.notNull(record, ErrorMessage.DATA_ABSENT);
+        Assert.notNull(record, ErrorMessage.DATA_ABSENT);
         // 查询数据是否冲突
         CommandSnippetDO updateRecord = CommandSnippetConvert.MAPPER.to(request);
         this.checkCommandSnippetPresent(updateRecord);
@@ -179,7 +179,7 @@ public class CommandSnippetServiceImpl implements CommandSnippetService {
         log.info("CommandSnippetService-deleteCommandSnippetById id: {}", id);
         // 检查数据是否存在
         CommandSnippetDO record = commandSnippetDAO.selectById(id);
-        Valid.notNull(record, ErrorMessage.DATA_ABSENT);
+        Assert.notNull(record, ErrorMessage.DATA_ABSENT);
         // 删除
         int effect = commandSnippetDAO.deleteById(id);
         log.info("CommandSnippetService-deleteCommandSnippetById id: {}, effect: {}", id, effect);
@@ -217,7 +217,7 @@ public class CommandSnippetServiceImpl implements CommandSnippetService {
                 .eq(CommandSnippetDO::getName, domain.getName());
         // 检查是否存在
         boolean present = commandSnippetDAO.of(wrapper).present();
-        Valid.isFalse(present, ErrorMessage.DATA_PRESENT);
+        Assert.isFalse(present, ErrorMessage.DATA_PRESENT);
     }
 
 }

@@ -33,7 +33,7 @@ import org.dromara.visor.common.constant.Const;
 import org.dromara.visor.common.constant.ErrorCode;
 import org.dromara.visor.common.constant.ErrorMessage;
 import org.dromara.visor.common.security.LoginUser;
-import org.dromara.visor.common.utils.Valid;
+import org.dromara.visor.common.utils.Assert;
 import org.dromara.visor.framework.biz.operator.log.core.utils.OperatorLogs;
 import org.dromara.visor.framework.redis.core.utils.RedisMaps;
 import org.dromara.visor.framework.redis.core.utils.RedisStrings;
@@ -138,9 +138,9 @@ public class SystemUserServiceImpl implements SystemUserService {
     @Override
     public Integer updateSystemUserById(SystemUserUpdateRequest request) {
         // 查询
-        Long id = Valid.notNull(request.getId(), ErrorMessage.ID_MISSING);
+        Long id = Assert.notNull(request.getId(), ErrorMessage.ID_MISSING);
         SystemUserDO record = systemUserDAO.selectById(id);
-        Valid.notNull(record, ErrorMessage.USER_ABSENT);
+        Assert.notNull(record, ErrorMessage.USER_ABSENT);
         // 添加日志参数
         OperatorLogs.add(OperatorLogs.USERNAME, record.getUsername());
         // 转换
@@ -165,10 +165,10 @@ public class SystemUserServiceImpl implements SystemUserService {
         if (id.equals(SecurityUtils.getLoginUserId())) {
             throw ErrorCode.UNSUPPOETED.exception();
         }
-        UserStatusEnum status = Valid.valid(UserStatusEnum::of, request.getStatus());
+        UserStatusEnum status = Assert.valid(UserStatusEnum::of, request.getStatus());
         // 查询用户
         SystemUserDO record = systemUserDAO.selectById(id);
-        Valid.notNull(record, ErrorMessage.USER_ABSENT);
+        Assert.notNull(record, ErrorMessage.USER_ABSENT);
         // 添加日志参数
         OperatorLogs.add(OperatorLogs.USERNAME, record.getUsername());
         OperatorLogs.add(OperatorLogs.STATUS_NAME, status.name());
@@ -194,7 +194,7 @@ public class SystemUserServiceImpl implements SystemUserService {
     public SystemUserVO getSystemUserById(Long id) {
         // 查询用户
         SystemUserDO record = systemUserDAO.selectById(id);
-        Valid.notNull(record, ErrorMessage.USER_ABSENT);
+        Assert.notNull(record, ErrorMessage.USER_ABSENT);
         // 查询角色
         List<SystemRoleDO> roles = systemRoleDAO.selectRoleByUserId(id);
         // 返回
@@ -258,7 +258,7 @@ public class SystemUserServiceImpl implements SystemUserService {
         }
         // 查询用户列表
         List<SystemUserDO> userList = systemUserDAO.selectBatchIds(idList);
-        Valid.notEmpty(userList, ErrorMessage.USER_ABSENT);
+        Assert.notEmpty(userList, ErrorMessage.USER_ABSENT);
         // 添加日志参数
         idList = userList.stream()
                 .map(SystemUserDO::getId)
@@ -304,10 +304,10 @@ public class SystemUserServiceImpl implements SystemUserService {
 
     @Override
     public void resetPassword(UserResetPasswordRequest request) {
-        Long id = Valid.notNull(request.getId(), ErrorMessage.ID_MISSING);
+        Long id = Assert.notNull(request.getId(), ErrorMessage.ID_MISSING);
         // 查询用户
         SystemUserDO record = systemUserDAO.selectById(id);
-        Valid.notNull(record, ErrorMessage.USER_ABSENT);
+        Assert.notNull(record, ErrorMessage.USER_ABSENT);
         // 添加日志参数
         OperatorLogs.add(OperatorLogs.USERNAME, record.getUsername());
         // 修改密码
@@ -340,7 +340,7 @@ public class SystemUserServiceImpl implements SystemUserService {
                 .eq(SystemUserDO::getUsername, domain.getUsername());
         // 检查是否存在
         boolean present = systemUserDAO.of(wrapper).present();
-        Valid.isFalse(present, ErrorMessage.USERNAME_PRESENT);
+        Assert.isFalse(present, ErrorMessage.USERNAME_PRESENT);
     }
 
     /**
@@ -356,7 +356,7 @@ public class SystemUserServiceImpl implements SystemUserService {
                 .eq(SystemUserDO::getNickname, domain.getNickname());
         // 检查是否存在
         boolean present = systemUserDAO.of(wrapper).present();
-        Valid.isFalse(present, ErrorMessage.NICKNAME_PRESENT);
+        Assert.isFalse(present, ErrorMessage.NICKNAME_PRESENT);
     }
 
     /**

@@ -40,8 +40,8 @@ import org.dromara.visor.common.constant.ErrorMessage;
 import org.dromara.visor.common.constant.FileConst;
 import org.dromara.visor.common.enums.EndpointDefine;
 import org.dromara.visor.common.file.FileClient;
+import org.dromara.visor.common.utils.Assert;
 import org.dromara.visor.common.utils.SqlUtils;
-import org.dromara.visor.common.utils.Valid;
 import org.dromara.visor.framework.biz.operator.log.core.utils.OperatorLogs;
 import org.dromara.visor.framework.redis.core.utils.RedisStrings;
 import org.dromara.visor.framework.security.core.utils.SecurityUtils;
@@ -122,7 +122,7 @@ public class ExecLogServiceImpl implements ExecLogService {
     public ExecLogVO getExecLog(Long id, String source) {
         // 查询执行日志
         ExecLogDO row = execLogDAO.selectByIdSource(id, source);
-        Valid.notNull(row, ErrorMessage.LOG_ABSENT);
+        Assert.notNull(row, ErrorMessage.LOG_ABSENT);
         // 查询执行主机
         List<ExecHostLogDO> hosts = execHostLogDAO.selectByLogId(id);
         // 返回
@@ -210,7 +210,7 @@ public class ExecLogServiceImpl implements ExecLogService {
                 .then()
                 .count()
                 .intValue();
-        Valid.isTrue(idList.size() == count, ErrorMessage.DATA_MODIFIED);
+        Assert.isTrue(idList.size() == count, ErrorMessage.DATA_MODIFIED);
         // 删除
         return this.deleteExecLogByIdList(idList);
     }
@@ -269,7 +269,7 @@ public class ExecLogServiceImpl implements ExecLogService {
         log.info("ExecLogService.interruptExec start logId: {}, source: {}", logId, source);
         // 获取执行记录
         ExecLogDO execLog = execLogDAO.selectByIdSource(logId, source);
-        Valid.notNull(execLog, ErrorMessage.DATA_ABSENT);
+        Assert.notNull(execLog, ErrorMessage.DATA_ABSENT);
         // 检查状态
         if (!ExecStatusEnum.of(execLog.getStatus()).isCloseable()) {
             return;
@@ -306,10 +306,10 @@ public class ExecLogServiceImpl implements ExecLogService {
         log.info("ExecLogService.interruptHostExec start hostLogId: {}, source: {}", hostLogId, source);
         // 获取执行记录
         ExecHostLogDO hostLog = execHostLogDAO.selectById(hostLogId);
-        Valid.notNull(hostLog, ErrorMessage.DATA_ABSENT);
+        Assert.notNull(hostLog, ErrorMessage.DATA_ABSENT);
         Long logId = hostLog.getLogId();
         ExecLogDO execLog = execLogDAO.selectByIdSource(logId, source);
-        Valid.notNull(execLog, ErrorMessage.DATA_ABSENT);
+        Assert.notNull(execLog, ErrorMessage.DATA_ABSENT);
         // 添加日志参数
         OperatorLogs.add(OperatorLogs.LOG_ID, logId);
         OperatorLogs.add(OperatorLogs.HOST_NAME, hostLog.getHostName());
@@ -394,11 +394,11 @@ public class ExecLogServiceImpl implements ExecLogService {
         try {
             // 获取主机执行日志
             ExecHostLogDO hostLog = execHostLogDAO.selectById(id);
-            Valid.notNull(hostLog, ErrorMessage.LOG_ABSENT);
+            Assert.notNull(hostLog, ErrorMessage.LOG_ABSENT);
             String logPath = hostLog.getLogPath();
-            Valid.notNull(logPath, ErrorMessage.LOG_ABSENT);
+            Assert.notNull(logPath, ErrorMessage.LOG_ABSENT);
             ExecLogDO execLog = execLogDAO.selectByIdSource(hostLog.getLogId(), source);
-            Valid.notNull(execLog, ErrorMessage.LOG_ABSENT);
+            Assert.notNull(execLog, ErrorMessage.LOG_ABSENT);
             // 设置日志参数
             OperatorLogs.add(OperatorLogs.LOG_ID, hostLog.getLogId());
             OperatorLogs.add(OperatorLogs.HOST_ID, hostLog.getHostId());

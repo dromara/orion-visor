@@ -32,7 +32,7 @@ import org.dromara.visor.common.constant.Const;
 import org.dromara.visor.common.constant.ErrorMessage;
 import org.dromara.visor.common.security.PasswordModifier;
 import org.dromara.visor.common.utils.AesEncryptUtils;
-import org.dromara.visor.common.utils.Valid;
+import org.dromara.visor.common.utils.Assert;
 import org.dromara.visor.framework.biz.operator.log.core.utils.OperatorLogs;
 import org.dromara.visor.framework.redis.core.utils.RedisMaps;
 import org.dromara.visor.framework.redis.core.utils.RedisUtils;
@@ -112,9 +112,9 @@ public class HostKeyServiceImpl implements HostKeyService {
     public Integer updateHostKeyById(HostKeyUpdateRequest request) {
         log.info("HostKeyService-updateHostKeyById request: {}", JSON.toJSONString(request));
         // 查询
-        Long id = Valid.notNull(request.getId(), ErrorMessage.ID_MISSING);
+        Long id = Assert.notNull(request.getId(), ErrorMessage.ID_MISSING);
         HostKeyDO record = hostKeyDAO.selectById(id);
-        Valid.notNull(record, ErrorMessage.DATA_ABSENT);
+        Assert.notNull(record, ErrorMessage.DATA_ABSENT);
         // 转换
         HostKeyDO updateRecord = HostKeyConvert.MAPPER.to(request);
         // 查询数据是否冲突
@@ -138,7 +138,7 @@ public class HostKeyServiceImpl implements HostKeyService {
     public HostKeyVO getHostKeyById(Long id) {
         // 查询
         HostKeyDO record = hostKeyDAO.selectById(id);
-        Valid.notNull(record, ErrorMessage.DATA_ABSENT);
+        Assert.notNull(record, ErrorMessage.DATA_ABSENT);
         // 解密密钥
         this.decryptKey(record);
         // 转换
@@ -148,7 +148,7 @@ public class HostKeyServiceImpl implements HostKeyService {
     @Override
     public HostKeyDO getHostKey(Long id) {
         HostKeyDO record = hostKeyDAO.selectById(id);
-        Valid.notNull(record, ErrorMessage.DATA_ABSENT);
+        Assert.notNull(record, ErrorMessage.DATA_ABSENT);
         // 解密密钥
         this.decryptKey(record);
         // 解密密码
@@ -206,7 +206,7 @@ public class HostKeyServiceImpl implements HostKeyService {
         log.info("HostKeyService-deleteHostKeyById idList: {}", idList);
         // 检查数据是否存在
         List<HostKeyDO> list = hostKeyDAO.selectBatchIds(idList);
-        Valid.notEmpty(list, ErrorMessage.DATA_ABSENT);
+        Assert.notEmpty(list, ErrorMessage.DATA_ABSENT);
         // 添加日志参数
         String name = list.stream()
                 .map(HostKeyDO::getName)
@@ -242,7 +242,7 @@ public class HostKeyServiceImpl implements HostKeyService {
                 .eq(HostKeyDO::getName, domain.getName());
         // 检查是否存在
         boolean present = hostKeyDAO.of(wrapper).present();
-        Valid.isFalse(present, ErrorMessage.DATA_PRESENT);
+        Assert.isFalse(present, ErrorMessage.DATA_PRESENT);
     }
 
     /**

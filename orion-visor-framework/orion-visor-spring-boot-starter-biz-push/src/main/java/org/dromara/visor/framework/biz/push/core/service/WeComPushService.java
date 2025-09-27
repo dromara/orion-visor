@@ -27,7 +27,7 @@ import cn.orionsec.kit.http.ok.OkResponse;
 import cn.orionsec.kit.lang.constant.StandardContentType;
 import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
-import org.dromara.visor.common.utils.Valid;
+import org.dromara.visor.common.utils.Assert;
 import org.dromara.visor.framework.biz.push.core.annotation.MessageChannel;
 import org.dromara.visor.framework.biz.push.core.entity.WeComRequestBody;
 import org.dromara.visor.framework.biz.push.core.entity.WeComResponseBody;
@@ -79,7 +79,7 @@ public class WeComPushService extends BasePushService<WeComPushMessage> {
         OkResponse response = OkRequests.post(url, StandardContentType.APPLICATION_JSON_UTF8, body);
         WeComResponseBody responseBody = JSON.parseObject(response.getBodyString(), WeComResponseBody.class);
         // 验证发送结果
-        Valid.eq(responseBody.getErrCode(), SUCCESS_CODE, responseBody.getErrMsg());
+        Assert.eq(responseBody.getErrCode(), SUCCESS_CODE, responseBody.getErrMsg());
     }
 
 }

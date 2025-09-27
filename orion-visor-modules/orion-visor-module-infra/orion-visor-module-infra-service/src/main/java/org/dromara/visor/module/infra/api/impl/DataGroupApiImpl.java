@@ -24,7 +24,7 @@ package org.dromara.visor.module.infra.api.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.visor.common.constant.Const;
-import org.dromara.visor.common.utils.Valid;
+import org.dromara.visor.common.utils.Assert;
 import org.dromara.visor.module.infra.api.DataGroupApi;
 import org.dromara.visor.module.infra.convert.DataGroupProviderConvert;
 import org.dromara.visor.module.infra.dao.DataGroupDAO;
@@ -64,7 +64,7 @@ public class DataGroupApiImpl implements DataGroupApi {
 
     @Override
     public Long createDataGroup(DataGroupTypeEnum type, DataGroupCreateDTO dto) {
-        Valid.valid(dto);
+        Assert.valid(dto);
         DataGroupCreateRequest request = DataGroupProviderConvert.MAPPER.toRequest(dto);
         request.setType(type.name());
         request.setUserId(Const.SYSTEM_USER_ID);
@@ -73,14 +73,14 @@ public class DataGroupApiImpl implements DataGroupApi {
 
     @Override
     public Integer renameDataGroup(DataGroupRenameDTO dto) {
-        Valid.valid(dto);
+        Assert.valid(dto);
         DataGroupRenameRequest request = DataGroupProviderConvert.MAPPER.toRequest(dto);
         return dataGroupService.renameDataGroup(request);
     }
 
     @Override
     public Integer moveDataGroup(DataGroupMoveDTO dto) {
-        Valid.valid(dto);
+        Assert.valid(dto);
         DataGroupMoveRequest request = DataGroupProviderConvert.MAPPER.toRequest(dto);
         return dataGroupService.moveDataGroup(request);
     }

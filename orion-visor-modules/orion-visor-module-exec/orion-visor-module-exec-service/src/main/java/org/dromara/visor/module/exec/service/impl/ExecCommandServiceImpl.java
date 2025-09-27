@@ -30,7 +30,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.dromara.visor.common.constant.Const;
 import org.dromara.visor.common.constant.ErrorMessage;
 import org.dromara.visor.common.security.LoginUser;
-import org.dromara.visor.common.utils.Valid;
+import org.dromara.visor.common.utils.Assert;
 import org.dromara.visor.framework.biz.operator.log.core.utils.OperatorLogs;
 import org.dromara.visor.framework.security.core.utils.SecurityUtils;
 import org.dromara.visor.module.asset.api.AssetAuthorizedDataApi;
@@ -97,7 +97,7 @@ public class ExecCommandServiceImpl implements ExecCommandService {
         List<Long> authorizedHostIdList = assetAuthorizedDataApi.getUserAuthorizedEnabledHostId(userId, HostTypeEnum.SSH);
         hostIdList.removeIf(s -> !authorizedHostIdList.contains(s));
         log.info("ExecService.startExecCommand host hostList: {}", hostIdList);
-        Valid.notEmpty(hostIdList, ErrorMessage.CHECK_AUTHORIZED_HOST);
+        Assert.notEmpty(hostIdList, ErrorMessage.CHECK_AUTHORIZED_HOST);
         // 创建命令
         ExecCommandExecDTO execRequest = ExecConvert.MAPPER.to(request);
         execRequest.setUserId(userId);
@@ -113,10 +113,10 @@ public class ExecCommandServiceImpl implements ExecCommandService {
         log.info("ExecService.reExecCommand start logId: {}", logId);
         // 获取执行记录
         ExecLogDO execLog = execLogDAO.selectByIdSource(logId, ExecSourceEnum.BATCH.name());
-        Valid.notNull(execLog, ErrorMessage.DATA_ABSENT);
+        Assert.notNull(execLog, ErrorMessage.DATA_ABSENT);
         // 获取执行主机
         List<ExecHostLogDO> hostLogs = execHostLogDAO.selectByLogId(logId);
-        Valid.notEmpty(hostLogs, ErrorMessage.DATA_ABSENT);
+        Assert.notEmpty(hostLogs, ErrorMessage.DATA_ABSENT);
         List<Long> hostIdList = hostLogs.stream()
                 .map(ExecHostLogDO::getHostId)
                 .collect(Collectors.toList());

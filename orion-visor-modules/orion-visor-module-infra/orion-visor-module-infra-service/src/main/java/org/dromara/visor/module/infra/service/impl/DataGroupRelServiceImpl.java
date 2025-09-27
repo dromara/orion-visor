@@ -28,7 +28,7 @@ import cn.orionsec.kit.lang.utils.collect.Maps;
 import cn.orionsec.kit.spring.SpringHolder;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.visor.common.constant.ErrorMessage;
-import org.dromara.visor.common.utils.Valid;
+import org.dromara.visor.common.utils.Assert;
 import org.dromara.visor.framework.biz.operator.log.core.utils.OperatorLogs;
 import org.dromara.visor.framework.redis.core.utils.RedisLists;
 import org.dromara.visor.framework.redis.core.utils.RedisStrings;
@@ -69,10 +69,10 @@ public class DataGroupRelServiceImpl implements DataGroupRelService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void updateGroupRel(Long groupId, List<Long> relIdList) {
-        Valid.notNull(groupId);
+        Assert.notNull(groupId);
         // 查询分组
         DataGroupDO group = dataGroupDAO.selectById(groupId);
-        Valid.notNull(group, ErrorMessage.GROUP_ABSENT);
+        Assert.notNull(group, ErrorMessage.GROUP_ABSENT);
         String type = group.getType();
         Long userId = group.getUserId();
         // 设置日志参数
@@ -119,7 +119,7 @@ public class DataGroupRelServiceImpl implements DataGroupRelService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void updateRelGroup(String type, Long userId, List<Long> groupIdList, Long relId) {
-        Valid.notNull(relId);
+        Assert.notNull(relId);
         // 删除引用
         this.deleteByRelId(type, userId, relId);
         // 插入引用

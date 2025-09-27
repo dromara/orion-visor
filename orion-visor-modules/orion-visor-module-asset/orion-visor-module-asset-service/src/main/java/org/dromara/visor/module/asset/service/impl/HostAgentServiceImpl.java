@@ -37,8 +37,8 @@ import org.dromara.visor.common.constant.Const;
 import org.dromara.visor.common.constant.ErrorMessage;
 import org.dromara.visor.common.constant.ExtraFieldConst;
 import org.dromara.visor.common.constant.FileConst;
+import org.dromara.visor.common.utils.Assert;
 import org.dromara.visor.common.utils.PathUtils;
-import org.dromara.visor.common.utils.Valid;
 import org.dromara.visor.framework.biz.operator.log.core.utils.OperatorLogs;
 import org.dromara.visor.framework.redis.core.utils.RedisStrings;
 import org.dromara.visor.module.asset.convert.HostConvert;
@@ -133,7 +133,7 @@ public class HostAgentServiceImpl implements HostAgentService {
         // 查询主机信息
         List<Long> idList = request.getIdList();
         List<HostDO> hosts = hostDAO.selectBatchIds(idList);
-        Valid.eq(hosts.size(), idList.size(), ErrorMessage.HOST_ABSENT);
+        Assert.eq(hosts.size(), idList.size(), ErrorMessage.HOST_ABSENT);
 
         // 检查并创建安装任务参数
         List<AgentInstallParams> installTaskParams = this.createInstallTaskParams(hosts);
@@ -146,7 +146,7 @@ public class HostAgentServiceImpl implements HostAgentService {
                 .in(HostAgentLogDO::getStatus, AgentLogStatusEnum.WAIT.name(), AgentLogStatusEnum.RUNNING.name())
                 .then()
                 .present();
-        Valid.isFalse(hasRunning, ErrorMessage.ILLEGAL_STATUS);
+        Assert.isFalse(hasRunning, ErrorMessage.ILLEGAL_STATUS);
 
         // 创建日志记录
         List<HostAgentLogDO> agentLogs = hosts.stream()
@@ -186,8 +186,8 @@ public class HostAgentServiceImpl implements HostAgentService {
                 .map(MultipartFile::getOriginalFilename)
                 .map(String::toLowerCase)
                 .orElse(Const.EMPTY);
-        Valid.notBlank(fileName, ErrorMessage.FILE_EXTENSION_TYPE);
-        Valid.isTrue(fileName.endsWith(Const.SUFFIX_TAR_GZ), ErrorMessage.FILE_EXTENSION_TYPE);
+        Assert.notBlank(fileName, ErrorMessage.FILE_EXTENSION_TYPE);
+        Assert.isTrue(fileName.endsWith(Const.SUFFIX_TAR_GZ), ErrorMessage.FILE_EXTENSION_TYPE);
         // 保存文件
         String releaseDir = PathUtils.getOrionPath(FileConst.INSTANCE_AGENT_RELEASE);
         String releaseTempDir = PathUtils.getOrionPath(FileConst.INSTANCE_AGENT_RELEASE_TEMP);
@@ -227,7 +227,7 @@ public class HostAgentServiceImpl implements HostAgentService {
         log.info("HostAgentService.installAgent decompressFiles: {}", Lists.map(decompressFiles, File::getName));
         // 检查版本文件
         String versionFile = releaseTempDir + Const.SLASH + FileConst.VERSION;
-        Valid.isTrue(Files1.isFile(versionFile), ErrorMessage.DECOMPRESS_FILE_ABSENT + Const.SPACE + FileConst.VERSION);
+        Assert.isTrue(Files1.isFile(versionFile), ErrorMessage.DECOMPRESS_FILE_ABSENT + Const.SPACE + FileConst.VERSION);
         // 移动文件
         for (File decompressFile : decompressFiles) {
             String releaseFile = releaseDir + Const.SLASH + decompressFile.getName();
@@ -261,10 +261,10 @@ public class HostAgentServiceImpl implements HostAgentService {
         // 任务参数
         for (HostDO host : hosts) {
             // 是否启用
-            Valid.eq(HostStatusEnum.ENABLED.name(), host.getStatus(), ErrorMessage.HOST_NOT_ENABLED, host.getName());
+            Assert.eq(HostStatusEnum.ENABLED.name(), host.getStatus(), ErrorMessage.HOST_NOT_ENABLED, host.getName());
             // 是否支持 ssh
             boolean supportSsh = HostTypeEnum.SSH.contains(host.getTypes());
-            Valid.isTrue(supportSsh, ErrorMessage.PLEASE_CHECK_HOST_SSH, host.getName());
+            Assert.isTrue(supportSsh, ErrorMessage.PLEASE_CHECK_HOST_SSH, host.getName());
             // 文件名称
             HostOsTypeEnum os = HostOsTypeEnum.of(host.getOsType());
             String agentFileName = Strings.format(FileConst.INSTANCE_AGENT_FILE_FORMAT,
@@ -289,7 +289,7 @@ public class HostAgentServiceImpl implements HostAgentService {
 
         // 检查文件是否存在
         for (String file : checkFileList) {
-            Valid.isTrue(Files1.isFile(file), ErrorMessage.FILE_ABSENT + Const.SPACE + file);
+            Assert.isTrue(Files1.isFile(file), ErrorMessage.FILE_ABSENT + Const.SPACE + file);
         }
         return taskParams;
     }

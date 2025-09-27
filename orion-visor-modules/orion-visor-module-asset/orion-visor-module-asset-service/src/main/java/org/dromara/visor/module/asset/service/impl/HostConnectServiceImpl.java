@@ -33,7 +33,7 @@ import org.dromara.visor.common.session.config.RdpConnectConfig;
 import org.dromara.visor.common.session.config.SshConnectConfig;
 import org.dromara.visor.common.session.config.VncConnectConfig;
 import org.dromara.visor.common.session.ssh.SessionStores;
-import org.dromara.visor.common.utils.Valid;
+import org.dromara.visor.common.utils.Assert;
 import org.dromara.visor.module.asset.dao.HostDAO;
 import org.dromara.visor.module.asset.dao.HostIdentityDAO;
 import org.dromara.visor.module.asset.dao.HostKeyDAO;
@@ -129,7 +129,7 @@ public class HostConnectServiceImpl implements HostConnectService {
     public SshConnectConfig getSshConnectConfig(Long hostId, Long userId) {
         // 查询主机
         HostDO host = hostDAO.selectById(hostId);
-        Valid.notNull(host, ErrorMessage.HOST_ABSENT);
+        Assert.notNull(host, ErrorMessage.HOST_ABSENT);
         // 获取配置
         return this.getSshConnectConfig(host, userId);
     }
@@ -142,7 +142,7 @@ public class HostConnectServiceImpl implements HostConnectService {
         this.validHostAuthorized(userId, hostId);
         // 获取主机配置
         HostSshConfigDTO config = hostConfigService.getHostConfig(hostId, HostTypeEnum.SSH.name());
-        Valid.notNull(config, ErrorMessage.CONFIG_ABSENT);
+        Assert.notNull(config, ErrorMessage.CONFIG_ABSENT);
         // 查询主机额外配置
         HostSshExtraModel extra = hostExtraService.getHostExtra(userId, hostId, HostExtraItemEnum.SSH);
         if (extra != null) {
@@ -168,7 +168,7 @@ public class HostConnectServiceImpl implements HostConnectService {
     public RdpConnectConfig getRdpConnectConfig(Long hostId, Long userId) {
         // 查询主机
         HostDO host = hostDAO.selectById(hostId);
-        Valid.notNull(host, ErrorMessage.HOST_ABSENT);
+        Assert.notNull(host, ErrorMessage.HOST_ABSENT);
         // 获取配置
         return this.getRdpConnectConfig(host, userId);
     }
@@ -181,7 +181,7 @@ public class HostConnectServiceImpl implements HostConnectService {
         this.validHostAuthorized(userId, hostId);
         // 获取主机配置
         HostRdpConfigDTO config = hostConfigService.getHostConfig(hostId, HostTypeEnum.RDP.name());
-        Valid.notNull(config, ErrorMessage.CONFIG_ABSENT);
+        Assert.notNull(config, ErrorMessage.CONFIG_ABSENT);
         // 查询主机额外配置
         HostRdpExtraModel extra = hostExtraService.getHostExtra(userId, hostId, HostExtraItemEnum.RDP);
         if (extra != null) {
@@ -207,7 +207,7 @@ public class HostConnectServiceImpl implements HostConnectService {
     public VncConnectConfig getVncConnectConfig(Long hostId, Long userId) {
         // 查询主机
         HostDO host = hostDAO.selectById(hostId);
-        Valid.notNull(host, ErrorMessage.HOST_ABSENT);
+        Assert.notNull(host, ErrorMessage.HOST_ABSENT);
         // 获取配置
         return this.getVncConnectConfig(host, userId);
     }
@@ -220,7 +220,7 @@ public class HostConnectServiceImpl implements HostConnectService {
         this.validHostAuthorized(userId, hostId);
         // 获取主机配置
         HostVncConfigDTO config = hostConfigService.getHostConfig(hostId, HostTypeEnum.VNC.name());
-        Valid.notNull(config, ErrorMessage.CONFIG_ABSENT);
+        Assert.notNull(config, ErrorMessage.CONFIG_ABSENT);
         // 查询主机额外配置
         HostVncExtraModel extra = hostExtraService.getHostExtra(userId, hostId, HostExtraItemEnum.VNC);
         // 获取连接配置
@@ -269,9 +269,9 @@ public class HostConnectServiceImpl implements HostConnectService {
         HostAuthTypeEnum authType = HostAuthTypeEnum.of(config.getAuthType());
         if (HostAuthTypeEnum.IDENTITY.equals(authType)) {
             // 身份认证
-            Valid.notNull(config.getIdentityId(), ErrorMessage.IDENTITY_ABSENT);
+            Assert.notNull(config.getIdentityId(), ErrorMessage.IDENTITY_ABSENT);
             HostIdentityDO identity = hostIdentityDAO.selectById(config.getIdentityId());
-            Valid.notNull(identity, ErrorMessage.IDENTITY_ABSENT);
+            Assert.notNull(identity, ErrorMessage.IDENTITY_ABSENT);
             config.setUsername(identity.getUsername());
             HostIdentityTypeEnum identityType = HostIdentityTypeEnum.of(identity.getType());
             if (HostIdentityTypeEnum.PASSWORD.equals(identityType)) {
@@ -398,7 +398,7 @@ public class HostConnectServiceImpl implements HostConnectService {
     private void validHostAuthorized(Long userId, Long hostId) {
         // 验证主机是否有权限
         List<Long> hostIdList = assetAuthorizedDataService.getUserAuthorizedHostId(userId);
-        Valid.isTrue(hostIdList.contains(hostId),
+        Assert.isTrue(hostIdList.contains(hostId),
                 ErrorMessage.ANY_NO_PERMISSION,
                 DataPermissionTypeEnum.HOST_GROUP.getPermissionName());
     }
@@ -415,14 +415,14 @@ public class HostConnectServiceImpl implements HostConnectService {
         HostExtraAuthTypeEnum extraAuthType = HostExtraAuthTypeEnum.of(authType);
         if (HostExtraAuthTypeEnum.CUSTOM_KEY.equals(extraAuthType)) {
             // 验证主机密钥是否有权限
-            Valid.notNull(keyId, ErrorMessage.KEY_ABSENT);
-            Valid.isTrue(dataPermissionApi.hasPermission(DataPermissionTypeEnum.HOST_KEY, userId, keyId),
+            Assert.notNull(keyId, ErrorMessage.KEY_ABSENT);
+            Assert.isTrue(dataPermissionApi.hasPermission(DataPermissionTypeEnum.HOST_KEY, userId, keyId),
                     ErrorMessage.ANY_NO_PERMISSION,
                     DataPermissionTypeEnum.HOST_KEY.getPermissionName());
         } else if (HostExtraAuthTypeEnum.CUSTOM_IDENTITY.equals(extraAuthType)) {
             // 验证主机身份是否有权限
-            Valid.notNull(identityId, ErrorMessage.IDENTITY_ABSENT);
-            Valid.isTrue(dataPermissionApi.hasPermission(DataPermissionTypeEnum.HOST_IDENTITY, userId, identityId),
+            Assert.notNull(identityId, ErrorMessage.IDENTITY_ABSENT);
+            Assert.isTrue(dataPermissionApi.hasPermission(DataPermissionTypeEnum.HOST_IDENTITY, userId, identityId),
                     ErrorMessage.ANY_NO_PERMISSION,
                     DataPermissionTypeEnum.HOST_IDENTITY.getPermissionName());
         }
@@ -440,7 +440,7 @@ public class HostConnectServiceImpl implements HostConnectService {
         }
         // 查询身份信息
         HostIdentityDO identity = hostIdentityDAO.selectById(identityId);
-        Valid.notNull(identity, ErrorMessage.IDENTITY_ABSENT);
+        Assert.notNull(identity, ErrorMessage.IDENTITY_ABSENT);
         // 设置身份信息
         connectConfig.setUsername(identity.getUsername());
         connectConfig.setPassword(identity.getPassword());
@@ -453,10 +453,10 @@ public class HostConnectServiceImpl implements HostConnectService {
      * @param connectConfig connectConfig
      */
     private void setSshKey(Long keyId, SshConnectConfig connectConfig) {
-        Valid.notNull(keyId, ErrorMessage.KEY_ABSENT);
+        Assert.notNull(keyId, ErrorMessage.KEY_ABSENT);
         // 查询密钥信息
         HostKeyDO key = hostKeyDAO.selectById(keyId);
-        Valid.notNull(key, ErrorMessage.KEY_ABSENT);
+        Assert.notNull(key, ErrorMessage.KEY_ABSENT);
         connectConfig.setKeyId(keyId);
         connectConfig.setPublicKey(key.getPublicKey());
         connectConfig.setPrivateKey(key.getPrivateKey());

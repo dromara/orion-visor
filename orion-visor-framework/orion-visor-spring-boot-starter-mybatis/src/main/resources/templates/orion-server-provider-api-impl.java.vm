@@ -27,7 +27,7 @@ import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.visor.common.constant.ErrorMessage;
-import org.dromara.visor.common.utils.Valid;
+import org.dromara.visor.common.utils.Assert;
 #foreach($pkg in ${customModuleFilePackages})
 import ${pkg}.*;
 #end
@@ -64,7 +64,7 @@ public class ${type}ApiImpl implements ${type}Api {
     @Override
     public Long create${type}(${type}CreateDTO dto) {
         log.info("${type}Api.create${type} dto: {}", JSON.toJSONString(dto));
-        Valid.valid(dto);
+        Assert.valid(dto);
         // 转换
         ${type}CreateRequest request = ${type}ProviderConvert.MAPPER.toRequest(dto);
         // 创建
@@ -74,7 +74,7 @@ public class ${type}ApiImpl implements ${type}Api {
     @Override
     public Integer update${type}ById(${type}UpdateDTO dto) {
         log.info("${type}Api.update${type}ById dto: {}", JSON.toJSONString(dto));
-        Valid.valid(dto);
+        Assert.valid(dto);
         // 转换
         ${type}UpdateRequest request = ${type}ProviderConvert.MAPPER.toRequest(dto);
         // 修改
@@ -84,8 +84,8 @@ public class ${type}ApiImpl implements ${type}Api {
     @Override
     public Integer update${type}(${type}QueryDTO query, ${type}UpdateDTO update) {
         log.info("${type}Api.update${type} query: {}, update: {}", JSON.toJSONString(query), JSON.toJSONString(update));
-        Valid.valid(query);
-        Valid.valid(update);
+        Assert.valid(query);
+        Assert.valid(update);
         // 更新
         int effect = ${typeLower}Service.update${type}(${type}ProviderConvert.MAPPER.toRequest(query),
                 ${type}ProviderConvert.MAPPER.toRequest(update));
@@ -96,7 +96,7 @@ public class ${type}ApiImpl implements ${type}Api {
     @Override
     public ${type}DTO get${type}ById(Long id) {
         log.info("${type}Api.get${type}ById id: {}", id);
-        Valid.notNull(id, ErrorMessage.ID_MISSING);
+        Assert.notNull(id, ErrorMessage.ID_MISSING);
         // 修改
         ${type}DO record = ${typeLower}DAO.selectById(id);
         if (record == null) {
@@ -121,7 +121,7 @@ public class ${type}ApiImpl implements ${type}Api {
     @Override
     public List<${type}DTO> get${type}List(${type}QueryDTO dto) {
         log.info("${type}Api.get${type}List dto: {}", JSON.toJSONString(dto));
-        Valid.valid(dto);
+        Assert.valid(dto);
         // 条件
         LambdaQueryWrapper<${type}DO> wrapper = this.buildQueryWrapper(dto);
         // 查询
@@ -142,7 +142,7 @@ public class ${type}ApiImpl implements ${type}Api {
     @Override
     public Long get${type}Count(${type}QueryDTO dto) {
         log.info("${type}Api.get${type}Count dto: {}", JSON.toJSONString(dto));
-        Valid.valid(dto);
+        Assert.valid(dto);
         // 条件
         LambdaQueryWrapper<${type}DO> wrapper = this.buildQueryWrapper(dto);
         // 查询
@@ -152,7 +152,7 @@ public class ${type}ApiImpl implements ${type}Api {
     @Override
     public Integer delete${type}ById(Long id) {
         log.info("${type}Api.delete${type}ById id: {}", id);
-        Valid.notNull(id, ErrorMessage.ID_MISSING);
+        Assert.notNull(id, ErrorMessage.ID_MISSING);
         // 删除
         Integer effect = ${typeLower}Service.delete${type}ById(id);
         log.info("${type}Api.delete${type}ById id: {}, effect: {}", id, effect);
@@ -162,7 +162,7 @@ public class ${type}ApiImpl implements ${type}Api {
     @Override
     public Integer delete${type}ByIdList(List<Long> idList) {
         log.info("${type}Api.delete${type}ByIdList idList: {}", idList);
-        Valid.notEmpty(idList, ErrorMessage.ID_MISSING);
+        Assert.notEmpty(idList, ErrorMessage.ID_MISSING);
         // 删除
         Integer effect = ${typeLower}Service.delete${type}ByIdList(idList);
         log.info("${type}Api.delete${type}ByIdList effect: {}", effect);
@@ -172,7 +172,7 @@ public class ${type}ApiImpl implements ${type}Api {
     @Override
     public Integer delete${type}(${type}QueryDTO dto) {
         log.info("${type}Api.delete${type} dto: {}", JSON.toJSONString(dto));
-        Valid.valid(dto);
+        Assert.valid(dto);
         // 删除
         Integer effect = ${typeLower}Service.delete${type}(${type}ProviderConvert.MAPPER.toRequest(dto));
         log.info("${type}Api.delete${type} effect: {}", effect);

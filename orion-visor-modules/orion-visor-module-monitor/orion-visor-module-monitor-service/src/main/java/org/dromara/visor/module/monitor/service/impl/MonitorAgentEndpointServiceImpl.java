@@ -32,8 +32,8 @@ import com.influxdb.client.write.Point;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.visor.common.constant.Const;
 import org.dromara.visor.common.constant.ErrorMessage;
+import org.dromara.visor.common.utils.Assert;
 import org.dromara.visor.common.utils.LockerUtils;
-import org.dromara.visor.common.utils.Valid;
 import org.dromara.visor.framework.influxdb.core.utils.InfluxdbUtils;
 import org.dromara.visor.module.asset.api.HostApi;
 import org.dromara.visor.module.asset.entity.dto.host.HostDTO;
@@ -112,7 +112,7 @@ public class MonitorAgentEndpointServiceImpl implements MonitorAgentEndpointServ
         Executable exec = () -> {
             // 查询主机是否存在
             HostDTO host = hostApi.selectByAgentKey(agentKey);
-            Valid.notNull(host, ErrorMessage.HOST_ABSENT);
+            Assert.notNull(host, ErrorMessage.HOST_ABSENT);
             // 查询数据
             MonitorHostDO monitorHost = monitorHostDAO.selectByAgentKey(agentKey);
             MonitorHostConfigDTO newConfig = null;

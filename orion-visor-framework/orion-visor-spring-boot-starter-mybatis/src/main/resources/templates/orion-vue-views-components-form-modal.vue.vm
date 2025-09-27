@@ -10,7 +10,7 @@
            :unmount-on-close="true"
            :ok-button-props="{ disabled: loading }"
            :cancel-button-props="{ disabled: loading }"
-           :on-before-ok="handlerOk"
+           :on-before-ok="handleOk"
            @close="handleClose">
     <a-spin class="full" :loading="loading">
       <a-form :model="formModel"
@@ -118,7 +118,7 @@
   defineExpose({ openAdd, openUpdate });
 
   // 确定
-  const handlerOk = async () => {
+  const handleOk = async () => {
     setLoading(true);
     try {
       // 验证参数
@@ -137,8 +137,8 @@
         Message.success('修改成功');
         emits('updated');
       }
-      // 清空
-      handlerClear();
+      handleClose();
+      return true;
     } catch (e) {
       return false;
     } finally {
@@ -148,11 +148,12 @@
 
   // 关闭
   const handleClose = () => {
-    handlerClear();
+    handleClear();
+    setVisible(false);
   };
 
   // 清空
-  const handlerClear = () => {
+  const handleClear = () => {
     setLoading(false);
   };
 

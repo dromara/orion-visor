@@ -29,8 +29,8 @@ import org.dromara.visor.common.handler.data.model.GenericsDataModel;
 import org.dromara.visor.common.handler.data.strategy.AbstractGenericsDataStrategy;
 import org.dromara.visor.common.security.UpdatePasswordAction;
 import org.dromara.visor.common.utils.AesEncryptUtils;
+import org.dromara.visor.common.utils.Assert;
 import org.dromara.visor.common.utils.RsaParamDecryptUtils;
-import org.dromara.visor.common.utils.Valid;
 import org.dromara.visor.module.asset.enums.HostAuthTypeEnum;
 
 /**
@@ -61,10 +61,10 @@ public abstract class AbstractHostConfigStrategy<T extends GenericsDataModel> ex
             return;
         }
         // 检查新密码
-        String newPassword = Valid.notBlank(after.getPassword(), ErrorMessage.PASSWORD_MISSING);
+        String newPassword = Assert.notBlank(after.getPassword(), ErrorMessage.PASSWORD_MISSING);
         // 解密密码
         newPassword = RsaParamDecryptUtils.decrypt(newPassword);
-        Valid.notBlank(newPassword, ErrorMessage.DECRYPT_ERROR);
+        Assert.notBlank(newPassword, ErrorMessage.DECRYPT_ERROR);
         // 设置密码
         after.setPassword(AesEncryptUtils.encryptAsString(newPassword));
     }
@@ -75,7 +75,7 @@ public abstract class AbstractHostConfigStrategy<T extends GenericsDataModel> ex
      * @param charset charset
      */
     protected void validCharset(String charset) {
-        Valid.isTrue(Charsets.isSupported(charset), ErrorMessage.UNSUPPORTED_CHARSET, charset);
+        Assert.isTrue(Charsets.isSupported(charset), ErrorMessage.UNSUPPORTED_CHARSET, charset);
     }
 
 }

@@ -29,7 +29,6 @@ import cn.orionsec.kit.lang.support.timeout.TimeoutEndpoint;
 import cn.orionsec.kit.lang.utils.Booleans;
 import cn.orionsec.kit.lang.utils.Strings;
 import cn.orionsec.kit.lang.utils.Threads;
-import cn.orionsec.kit.lang.utils.Valid;
 import cn.orionsec.kit.lang.utils.collect.Lists;
 import cn.orionsec.kit.lang.utils.io.Streams;
 import cn.orionsec.kit.lang.utils.time.Dates;
@@ -39,6 +38,7 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.visor.common.constant.ErrorMessage;
 import org.dromara.visor.common.constant.ExtraFieldConst;
+import org.dromara.visor.common.utils.Assert;
 import org.dromara.visor.module.common.config.AppLogConfig;
 import org.dromara.visor.module.exec.dao.ExecLogDAO;
 import org.dromara.visor.module.exec.define.ExecThreadPools;
@@ -149,8 +149,8 @@ public class ExecTaskHandler implements IExecTaskHandler {
         try {
             // 查询任务
             this.execLog = execLogDAO.selectById(id);
-            Valid.notNull(execLog, ErrorMessage.TASK_ABSENT);
-            Valid.eq(execLog.getStatus(), ExecStatusEnum.WAITING.name(), ErrorMessage.ILLEGAL_STATUS);
+            Assert.notNull(execLog, ErrorMessage.TASK_ABSENT);
+            Assert.eq(execLog.getStatus(), ExecStatusEnum.WAITING.name(), ErrorMessage.ILLEGAL_STATUS);
             // 获取内置变量
             this.builtParams = this.getBaseBuiltinParams();
             return true;

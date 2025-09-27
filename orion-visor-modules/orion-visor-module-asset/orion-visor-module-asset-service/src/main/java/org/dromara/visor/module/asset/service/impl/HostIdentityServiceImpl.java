@@ -34,7 +34,7 @@ import org.dromara.visor.common.constant.Const;
 import org.dromara.visor.common.constant.ErrorMessage;
 import org.dromara.visor.common.security.PasswordModifier;
 import org.dromara.visor.common.utils.AesEncryptUtils;
-import org.dromara.visor.common.utils.Valid;
+import org.dromara.visor.common.utils.Assert;
 import org.dromara.visor.framework.biz.operator.log.core.utils.OperatorLogs;
 import org.dromara.visor.framework.redis.core.utils.RedisMaps;
 import org.dromara.visor.framework.redis.core.utils.RedisUtils;
@@ -118,15 +118,15 @@ public class HostIdentityServiceImpl implements HostIdentityService {
     public Integer updateHostIdentityById(HostIdentityUpdateRequest request) {
         log.info("HostIdentityService-updateHostIdentityById request: {}", JSON.toJSONString(request));
         // 验证参数
-        Long id = Valid.notNull(request.getId(), ErrorMessage.ID_MISSING);
-        HostIdentityTypeEnum type = Valid.valid(HostIdentityTypeEnum::of, request.getType());
+        Long id = Assert.notNull(request.getId(), ErrorMessage.ID_MISSING);
+        HostIdentityTypeEnum type = Assert.valid(HostIdentityTypeEnum::of, request.getType());
         if (HostIdentityTypeEnum.KEY.equals(type)) {
             // 密钥认证
             this.checkKeyId(request.getKeyId());
         }
         // 查询主机身份
         HostIdentityDO record = hostIdentityDAO.selectById(id);
-        Valid.notNull(record, ErrorMessage.DATA_ABSENT);
+        Assert.notNull(record, ErrorMessage.DATA_ABSENT);
         // 转换
         HostIdentityDO updateRecord = HostIdentityConvert.MAPPER.to(request);
         // 查询数据是否冲突
@@ -151,7 +151,7 @@ public class HostIdentityServiceImpl implements HostIdentityService {
     public HostIdentityVO getHostIdentityById(Long id) {
         // 查询
         HostIdentityDO record = hostIdentityDAO.selectById(id);
-        Valid.notNull(record, ErrorMessage.DATA_ABSENT);
+        Assert.notNull(record, ErrorMessage.DATA_ABSENT);
         // 转换
         return HostIdentityConvert.MAPPER.to(record);
     }
@@ -224,7 +224,7 @@ public class HostIdentityServiceImpl implements HostIdentityService {
         log.info("HostIdentityService-deleteHostIdentityByIdList idList: {}", idList);
         // 检查数据是否存在
         List<HostIdentityDO> list = hostIdentityDAO.selectBatchIds(idList);
-        Valid.notEmpty(list, ErrorMessage.DATA_ABSENT);
+        Assert.notEmpty(list, ErrorMessage.DATA_ABSENT);
         // 添加日志参数
         String name = list.stream()
                 .map(HostIdentityDO::getName)
@@ -258,7 +258,7 @@ public class HostIdentityServiceImpl implements HostIdentityService {
                 .eq(HostIdentityDO::getName, domain.getName());
         // 检查是否存在
         boolean present = hostIdentityDAO.of(wrapper).present();
-        Valid.isFalse(present, ErrorMessage.DATA_PRESENT);
+        Assert.isFalse(present, ErrorMessage.DATA_PRESENT);
     }
 
     /**
@@ -267,10 +267,10 @@ public class HostIdentityServiceImpl implements HostIdentityService {
      * @param request request
      */
     private void checkCreateParams(HostIdentityCreateRequest request) {
-        HostIdentityTypeEnum type = Valid.valid(HostIdentityTypeEnum::of, request.getType());
+        HostIdentityTypeEnum type = Assert.valid(HostIdentityTypeEnum::of, request.getType());
         if (HostIdentityTypeEnum.PASSWORD.equals(type)) {
             // 密码认证
-            Valid.notBlank(request.getPassword(), ErrorMessage.PARAM_MISSING);
+            Assert.notBlank(request.getPassword(), ErrorMessage.PARAM_MISSING);
         } else if (HostIdentityTypeEnum.KEY.equals(type)) {
             // 密钥认证
             this.checkKeyId(request.getKeyId());
@@ -283,8 +283,8 @@ public class HostIdentityServiceImpl implements HostIdentityService {
      * @param keyId keyId
      */
     private void checkKeyId(Long keyId) {
-        Valid.notNull(keyId, ErrorMessage.PARAM_MISSING);
-        Valid.notNull(hostKeyDAO.selectById(keyId), ErrorMessage.KEY_ABSENT);
+        Assert.notNull(keyId, ErrorMessage.PARAM_MISSING);
+        Assert.notNull(hostKeyDAO.selectById(keyId), ErrorMessage.KEY_ABSENT);
     }
 
     /**

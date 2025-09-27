@@ -170,7 +170,7 @@ public class UploadTaskServiceImpl implements UploadTaskService {
     public UploadTaskVO getUploadTask(Long id) {
         // 查询任务
         UploadTaskDO record = uploadTaskDAO.selectById(id);
-        Valid.notNull(record, ErrorMessage.DATA_ABSENT);
+        Assert.notNull(record, ErrorMessage.DATA_ABSENT);
         // 查询任务文件
         List<UploadTaskFileVO> files = uploadTaskFileService.getFileByTaskId(id);
         // 返回
@@ -291,9 +291,9 @@ public class UploadTaskServiceImpl implements UploadTaskService {
     public void startUploadTask(Long id) {
         // 查询任务
         UploadTaskDO record = uploadTaskDAO.selectById(id);
-        Valid.notNull(record, ErrorMessage.TASK_ABSENT);
+        Assert.notNull(record, ErrorMessage.TASK_ABSENT);
         // 检查任务状态
-        Valid.eq(record.getStatus(), UploadTaskStatusEnum.WAITING.name(), ErrorMessage.ILLEGAL_STATUS);
+        Assert.eq(record.getStatus(), UploadTaskStatusEnum.WAITING.name(), ErrorMessage.ILLEGAL_STATUS);
         // 检查文件完整性
         this.checkFileCompleteness(id);
         // 执行任务
@@ -304,9 +304,9 @@ public class UploadTaskServiceImpl implements UploadTaskService {
     public void cancelUploadTask(UploadTaskRequest request) {
         // 查询任务
         UploadTaskDO record = uploadTaskDAO.selectById(request.getId());
-        Valid.notNull(record, ErrorMessage.TASK_ABSENT);
+        Assert.notNull(record, ErrorMessage.TASK_ABSENT);
         // 检查状态
-        Valid.isTrue(UploadTaskStatusEnum.of(record.getStatus()).isCancelable(), ErrorMessage.ILLEGAL_STATUS);
+        Assert.isTrue(UploadTaskStatusEnum.of(record.getStatus()).isCancelable(), ErrorMessage.ILLEGAL_STATUS);
         // 取消任务
         if (Booleans.isTrue(request.getFailed())) {
             this.checkCancelTask(Lists.singleton(record), UploadTaskStatusEnum.FAILED);
@@ -356,7 +356,7 @@ public class UploadTaskServiceImpl implements UploadTaskService {
         // 查询有权限的主机
         List<Long> authorizedHostIdList = assetAuthorizedDataApi.getUserAuthorizedEnabledHostId(SecurityUtils.getLoginUserId(), HostTypeEnum.SSH);
         for (Long hostId : hostIdList) {
-            Valid.isTrue(authorizedHostIdList.contains(hostId), Strings.format(ErrorMessage.PLEASE_CHECK_HOST_SSH, hostId));
+            Assert.isTrue(authorizedHostIdList.contains(hostId), Strings.format(ErrorMessage.PLEASE_CHECK_HOST_SSH, hostId));
         }
     }
 
@@ -370,10 +370,10 @@ public class UploadTaskServiceImpl implements UploadTaskService {
         // 查询主机信息
         List<HostDTO> hosts = hostApi.selectByIdList(hostIdList);
         // 检查主机数量
-        Valid.eq(hosts.size(), hostIdList.size(), ErrorMessage.HOST_ABSENT);
+        Assert.eq(hosts.size(), hostIdList.size(), ErrorMessage.HOST_ABSENT);
         // 检查主机状态
         for (HostDTO host : hosts) {
-            Valid.eq(HostStatusEnum.ENABLED.name(), host.getStatus(), ErrorMessage.HOST_NOT_ENABLED, host.getName());
+            Assert.eq(HostStatusEnum.ENABLED.name(), host.getStatus(), ErrorMessage.HOST_NOT_ENABLED, host.getName());
         }
         return hosts;
     }

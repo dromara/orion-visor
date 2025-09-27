@@ -26,7 +26,6 @@ import cn.orionsec.kit.lang.constant.StandardContentType;
 import cn.orionsec.kit.lang.define.wrapper.HttpWrapper;
 import cn.orionsec.kit.lang.utils.Exceptions;
 import cn.orionsec.kit.lang.utils.Strings;
-import cn.orionsec.kit.lang.utils.Valid;
 import cn.orionsec.kit.lang.utils.io.Files1;
 import cn.orionsec.kit.lang.utils.io.Streams;
 import cn.orionsec.kit.net.host.SessionStore;
@@ -37,6 +36,7 @@ import org.dromara.visor.common.constant.Const;
 import org.dromara.visor.common.constant.ErrorMessage;
 import org.dromara.visor.common.session.config.SshConnectConfig;
 import org.dromara.visor.common.session.ssh.SessionStores;
+import org.dromara.visor.common.utils.Assert;
 import org.dromara.visor.framework.redis.core.utils.RedisStrings;
 import org.dromara.visor.framework.security.core.utils.SecurityUtils;
 import org.dromara.visor.module.asset.api.HostConnectApi;
@@ -114,7 +114,7 @@ public class TerminalSftpServiceImpl implements TerminalSftpService {
         // 解析 token
         String key = TerminalCacheKeyDefine.TERMINAL_SFTP_SET_CONTENT.format(token);
         SftpSetContentCacheDTO cache = RedisStrings.getJson(key, TerminalCacheKeyDefine.TERMINAL_SFTP_SET_CONTENT);
-        Valid.notNull(cache, ErrorMessage.FILE_ABSENT);
+        Assert.notNull(cache, ErrorMessage.FILE_ABSENT);
         // 删除缓存
         RedisStrings.delete(key);
         // 写入文件内容

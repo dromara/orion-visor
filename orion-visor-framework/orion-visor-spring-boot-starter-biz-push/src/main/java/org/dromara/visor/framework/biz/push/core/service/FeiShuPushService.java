@@ -27,12 +27,12 @@ import cn.orionsec.kit.http.ok.OkResponse;
 import cn.orionsec.kit.lang.constant.Const;
 import cn.orionsec.kit.lang.constant.StandardContentType;
 import cn.orionsec.kit.lang.utils.Strings;
-import cn.orionsec.kit.lang.utils.Valid;
 import cn.orionsec.kit.lang.utils.codec.Base64s;
 import cn.orionsec.kit.lang.utils.crypto.Signatures;
 import cn.orionsec.kit.lang.utils.crypto.enums.SecretKeySpecMode;
 import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
+import org.dromara.visor.common.utils.Assert;
 import org.dromara.visor.framework.biz.push.core.annotation.MessageChannel;
 import org.dromara.visor.framework.biz.push.core.entity.FeiShuRequestBody;
 import org.dromara.visor.framework.biz.push.core.entity.FeiShuResponseBody;
@@ -112,7 +112,7 @@ public class FeiShuPushService extends BasePushService<FeiShuPushMessage> {
         OkResponse response = OkRequests.post(url, StandardContentType.APPLICATION_JSON_UTF8, body);
         FeiShuResponseBody responseBody = JSON.parseObject(response.getBodyString(), FeiShuResponseBody.class);
         // 验证发送结果
-        Valid.eq(responseBody.getCode(), SUCCESS_CODE, responseBody.getMsg());
+        Assert.eq(responseBody.getCode(), SUCCESS_CODE, responseBody.getMsg());
     }
 
 }

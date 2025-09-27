@@ -28,8 +28,8 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.dromara.visor.common.constant.ErrorMessage;
+import org.dromara.visor.common.utils.Assert;
 import org.dromara.visor.common.utils.RsaParamDecryptUtils;
-import org.dromara.visor.common.utils.Valid;
 
 import java.io.IOException;
 
@@ -52,7 +52,7 @@ public class ParamDecryptDeserializer extends JsonDeserializer<String> {
         }
         // 解密参数
         String decrypt = RsaParamDecryptUtils.decrypt(value);
-        return Valid.notNull(decrypt, ErrorMessage.DECRYPT_ERROR);
+        return Assert.notNull(decrypt, ErrorMessage.DECRYPT_ERROR);
     }
 
 }

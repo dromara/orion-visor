@@ -27,7 +27,6 @@ import cn.orionsec.kit.lang.define.wrapper.PageRequest;
 import cn.orionsec.kit.lang.define.wrapper.Pager;
 import cn.orionsec.kit.lang.utils.Exceptions;
 import cn.orionsec.kit.lang.utils.Objects1;
-import cn.orionsec.kit.lang.utils.Valid;
 import cn.orionsec.kit.lang.utils.collect.Lists;
 import cn.orionsec.kit.lang.utils.reflect.Classes;
 import cn.orionsec.kit.spring.SpringHolder;
@@ -42,6 +41,7 @@ import org.dromara.visor.common.constant.Const;
 import org.dromara.visor.common.entity.IOrderRequest;
 import org.dromara.visor.common.entity.IPageRequest;
 import org.dromara.visor.common.enums.BooleanBit;
+import org.dromara.visor.common.utils.Assert;
 import org.dromara.visor.common.utils.SqlUtils;
 import org.dromara.visor.framework.mybatis.core.domain.BaseDO;
 
@@ -85,23 +85,23 @@ public class DataQuery<T> {
      */
     @SuppressWarnings("unchecked")
     public static <T extends BaseDO> DataQuery<T> create(Class<T> entityClass) {
-        TableInfo table = Valid.notNull(TableInfoHelper.getTableInfo(entityClass), "notfound mapper class");
+        TableInfo table = Assert.notNull(TableInfoHelper.getTableInfo(entityClass), "notfound mapper class");
         Class<BaseMapper<T>> mapperClass = (Class<BaseMapper<T>>) Classes.loadClass(table.getCurrentNamespace());
         return new DataQuery<T>(SpringHolder.getBean(mapperClass));
     }
 
     public static <T> DataQuery<T> of(BaseMapper<T> dao) {
-        Valid.notNull(dao, "dao is null");
+        Assert.notNull(dao, "dao is null");
         return new DataQuery<>(dao);
     }
 
     public static <T> DataQuery<T> of(BaseMapper<T> dao, Wrapper<T> wrapper) {
-        Valid.notNull(dao, "dao is null");
+        Assert.notNull(dao, "dao is null");
         return new DataQuery<>(dao, wrapper);
     }
 
     public DataQuery<T> page(IPageRequest request) {
-        Valid.notNull(request, "page is null");
+        Assert.notNull(request, "page is null");
         this.page = new PageRequest(request.getPage(), request.getLimit());
         return this;
     }
@@ -112,7 +112,7 @@ public class DataQuery<T> {
     }
 
     public DataQuery<T> wrapper(Wrapper<T> wrapper) {
-        this.wrapper = Valid.notNull(wrapper, "wrapper is null");
+        this.wrapper = Assert.notNull(wrapper, "wrapper is null");
         return this;
     }
 
@@ -177,18 +177,18 @@ public class DataQuery<T> {
     // -------------------- id --------------------
 
     public T get(Serializable id) {
-        Valid.notNull(id, "id is null");
+        Assert.notNull(id, "id is null");
         return dao.selectById(id);
     }
 
     public <R> R get(Serializable id, Function<T, R> mapper) {
-        Valid.notNull(id, "id is null");
-        Valid.notNull(mapper, "convert function is null");
+        Assert.notNull(id, "id is null");
+        Assert.notNull(mapper, "convert function is null");
         return Objects1.map(dao.selectById(id), mapper);
     }
 
     public Optional<T> optional(Serializable id) {
-        Valid.notNull(id, "id is null");
+        Assert.notNull(id, "id is null");
         return Optional.ofNullable(dao.selectById(id));
     }
 
@@ -213,7 +213,7 @@ public class DataQuery<T> {
     }
 
     public <R> R get(Function<T, R> mapper) {
-        Valid.notNull(mapper, "convert function is null");
+        Assert.notNull(mapper, "convert function is null");
         return Objects1.map(dao.selectOne(wrapper), mapper);
     }
 
@@ -228,7 +228,7 @@ public class DataQuery<T> {
     }
 
     public <R> List<R> list(Function<T, R> mapper) {
-        Valid.notNull(mapper, "convert function is null");
+        Assert.notNull(mapper, "convert function is null");
         return Lists.map(dao.selectList(wrapper), mapper);
     }
 
@@ -277,10 +277,10 @@ public class DataQuery<T> {
     }
 
     public <R> DataGrid<R> dataGrid(Wrapper<T> countWrapper, Function<T, R> mapper) {
-        Valid.notNull(page, "page is null");
-        Valid.notNull(wrapper, "wrapper is null");
-        Valid.notNull(countWrapper, "count wrapper is null");
-        Valid.notNull(mapper, "convert function is null");
+        Assert.notNull(page, "page is null");
+        Assert.notNull(wrapper, "wrapper is null");
+        Assert.notNull(countWrapper, "count wrapper is null");
+        Assert.notNull(mapper, "convert function is null");
         Long count = dao.selectCount(countWrapper);
         Pager<R> pager = new Pager<>(page);
         pager.setTotal(count.intValue());

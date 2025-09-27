@@ -26,7 +26,7 @@ import cn.orionsec.kit.lang.utils.collect.Lists;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.visor.common.constant.ErrorMessage;
-import org.dromara.visor.common.utils.Valid;
+import org.dromara.visor.common.utils.Assert;
 import org.dromara.visor.framework.biz.operator.log.core.utils.OperatorLogs;
 import org.dromara.visor.module.exec.convert.ExecHostLogConvert;
 import org.dromara.visor.module.exec.dao.ExecHostLogDAO;
@@ -63,7 +63,7 @@ public class ExecHostLogServiceImpl implements ExecHostLogService {
     @Override
     public ExecHostLogVO getExecHostLog(Long id) {
         ExecHostLogDO record = execHostLogDAO.selectById(id);
-        Valid.notNull(record, ErrorMessage.DATA_ABSENT);
+        Assert.notNull(record, ErrorMessage.DATA_ABSENT);
         return ExecHostLogConvert.MAPPER.to(record);
     }
 
@@ -100,7 +100,7 @@ public class ExecHostLogServiceImpl implements ExecHostLogService {
         log.info("ExecHostLogService-deleteExecHostLogById id: {}", id);
         // 检查数据是否存在
         ExecHostLogDO record = execHostLogDAO.selectById(id);
-        Valid.notNull(record, ErrorMessage.DATA_ABSENT);
+        Assert.notNull(record, ErrorMessage.DATA_ABSENT);
         // 中断
         Optional.ofNullable(record.getLogId())
                 .map(execTaskManager::getTask)

@@ -28,7 +28,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.visor.common.constant.Const;
 import org.dromara.visor.common.constant.ErrorMessage;
-import org.dromara.visor.common.utils.Valid;
+import org.dromara.visor.common.utils.Assert;
 import org.dromara.visor.framework.biz.operator.log.core.utils.OperatorLogs;
 import org.dromara.visor.framework.redis.core.utils.RedisMaps;
 import org.dromara.visor.framework.redis.core.utils.RedisStrings;
@@ -94,11 +94,11 @@ public class NotifyTemplateServiceImpl implements NotifyTemplateService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Integer updateNotifyTemplateById(NotifyTemplateUpdateRequest request) {
-        Long id = Valid.notNull(request.getId(), ErrorMessage.ID_MISSING);
+        Long id = Assert.notNull(request.getId(), ErrorMessage.ID_MISSING);
         log.info("NotifyTemplateService-updateNotifyTemplateById id: {}, request: {}", id, JSON.toJSONString(request));
         // 查询
         NotifyTemplateDO record = notifyTemplateDAO.selectById(id);
-        Valid.notNull(record, ErrorMessage.DATA_ABSENT);
+        Assert.notNull(record, ErrorMessage.DATA_ABSENT);
         // 转换
         NotifyTemplateDO updateRecord = NotifyTemplateConvert.MAPPER.to(request);
         updateRecord.setBizType(record.getBizType());
@@ -117,7 +117,7 @@ public class NotifyTemplateServiceImpl implements NotifyTemplateService {
     public NotifyTemplateVO getNotifyTemplateById(Long id) {
         // 查询
         NotifyTemplateDO record = notifyTemplateDAO.selectById(id);
-        Valid.notNull(record, ErrorMessage.DATA_ABSENT);
+        Assert.notNull(record, ErrorMessage.DATA_ABSENT);
         // 转换
         return NotifyTemplateConvert.MAPPER.to(record);
     }
@@ -187,7 +187,7 @@ public class NotifyTemplateServiceImpl implements NotifyTemplateService {
         log.info("NotifyTemplateService-deleteNotifyTemplateById id: {}", id);
         // 查询数据
         NotifyTemplateDO record = notifyTemplateDAO.selectById(id);
-        Valid.notNull(record, ErrorMessage.DATA_ABSENT);
+        Assert.notNull(record, ErrorMessage.DATA_ABSENT);
         // 设置日志参数
         OperatorLogs.add(OperatorLogs.NAME, record.getName());
         // 删除数据
@@ -226,7 +226,7 @@ public class NotifyTemplateServiceImpl implements NotifyTemplateService {
                 .eq(NotifyTemplateDO::getBizType, domain.getBizType());
         // 检查是否存在
         boolean present = notifyTemplateDAO.of(wrapper).present();
-        Valid.isFalse(present, ErrorMessage.DATA_PRESENT);
+        Assert.isFalse(present, ErrorMessage.DATA_PRESENT);
     }
 
 }

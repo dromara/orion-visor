@@ -41,7 +41,7 @@ if [ "$DEMO_MODE" = true ]; then
     echo "Starting services for demo mode..."
 
     # 启动指定的服务
-    docker compose up -d --remove-orphans mysql redis ui service guacd adminer
+    docker compose up -d --remove-orphans mysql redis ui service guacd influxdb adminer
     echo "Started services for demo mode..."
 else
     # 启动所有服务

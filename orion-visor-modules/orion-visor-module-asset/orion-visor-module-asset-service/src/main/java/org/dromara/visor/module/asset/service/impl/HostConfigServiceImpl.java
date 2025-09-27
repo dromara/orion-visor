@@ -30,7 +30,7 @@ import org.dromara.visor.common.constant.ErrorMessage;
 import org.dromara.visor.common.constant.ExtraFieldConst;
 import org.dromara.visor.common.enums.EnableStatus;
 import org.dromara.visor.common.handler.data.model.GenericsDataModel;
-import org.dromara.visor.common.utils.Valid;
+import org.dromara.visor.common.utils.Assert;
 import org.dromara.visor.framework.biz.operator.log.core.utils.OperatorLogs;
 import org.dromara.visor.module.asset.dao.HostConfigDAO;
 import org.dromara.visor.module.asset.dao.HostDAO;
@@ -104,7 +104,7 @@ public class HostConfigServiceImpl implements HostConfigService {
         OperatorLogs.add(ExtraFieldConst.CONFIG, param);
         // 查询主机
         HostDO host = hostDAO.selectById(hostId);
-        Valid.notNull(host, ErrorMessage.HOST_ABSENT);
+        Assert.notNull(host, ErrorMessage.HOST_ABSENT);
         OperatorLogs.add(OperatorLogs.NAME, host.getName());
         // 获取处理策略
         HostConfigStrategyEnum strategy = HostConfigStrategyEnum.of(type);
@@ -169,12 +169,12 @@ public class HostConfigServiceImpl implements HostConfigService {
     public <T extends GenericsDataModel> T getHostConfig(Long hostId, String type) {
         // 查询配置信息
         HostConfigDO config = hostConfigDAO.selectByHostIdType(hostId, type);
-        Valid.notNull(config, ErrorMessage.CONFIG_ABSENT);
+        Assert.notNull(config, ErrorMessage.CONFIG_ABSENT);
         // 检查配置状态
-        Valid.isTrue(HostStatusEnum.ENABLED.name().equals(config.getStatus()), ErrorMessage.CONFIG_NOT_ENABLED);
+        Assert.isTrue(HostStatusEnum.ENABLED.name().equals(config.getStatus()), ErrorMessage.CONFIG_NOT_ENABLED);
         // 解析配置
         T model = HostTypeEnum.of(type).parse(config.getConfig());
-        Valid.notNull(model, ErrorMessage.CONFIG_ABSENT);
+        Assert.notNull(model, ErrorMessage.CONFIG_ABSENT);
         return model;
     }
 

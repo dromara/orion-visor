@@ -27,7 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.dromara.visor.common.constant.ErrorMessage;
 import org.dromara.visor.common.security.LoginUser;
 import org.dromara.visor.common.security.UserRole;
-import org.dromara.visor.common.utils.Valid;
+import org.dromara.visor.common.utils.Assert;
 import org.dromara.visor.framework.biz.operator.log.core.utils.OperatorLogs;
 import org.dromara.visor.framework.redis.core.utils.RedisStrings;
 import org.dromara.visor.module.infra.dao.SystemRoleDAO;
@@ -95,7 +95,7 @@ public class SystemUserRoleServiceImpl implements SystemUserRoleService {
         Long userId = request.getId();
         // 查询用户
         SystemUserDO user = systemUserDAO.selectById(userId);
-        Valid.notNull(user, ErrorMessage.USER_ABSENT);
+        Assert.notNull(user, ErrorMessage.USER_ABSENT);
         // 添加日志参数
         OperatorLogs.add(OperatorLogs.USERNAME, user.getUsername());
         // 删除用户关联
@@ -116,7 +116,7 @@ public class SystemUserRoleServiceImpl implements SystemUserRoleService {
         List<Long> roleIdList = request.getRoleIdList();
         // 查询用户
         SystemUserDO user = systemUserDAO.selectById(userId);
-        Valid.notNull(user, ErrorMessage.USER_ABSENT);
+        Assert.notNull(user, ErrorMessage.USER_ABSENT);
         // 添加日志参数
         OperatorLogs.add(OperatorLogs.USERNAME, user.getUsername());
         // 查询角色
@@ -128,7 +128,7 @@ public class SystemUserRoleServiceImpl implements SystemUserRoleService {
                     .map(SystemRoleDO::getId)
                     .collect(Collectors.toList());
             for (Long roleId : roleIdList) {
-                Valid.in(roleId, userRoleIdLists, ErrorMessage.ROLE_CODE_ABSENT, roleId);
+                Assert.in(roleId, userRoleIdLists, ErrorMessage.ROLE_CODE_ABSENT, roleId);
             }
         }
         // 删除用户角色关联

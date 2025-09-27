@@ -25,7 +25,7 @@ package org.dromara.visor.framework.mybatis.core.query;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
 import org.dromara.visor.common.constant.ErrorMessage;
-import org.dromara.visor.common.utils.Valid;
+import org.dromara.visor.common.utils.Assert;
 
 import java.util.Collection;
 
@@ -81,7 +81,7 @@ public class Conditions {
      * @return wrapper
      */
     public static <T, E> LambdaQueryWrapper<T> eq(SFunction<T, E> mapping, E e) {
-        Valid.notNull(e, ErrorMessage.INVALID_PARAM);
+        Assert.notNull(e, ErrorMessage.INVALID_PARAM);
         return new LambdaQueryWrapper<T>().eq(mapping, e);
     }
 
@@ -95,7 +95,7 @@ public class Conditions {
      * @return wrapper
      */
     public static <T, E> LambdaQueryWrapper<T> in(SFunction<T, E> mapping, Collection<E> es) {
-        Valid.notEmpty(es, ErrorMessage.INVALID_PARAM);
+        Assert.notEmpty(es, ErrorMessage.INVALID_PARAM);
         return new LambdaQueryWrapper<T>().in(mapping, es);
     }
 

@@ -35,7 +35,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.dromara.visor.common.constant.Const;
 import org.dromara.visor.common.constant.ErrorMessage;
 import org.dromara.visor.common.enums.EnableStatus;
-import org.dromara.visor.common.utils.Valid;
+import org.dromara.visor.common.utils.Assert;
 import org.dromara.visor.framework.biz.operator.log.core.utils.OperatorLogs;
 import org.dromara.visor.framework.mybatis.core.query.DataQuery;
 import org.dromara.visor.framework.redis.core.utils.RedisMaps;
@@ -160,7 +160,7 @@ public class HostServiceImpl implements HostService {
         log.info("HostService-copyHost originId: {}, request: {}", originId, JSON.toJSONString(request));
         // 查询原始主机
         HostDO originHost = hostDAO.selectById(originId);
-        Valid.notNull(originHost, ErrorMessage.HOST_ABSENT);
+        Assert.notNull(originHost, ErrorMessage.HOST_ABSENT);
         // 创建主机
         Long newId = SpringHolder.getBean(HostService.class)
                 .createHost(HostConvert.MAPPER.toCreate(request));
@@ -177,9 +177,9 @@ public class HostServiceImpl implements HostService {
         log.info("HostService-updateHostById request: {}", JSON.toJSONString(request));
         List<String> types = request.getTypes();
         // 查询
-        Long id = Valid.notNull(request.getId(), ErrorMessage.ID_MISSING);
+        Long id = Assert.notNull(request.getId(), ErrorMessage.ID_MISSING);
         HostDO record = hostDAO.selectById(id);
-        Valid.notNull(record, ErrorMessage.HOST_ABSENT);
+        Assert.notNull(record, ErrorMessage.HOST_ABSENT);
         // 转换
         HostDO updateRecord = HostConvert.MAPPER.to(request);
         // 查询数据是否冲突
@@ -207,10 +207,10 @@ public class HostServiceImpl implements HostService {
     public Integer updateHostStatus(HostUpdateStatusRequest request) {
         log.info("HostService-updateHostStatus request: {}", JSON.toJSONString(request));
         Long id = request.getId();
-        String status = Valid.valid(HostStatusEnum::of, request.getStatus()).name();
+        String status = Assert.valid(HostStatusEnum::of, request.getStatus()).name();
         // 查询主机
         HostDO record = hostDAO.selectById(id);
-        Valid.notNull(record, ErrorMessage.HOST_ABSENT);
+        Assert.notNull(record, ErrorMessage.HOST_ABSENT);
         // 更新
         HostDO update = HostDO.builder()
                 .id(id)
@@ -230,7 +230,7 @@ public class HostServiceImpl implements HostService {
         log.info("HostService-updateHostSpec request: {}", JSON.toJSONString(request));
         // 查询主机
         HostDO record = hostDAO.selectById(request.getHostId());
-        Valid.notNull(record, ErrorMessage.HOST_ABSENT);
+        Assert.notNull(record, ErrorMessage.HOST_ABSENT);
         // 设置日志参数
         OperatorLogs.add(OperatorLogs.NAME, record.getName());
         // 更新
@@ -244,7 +244,7 @@ public class HostServiceImpl implements HostService {
         // 查询主机基础信息
         if (Booleans.isTrue(base)) {
             HostDO record = hostDAO.selectById(id);
-            Valid.notNull(record, ErrorMessage.HOST_ABSENT);
+            Assert.notNull(record, ErrorMessage.HOST_ABSENT);
             return HostConvert.MAPPER.to(record);
         }
         // 查询 tag 信息
@@ -253,7 +253,7 @@ public class HostServiceImpl implements HostService {
         Future<Set<Long>> groupIdFuture = dataGroupRelApi.getGroupIdByRelIdAsync(DataGroupTypeEnum.HOST, id);
         // 查询主机
         HostDO record = hostDAO.selectById(id);
-        Valid.notNull(record, ErrorMessage.HOST_ABSENT);
+        Assert.notNull(record, ErrorMessage.HOST_ABSENT);
         // 查询规格
         HostSpecExtraModel spec = hostExtraService.getHostExtra(Const.SYSTEM_USER_ID, id, HostExtraItemEnum.SPEC);
         // 转换
@@ -392,7 +392,7 @@ public class HostServiceImpl implements HostService {
                 .eq(HostDO::getName, domain.getName());
         // 检查是否存在
         boolean present = hostDAO.of(wrapper).present();
-        Valid.isFalse(present, ErrorMessage.NAME_PRESENT);
+        Assert.isFalse(present, ErrorMessage.NAME_PRESENT);
     }
 
     /**
@@ -408,7 +408,7 @@ public class HostServiceImpl implements HostService {
                 .eq(HostDO::getCode, domain.getCode());
         // 检查是否存在
         boolean present = hostDAO.of(wrapper).present();
-        Valid.isFalse(present, ErrorMessage.CODE_PRESENT);
+        Assert.isFalse(present, ErrorMessage.CODE_PRESENT);
     }
 
     @Override

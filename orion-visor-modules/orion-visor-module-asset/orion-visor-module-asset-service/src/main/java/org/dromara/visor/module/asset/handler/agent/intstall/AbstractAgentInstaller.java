@@ -23,7 +23,6 @@
 package org.dromara.visor.module.asset.handler.agent.intstall;
 
 import cn.orionsec.kit.lang.utils.Strings;
-import cn.orionsec.kit.lang.utils.Valid;
 import cn.orionsec.kit.lang.utils.io.FileReaders;
 import cn.orionsec.kit.lang.utils.io.Streams;
 import cn.orionsec.kit.net.host.SessionStore;
@@ -36,6 +35,7 @@ import org.dromara.visor.common.constant.ErrorMessage;
 import org.dromara.visor.common.constant.FileConst;
 import org.dromara.visor.common.session.config.SshConnectConfig;
 import org.dromara.visor.common.session.ssh.SessionStores;
+import org.dromara.visor.common.utils.Assert;
 import org.dromara.visor.common.utils.PathUtils;
 import org.dromara.visor.module.asset.entity.domain.HostAgentLogDO;
 import org.dromara.visor.module.asset.enums.AgentLogStatusEnum;
@@ -94,8 +94,8 @@ public abstract class AbstractAgentInstaller implements AgentInstaller {
         log.info("AgentInstaller install start {}", logId);
         // 查询记录
         this.record = hostAgentLogService.selectById(logId);
-        Valid.notNull(record, "AgentInstaller record is null {}", logId);
-        Valid.eq(record.getStatus(), AgentLogStatusEnum.WAIT.name(), "AgentInstaller record status is not WAIT {}", logId);
+        Assert.notNull(record, "AgentInstaller record is null {}", logId);
+        Assert.eq(record.getStatus(), AgentLogStatusEnum.WAIT.name(), "AgentInstaller record status is not WAIT {}", logId);
         try {
             // 更新状态
             this.updateStatus(AgentLogStatusEnum.RUNNING, null);

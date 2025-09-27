@@ -25,8 +25,8 @@ package org.dromara.visor.module.infra.service.impl;
 import cn.orionsec.kit.lang.utils.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.visor.common.constant.ErrorMessage;
+import org.dromara.visor.common.utils.Assert;
 import org.dromara.visor.common.utils.Requests;
-import org.dromara.visor.common.utils.Valid;
 import org.dromara.visor.framework.biz.operator.log.core.utils.OperatorLogs;
 import org.dromara.visor.framework.redis.core.utils.RedisStrings;
 import org.dromara.visor.framework.security.core.utils.SecurityUtils;
@@ -100,12 +100,12 @@ public class SystemUserManagementServiceImpl implements SystemUserManagementServ
 
     @Override
     public void offlineUserSession(UserSessionOfflineRequest request) {
-        Long userId = Valid.notNull(request.getUserId());
+        Long userId = Assert.notNull(request.getUserId());
         Long timestamp = request.getTimestamp();
         log.info("SystemUserManagementService offlineUserSession userId: {}, timestamp: {}", userId, timestamp);
         // 查询用户
         SystemUserDO user = systemUserDAO.selectById(userId);
-        Valid.notNull(user, ErrorMessage.USER_ABSENT);
+        Assert.notNull(user, ErrorMessage.USER_ABSENT);
         // 添加日志参数
         OperatorLogs.add(OperatorLogs.USERNAME, user.getUsername());
         // 删除刷新缓存

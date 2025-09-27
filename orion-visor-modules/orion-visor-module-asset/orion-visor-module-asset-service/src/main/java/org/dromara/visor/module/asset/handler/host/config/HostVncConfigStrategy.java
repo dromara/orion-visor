@@ -26,7 +26,7 @@ import cn.orionsec.kit.lang.utils.Booleans;
 import cn.orionsec.kit.lang.utils.Strings;
 import org.dromara.visor.common.constant.Const;
 import org.dromara.visor.common.constant.ErrorMessage;
-import org.dromara.visor.common.utils.Valid;
+import org.dromara.visor.common.utils.Assert;
 import org.dromara.visor.module.asset.dao.HostIdentityDAO;
 import org.dromara.visor.module.asset.entity.domain.HostIdentityDO;
 import org.dromara.visor.module.asset.entity.dto.host.HostVncConfigDTO;
@@ -77,15 +77,15 @@ public class HostVncConfigStrategy extends AbstractHostConfigStrategy<HostVncCon
         // 检查主机身份是否存在
         Long identityId = model.getIdentityId();
         if (identityId != null) {
-            HostIdentityDO identity = Valid.notNull(hostIdentityDAO.selectById(identityId), ErrorMessage.IDENTITY_ABSENT);
-            Valid.eq(HostIdentityTypeEnum.PASSWORD.name(), identity.getType(), ErrorMessage.CHECK_IDENTITY_PASSWORD);
+            HostIdentityDO identity = Assert.notNull(hostIdentityDAO.selectById(identityId), ErrorMessage.IDENTITY_ABSENT);
+            Assert.eq(HostIdentityTypeEnum.PASSWORD.name(), identity.getType(), ErrorMessage.CHECK_IDENTITY_PASSWORD);
         }
     }
 
     @Override
     protected void valid(HostVncConfigDTO model) {
         // 验证填充后的参数
-        Valid.valid(model);
+        Assert.valid(model);
     }
 
     @Override

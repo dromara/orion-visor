@@ -58,7 +58,7 @@ public class TerminalTransferInterceptor implements HandshakeInterceptor {
     private TerminalService terminalService;
 
     @Override
-    public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler, Map<String, Object> attributes) throws Exception {
+    public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler, Map<String, Object> attributes) {
         // 获取 transferToken
         String transferToken = Urls.getUrlSource(request.getURI().getPath());
         log.info("TerminalTransferInterceptor-beforeHandshake start transferToken: {}", transferToken);

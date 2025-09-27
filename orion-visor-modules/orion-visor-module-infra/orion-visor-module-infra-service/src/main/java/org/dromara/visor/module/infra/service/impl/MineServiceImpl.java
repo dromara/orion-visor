@@ -26,7 +26,7 @@ import cn.orionsec.kit.lang.define.wrapper.DataGrid;
 import cn.orionsec.kit.lang.utils.crypto.Signatures;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.visor.common.constant.ErrorMessage;
-import org.dromara.visor.common.utils.Valid;
+import org.dromara.visor.common.utils.Assert;
 import org.dromara.visor.framework.security.core.utils.SecurityUtils;
 import org.dromara.visor.module.infra.dao.SystemUserDAO;
 import org.dromara.visor.module.infra.entity.domain.SystemUserDO;
@@ -87,10 +87,10 @@ public class MineServiceImpl implements MineService {
         Long userId = SecurityUtils.getLoginUserId();
         // 查询用户信息
         SystemUserDO record = systemUserDAO.selectById(userId);
-        Valid.notNull(record, ErrorMessage.USER_ABSENT);
+        Assert.notNull(record, ErrorMessage.USER_ABSENT);
         // 对比原始密码
         String beforePassword = Signatures.md5(request.getBeforePassword());
-        Valid.eq(beforePassword, record.getPassword(), ErrorMessage.BEFORE_PASSWORD_ERROR);
+        Assert.eq(beforePassword, record.getPassword(), ErrorMessage.BEFORE_PASSWORD_ERROR);
         // 重置密码
         UserResetPasswordRequest reset = new UserResetPasswordRequest();
         reset.setId(userId);

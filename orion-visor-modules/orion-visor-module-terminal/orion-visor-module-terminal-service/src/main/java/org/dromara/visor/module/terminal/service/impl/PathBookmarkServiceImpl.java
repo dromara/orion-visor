@@ -28,7 +28,7 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.visor.common.constant.ErrorMessage;
-import org.dromara.visor.common.utils.Valid;
+import org.dromara.visor.common.utils.Assert;
 import org.dromara.visor.framework.redis.core.utils.RedisMaps;
 import org.dromara.visor.framework.redis.core.utils.barrier.CacheBarriers;
 import org.dromara.visor.framework.security.core.utils.SecurityUtils;
@@ -90,12 +90,12 @@ public class PathBookmarkServiceImpl implements PathBookmarkService {
 
     @Override
     public Integer updatePathBookmarkById(PathBookmarkUpdateRequest request) {
-        Long id = Valid.notNull(request.getId(), ErrorMessage.ID_MISSING);
+        Long id = Assert.notNull(request.getId(), ErrorMessage.ID_MISSING);
         Long userId = SecurityUtils.getLoginUserId();
         log.info("PathBookmarkService-updatePathBookmarkById id: {}, request: {}", id, JSON.toJSONString(request));
         // 查询
         PathBookmarkDO record = pathBookmarkDAO.selectById(id);
-        Valid.notNull(record, ErrorMessage.DATA_ABSENT);
+        Assert.notNull(record, ErrorMessage.DATA_ABSENT);
         // 查询数据是否冲突
         PathBookmarkDO updateRecord = PathBookmarkConvert.MAPPER.to(request);
         this.checkPathBookmarkPresent(updateRecord);
@@ -179,7 +179,7 @@ public class PathBookmarkServiceImpl implements PathBookmarkService {
         log.info("PathBookmarkService-deletePathBookmarkById id: {}", id);
         // 检查数据是否存在
         PathBookmarkDO record = pathBookmarkDAO.selectById(id);
-        Valid.notNull(record, ErrorMessage.DATA_ABSENT);
+        Assert.notNull(record, ErrorMessage.DATA_ABSENT);
         // 删除
         int effect = pathBookmarkDAO.deleteById(id);
         log.info("PathBookmarkService-deletePathBookmarkById id: {}, effect: {}", id, effect);
@@ -217,7 +217,7 @@ public class PathBookmarkServiceImpl implements PathBookmarkService {
                 .eq(PathBookmarkDO::getName, domain.getName());
         // 检查是否存在
         boolean present = pathBookmarkDAO.of(wrapper).present();
-        Valid.isFalse(present, ErrorMessage.DATA_PRESENT);
+        Assert.isFalse(present, ErrorMessage.DATA_PRESENT);
     }
 
 }

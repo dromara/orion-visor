@@ -25,7 +25,7 @@ package org.dromara.visor.module.infra.api.impl;
 import cn.orionsec.kit.lang.define.wrapper.DataGrid;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import lombok.extern.slf4j.Slf4j;
-import org.dromara.visor.common.utils.Valid;
+import org.dromara.visor.common.utils.Assert;
 import org.dromara.visor.module.infra.api.OperatorLogApi;
 import org.dromara.visor.module.infra.convert.OperatorLogProviderConvert;
 import org.dromara.visor.module.infra.dao.OperatorLogDAO;
@@ -53,7 +53,7 @@ public class OperatorLogApiImpl implements OperatorLogApi {
 
     @Override
     public DataGrid<OperatorLogDTO> getOperatorLogPage(OperatorLogQueryDTO request) {
-        Valid.valid(request);
+        Assert.valid(request);
         // 条件
         LambdaQueryWrapper<OperatorLogDO> wrapper = this.buildQueryWrapper(request);
         // 查询
@@ -66,7 +66,7 @@ public class OperatorLogApiImpl implements OperatorLogApi {
 
     @Override
     public List<OperatorLogDTO> getOperatorLogList(OperatorLogQueryDTO request) {
-        Valid.valid(request);
+        Assert.valid(request);
         // 条件
         LambdaQueryWrapper<OperatorLogDO> wrapper = this.buildQueryWrapper(request)
                 .orderByDesc(OperatorLogDO::getId);
@@ -79,7 +79,7 @@ public class OperatorLogApiImpl implements OperatorLogApi {
 
     @Override
     public Long getOperatorLogCount(OperatorLogQueryDTO request) {
-        Valid.valid(request);
+        Assert.valid(request);
         // 条件
         LambdaQueryWrapper<OperatorLogDO> wrapper = this.buildQueryWrapper(request);
         // 查询

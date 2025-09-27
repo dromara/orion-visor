@@ -29,7 +29,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.visor.common.constant.Const;
 import org.dromara.visor.common.constant.ErrorMessage;
-import org.dromara.visor.common.utils.Valid;
+import org.dromara.visor.common.utils.Assert;
 import org.dromara.visor.framework.biz.operator.log.core.utils.OperatorLogs;
 import org.dromara.visor.framework.security.core.utils.SecurityUtils;
 import org.dromara.visor.module.asset.api.AssetAuthorizedDataApi;
@@ -89,11 +89,11 @@ public class ExecTemplateServiceImpl implements ExecTemplateService {
 
     @Override
     public Integer updateExecTemplateById(ExecTemplateUpdateRequest request) {
-        Long id = Valid.notNull(request.getId(), ErrorMessage.ID_MISSING);
+        Long id = Assert.notNull(request.getId(), ErrorMessage.ID_MISSING);
         log.info("ExecTemplateService-updateExecTemplateById id: {}, request: {}", id, JSON.toJSONString(request));
         // 查询
         ExecTemplateDO record = execTemplateDAO.selectById(id);
-        Valid.notNull(record, ErrorMessage.DATA_ABSENT);
+        Assert.notNull(record, ErrorMessage.DATA_ABSENT);
         // 转换
         ExecTemplateDO updateRecord = ExecTemplateConvert.MAPPER.to(request);
         // 查询数据是否冲突
@@ -110,7 +110,7 @@ public class ExecTemplateServiceImpl implements ExecTemplateService {
     public ExecTemplateVO getExecTemplateById(Long id) {
         // 查询模板
         ExecTemplateDO record = execTemplateDAO.selectById(id);
-        Valid.notNull(record, ErrorMessage.DATA_ABSENT);
+        Assert.notNull(record, ErrorMessage.DATA_ABSENT);
         // 转换
         ExecTemplateVO template = ExecTemplateConvert.MAPPER.to(record);
         // 查询模板主机
@@ -123,7 +123,7 @@ public class ExecTemplateServiceImpl implements ExecTemplateService {
     public ExecTemplateVO getExecTemplateWithAuthorized(Long id) {
         // 查询模板
         ExecTemplateDO record = execTemplateDAO.selectById(id);
-        Valid.notNull(record, ErrorMessage.DATA_ABSENT);
+        Assert.notNull(record, ErrorMessage.DATA_ABSENT);
         // 转换
         ExecTemplateVO template = ExecTemplateConvert.MAPPER.to(record);
         // 查询模板主机
@@ -172,7 +172,7 @@ public class ExecTemplateServiceImpl implements ExecTemplateService {
         log.info("ExecTemplateService-deleteExecTemplateByIdList idList: {}", idList);
         // 检查数据是否存在
         List<ExecTemplateDO> recordList = execTemplateDAO.selectBatchIds(idList);
-        Valid.notEmpty(recordList, ErrorMessage.DATA_ABSENT);
+        Assert.notEmpty(recordList, ErrorMessage.DATA_ABSENT);
         // 设置日志参数
         String name = recordList.stream()
                 .map(ExecTemplateDO::getName)
@@ -208,7 +208,7 @@ public class ExecTemplateServiceImpl implements ExecTemplateService {
                 .eq(ExecTemplateDO::getName, domain.getName());
         // 检查是否存在
         boolean present = execTemplateDAO.of(wrapper).present();
-        Valid.isFalse(present, ErrorMessage.DATA_PRESENT);
+        Assert.isFalse(present, ErrorMessage.DATA_PRESENT);
     }
 
 }

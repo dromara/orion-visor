@@ -27,7 +27,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.visor.common.constant.ErrorCode;
 import org.dromara.visor.common.constant.ErrorMessage;
-import org.dromara.visor.common.utils.Valid;
+import org.dromara.visor.common.utils.Assert;
 import org.dromara.visor.framework.biz.operator.log.core.utils.OperatorLogs;
 import org.dromara.visor.framework.mybatis.core.query.Conditions;
 import org.dromara.visor.module.infra.convert.SystemMenuConvert;
@@ -79,7 +79,7 @@ public class SystemRoleMenuServiceImpl implements SystemRoleMenuService {
         Long roleId = request.getRoleId();
         List<Long> menuIdList = request.getMenuIdList();
         // 检查角色是否存在
-        SystemRoleDO role = Valid.notNull(systemRoleDAO.selectById(roleId), ErrorMessage.ROLE_ABSENT);
+        SystemRoleDO role = Assert.notNull(systemRoleDAO.selectById(roleId), ErrorMessage.ROLE_ABSENT);
         // 添加日志参数
         OperatorLogs.add(OperatorLogs.NAME, role.getName());
         OperatorLogs.add(OperatorLogs.CODE, role.getCode());

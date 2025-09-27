@@ -34,7 +34,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.dromara.visor.common.constant.Const;
 import org.dromara.visor.common.constant.ErrorMessage;
 import org.dromara.visor.common.security.LoginUser;
-import org.dromara.visor.common.utils.Valid;
+import org.dromara.visor.common.utils.Assert;
 import org.dromara.visor.framework.biz.operator.log.core.utils.OperatorLogs;
 import org.dromara.visor.framework.job.core.utils.QuartzUtils;
 import org.dromara.visor.framework.security.core.utils.SecurityUtils;
@@ -134,13 +134,13 @@ public class ExecJobServiceImpl implements ExecJobService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Integer updateExecJobById(ExecJobUpdateRequest request) {
-        Long id = Valid.notNull(request.getId(), ErrorMessage.ID_MISSING);
+        Long id = Assert.notNull(request.getId(), ErrorMessage.ID_MISSING);
         log.info("ExecJobService-updateExecJobById id: {}, request: {}", id, JSON.toJSONString(request));
         // 验证表达式是否正确
         Cron.of(request.getExpression());
         // 查询
         ExecJobDO record = execJobDAO.selectById(id);
-        Valid.notNull(record, ErrorMessage.DATA_ABSENT);
+        Assert.notNull(record, ErrorMessage.DATA_ABSENT);
         // 转换
         ExecJobDO updateRecord = ExecJobConvert.MAPPER.to(request);
         // 查询数据是否冲突
@@ -167,7 +167,7 @@ public class ExecJobServiceImpl implements ExecJobService {
         log.info("ExecJobService-updateExecJobStatus id: {}, status: {}", id, status);
         // 查询任务
         ExecJobDO record = execJobDAO.selectById(id);
-        Valid.notNull(record, ErrorMessage.DATA_ABSENT);
+        Assert.notNull(record, ErrorMessage.DATA_ABSENT);
         // 更新状态
         ExecJobDO update = new ExecJobDO();
         update.setId(id);
@@ -189,10 +189,10 @@ public class ExecJobServiceImpl implements ExecJobService {
         log.info("ExecJobService-updateExecJobExecUser id: {}, userId: {}", id, userId);
         // 查询任务
         ExecJobDO job = execJobDAO.selectById(id);
-        Valid.notNull(job, ErrorMessage.DATA_ABSENT);
+        Assert.notNull(job, ErrorMessage.DATA_ABSENT);
         // 查询用户
         String username = systemUserApi.getUsernameById(userId);
-        Valid.notNull(username, ErrorMessage.USER_ABSENT);
+        Assert.notNull(username, ErrorMessage.USER_ABSENT);
         // 修改任务
         ExecJobDO update = new ExecJobDO();
         update.setId(id);
@@ -210,7 +210,7 @@ public class ExecJobServiceImpl implements ExecJobService {
     public ExecJobVO getExecJobById(Long id) {
         // 查询任务
         ExecJobDO record = execJobDAO.selectById(id);
-        Valid.notNull(record, ErrorMessage.DATA_ABSENT);
+        Assert.notNull(record, ErrorMessage.DATA_ABSENT);
         // 转换
         ExecJobVO vo = ExecJobConvert.MAPPER.to(record);
         // 查询任务主机
@@ -309,7 +309,7 @@ public class ExecJobServiceImpl implements ExecJobService {
         log.info("ExecJobService-deleteExecJobByIdList idList: {}", idList);
         // 检查数据是否存在
         List<ExecJobDO> jobList = execJobDAO.selectBatchIds(idList);
-        Valid.notEmpty(jobList, ErrorMessage.DATA_ABSENT);
+        Assert.notEmpty(jobList, ErrorMessage.DATA_ABSENT);
         // 删除任务
         int effect = execJobDAO.deleteBatchIds(idList);
         // 删除任务主机
@@ -332,7 +332,7 @@ public class ExecJobServiceImpl implements ExecJobService {
         log.info("ExecJobService.manualTriggerExecJob start id: {}", id);
         // 查询任务
         ExecJobDO job = execJobDAO.selectById(id);
-        Valid.notNull(job, ErrorMessage.DATA_ABSENT);
+        Assert.notNull(job, ErrorMessage.DATA_ABSENT);
         // 触发请求
         ExecJobTriggerRequest request = new ExecJobTriggerRequest();
         request.setId(id);
@@ -408,7 +408,7 @@ public class ExecJobServiceImpl implements ExecJobService {
                 .eq(ExecJobDO::getName, domain.getName());
         // 检查是否存在
         boolean present = execJobDAO.of(wrapper).present();
-        Valid.isFalse(present, ErrorMessage.DATA_PRESENT);
+        Assert.isFalse(present, ErrorMessage.DATA_PRESENT);
     }
 
     /**
@@ -439,7 +439,7 @@ public class ExecJobServiceImpl implements ExecJobService {
         // 查询有权限的主机
         List<Long> authorizedHostIdList = assetAuthorizedDataApi.getUserAuthorizedEnabledHostId(SecurityUtils.getLoginUserId(), HostTypeEnum.SSH);
         for (Long hostId : hostIdList) {
-            Valid.isTrue(authorizedHostIdList.contains(hostId), Strings.format(ErrorMessage.PLEASE_CHECK_HOST_SSH, hostId));
+            Assert.isTrue(authorizedHostIdList.contains(hostId), Strings.format(ErrorMessage.PLEASE_CHECK_HOST_SSH, hostId));
         }
     }
 

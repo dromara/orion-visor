@@ -29,7 +29,7 @@ import cn.orionsec.kit.lang.utils.collect.Maps;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import lombok.extern.slf4j.Slf4j;
-import org.dromara.visor.common.utils.Valid;
+import org.dromara.visor.common.utils.Assert;
 import org.dromara.visor.framework.redis.core.utils.RedisStrings;
 import org.dromara.visor.framework.security.core.utils.SecurityUtils;
 import org.dromara.visor.module.infra.dao.PreferenceDAO;
@@ -70,7 +70,7 @@ public class PreferenceServiceImpl implements PreferenceService {
         Long userId = SecurityUtils.getLoginUserId();
         String type = request.getType();
         String item = request.getItem();
-        Valid.valid(PreferenceTypeEnum::of, type);
+        Assert.valid(PreferenceTypeEnum::of, type);
         // 查询
         PreferenceDO preference = preferenceDAO.of()
                 .createWrapper()
@@ -104,7 +104,7 @@ public class PreferenceServiceImpl implements PreferenceService {
         Long userId = SecurityUtils.getLoginUserId();
         String type = request.getType();
         Map<String, String> config = request.getConfig();
-        Valid.valid(PreferenceTypeEnum::of, type);
+        Assert.valid(PreferenceTypeEnum::of, type);
         // 查询配置
         LambdaQueryWrapper<PreferenceDO> wrapper = preferenceDAO.lambda()
                 .eq(PreferenceDO::getUserId, userId)
@@ -148,14 +148,14 @@ public class PreferenceServiceImpl implements PreferenceService {
     @Override
     public <T> T getPreferenceByType(String type, List<String> items) {
         Long userId = SecurityUtils.getLoginUserId();
-        PreferenceTypeEnum typeEnum = Valid.valid(PreferenceTypeEnum::of, type);
+        PreferenceTypeEnum typeEnum = Assert.valid(PreferenceTypeEnum::of, type);
         // 查询缓存
         return this.getPreferenceByCache(userId, typeEnum, items);
     }
 
     @Override
     public <T> T getDefaultPreferenceByType(String type, List<String> items) {
-        PreferenceTypeEnum preferenceType = Valid.valid(PreferenceTypeEnum::of, type);
+        PreferenceTypeEnum preferenceType = Assert.valid(PreferenceTypeEnum::of, type);
         // 获取默认值
         JSONObject config = JSONObject.parseObject(preferenceType.getDefault().serial());
         // 解析

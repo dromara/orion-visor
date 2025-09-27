@@ -25,7 +25,7 @@ package org.dromara.visor.module.infra.api.impl;
 import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.visor.common.constant.ErrorMessage;
-import org.dromara.visor.common.utils.Valid;
+import org.dromara.visor.common.utils.Assert;
 import org.dromara.visor.module.infra.api.HistoryValueApi;
 import org.dromara.visor.module.infra.convert.HistoryValueProviderConvert;
 import org.dromara.visor.module.infra.entity.domain.HistoryValueDO;
@@ -56,8 +56,8 @@ public class HistoryValueApiImpl implements HistoryValueApi {
     @Override
     public Long createHistoryValue(HistoryValueTypeEnum type, HistoryValueCreateDTO dto) {
         log.info("HistoryValueApi.createHistoryValue dto: {}", JSON.toJSONString(dto));
-        Valid.notNull(type);
-        Valid.valid(dto);
+        Assert.notNull(type);
+        Assert.valid(dto);
         // 转换
         HistoryValueCreateRequest request = HistoryValueProviderConvert.MAPPER.toRequest(dto);
         request.setType(type.name());
@@ -68,7 +68,7 @@ public class HistoryValueApiImpl implements HistoryValueApi {
     @Override
     public HistoryValueDTO getHistoryValueById(Long id) {
         log.info("HistoryValueApi.getHistoryValueById id: {}", id);
-        Valid.notNull(id, ErrorMessage.ID_MISSING);
+        Assert.notNull(id, ErrorMessage.ID_MISSING);
         // 修改
         HistoryValueDO record = historyValueService.getHistoryById(id);
         if (record == null) {
@@ -81,7 +81,7 @@ public class HistoryValueApiImpl implements HistoryValueApi {
     @Override
     public HistoryValueDTO getHistoryValueByRelId(Long id, Long relId, HistoryValueTypeEnum type) {
         log.info("HistoryValueApi.getHistoryValueByRelId id: {}, relId: {}, type: {}", id, relId, type);
-        Valid.allNotNull(id, relId, type);
+        Assert.allNotNull(id, relId, type);
         // 修改
         HistoryValueDO record = historyValueService.getHistoryByRelId(id, relId, type.name());
         if (record == null) {
