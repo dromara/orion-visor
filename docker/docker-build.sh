@@ -7,7 +7,7 @@ set -e
 source ./project-build.sh "$@"
 
 # 版本号
-version=2.5.1
+version=2.5.2
 # 是否推送镜像
 push_image=false
 # 是否构建 latest
