@@ -41,8 +41,8 @@ import java.io.Serializable;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(name = "AlarmPolicyAlarmCountPO", description = "监控告警事件数量对象")
-public class AlarmPolicyAlarmCountPO implements Serializable {
+@Schema(name = "AlarmEventCountPO", description = "监控告警事件数量对象")
+public class AlarmEventCountPO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

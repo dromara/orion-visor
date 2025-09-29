@@ -26,7 +26,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.dromara.visor.framework.mybatis.core.mapper.IMapper;
 import org.dromara.visor.module.monitor.entity.domain.AlarmEventDO;
-import org.dromara.visor.module.monitor.entity.po.AlarmPolicyRuleCountPO;
+import org.dromara.visor.module.monitor.entity.po.AlarmEventCountPO;
 
 import java.util.Date;
 import java.util.List;
@@ -49,8 +49,8 @@ public interface AlarmEventDAO extends IMapper<AlarmEventDO> {
      * @param createTimeEnd   createTimeEnd
      * @return count
      */
-    List<AlarmPolicyRuleCountPO> selectPolicyEventCount(@Param("policyIdList") List<Long> policyIdList,
-                                                        @Param("createTimeStart") Date createTimeStart,
-                                                        @Param("createTimeEnd") Date createTimeEnd);
+    List<AlarmEventCountPO> selectPolicyEventCount(@Param("policyIdList") List<Long> policyIdList,
+                                                   @Param("createTimeStart") Date createTimeStart,
+                                                   @Param("createTimeEnd") Date createTimeEnd);
 
 }

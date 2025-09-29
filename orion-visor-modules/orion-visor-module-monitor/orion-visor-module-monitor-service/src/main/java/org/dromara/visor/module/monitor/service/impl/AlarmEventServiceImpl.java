@@ -43,7 +43,7 @@ import org.dromara.visor.module.monitor.dao.AlarmEventDAO;
 import org.dromara.visor.module.monitor.define.cache.AlarmEventCacheKeyDefine;
 import org.dromara.visor.module.monitor.entity.domain.AlarmEventDO;
 import org.dromara.visor.module.monitor.entity.dto.AlarmPolicyAlarmCountDTO;
-import org.dromara.visor.module.monitor.entity.po.AlarmPolicyRuleCountPO;
+import org.dromara.visor.module.monitor.entity.po.AlarmEventCountPO;
 import org.dromara.visor.module.monitor.entity.request.alarm.AlarmEventClearRequest;
 import org.dromara.visor.module.monitor.entity.request.alarm.AlarmEventHandleRequest;
 import org.dromara.visor.module.monitor.entity.request.alarm.AlarmEventQueryRequest;
@@ -198,7 +198,7 @@ public class AlarmEventServiceImpl implements AlarmEventService {
         if (!queryIdList.isEmpty()) {
             Map<Long, Integer> countMap = alarmEventDAO.selectPolicyEventCount(queryIdList, startDate, endDate)
                     .stream()
-                    .collect(Collectors.toMap(AlarmPolicyRuleCountPO::getPolicyId, AlarmPolicyRuleCountPO::getCount));
+                    .collect(Collectors.toMap(AlarmEventCountPO::getPolicyId, AlarmEventCountPO::getCount));
             // 设置缓存
             for (Long policyId : queryIdList) {
                 Integer count = Objects1.def(countMap.get(policyId), 0);

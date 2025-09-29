@@ -25,7 +25,7 @@ package org.dromara.visor.module.monitor.convert;
 import org.dromara.visor.module.monitor.entity.domain.AlarmEventDO;
 import org.dromara.visor.module.monitor.entity.dto.AlarmEventTriggerDTO;
 import org.dromara.visor.module.monitor.entity.dto.AlarmPolicyAlarmCountDTO;
-import org.dromara.visor.module.monitor.entity.po.AlarmPolicyAlarmCountPO;
+import org.dromara.visor.module.monitor.entity.po.AlarmEventCountPO;
 import org.dromara.visor.module.monitor.entity.request.alarm.AlarmEventQueryRequest;
 import org.dromara.visor.module.monitor.entity.vo.AlarmEventVO;
 import org.mapstruct.Mapper;
@@ -51,7 +51,7 @@ public interface AlarmEventConvert {
 
     AlarmEventTriggerDTO toTrigger(AlarmEventDO domain);
 
-    AlarmPolicyAlarmCountDTO toCount(AlarmPolicyAlarmCountPO domain);
+    AlarmPolicyAlarmCountDTO toCount(AlarmEventCountPO domain);
 
     List<AlarmEventVO> to(List<AlarmEventDO> list);
 
