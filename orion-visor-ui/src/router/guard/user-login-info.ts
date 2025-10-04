@@ -2,6 +2,7 @@ import type { RouteLocationRaw, Router } from 'vue-router';
 import NProgress from 'nprogress';
 import { useUserStore } from '@/store';
 import { isLogin } from '@/utils/auth';
+import { Message } from '@arco-design/web-vue';
 import { LOGIN_ROUTE_NAME, UPDATE_PASSWORD_ROUTE_NAME } from '@/router/constants';
 
 /**
@@ -30,6 +31,7 @@ export default function setupUserLoginInfoGuard(router: Router) {
             next();
           }
         } catch (error) {
+          Message.error('获取用户信息失败');
           // 获取失败退出登录
           await userStore.logout();
           next({
