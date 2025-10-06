@@ -372,6 +372,7 @@ public class MonitorHostServiceImpl implements MonitorHostService {
         } else {
             Assert.notNull(request.getStart(), ErrorMessage.PARAM_MISSING);
             Assert.notNull(request.getEnd(), ErrorMessage.PARAM_MISSING);
+            query.range(request.getStart(), request.getEnd());
         }
         // 设置名称
         Set<String> names = null;

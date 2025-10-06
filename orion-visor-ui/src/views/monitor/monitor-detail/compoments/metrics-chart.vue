@@ -70,6 +70,7 @@
       animation: false,
       tooltip: {
         trigger: 'axis',
+        appendToBody: true,
         backgroundColor: 'rgba(255, 255, 255, 0.9)',
         textStyle: {
           color: 'rgba(0, 0, 0, 0.8)',

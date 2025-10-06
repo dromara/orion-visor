@@ -24,6 +24,7 @@ package org.dromara.visor.framework.influxdb.core.query;
 
 import cn.orionsec.kit.lang.utils.collect.Collections;
 import cn.orionsec.kit.lang.utils.collect.Lists;
+import cn.orionsec.kit.lang.utils.collect.Maps;
 import org.dromara.visor.common.constant.Const;
 
 import java.time.Instant;
@@ -194,7 +195,7 @@ public class FluxQueryBuilder {
         if (values.size() == 1) {
             return this.tag(key, Collections.first(values));
         }
-        //
+        // 使用 or 拼接
         Collection<String> conditions = values.stream()
                 .map(value -> String.format("r[\"%s\"] == \"%s\"", key, value))
                 .collect(Collectors.toList());
@@ -204,33 +205,18 @@ public class FluxQueryBuilder {
     }
 
     /**
-     * 过滤多个 tag
-     * tag 使用 and
-     * value 使用 or
+     * 过滤 tag
      *
      * @param tags tags
      * @return this
      */
     public FluxQueryBuilder tags(Map<String, ? extends Collection<String>> tags) {
-        for (Map.Entry<String, ? extends Collection<String>> entry : tags.entrySet()) {
-            String key = entry.getKey();
-            Collection<String> values = entry.getValue();
-            if (Collections.isEmpty(values)) {
-                continue;
-            }
-            if (values.size() == 1) {
-                // 单值直接用等号
-                String singleValue = values.iterator().next();
-                this.appendFilter(String.format("r[\"%s\"] == \"%s\"", key, singleValue));
-            } else {
-                // 多值用 OR
-                Collection<String> conditions = values.stream()
-                        .map(v -> String.format("r[\"%s\"] == \"%s\"", key, v))
-                        .collect(Collectors.toList());
-                this.appendFilter("(" + String.join(" or ", conditions) + ")");
-            }
+        if (Maps.isEmpty(tags)) {
+            return this;
         }
-        this.closeFilter();
+        for (Map.Entry<String, ? extends Collection<String>> entry : tags.entrySet()) {
+            this.tag(entry.getKey(), entry.getValue());
+        }
         return this;
     }
 

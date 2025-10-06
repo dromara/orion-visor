@@ -59,17 +59,17 @@ public class MonitorHostChartRequest extends BaseQueryRequest {
     @Schema(description = "时间窗口")
     private String window;
 
+    @Schema(description = "时间区间")
+    private String range;
+
+    @Schema(description = "时间区间")
+    private Long start;
+
+    @Schema(description = "时间区间")
+    private Long end;
+
     @NotBlank
     @Schema(description = "聚合参数")
     private String aggregate;
-
-    @Schema(description = "聚合参数")
-    private Long start;
-
-    @Schema(description = "聚合参数")
-    private Long end;
-
-    @Schema(description = "区间")
-    private String range;
 
 }
