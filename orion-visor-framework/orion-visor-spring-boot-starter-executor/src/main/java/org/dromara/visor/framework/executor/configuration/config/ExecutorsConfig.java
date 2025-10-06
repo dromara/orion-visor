@@ -20,24 +20,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.dromara.visor.module.asset.define;
+package org.dromara.visor.framework.executor.configuration.config;
 
-import org.dromara.visor.framework.executor.core.utils.ExecutorUtils;
+import lombok.Data;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 
-import java.util.concurrent.Executor;
+import java.util.Map;
 
 /**
- * 执行线程池
+ * 线程池配置
  *
  * @author Jiahang Li
  * @version 1.0.0
- * @since 2024/1/3 11:21
+ * @since 2025/9/16 16:21
  */
-public interface AssetThreadPools {
+@Data
+@ConfigurationProperties(prefix = "app")
+public class ExecutorsConfig {
 
     /**
-     * 批量执行主机命令线程池
+     * 线程池配置
      */
-    Executor AGENT_INSTALL = ExecutorUtils.getExecutor("agentInstallExecutor");
+    private Map<String, ExecutorConfig> executors;
 
 }

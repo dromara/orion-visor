@@ -1,0 +1,77 @@
+{
+  "groups": [
+    {
+      "name": "orion.executors.*",
+      "type": "org.dromara.visor.framework.executor.configuration.config.ExecutorConfig",
+      "sourceType": "org.dromara.visor.framework.executor.configuration.config.ExecutorConfig",
+      "description": "线程池配置项."
+    }
+  ],
+  "properties": [
+    {
+      "name": "orion.executors",
+      "type": "java.util.Map<java.lang.String,org.dromara.visor.framework.executor.configuration.config.ExecutorConfig>",
+      "description": "线程池配置.",
+      "defaultValue": "{}"
+    },
+    {
+      "name": "orion.executors.*.enabled",
+      "type": "java.lang.Boolean",
+      "description": "是否启用.",
+      "defaultValue": false
+    },
+    {
+      "name": "orion.executors.*.corePoolSize",
+      "type": "java.lang.Integer",
+      "description": "核心线程数.",
+      "defaultValue": "CPU_NUM"
+    },
+    {
+      "name": "orion.executors.*.maxPoolSize",
+      "type": "java.lang.Integer",
+      "description": "最大线程数.",
+      "defaultValue": "CPU_NUM"
+    },
+    {
+      "name": "orion.executors.*.queueCapacity",
+      "type": "java.lang.Integer",
+      "description": "任务队列容量.",
+      "defaultValue": 100
+    },
+    {
+      "name": "orion.executors.*.keepAliveSeconds",
+      "type": "java.lang.Integer",
+      "description": "空闲线程存活时间.",
+      "defaultValue": 60
+    },
+    {
+      "name": "orion.executors.*.allowCoreTimeout",
+      "type": "java.lang.Boolean",
+      "description": "是否允许核心线程超时回收.",
+      "defaultValue": false
+    },
+    {
+      "name": "orion.executors.*.synchronousQueue",
+      "type": "java.lang.Boolean",
+      "description": "是否启用同步队列模式.",
+      "defaultValue": false
+    },
+    {
+      "name": "orion.executors.*.mdc",
+      "type": "java.lang.Boolean",
+      "description": "是否启用 MDC 上下文传递.",
+      "defaultValue": false
+    },
+    {
+      "name": "orion.executors.*.threadNamePrefix",
+      "type": "java.lang.String",
+      "description": "线程名称前缀."
+    },
+    {
+      "name": "orion.executors.*.rejectPolicy",
+      "type": "cn.orionsec.kit.lang.define.thread.RejectPolicy",
+      "description": "拒绝策略.",
+      "defaultValue": "CALLER_RUNS"
+    }
+  ]
+}

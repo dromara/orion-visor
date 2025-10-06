@@ -108,6 +108,11 @@
             </dependency>
             <dependency>
                 <groupId>org.dromara.visor</groupId>
+                <artifactId>orion-visor-spring-boot-starter-executor</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.dromara.visor</groupId>
                 <artifactId>orion-visor-spring-boot-starter-websocket</artifactId>
                 <version>${revision}</version>
             </dependency>

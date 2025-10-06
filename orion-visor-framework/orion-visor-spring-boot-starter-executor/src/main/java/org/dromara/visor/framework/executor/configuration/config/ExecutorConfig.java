@@ -20,29 +20,43 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.dromara.visor.framework.job.configuration.config;
+package org.dromara.visor.framework.executor.configuration.config;
 
+import cn.orionsec.kit.lang.define.thread.RejectPolicy;
+import cn.orionsec.kit.lang.utils.Systems;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
- * 线程池配置类
+ * 线程池配置
  *
  * @author Jiahang Li
  * @version 1.0.0
- * @since 2023/7/10 15:49
+ * @since 2025/9/16 10:51
  */
 @Data
-@ConfigurationProperties(prefix = "orion.async.executor")
-public class AsyncExecutorConfig {
+@Builder
+@AllArgsConstructor
+public class ExecutorConfig {
 
     /**
-     * 核心线程数量
+     * 是否启用
+     */
+    private boolean enabled;
+
+    /**
+     * 是否使用 MDC
+     */
+    private boolean mdc;
+
+    /**
+     * 核心线程数
      */
     private int corePoolSize;
 
     /**
-     * 最大线程数量
+     * 最大线程数
      */
     private int maxPoolSize;
 
@@ -52,15 +66,37 @@ public class AsyncExecutorConfig {
     private int queueCapacity;
 
     /**
-     * 活跃时间
+     * 空闲线程存活时间
      */
     private int keepAliveSeconds;
 
-    public AsyncExecutorConfig() {
-        this.corePoolSize = 8;
-        this.maxPoolSize = 16;
-        this.queueCapacity = 200;
+    /**
+     * 是否允许核心线程超时
+     */
+    private boolean allowCoreTimeout;
+
+    /**
+     * 是否使用同步队列
+     */
+    private boolean synchronousQueue;
+
+    /**
+     * 线程名称前缀
+     */
+    private String threadNamePrefix;
+
+    /**
+     * 拒绝策略
+     */
+    private RejectPolicy rejectPolicy;
+
+    public ExecutorConfig() {
+        this.enabled = true;
+        this.corePoolSize = Systems.PROCESS_NUM;
+        this.maxPoolSize = Systems.PROCESS_NUM;
+        this.queueCapacity = 100;
         this.keepAliveSeconds = 300;
+        this.rejectPolicy = RejectPolicy.CALLER_RUNS;
     }
 
 }

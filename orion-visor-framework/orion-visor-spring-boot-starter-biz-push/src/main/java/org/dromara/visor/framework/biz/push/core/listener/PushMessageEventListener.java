@@ -48,8 +48,7 @@ public class PushMessageEventListener implements ApplicationListener<PushMessage
         this.pushServiceMap = pushServiceMap;
     }
 
-    // FIXME
-    @Async("asyncExecutor")
+    @Async("pushExecutor")
     @Override
     public void onApplicationEvent(PushMessageEvent event) {
         try {

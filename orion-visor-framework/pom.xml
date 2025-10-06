@@ -24,6 +24,7 @@
         <module>orion-visor-spring-boot-starter-cipher</module>
         <module>orion-visor-spring-boot-starter-config</module>
         <module>orion-visor-spring-boot-starter-job</module>
+        <module>orion-visor-spring-boot-starter-executor</module>
         <module>orion-visor-spring-boot-starter-websocket</module>
         <module>orion-visor-spring-boot-starter-redis</module>
         <module>orion-visor-spring-boot-starter-desensitize</module>

@@ -25,6 +25,8 @@ package org.dromara.visor.framework.job.configuration;
 import org.dromara.visor.common.constant.AutoConfigureOrderConst;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.AutoConfigureOrder;
+import org.springframework.boot.autoconfigure.task.TaskSchedulingProperties;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -40,17 +42,18 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 @EnableScheduling
 @AutoConfiguration
 @AutoConfigureOrder(AutoConfigureOrderConst.FRAMEWORK_JOB)
+@EnableConfigurationProperties(TaskSchedulingProperties.class)
 public class OrionSchedulerAutoConfiguration {
 
     /**
      * @return 任务调度器
      */
     @Bean
-    public TaskScheduler taskScheduler() {
+    public TaskScheduler taskScheduler(TaskSchedulingProperties properties) {
         ThreadPoolTaskScheduler scheduler = new ThreadPoolTaskScheduler();
-        scheduler.setPoolSize(4);
         scheduler.setRemoveOnCancelPolicy(true);
-        scheduler.setThreadNamePrefix("scheduling-task-");
+        scheduler.setPoolSize(properties.getPool().getSize());
+        scheduler.setThreadNamePrefix(properties.getThreadNamePrefix());
         return scheduler;
     }
 

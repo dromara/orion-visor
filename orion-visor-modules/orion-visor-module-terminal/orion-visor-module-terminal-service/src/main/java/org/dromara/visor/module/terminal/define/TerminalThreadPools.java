@@ -22,12 +22,9 @@
  */
 package org.dromara.visor.module.terminal.define;
 
-import cn.orionsec.kit.lang.define.thread.ExecutorBuilder;
-import org.dromara.visor.common.constant.Const;
+import org.dromara.visor.framework.executor.core.utils.ExecutorUtils;
 
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.SynchronousQueue;
-import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.Executor;
 
 /**
  * 终端线程池
@@ -39,37 +36,18 @@ import java.util.concurrent.ThreadPoolExecutor;
 public interface TerminalThreadPools {
 
     /**
-     * terminal 标准输出线程池
+     * 终端标准输出线程池
      */
-    ThreadPoolExecutor TERMINAL_STDOUT = ExecutorBuilder.create()
-            .namedThreadFactory("terminal-stdout-")
-            .corePoolSize(1)
-            .maxPoolSize(Integer.MAX_VALUE)
-            .keepAliveTime(Const.MS_S_60)
-            .workQueue(new SynchronousQueue<>())
-            .allowCoreThreadTimeout(true)
-            .build();
+    Executor TERMINAL_STDOUT = ExecutorUtils.getExecutor("terminalStdoutExecutor");
 
     /**
-     * terminal 操作线程池
+     * 终端操作线程池
      */
-    ThreadPoolExecutor TERMINAL_OPERATOR = ExecutorBuilder.create()
-            .namedThreadFactory("terminal-operator-")
-            .corePoolSize(1)
-            .maxPoolSize(Integer.MAX_VALUE)
-            .keepAliveTime(Const.MS_S_60)
-            .workQueue(new SynchronousQueue<>())
-            .allowCoreThreadTimeout(true)
-            .build();
+    Executor TERMINAL_OPERATOR = ExecutorUtils.getExecutor("terminalOperatorExecutor");
 
     /**
      * 终端异步保存线程池
      */
-    ThreadPoolExecutor TERMINAL_ASYNC_SAVER = ExecutorBuilder.create()
-            .namedThreadFactory("terminal-async-saver-")
-            .corePoolSize(1)
-            .maxPoolSize(1)
-            .workQueue(new LinkedBlockingQueue<>())
-            .build();
+    Executor TERMINAL_ASYNC_SAVER = ExecutorUtils.getExecutor("terminalAsyncSaverExecutor");
 
 }
