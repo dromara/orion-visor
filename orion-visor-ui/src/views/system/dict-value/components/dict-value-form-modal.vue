@@ -177,6 +177,9 @@
             if (type === ValueType.BOOLEAN) {
               extraValue.value[nameKey] = false;
               continue;
+            } else if (type === ValueType.STRING) {
+              extraValue.value[nameKey] = '';
+              continue;
             }
             formRef.value.setFields({
               [nameKey]: {

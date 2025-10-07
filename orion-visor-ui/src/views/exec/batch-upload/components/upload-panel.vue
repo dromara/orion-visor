@@ -301,7 +301,7 @@
     .panel-item {
       height: 100%;
       padding: 16px;
-      border-radius: 4px;
+      border-radius: 8px;
       margin-right: 16px;
       position: relative;
       background: var(--color-bg-2);

@@ -62,7 +62,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
- * 监控告警记录 服务实现类
+ * 监控告警事件 服务实现类
  *
  * @author Jiahang Li
  * @version 1.0.0

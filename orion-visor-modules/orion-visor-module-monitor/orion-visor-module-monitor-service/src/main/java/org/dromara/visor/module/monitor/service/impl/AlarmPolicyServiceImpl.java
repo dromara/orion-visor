@@ -173,14 +173,14 @@ public class AlarmPolicyServiceImpl implements AlarmPolicyService {
     @Override
     public List<AlarmPolicyVO> getAlarmPolicyListByCache() {
         // 查询缓存
-        List<AlarmPolicyCacheDTO> list = RedisMaps.valuesJson(AlarmPolicyCacheKeyDefine.MONITOR_ALARM_POLICY);
+        List<AlarmPolicyCacheDTO> list = RedisMaps.valuesJson(AlarmPolicyCacheKeyDefine.ALARM_POLICY);
         if (list.isEmpty()) {
             // 查询数据库
             list = alarmPolicyDAO.of().list(AlarmPolicyConvert.MAPPER::toCache);
             // 设置屏障 防止穿透
             CacheBarriers.checkBarrier(list, AlarmPolicyCacheDTO::new);
             // 设置缓存
-            RedisMaps.putAllJson(AlarmPolicyCacheKeyDefine.MONITOR_ALARM_POLICY, s -> s.getId().toString(), list);
+            RedisMaps.putAllJson(AlarmPolicyCacheKeyDefine.ALARM_POLICY, s -> s.getId().toString(), list);
         }
         // 删除屏障
         CacheBarriers.removeBarrier(list);

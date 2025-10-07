@@ -92,14 +92,14 @@ public interface HostDAO extends IMapper<HostDO> {
     /**
      * 更新探针信息
      *
-     * @param keys   agentKeyList
-     * @param update update
+     * @param agentKeys agentKeys
+     * @param update    update
      * @return effect
      */
-    default int updateByAgentKeys(List<String> keys, HostDO update) {
+    default int updateByAgentKeys(List<String> agentKeys, HostDO update) {
         update.setUpdateTime(new Date());
         // 更新
-        return this.update(update, Conditions.in(HostDO::getAgentKey, keys));
+        return this.update(update, Conditions.in(HostDO::getAgentKey, agentKeys));
     }
 
 }

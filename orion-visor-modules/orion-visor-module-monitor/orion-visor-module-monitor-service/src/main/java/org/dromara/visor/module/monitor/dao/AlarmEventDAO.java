@@ -32,7 +32,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * 监控告警记录 Mapper 接口
+ * 监控告警事件 Mapper 接口
  *
  * @author Jiahang Li
  * @version 1.0.0

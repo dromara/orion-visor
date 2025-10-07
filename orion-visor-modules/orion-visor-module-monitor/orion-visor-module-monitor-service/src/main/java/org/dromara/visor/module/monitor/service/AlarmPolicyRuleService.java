@@ -73,11 +73,11 @@ public interface AlarmPolicyRuleService {
     /**
      * 查询全部监控告警规则
      *
-     * @param policyId           policyId
-     * @param metricsMeasurement metricsMeasurement
+     * @param policyId    policyId
+     * @param measurement measurement
      * @return rows
      */
-    List<AlarmPolicyRuleVO> getAlarmPolicyRuleList(Long policyId, String metricsMeasurement);
+    List<AlarmPolicyRuleVO> getAlarmPolicyRuleList(Long policyId, String measurement);
 
     /**
      * 通过 metricsId 删除监控告警规则

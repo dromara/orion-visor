@@ -48,10 +48,10 @@ public interface HostAgentApi {
     /**
      * 获取缓存名称
      *
-     * @param agentKeyList agentKeyList
+     * @param agentKeys agentKeys
      * @return nameMap
      */
-    Map<String, String> getNameCacheByAgentKey(List<String> agentKeyList);
+    Map<String, String> getNameCacheByAgentKey(List<String> agentKeys);
 
     /**
      * 获取缓存名称

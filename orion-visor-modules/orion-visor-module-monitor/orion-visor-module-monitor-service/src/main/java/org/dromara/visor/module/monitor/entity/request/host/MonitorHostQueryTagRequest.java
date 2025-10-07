@@ -20,37 +20,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.dromara.visor.module.monitor.enums;
+package org.dromara.visor.module.monitor.entity.request.host;
+
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import org.dromara.visor.common.entity.BaseQueryRequest;
+
+import java.util.List;
 
 /**
- * 告警事件处理状态
+ * 监控主机标签 查询请求对象
  *
  * @author Jiahang Li
  * @version 1.0.0
- * @since 2025/9/19 17:43
+ * @since 2025-8-14 16:27
  */
-public enum AlarmHandleStatusEnum {
+@Data
+@EqualsAndHashCode(callSuper = true)
+@Schema(name = "MonitorHostQueryTagRequest", description = "监控主机标签 查询请求对象")
+public class MonitorHostQueryTagRequest extends BaseQueryRequest {
 
-    /**
-     * 新告警
-     */
-    NEW,
+    @Schema(description = "数据集")
+    private String measurement;
 
-    /**
-     * 已确认
-     */
-    CONFIRMED,
+    @Schema(description = "策略id")
+    private Long policyId;
 
-    /**
-     * 已处理
-     */
-    RESOLVE,
-
-    /**
-     * 忽略
-     */
-    IGNORED,
-
-    ;
+    @Schema(description = "agentKey")
+    private List<String> agentKeys;
 
 }

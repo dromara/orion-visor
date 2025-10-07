@@ -90,7 +90,7 @@
     padding: 16px;
     display: flex;
     flex-direction: column;
-    border-radius: 4px;
+    border-radius: 8px;
   }
 
   :deep(.arco-tabs-nav-tab-list) {

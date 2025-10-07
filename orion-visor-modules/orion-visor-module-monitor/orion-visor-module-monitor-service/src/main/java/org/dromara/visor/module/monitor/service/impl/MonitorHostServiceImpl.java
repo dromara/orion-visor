@@ -55,10 +55,7 @@ import org.dromara.visor.module.monitor.engine.MonitorContext;
 import org.dromara.visor.module.monitor.entity.domain.AlarmPolicyDO;
 import org.dromara.visor.module.monitor.entity.domain.MonitorHostDO;
 import org.dromara.visor.module.monitor.entity.dto.*;
-import org.dromara.visor.module.monitor.entity.request.host.MonitorHostChartRequest;
-import org.dromara.visor.module.monitor.entity.request.host.MonitorHostQueryRequest;
-import org.dromara.visor.module.monitor.entity.request.host.MonitorHostSwitchUpdateRequest;
-import org.dromara.visor.module.monitor.entity.request.host.MonitorHostUpdateRequest;
+import org.dromara.visor.module.monitor.entity.request.host.*;
 import org.dromara.visor.module.monitor.entity.vo.MonitorHostMetricsDataVO;
 import org.dromara.visor.module.monitor.entity.vo.MonitorHostVO;
 import org.dromara.visor.module.monitor.enums.AlarmSwitchEnum;
@@ -188,8 +185,8 @@ public class MonitorHostServiceImpl implements MonitorHostService {
     }
 
     @Override
-    public List<MonitorHostMetricsDataVO> getMonitorHostMetrics(List<String> agentKeyList) {
-        return agentKeyList.stream()
+    public List<MonitorHostMetricsDataVO> getMonitorHostMetrics(List<String> agentKeys) {
+        return agentKeys.stream()
                 .map(s -> this.getHostMetricsData(s, null))
                 .collect(Collectors.toList());
     }
@@ -236,6 +233,44 @@ public class MonitorHostServiceImpl implements MonitorHostService {
     }
 
     @Override
+    public List<String> getMonitorHostTags(MonitorHostQueryTagRequest request) {
+        MeasurementEnum measurementEnum = MeasurementEnum.of(request.getMeasurement());
+        if (measurementEnum == null) {
+            return Collections.emptyList();
+        }
+        // 映射数据
+        Function<MonitorHostMetaDTO, List<String>> tagsGetter;
+        if (MeasurementEnum.CPU.equals(measurementEnum)) {
+            tagsGetter = MonitorHostMetaDTO::getCpus;
+        } else if (MeasurementEnum.DISK.equals(measurementEnum)) {
+            tagsGetter = MonitorHostMetaDTO::getDisks;
+        } else if (MeasurementEnum.NETWORK.equals(measurementEnum)) {
+            tagsGetter = MonitorHostMetaDTO::getNets;
+        } else {
+            return Collections.emptyList();
+        }
+        // 查询监控主机元数据
+        List<MonitorHostMetaDTO> metas = monitorHostDAO.of()
+                .createValidateWrapper()
+                .eq(MonitorHostDO::getPolicyId, request.getPolicyId())
+                .in(MonitorHostDO::getAgentKey, request.getAgentKeys())
+                .then()
+                .stream()
+                .map(MonitorHostDO::getMonitorMeta)
+                .filter(Objects::nonNull)
+                .map(s -> JSON.parseObject(s, MonitorHostMetaDTO.class))
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+        // 获取 tag
+        return metas.stream()
+                .map(tagsGetter)
+                .flatMap(Collection::stream)
+                .filter(Objects::nonNull)
+                .distinct()
+                .collect(Collectors.toList());
+    }
+
+    @Override
     @Transactional(rollbackFor = Exception.class)
     public Integer updateMonitorHostById(MonitorHostUpdateRequest request) {
         Long id = Assert.notNull(request.getId(), ErrorMessage.ID_MISSING);
@@ -272,7 +307,7 @@ public class MonitorHostServiceImpl implements MonitorHostService {
         if (policyId == null) {
             monitorHostDAO.setPolicyIdWithNullById(id);
         }
-        // 更新缓存
+        // 重新加载监控主机上下文
         monitorContext.reloadMonitorHost(host.getAgentKey());
         log.info("MonitorHostService-updateMonitorHostById effect: {}", effect);
         return effect;

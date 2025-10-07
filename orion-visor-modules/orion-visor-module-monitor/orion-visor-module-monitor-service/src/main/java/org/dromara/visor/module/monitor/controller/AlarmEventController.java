@@ -48,13 +48,13 @@ import javax.annotation.Resource;
 import java.util.List;
 
 /**
- * 告警记录 api
+ * 告警事件 api
  *
  * @author Jiahang Li
  * @version 1.0.0
  * @since 2025-9-17 21:31
  */
-@Tag(name = "monitor - 告警记录服务")
+@Tag(name = "monitor - 告警事件服务")
 @Slf4j
 @Validated
 @RestWrapper
@@ -67,7 +67,7 @@ public class AlarmEventController {
 
     @IgnoreLog(IgnoreLogMode.RET)
     @PostMapping("/query")
-    @Operation(summary = "分页查询告警记录")
+    @Operation(summary = "分页查询告警事件")
     @PreAuthorize("@ss.hasPermission('monitor:alarm-event:query')")
     public DataGrid<AlarmEventVO> getAlarmEventPage(@Validated(Page.class) @RequestBody AlarmEventQueryRequest request) {
         return alarmEventService.getAlarmEventPage(request);
@@ -76,7 +76,7 @@ public class AlarmEventController {
     @IgnoreLog(IgnoreLogMode.RET)
     @OperatorLog(AlarmEventOperatorType.HANDLE)
     @PostMapping("/handle")
-    @Operation(summary = "处理告警记录")
+    @Operation(summary = "处理告警事件")
     @PreAuthorize("@ss.hasPermission('monitor:alarm-event:handle')")
     public Integer handleAlarmEvent(@Validated @RequestBody AlarmEventHandleRequest request) {
         return alarmEventService.handleAlarmEvent(request);
@@ -92,7 +92,7 @@ public class AlarmEventController {
     }
 
     @PostMapping("/count")
-    @Operation(summary = "查询告警记录数量")
+    @Operation(summary = "查询告警事件数量")
     @PreAuthorize("@ss.hasPermission('monitor:alarm-event:query')")
     public Long getAlarmEventCount(@Validated @RequestBody AlarmEventQueryRequest request) {
         return alarmEventService.getAlarmEventCount(request);
@@ -101,7 +101,7 @@ public class AlarmEventController {
     @DemoDisableApi
     @OperatorLog(AlarmEventOperatorType.DELETE)
     @DeleteMapping("/delete")
-    @Operation(summary = "删除告警记录")
+    @Operation(summary = "删除告警事件")
     @Parameter(name = "id", description = "id", required = true)
     @PreAuthorize("@ss.hasPermission('monitor:alarm-event:delete')")
     public Integer deleteAlarmEvent(@RequestParam("id") Long id) {
@@ -111,7 +111,7 @@ public class AlarmEventController {
     @DemoDisableApi
     @OperatorLog(AlarmEventOperatorType.DELETE)
     @DeleteMapping("/batch-delete")
-    @Operation(summary = "批量删除告警记录")
+    @Operation(summary = "批量删除告警事件")
     @Parameter(name = "idList", description = "idList", required = true)
     @PreAuthorize("@ss.hasPermission('monitor:alarm-event:delete')")
     public Integer batchDeleteAlarmEvent(@RequestParam("idList") List<Long> idList) {
@@ -121,7 +121,7 @@ public class AlarmEventController {
     @DemoDisableApi
     @OperatorLog(AlarmEventOperatorType.CLEAR)
     @PostMapping("/clear")
-    @Operation(summary = "清理告警记录")
+    @Operation(summary = "清理告警事件")
     @PreAuthorize("@ss.hasPermission('monitor:alarm-event:management:clear')")
     public Integer clearAlarmEvent(@Validated @RequestBody AlarmEventClearRequest request) {
         return alarmEventService.clearAlarmEvent(request);

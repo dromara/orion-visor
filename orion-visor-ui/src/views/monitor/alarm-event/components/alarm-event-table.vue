@@ -48,7 +48,7 @@
                                allow-clear />
       </a-form-item>
       <!-- 数据集 -->
-      <a-form-item field="metricsId" label="数据集">
+      <a-form-item field="metricsMeasurement" label="数据集">
         <a-select v-model="formModel.metricsMeasurement"
                   :options="toOptions(MetricsMeasurementKey)"
                   placeholder="数据集"

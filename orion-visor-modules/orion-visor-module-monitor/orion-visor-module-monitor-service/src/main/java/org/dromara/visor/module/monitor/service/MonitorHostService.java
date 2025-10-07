@@ -24,10 +24,7 @@ package org.dromara.visor.module.monitor.service;
 
 import cn.orionsec.kit.lang.define.wrapper.DataGrid;
 import org.dromara.visor.common.entity.chart.TimeChartSeries;
-import org.dromara.visor.module.monitor.entity.request.host.MonitorHostChartRequest;
-import org.dromara.visor.module.monitor.entity.request.host.MonitorHostQueryRequest;
-import org.dromara.visor.module.monitor.entity.request.host.MonitorHostSwitchUpdateRequest;
-import org.dromara.visor.module.monitor.entity.request.host.MonitorHostUpdateRequest;
+import org.dromara.visor.module.monitor.entity.request.host.*;
 import org.dromara.visor.module.monitor.entity.vo.MonitorHostMetricsDataVO;
 import org.dromara.visor.module.monitor.entity.vo.MonitorHostVO;
 
@@ -53,10 +50,10 @@ public interface MonitorHostService {
     /**
      * 获取监控主机指标数据
      *
-     * @param agentKeyList agentKeyList
+     * @param agentKeys agentKeys
      * @return metrics
      */
-    List<MonitorHostMetricsDataVO> getMonitorHostMetrics(List<String> agentKeyList);
+    List<MonitorHostMetricsDataVO> getMonitorHostMetrics(List<String> agentKeys);
 
     /**
      * 获取监控主机图表数据
@@ -65,6 +62,14 @@ public interface MonitorHostService {
      * @return series
      */
     List<TimeChartSeries> getMonitorHostChart(MonitorHostChartRequest request);
+
+    /**
+     * 查询监控告警标签
+     *
+     * @param request request
+     * @return tags
+     */
+    List<String> getMonitorHostTags(MonitorHostQueryTagRequest request);
 
     /**
      * 更新监控主机

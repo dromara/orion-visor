@@ -96,6 +96,20 @@ public interface MonitorHostDAO extends IMapper<MonitorHostDO> {
     }
 
     /**
+     * 通过 policyId 查询
+     *
+     * @param policyId policyId
+     * @return row
+     */
+    default List<MonitorHostDO> selectByPolicyId(Long policyId) {
+        return this.of()
+                .createWrapper()
+                .eq(MonitorHostDO::getPolicyId, policyId)
+                .then()
+                .list();
+    }
+
+    /**
      * 设置 policyId 为 null
      *
      * @param policyId policyId

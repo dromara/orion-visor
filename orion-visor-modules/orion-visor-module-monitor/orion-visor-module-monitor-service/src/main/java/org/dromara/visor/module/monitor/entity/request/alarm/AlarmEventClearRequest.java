@@ -32,7 +32,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 /**
- * 监控告警记录 清理请求对象
+ * 监控告警事件 清理请求对象
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -40,7 +40,7 @@ import javax.validation.constraints.NotNull;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-@Schema(name = "AlarmEventClearRequest", description = "监控告警记录 清理请求对象")
+@Schema(name = "AlarmEventClearRequest", description = "监控告警事件 清理请求对象")
 public class AlarmEventClearRequest extends AlarmEventQueryRequest implements DataClearRequest {
 
     @NotNull

@@ -43,7 +43,7 @@ public enum MeasurementEnum {
     /**
      * cpu
      */
-    CPU("cpu", (s) -> {
+    CPU("cpu", true, (s) -> {
         s.accept(MetricsConst.CPU_USER_SECONDS_TOTAL, double.class);
         s.accept(MetricsConst.CPU_SYSTEM_SECONDS_TOTAL, double.class);
         s.accept(MetricsConst.CPU_TOTAL_SECONDS_TOTAL, double.class);
@@ -52,7 +52,7 @@ public enum MeasurementEnum {
     /**
      * 内存
      */
-    MEMORY("memory", s -> {
+    MEMORY("memory", false, s -> {
         s.accept(MetricsConst.MEM_USED_BYTES_TOTAL, long.class);
         s.accept(MetricsConst.MEM_USED_PERCENT, double.class);
         s.accept(MetricsConst.MEM_SWAP_USED_BYTES_TOTAL, long.class);
@@ -62,7 +62,7 @@ public enum MeasurementEnum {
     /**
      * 负载
      */
-    LOAD("load", s -> {
+    LOAD("load", false, s -> {
         s.accept(MetricsConst.LOAD1, double.class);
         s.accept(MetricsConst.LOAD5, double.class);
         s.accept(MetricsConst.LOAD15, double.class);
@@ -74,7 +74,7 @@ public enum MeasurementEnum {
     /**
      * 磁盘
      */
-    DISK("disk", s -> {
+    DISK("disk", true, s -> {
         s.accept(MetricsConst.DISK_FS_USED_BYTES_TOTAL, long.class);
         s.accept(MetricsConst.DISK_FS_USED_PERCENT, double.class);
         s.accept(MetricsConst.DISK_FS_INODES_USED_PERCENT, double.class);
@@ -83,7 +83,7 @@ public enum MeasurementEnum {
     /**
      * io
      */
-    IO("io", s -> {
+    IO("io", false, s -> {
         s.accept(MetricsConst.DISK_IO_READ_BYTES_TOTAL, long.class);
         s.accept(MetricsConst.DISK_IO_WRITE_BYTES_TOTAL, long.class);
         s.accept(MetricsConst.DISK_IO_READS_TOTAL, long.class);
@@ -97,7 +97,7 @@ public enum MeasurementEnum {
     /**
      * 网络
      */
-    NETWORK("network", s -> {
+    NETWORK("network", true, s -> {
         s.accept(MetricsConst.NET_SENT_BYTES_TOTAL, long.class);
         s.accept(MetricsConst.NET_RECV_BYTES_TOTAL, long.class);
         s.accept(MetricsConst.NET_SENT_PACKETS_TOTAL, long.class);
@@ -111,7 +111,7 @@ public enum MeasurementEnum {
     /**
      * 连接数
      */
-    CONNECTIONS("connections", s -> {
+    CONNECTIONS("connections", false, s -> {
         s.accept(MetricsConst.NET_TCP_CONNECTIONS, int.class);
         s.accept(MetricsConst.NET_UDP_CONNECTIONS, int.class);
         s.accept(MetricsConst.NET_INET_CONNECTIONS, int.class);
@@ -121,10 +121,14 @@ public enum MeasurementEnum {
     ;
 
     private final String measurement;
+
+    private final boolean hasTags;
+
     private final Map<String, Class<?>> fields;
 
-    MeasurementEnum(String measurement, Consumer<BiConsumer<String, Class<?>>> register) {
+    MeasurementEnum(String measurement, boolean hasTags, Consumer<BiConsumer<String, Class<?>>> register) {
         this.measurement = measurement;
+        this.hasTags = hasTags;
         this.fields = new HashedMap<>();
         register.accept(this.fields::put);
     }

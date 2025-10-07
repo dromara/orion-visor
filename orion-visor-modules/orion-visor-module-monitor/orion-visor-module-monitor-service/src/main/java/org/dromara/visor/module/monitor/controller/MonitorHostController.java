@@ -38,10 +38,7 @@ import org.dromara.visor.framework.web.core.annotation.RestWrapper;
 import org.dromara.visor.module.monitor.define.operator.MonitorHostOperatorType;
 import org.dromara.visor.module.monitor.engine.MonitorContext;
 import org.dromara.visor.module.monitor.entity.dto.AgentMetricsDataDTO;
-import org.dromara.visor.module.monitor.entity.request.host.MonitorHostChartRequest;
-import org.dromara.visor.module.monitor.entity.request.host.MonitorHostQueryRequest;
-import org.dromara.visor.module.monitor.entity.request.host.MonitorHostSwitchUpdateRequest;
-import org.dromara.visor.module.monitor.entity.request.host.MonitorHostUpdateRequest;
+import org.dromara.visor.module.monitor.entity.request.host.*;
 import org.dromara.visor.module.monitor.entity.vo.MonitorHostMetricsDataVO;
 import org.dromara.visor.module.monitor.entity.vo.MonitorHostVO;
 import org.dromara.visor.module.monitor.service.MonitorHostService;
@@ -95,7 +92,7 @@ public class MonitorHostController {
     @Operation(summary = "查询监控指标")
     @PreAuthorize("@ss.hasPermission('monitor:monitor-host:query')")
     public List<MonitorHostMetricsDataVO> getMonitorHostMetrics(@Validated(Key.class) @RequestBody MonitorHostQueryRequest request) {
-        return monitorHostService.getMonitorHostMetrics(request.getAgentKeyList());
+        return monitorHostService.getMonitorHostMetrics(request.getAgentKeys());
     }
 
     @IgnoreLog(IgnoreLogMode.RET)
@@ -104,6 +101,14 @@ public class MonitorHostController {
     @PreAuthorize("@ss.hasPermission('monitor:monitor-host:query')")
     public List<TimeChartSeries> getMonitorHostChart(@Validated @RequestBody MonitorHostChartRequest request) {
         return monitorHostService.getMonitorHostChart(request);
+    }
+
+    @IgnoreLog(IgnoreLogMode.RET)
+    @PostMapping("/host-tags")
+    @Operation(summary = "查询监控告警标签")
+    @PreAuthorize("@ss.hasPermission('monitor:monitor-host:query')")
+    public List<String> getMonitorHostTags(@RequestBody MonitorHostQueryTagRequest request) {
+        return monitorHostService.getMonitorHostTags(request);
     }
 
     @DemoDisableApi

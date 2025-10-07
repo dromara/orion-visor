@@ -34,7 +34,7 @@ import org.mapstruct.factory.Mappers;
 import java.util.List;
 
 /**
- * 监控告警记录 内部对象转换器
+ * 监控告警事件 内部对象转换器
  *
  * @author Jiahang Li
  * @version 1.0.0
