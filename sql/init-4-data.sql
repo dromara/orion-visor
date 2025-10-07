@@ -143,7 +143,7 @@ INSERT INTO `dict_key` VALUES (86, 'notifyBizType', 'STRING', '[]', '通知业�
 INSERT INTO `dict_key` VALUES (87, 'notifyChannelType', 'STRING', '[{\"name\": \"color\", \"type\": \"COLOR\"}, {\"name\": \"notifyType\", \"type\": \"STRING\"}, {\"name\": \"templateTips\", \"type\": \"STRING\"}]', '通知渠道类型', '2025-09-13 13:35:03', '2025-09-20 22:26:20', 'admin', 'admin', 0);
 INSERT INTO `dict_key` VALUES (88, 'alarmTriggerCondition', 'STRING', '[]', '告警条件', '2025-09-14 05:36:35', '2025-09-14 05:36:35', 'admin', 'admin', 0);
 INSERT INTO `dict_key` VALUES (89, 'alarmLevel', 'INTEGER', '[{\"name\": \"level\", \"type\": \"STRING\"}, {\"name\": \"color\", \"type\": \"STRING\"}]', '告警等级', '2025-09-14 05:36:36', '2025-09-14 05:36:36', 'admin', 'admin', 0);
-INSERT INTO `dict_key` VALUES (90, 'alarmEventHandleStatus', 'STRING', '[{\"name\": \"color\", \"type\": \"STRING\"}]', '告警记录处理状态', '2025-09-17 16:20:03', '2025-09-17 16:20:03', 'admin', 'admin', 0);
+INSERT INTO `dict_key` VALUES (90, 'alarmEventHandleStatus', 'STRING', '[{\"name\": \"color\", \"type\": \"STRING\"}]', '告警事件处理状态', '2025-09-17 16:20:03', '2025-09-17 16:20:03', 'admin', 'admin', 0);
 INSERT INTO `dict_key` VALUES (92, 'falseAlarm', 'INTEGER', '[]', '是否为误报', '2025-09-17 16:20:03', '2025-09-17 16:20:03', 'admin', 'admin', 0);
 
 -- 字典值
@@ -574,11 +574,11 @@ INSERT INTO `dict_value` VALUES (600, 89, 'alarmLevel', '3', '警告', '{\"color
 INSERT INTO `dict_value` VALUES (601, 89, 'alarmLevel', '4', '信息', '{\"color\": \"gray\", \"level\": \"Info\"}', 50, '2025-09-14 05:36:36', '2025-09-14 05:36:36', 'admin', 'admin', 0);
 INSERT INTO `dict_value` VALUES (602, 2, 'operatorLogType', 'alarm-policy:update-rule-switch', '更新监控告警规则开关', '{}', 80, '2025-09-14 05:36:35', '2025-09-14 06:35:40', 'admin', 'admin', 0);
 INSERT INTO `dict_value` VALUES (603, 87, 'notifyChannelType', 'WEBSITE', '站内信', '{\"color\": \"arcoblue\", \"notifyType\": \"website\", \"templateTips\": \"普通文本格式, 文本颜色以及参数请参考文档\"}', 5, '2025-09-13 13:35:03', '2025-09-20 22:54:37', 'admin', 'admin', 0);
-INSERT INTO `dict_value` VALUES (604, 1, 'operatorLogModule', 'monitor:alarm-event', '告警记录', '{}', 2200, '2025-09-17 16:20:03', '2025-09-17 16:20:03', 'admin', 'admin', 0);
-INSERT INTO `dict_value` VALUES (605, 2, 'operatorLogType', 'alarm-event:handle', '处理告警记录', '{}', 10, '2025-09-17 16:20:03', '2025-09-17 16:20:03', 'admin', 'admin', 0);
-INSERT INTO `dict_value` VALUES (606, 2, 'operatorLogType', 'alarm-event:set-false', '设置告警记录误报', '{}', 20, '2025-09-17 16:20:03', '2025-09-17 16:20:03', 'admin', 'admin', 0);
-INSERT INTO `dict_value` VALUES (607, 2, 'operatorLogType', 'alarm-event:delete', '删除告警记录', '{}', 30, '2025-09-17 16:20:03', '2025-09-17 16:20:03', 'admin', 'admin', 0);
-INSERT INTO `dict_value` VALUES (608, 2, 'operatorLogType', 'alarm-event:clear', '清理告警记录', '{}', 40, '2025-09-17 16:20:03', '2025-09-17 16:20:03', 'admin', 'admin', 0);
+INSERT INTO `dict_value` VALUES (604, 1, 'operatorLogModule', 'monitor:alarm-event', '告警事件', '{}', 2200, '2025-09-17 16:20:03', '2025-09-17 16:20:03', 'admin', 'admin', 0);
+INSERT INTO `dict_value` VALUES (605, 2, 'operatorLogType', 'alarm-event:handle', '处理告警事件', '{}', 10, '2025-09-17 16:20:03', '2025-09-17 16:20:03', 'admin', 'admin', 0);
+INSERT INTO `dict_value` VALUES (606, 2, 'operatorLogType', 'alarm-event:set-false', '设置告警事件误报', '{}', 20, '2025-09-17 16:20:03', '2025-09-17 16:20:03', 'admin', 'admin', 0);
+INSERT INTO `dict_value` VALUES (607, 2, 'operatorLogType', 'alarm-event:delete', '删除告警事件', '{}', 30, '2025-09-17 16:20:03', '2025-09-17 16:20:03', 'admin', 'admin', 0);
+INSERT INTO `dict_value` VALUES (608, 2, 'operatorLogType', 'alarm-event:clear', '清理告警事件', '{}', 40, '2025-09-17 16:20:03', '2025-09-17 16:20:03', 'admin', 'admin', 0);
 INSERT INTO `dict_value` VALUES (609, 90, 'alarmEventHandleStatus', 'NEW', '新告警', '{\"color\": \"red\"}', 10, '2025-09-17 16:20:03', '2025-09-17 16:20:03', 'admin', 'admin', 0);
 INSERT INTO `dict_value` VALUES (610, 90, 'alarmEventHandleStatus', 'CONFIRMED', '已确认', '{\"color\": \"orangered\"}', 20, '2025-09-17 16:20:03', '2025-09-17 16:20:03', 'admin', 'admin', 0);
 INSERT INTO `dict_value` VALUES (611, 90, 'alarmEventHandleStatus', 'RESOLVE', '已解决', '{\"color\": \"green\"}', 30, '2025-09-17 16:20:03', '2025-09-17 16:20:03', 'admin', 'admin', 0);
@@ -733,8 +733,8 @@ INSERT INTO `system_menu` VALUES (304, 300, '复制告警策略', 'monitor:alarm
 INSERT INTO `system_menu` VALUES (305, 300, '删除告警策略', 'monitor:alarm-policy:delete', 3, 50, 1, 1, 1, 0, NULL, NULL, NULL, '2025-09-13 16:13:36', '2025-09-13 17:10:41', 'admin', 'admin', 0);
 INSERT INTO `system_menu` VALUES (306, 300, '修改告警规则', 'monitor:alarm-policy:update-rule', 3, 60, 1, 1, 1, 0, NULL, NULL, NULL, '2025-09-14 14:34:25', '2025-09-14 14:34:25', 'admin', 'admin', 0);
 INSERT INTO `system_menu` VALUES (307, 282, '告警规则', NULL, 2, 21, 0, 1, 1, 0, 'IconExperiment', NULL, 'alarmRule', '2025-09-15 00:01:55', '2025-09-20 22:12:16', 'admin', 'admin', 0);
-INSERT INTO `system_menu` VALUES (308, 282, '告警记录', NULL, 2, 30, 1, 1, 1, 0, 'IconNotification', NULL, 'alarmEvent', '2025-09-17 16:06:34', '2025-09-20 22:11:32', 'admin', 'admin', 0);
-INSERT INTO `system_menu` VALUES (309, 308, '查询告警记录', 'monitor:alarm-event:query', 3, 10, 1, 1, 1, 0, NULL, NULL, NULL, '2025-09-17 16:06:34', '2025-09-17 16:06:34', 'admin', 'admin', 0);
-INSERT INTO `system_menu` VALUES (310, 308, '处理告警记录', 'monitor:alarm-event:handle', 3, 20, 1, 1, 1, 0, NULL, NULL, NULL, '2025-09-17 16:06:34', '2025-09-17 16:06:34', 'admin', 'admin', 0);
-INSERT INTO `system_menu` VALUES (311, 308, '删除告警记录', 'monitor:alarm-event:delete', 3, 30, 1, 1, 1, 0, NULL, NULL, NULL, '2025-09-17 16:06:34', '2025-09-17 16:06:34', 'admin', 'admin', 0);
-INSERT INTO `system_menu` VALUES (312, 308, '清理告警记录', 'monitor:alarm-event:management:clear', 3, 40, 1, 1, 1, 0, NULL, NULL, NULL, '2025-09-17 16:06:34', '2025-09-17 16:06:34', 'admin', 'admin', 0);
+INSERT INTO `system_menu` VALUES (308, 282, '告警事件', NULL, 2, 30, 1, 1, 1, 0, 'IconNotification', NULL, 'alarmEvent', '2025-09-17 16:06:34', '2025-09-20 22:11:32', 'admin', 'admin', 0);
+INSERT INTO `system_menu` VALUES (309, 308, '查询告警事件', 'monitor:alarm-event:query', 3, 10, 1, 1, 1, 0, NULL, NULL, NULL, '2025-09-17 16:06:34', '2025-09-17 16:06:34', 'admin', 'admin', 0);
+INSERT INTO `system_menu` VALUES (310, 308, '处理告警事件', 'monitor:alarm-event:handle', 3, 20, 1, 1, 1, 0, NULL, NULL, NULL, '2025-09-17 16:06:34', '2025-09-17 16:06:34', 'admin', 'admin', 0);
+INSERT INTO `system_menu` VALUES (311, 308, '删除告警事件', 'monitor:alarm-event:delete', 3, 30, 1, 1, 1, 0, NULL, NULL, NULL, '2025-09-17 16:06:34', '2025-09-17 16:06:34', 'admin', 'admin', 0);
+INSERT INTO `system_menu` VALUES (312, 308, '清理告警事件', 'monitor:alarm-event:management:clear', 3, 40, 1, 1, 1, 0, NULL, NULL, NULL, '2025-09-17 16:06:34', '2025-09-17 16:06:34', 'admin', 'admin', 0);

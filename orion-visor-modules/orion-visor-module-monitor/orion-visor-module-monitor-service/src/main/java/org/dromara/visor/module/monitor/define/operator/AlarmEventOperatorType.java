@@ -30,7 +30,7 @@ import static org.dromara.visor.framework.biz.operator.log.core.enums.OperatorRi
 import static org.dromara.visor.framework.biz.operator.log.core.enums.OperatorRiskLevel.L;
 
 /**
- * 监控告警记录 操作日志类型
+ * 监控告警事件 操作日志类型
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -51,9 +51,9 @@ public class AlarmEventOperatorType extends InitializingOperatorTypes {
     public OperatorType[] types() {
         return new OperatorType[]{
                 new OperatorType(L, HANDLE, "设置告警状态为 ${status} <sb>${count}</sb> 条"),
-                new OperatorType(L, SET_FALSE, "设置告警记录为误报 <sb>${count}</sb> 条"),
-                new OperatorType(H, DELETE, "删除告警记录 <sb>${count}</sb> 条"),
-                new OperatorType(H, CLEAR, "清理告警记录 <sb>${count}</sb> 条"),
+                new OperatorType(L, SET_FALSE, "设置告警事件为误报 <sb>${count}</sb> 条"),
+                new OperatorType(H, DELETE, "删除告警事件 <sb>${count}</sb> 条"),
+                new OperatorType(H, CLEAR, "清理告警事件 <sb>${count}</sb> 条"),
         };
     }
 

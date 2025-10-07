@@ -14,7 +14,7 @@ export const FalseAlarm = {
 // 告警条件 字典项
 export const TriggerConditionKey = 'alarmTriggerCondition';
 
-// 告警记录处理状态 字典项
+// 告警事件处理状态 字典项
 export const HandleStatusKey = 'alarmEventHandleStatus';
 
 // 是否为误报 字典项

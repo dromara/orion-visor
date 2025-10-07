@@ -580,7 +580,7 @@ CREATE TABLE `monitor_alarm_event`
 ) ENGINE = InnoDB
   AUTO_INCREMENT = 1
   CHARACTER SET = utf8mb4
-  COLLATE = utf8mb4_unicode_ci COMMENT = '监控告警记录'
+  COLLATE = utf8mb4_unicode_ci COMMENT = '监控告警事件'
   ROW_FORMAT = Dynamic;
 
 -- ----------------------------

@@ -33,7 +33,7 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * 监控告警记录 设置误报请求对象
+ * 监控告警事件 设置误报请求对象
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -43,7 +43,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(name = "AlarmEventSetFalseRequest", description = "监控告警记录 设置误报请求对象")
+@Schema(name = "AlarmEventSetFalseRequest", description = "监控告警事件 设置误报请求对象")
 public class AlarmEventSetFalseRequest implements Serializable {
 
     private static final long serialVersionUID = 1L;

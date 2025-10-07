@@ -23,7 +23,7 @@
 package org.dromara.visor.module.monitor.enums;
 
 /**
- * 告警记录处理状态
+ * 告警事件处理状态
  *
  * @author Jiahang Li
  * @version 1.0.0

@@ -35,21 +35,26 @@
           <a-form-item v-if="formModel.allEffect === 0"
                        :field="'tag-' + (index + 1)"
                        :label="'指标标签-' + (index + 1)">
-            <a-space :size="12">
+            <a-space :size="12" class="tag-wrapper">
               <!-- 标签名称 -->
               <a-input v-model="tag.key"
-                       style="width: 128px;"
-                       placeholder="指标标签名称" />
+                       style="width: 108px;"
+                       placeholder="标签名称" />
               <!-- 标签值 -->
               <a-select v-model="tag.value"
                         class="tag-values"
                         style="width: 260px"
                         :max-tag-count="2"
-                        :options="measurementTags[measurement] || []"
-                        placeholder="标签值"
-                        tag-nowrap
+                        :options="[measurement] || []"
+                        placeholder="输入或选择标签值"
                         multiple
-                        allow-create />
+                        allow-create>
+                <template #empty>
+                  <a-empty>
+                    请输入标签值
+                  </a-empty>
+                </template>
+              </a-select>
               <!-- 移除 -->
               <a-button title="移除"
                         style="width: 32px"
@@ -200,7 +205,6 @@
   import { assignOmitRecord } from '@/utils';
   import { TriggerConditionKey, LevelKey, DefaultCondition, DefaultLevel, } from '../types/const';
   import { createAlarmRule, updateAlarmRule } from '@/api/monitor/alarm-rule';
-  import { isBoolean } from '@/utils/is';
   import { Message } from '@arco-design/web-vue';
   import { useDictStore, useCacheStore } from '@/store';
   import { getMonitorHostPolicyRuleTags } from '@/api/monitor/monitor-host';
@@ -220,7 +224,7 @@
   const tags = ref<Array<RuleTag>>([]);
   const hasTags = ref(false);
   const measurement = ref('');
-  const measurementTags = ref<Record<string, string[]>>({});
+  const  = ref<Record<string, string[]>>({});
 
   const defaultForm = (): AlarmRuleUpdateRequest => {
     return {
@@ -326,13 +330,13 @@
 
   // 加载全部标签
   const loadTags = () => {
-    const tags = measurementTags.value[measurement.value];
+    const tags = .value[measurement.value];
     if (tags) {
       return;
     }
     // 加载标签
     getMonitorHostPolicyRuleTags(formModel.value.policyId as number, measurement.value).then(({ data }) => {
-      measurementTags.value[measurement.value as any] = data;
+      .value[measurement.value as any] = data;
     });
   };
 
@@ -420,6 +424,11 @@
     margin-right: 12px;
   }
 
+  .tag-wrapper {
+    width: 100%;
+    justify-content: space-between;
+  }
+
   .alarm-level-select, .condition-select {
 
     :deep(.arco-select-view-suffix) {
@@ -430,4 +439,5 @@
   :deep(.tag-values .arco-select-view-inner) {
     flex-wrap: nowrap !important;
   }
+
 </style>

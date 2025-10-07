@@ -6,7 +6,7 @@
       <div class="table-left-bar-handle">
         <!-- 标题 -->
         <div class="table-title">
-          告警记录列表
+          告警事件列表
         </div>
       </div>
       <!-- 右侧操作 -->
