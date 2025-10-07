@@ -189,6 +189,7 @@
         return createTimeSeries({
           name: s.name,
           type: props.option.type,
+          smooth: props.option.smooth,
           area: props.option.background,
           lineColor: colors?.[0],
           itemBorderColor: colors?.[1],

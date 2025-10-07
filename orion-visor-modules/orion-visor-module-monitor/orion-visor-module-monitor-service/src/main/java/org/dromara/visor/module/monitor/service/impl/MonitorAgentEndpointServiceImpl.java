@@ -35,12 +35,10 @@ import org.dromara.visor.common.constant.ErrorMessage;
 import org.dromara.visor.common.utils.Assert;
 import org.dromara.visor.common.utils.LockerUtils;
 import org.dromara.visor.framework.influxdb.core.utils.InfluxdbUtils;
-import org.dromara.visor.framework.redis.core.utils.RedisMaps;
 import org.dromara.visor.module.asset.api.HostApi;
 import org.dromara.visor.module.asset.entity.dto.host.HostDTO;
 import org.dromara.visor.module.infra.api.SystemUserApi;
 import org.dromara.visor.module.monitor.dao.MonitorHostDAO;
-import org.dromara.visor.module.monitor.define.cache.MonitorHostCacheKeyDefine;
 import org.dromara.visor.module.monitor.engine.AlarmEngine;
 import org.dromara.visor.module.monitor.engine.MonitorContext;
 import org.dromara.visor.module.monitor.entity.domain.MonitorHostDO;
@@ -148,11 +146,6 @@ public class MonitorAgentEndpointServiceImpl implements MonitorAgentEndpointServ
                     update.setMonitorConfig(JSON.toJSONString(newConfig));
                 }
                 monitorHostDAO.updateById(update);
-                // 删除元数据缓存
-                Long policyId = monitorHost.getPolicyId();
-                if (policyId != null) {
-                    RedisMaps.delete(MonitorHostCacheKeyDefine.MONITOR_HOST_POLICY_HOST_TAGS.format(policyId));
-                }
             }
             // 重新加载监控主机上下文
             if (newConfig != null) {

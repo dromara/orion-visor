@@ -212,25 +212,25 @@ public class HostAgentEndpointServiceImpl implements HostAgentEndpointService {
     /**
      * 标记在线状态
      *
-     * @param agentKeyList agentKeyList
-     * @param status       status
+     * @param agentKeys agentKeys
+     * @param status    status
      */
-    private void markOnlineStatus(List<String> agentKeyList, AgentOnlineStatusEnum status) {
-        if (Lists.isEmpty(agentKeyList)) {
+    private void markOnlineStatus(List<String> agentKeys, AgentOnlineStatusEnum status) {
+        if (Lists.isEmpty(agentKeys)) {
             return;
         }
-        log.info("HostAgentEndpointService mark {}. count: {}, keys: {}", status, agentKeyList.size(), agentKeyList);
+        log.info("HostAgentEndpointService mark {}. count: {}, keys: {}", status, agentKeys.size(), agentKeys);
         // 更新数据
         HostDO update = HostDO.builder()
                 .agentOnlineStatus(status.getValue())
                 .agentOnlineChangeTime(new Date())
                 .build();
-        int effect = hostDAO.updateByAgentKeys(agentKeyList, update);
+        int effect = hostDAO.updateByAgentKeys(agentKeys, update);
         // 更新缓存
-        agentKeyList.forEach(s -> ONLINE_STATUS_CACHE.put(s, status.getValue()));
+        agentKeys.forEach(s -> ONLINE_STATUS_CACHE.put(s, status.getValue()));
         log.info("HostAgentEndpointService mark {}. effect: {}", status, effect);
         // 插入日志
-        List<HostAgentLogDO> logList = hostDAO.selectIdByAgentKeys(agentKeyList)
+        List<HostAgentLogDO> logList = hostDAO.selectIdByAgentKeys(agentKeys)
                 .stream()
                 .map(s -> {
                     HostAgentLogDO agentLog = HostAgentLogDO.builder()
@@ -250,7 +250,7 @@ public class HostAgentEndpointServiceImpl implements HostAgentEndpointService {
         }
         // 发送已下线事件
         if (AgentOnlineStatusEnum.OFFLINE.equals(status)) {
-            SpringHolder.publishEvent(new AgentOfflineEvent(agentKeyList));
+            SpringHolder.publishEvent(new AgentOfflineEvent(agentKeys));
         }
     }
 

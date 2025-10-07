@@ -45,7 +45,7 @@
                         class="tag-values"
                         style="width: 260px"
                         :max-tag-count="2"
-                        :options="[measurement] || []"
+                        :options="measurementTags[measurement] || []"
                         placeholder="输入或选择标签值"
                         multiple
                         allow-create>
@@ -207,7 +207,7 @@
   import { createAlarmRule, updateAlarmRule } from '@/api/monitor/alarm-rule';
   import { Message } from '@arco-design/web-vue';
   import { useDictStore, useCacheStore } from '@/store';
-  import { getMonitorHostPolicyRuleTags } from '@/api/monitor/monitor-host';
+  import { getMonitorHostTags } from '@/api/monitor/monitor-host';
   import MonitorMetricsSelector from '@/components/monitor/metrics/selector/index.vue';
 
   const emits = defineEmits(['added', 'updated']);
@@ -224,7 +224,7 @@
   const tags = ref<Array<RuleTag>>([]);
   const hasTags = ref(false);
   const measurement = ref('');
-  const  = ref<Record<string, string[]>>({});
+  const measurementTags = ref<Record<string, string[]>>({});
 
   const defaultForm = (): AlarmRuleUpdateRequest => {
     return {
@@ -330,13 +330,16 @@
 
   // 加载全部标签
   const loadTags = () => {
-    const tags = .value[measurement.value];
+    const tags = measurementTags.value[measurement.value];
     if (tags) {
       return;
     }
     // 加载标签
-    getMonitorHostPolicyRuleTags(formModel.value.policyId as number, measurement.value).then(({ data }) => {
-      .value[measurement.value as any] = data;
+    getMonitorHostTags({
+      measurement: measurement.value,
+      policyId: formModel.value.policyId,
+    }).then(({ data }) => {
+      measurementTags.value[measurement.value as any] = data;
     });
   };
 

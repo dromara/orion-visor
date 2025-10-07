@@ -40,7 +40,6 @@ import org.dromara.visor.framework.biz.operator.log.core.utils.OperatorLogs;
 import org.dromara.visor.framework.influxdb.core.query.FluxQueryBuilder;
 import org.dromara.visor.framework.influxdb.core.utils.InfluxdbUtils;
 import org.dromara.visor.framework.mybatis.core.query.Conditions;
-import org.dromara.visor.framework.redis.core.utils.RedisMaps;
 import org.dromara.visor.module.asset.api.HostAgentApi;
 import org.dromara.visor.module.asset.api.HostApi;
 import org.dromara.visor.module.asset.entity.dto.host.HostAgentLogDTO;
@@ -52,15 +51,11 @@ import org.dromara.visor.module.monitor.constant.MetricsConst;
 import org.dromara.visor.module.monitor.convert.MonitorHostConvert;
 import org.dromara.visor.module.monitor.dao.AlarmPolicyDAO;
 import org.dromara.visor.module.monitor.dao.MonitorHostDAO;
-import org.dromara.visor.module.monitor.define.cache.MonitorHostCacheKeyDefine;
 import org.dromara.visor.module.monitor.engine.MonitorContext;
 import org.dromara.visor.module.monitor.entity.domain.AlarmPolicyDO;
 import org.dromara.visor.module.monitor.entity.domain.MonitorHostDO;
 import org.dromara.visor.module.monitor.entity.dto.*;
-import org.dromara.visor.module.monitor.entity.request.host.MonitorHostChartRequest;
-import org.dromara.visor.module.monitor.entity.request.host.MonitorHostQueryRequest;
-import org.dromara.visor.module.monitor.entity.request.host.MonitorHostSwitchUpdateRequest;
-import org.dromara.visor.module.monitor.entity.request.host.MonitorHostUpdateRequest;
+import org.dromara.visor.module.monitor.entity.request.host.*;
 import org.dromara.visor.module.monitor.entity.vo.MonitorHostMetricsDataVO;
 import org.dromara.visor.module.monitor.entity.vo.MonitorHostVO;
 import org.dromara.visor.module.monitor.enums.AlarmSwitchEnum;
@@ -76,7 +71,6 @@ import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * 监控主机 服务实现类
@@ -191,8 +185,8 @@ public class MonitorHostServiceImpl implements MonitorHostService {
     }
 
     @Override
-    public List<MonitorHostMetricsDataVO> getMonitorHostMetrics(List<String> agentKeyList) {
-        return agentKeyList.stream()
+    public List<MonitorHostMetricsDataVO> getMonitorHostMetrics(List<String> agentKeys) {
+        return agentKeys.stream()
                 .map(s -> this.getHostMetricsData(s, null))
                 .collect(Collectors.toList());
     }
@@ -239,25 +233,11 @@ public class MonitorHostServiceImpl implements MonitorHostService {
     }
 
     @Override
-    public List<String> getMonitorHostPolicyRuleTags(Long policyId, String measurement) {
-        MeasurementEnum measurementEnum = MeasurementEnum.of(measurement);
+    public List<String> getMonitorHostTags(MonitorHostQueryTagRequest request) {
+        MeasurementEnum measurementEnum = MeasurementEnum.of(request.getMeasurement());
         if (measurementEnum == null) {
             return Collections.emptyList();
         }
-        // 查询缓存
-        String cacheKey = MonitorHostCacheKeyDefine.MONITOR_HOST_POLICY_HOST_TAGS.format(policyId);
-        String value = RedisMaps.get(cacheKey, measurement);
-        if (!Strings.isBlank(value)) {
-            return JSON.parseArray(value, String.class);
-        }
-        // 查询规则下的全部主机
-        List<MonitorHostMetaDTO> metas = monitorHostDAO.selectByPolicyId(policyId)
-                .stream()
-                .map(MonitorHostDO::getMonitorMeta)
-                .filter(Objects::nonNull)
-                .map(s -> JSON.parseObject(s, MonitorHostMetaDTO.class))
-                .filter(Objects::nonNull)
-                .collect(Collectors.toList());
         // 映射数据
         Function<MonitorHostMetaDTO, List<String>> tagsGetter;
         if (MeasurementEnum.CPU.equals(measurementEnum)) {
@@ -269,15 +249,25 @@ public class MonitorHostServiceImpl implements MonitorHostService {
         } else {
             return Collections.emptyList();
         }
-        List<String> tags = metas.stream()
+        // 查询监控主机元数据
+        List<MonitorHostMetaDTO> metas = monitorHostDAO.of()
+                .createValidateWrapper()
+                .eq(MonitorHostDO::getPolicyId, request.getPolicyId())
+                .in(MonitorHostDO::getAgentKey, request.getAgentKeys())
+                .then()
+                .stream()
+                .map(MonitorHostDO::getMonitorMeta)
+                .filter(Objects::nonNull)
+                .map(s -> JSON.parseObject(s, MonitorHostMetaDTO.class))
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+        // 获取 tag
+        return metas.stream()
                 .map(tagsGetter)
                 .flatMap(Collection::stream)
                 .filter(Objects::nonNull)
                 .distinct()
                 .collect(Collectors.toList());
-        // 设置缓存
-        RedisMaps.putJson(cacheKey, MonitorHostCacheKeyDefine.MONITOR_HOST_POLICY_HOST_TAGS, measurement, tags);
-        return tags;
     }
 
     @Override
@@ -316,14 +306,6 @@ public class MonitorHostServiceImpl implements MonitorHostService {
         // 更新策略为空
         if (policyId == null) {
             monitorHostDAO.setPolicyIdWithNullById(id);
-        }
-        // 删除元数据缓存
-        List<String> tagsCacheKeyList = Stream.of(policyId, monitorHost.getPolicyId())
-                .filter(Objects::nonNull)
-                .map(MonitorHostCacheKeyDefine.MONITOR_HOST_POLICY_HOST_TAGS::format)
-                .collect(Collectors.toList());
-        if (!tagsCacheKeyList.isEmpty()) {
-            RedisMaps.delete(tagsCacheKeyList);
         }
         // 重新加载监控主机上下文
         monitorContext.reloadMonitorHost(host.getAgentKey());

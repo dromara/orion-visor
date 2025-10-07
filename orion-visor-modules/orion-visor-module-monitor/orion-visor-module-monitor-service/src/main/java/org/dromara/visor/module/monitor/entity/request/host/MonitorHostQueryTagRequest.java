@@ -20,29 +20,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.dromara.visor.module.monitor.define.cache;
+package org.dromara.visor.module.monitor.entity.request.host;
 
-import cn.orionsec.kit.lang.define.cache.key.CacheKeyBuilder;
-import cn.orionsec.kit.lang.define.cache.key.CacheKeyDefine;
-import cn.orionsec.kit.lang.define.cache.key.struct.RedisCacheStruct;
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import org.dromara.visor.common.entity.BaseQueryRequest;
 
-import java.util.concurrent.TimeUnit;
+import java.util.List;
 
 /**
- * 监控主机缓存 key
+ * 监控主机标签 查询请求对象
  *
  * @author Jiahang Li
  * @version 1.0.0
- * @since 2025-9-14 00:12
+ * @since 2025-8-14 16:27
  */
-public interface MonitorHostCacheKeyDefine {
+@Data
+@EqualsAndHashCode(callSuper = true)
+@Schema(name = "MonitorHostQueryTagRequest", description = "监控主机标签 查询请求对象")
+public class MonitorHostQueryTagRequest extends BaseQueryRequest {
 
-    CacheKeyDefine MONITOR_HOST_POLICY_HOST_TAGS = new CacheKeyBuilder()
-            .key("monitor:host:policy:host-tags:{}")
-            .desc("告警规则沉默标志 ${policyId}")
-            .type(String.class)
-            .struct(RedisCacheStruct.HASH)
-            .timeout(8, TimeUnit.HOURS)
-            .build();
+    @Schema(description = "数据集")
+    private String measurement;
+
+    @Schema(description = "策略id")
+    private Long policyId;
+
+    @Schema(description = "agentKey")
+    private List<String> agentKeys;
 
 }
