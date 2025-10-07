@@ -30,8 +30,8 @@
                    placeholder="请输入策略描述"
                    allow-clear />
         </a-form-item>
-        <!-- 通知模板 -->
-        <a-form-item field="notifyIdList" label="通知模板">
+        <!-- 通知渠道 -->
+        <a-form-item field="notifyIdList" label="通知渠道">
           <notify-template-selector v-model="formModel.notifyIdList"
                                     biz-type="ALARM"
                                     multiple

@@ -229,8 +229,8 @@
 
   // 获取指标名称
   const getMetricsField = (metricsId: number, field: string) => {
-    return (monitorMetrics as Array<MetricsQueryResponse>).find(m => m.id === metricsId)?.[field];
-  };
+    return (monitorMetrics as Array<MetricsQueryResponse> || []).find(m => m.id === metricsId)?.[field];
+ };
 
   // 提取标签
   const extraTags = (record: AlarmEventQueryResponse) => {

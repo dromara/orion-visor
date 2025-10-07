@@ -15,7 +15,7 @@
         <!-- exitCode -->
         <a-tag v-if="host.exitCode || host.exitCode === 0"
                :color="host.exitCode === 0 ? 'arcoblue' : 'orangered'"
-               title="exit code">
+               title="exitCode">
           <template #icon>
             <icon-check v-if="host.exitCode === 0" />
             <icon-exclamation v-else />
