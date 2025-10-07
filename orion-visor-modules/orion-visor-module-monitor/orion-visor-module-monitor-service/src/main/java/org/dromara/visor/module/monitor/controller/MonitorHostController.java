@@ -106,6 +106,17 @@ public class MonitorHostController {
         return monitorHostService.getMonitorHostChart(request);
     }
 
+    @IgnoreLog(IgnoreLogMode.RET)
+    @GetMapping("/host-tags")
+    @Operation(summary = "查询监控告警标签")
+    @Parameter(name = "policyId", description = "policyId", required = true)
+    @Parameter(name = "measurement", description = "measurement")
+    @PreAuthorize("@ss.hasPermission('monitor:monitor-host:query')")
+    public List<String> getMonitorHostPolicyRuleTags(@RequestParam("policyId") Long policyId,
+                                                     @RequestParam(value = "measurement", required = false) String measurement) {
+        return monitorHostService.getMonitorHostPolicyRuleTags(policyId, measurement);
+    }
+
     @DemoDisableApi
     @OperatorLog(MonitorHostOperatorType.UPDATE)
     @PutMapping("/update")

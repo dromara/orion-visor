@@ -67,6 +67,15 @@ public interface MonitorHostService {
     List<TimeChartSeries> getMonitorHostChart(MonitorHostChartRequest request);
 
     /**
+     * 查询监控告警规则主机标签
+     *
+     * @param policyId    policyId
+     * @param measurement measurement
+     * @return tags
+     */
+    List<String> getMonitorHostPolicyRuleTags(Long policyId, String measurement);
+
+    /**
      * 更新监控主机
      *
      * @param request request

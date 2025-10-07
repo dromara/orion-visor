@@ -25,32 +25,24 @@ package org.dromara.visor.module.monitor.define.cache;
 import cn.orionsec.kit.lang.define.cache.key.CacheKeyBuilder;
 import cn.orionsec.kit.lang.define.cache.key.CacheKeyDefine;
 import cn.orionsec.kit.lang.define.cache.key.struct.RedisCacheStruct;
-import org.dromara.visor.module.monitor.entity.dto.AlarmPolicyCacheDTO;
 
 import java.util.concurrent.TimeUnit;
 
 /**
- * 监控告警策略缓存 key
+ * 监控主机缓存 key
  *
  * @author Jiahang Li
  * @version 1.0.0
  * @since 2025-9-14 00:12
  */
-public interface AlarmPolicyCacheKeyDefine {
+public interface MonitorHostCacheKeyDefine {
 
-    CacheKeyDefine ALARM_POLICY = new CacheKeyBuilder()
-            .key("alarm:policy:list")
-            .desc("告警策略")
-            .type(AlarmPolicyCacheDTO.class)
+    CacheKeyDefine MONITOR_HOST_POLICY_HOST_TAGS = new CacheKeyBuilder()
+            .key("monitor:host:policy:host-tags:{}")
+            .desc("告警规则沉默标志 ${policyId}")
+            .type(String.class)
             .struct(RedisCacheStruct.HASH)
             .timeout(8, TimeUnit.HOURS)
-            .build();
-
-    CacheKeyDefine ALARM_RULE_SILENCE = new CacheKeyBuilder()
-            .key("alarm:silence:{}:{}")
-            .desc("告警规则沉默标志 ${agentKey} ${ruleId}")
-            .type(Long.class)
-            .struct(RedisCacheStruct.STRING)
             .build();
 
 }

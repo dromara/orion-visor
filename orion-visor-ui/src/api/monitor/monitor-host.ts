@@ -178,6 +178,13 @@ export function getMonitorHostPage(request: MonitorHostQueryRequest) {
 }
 
 /**
+ * 查询监控告警标签
+ */
+export function getMonitorHostPolicyRuleTags(policyId: number, measurement: string = '') {
+  return axios.get<Array<string>>('/monitor/monitor-host/host-tags', { params: { policyId, measurement } });
+}
+
+/**
  * 更新监控主机
  */
 export function updateMonitorHost(request: MonitorHostUpdateRequest) {
