@@ -5,7 +5,7 @@
           :loading="loading"
           :bordered="false"
           :header-style="{ height: '48px', padding: '8px 16px 0 16px', borderBottom: 'none' }"
-          :body-style="{ padding: '0 0 0 16px', height: 'calc(100% - 48px)', position: 'relative' }">
+          :body-style="{ padding: '0 0 0 16px', height: 'calc(100% - 48px)', position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }">
     <!-- 标题 -->
     <template #title>
       <div class="chart-title">
@@ -80,7 +80,7 @@
         textStyle: {
           color: 'rgba(0, 0, 0, 0.8)',
         },
-        formatter: function(params: any) {
+        formatter: function (params: any) {
           if (!params.length) {
             return '';
           }
@@ -241,7 +241,6 @@
   }
 
   .nodata-chart {
-    padding-top: 76px;
     font-size: 16px;
     display: flex;
     align-items: center;
