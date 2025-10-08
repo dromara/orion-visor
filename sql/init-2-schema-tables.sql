@@ -433,8 +433,8 @@ CREATE TABLE `host`
     `updater`                  varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  NULL DEFAULT NULL COMMENT '更新人',
     `deleted`                  tinyint(0)                                                    NULL DEFAULT 0 COMMENT '是否删除 0未删除 1已删除',
     PRIMARY KEY (`id`) USING BTREE,
-    INDEX `idx_name` (`name`) USING BTREE,
-    INDEX `idx_agent_key` (`agent_key`) USING BTREE
+    UNIQUE INDEX `idx_agent_key` (`agent_key`) USING BTREE,
+    INDEX `idx_name` (`name`) USING BTREE
 ) ENGINE = InnoDB
   AUTO_INCREMENT = 1
   CHARACTER SET = utf8mb4
@@ -580,7 +580,7 @@ CREATE TABLE `monitor_alarm_event`
 ) ENGINE = InnoDB
   AUTO_INCREMENT = 1
   CHARACTER SET = utf8mb4
-  COLLATE = utf8mb4_unicode_ci COMMENT = '监控告警记录'
+  COLLATE = utf8mb4_unicode_ci COMMENT = '监控告警事件'
   ROW_FORMAT = Dynamic;
 
 -- ----------------------------
@@ -680,9 +680,9 @@ CREATE TABLE `monitor_host`
     `updater`        varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '更新人',
     `deleted`        tinyint(0)                                                   NULL DEFAULT 0 COMMENT '是否删除 0未删除 1已删除',
     PRIMARY KEY (`id`) USING BTREE,
+    UNIQUE INDEX `idx_agent_key` (`agent_key`) USING BTREE,
     INDEX `idx_host_id` (`host_id`) USING BTREE,
-    INDEX `idx_policy_id` (`policy_id`) USING BTREE,
-    INDEX `idx_agent_key` (`agent_key`) USING BTREE
+    INDEX `idx_policy_id` (`policy_id`) USING BTREE
 ) ENGINE = InnoDB
   AUTO_INCREMENT = 1
   CHARACTER SET = utf8mb4

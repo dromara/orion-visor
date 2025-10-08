@@ -295,7 +295,7 @@
 
     .exec-form-container, .exec-command-container, .exec-history-container {
       background: var(--color-bg-2);
-      border-radius: 4px;
+      border-radius: 8px;
       height: 100%;
       padding: 16px;
       position: relative;

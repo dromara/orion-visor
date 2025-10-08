@@ -22,6 +22,11 @@ spring:
     async:
       # 异步请求时间 30min
       request-timeout: 1800000
+  task:
+    scheduling:
+      thread-name-prefix: scheduling-task-
+      pool:
+        size: 4
   datasource:
     druid:
       driver-class-name: com.mysql.cj.jdbc.Driver
@@ -255,13 +260,6 @@ orion:
       secret-key: I66AndrKWrwXjtBL
       use-generator-key: true
       generator-key-length: 128
-  async:
-    # 线程池配置
-    executor:
-      core-pool-size: 2
-      max-pool-size: 4
-      queue-capacity: 30
-      keep-alive-seconds: 180
   operator-log:
     error-message-length: 255
     user-agent-length: 128

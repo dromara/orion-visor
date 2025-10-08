@@ -20,47 +20,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.dromara.visor.framework.job.configuration.config;
+package org.dromara.visor.module.monitor.entity.po;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-import org.springframework.boot.context.properties.ConfigurationProperties;
+import lombok.NoArgsConstructor;
+
+import java.io.Serializable;
 
 /**
- * 线程池配置类
+ * 监控告警事件数量对象
  *
  * @author Jiahang Li
- * @version 1.0.0
- * @since 2023/7/10 15:49
+ * @version 1.0.8
+ * @since 2024/5/11 18:15
  */
 @Data
-@ConfigurationProperties(prefix = "orion.async.executor")
-public class AsyncExecutorConfig {
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Schema(name = "AlarmEventCountPO", description = "监控告警事件数量对象")
+public class AlarmEventCountPO implements Serializable {
 
-    /**
-     * 核心线程数量
-     */
-    private int corePoolSize;
+    private static final long serialVersionUID = 1L;
 
-    /**
-     * 最大线程数量
-     */
-    private int maxPoolSize;
+    @Schema(description = "policyId")
+    private Long policyId;
 
-    /**
-     * 队列容量
-     */
-    private int queueCapacity;
-
-    /**
-     * 活跃时间
-     */
-    private int keepAliveSeconds;
-
-    public AsyncExecutorConfig() {
-        this.corePoolSize = 8;
-        this.maxPoolSize = 16;
-        this.queueCapacity = 200;
-        this.keepAliveSeconds = 300;
-    }
+    @Schema(description = "数量")
+    private Integer count;
 
 }

@@ -5,7 +5,7 @@
           :loading="loading"
           :bordered="false"
           :header-style="{ height: '48px', padding: '8px 16px 0 16px', borderBottom: 'none' }"
-          :body-style="{ padding: '0 0 0 16px', height: 'calc(100% - 48px)', position: 'relative' }">
+          :body-style="{ padding: '0 0 0 16px', height: 'calc(100% - 48px)', position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }">
     <!-- 标题 -->
     <template #title>
       <div class="chart-title">
@@ -68,13 +68,19 @@
       },
       backgroundColor: 'transparent',
       animation: false,
+      dataZoom: [{
+        type: 'inside',
+        zoomOnMouseWheel: true,
+        moveOnMouseMove: true,
+      }],
       tooltip: {
         trigger: 'axis',
+        appendToBody: true,
         backgroundColor: 'rgba(255, 255, 255, 0.9)',
         textStyle: {
           color: 'rgba(0, 0, 0, 0.8)',
         },
-        formatter: function(params: any) {
+        formatter: function (params: any) {
           if (!params.length) {
             return '';
           }
@@ -188,6 +194,7 @@
         return createTimeSeries({
           name: s.name,
           type: props.option.type,
+          smooth: props.option.smooth,
           area: props.option.background,
           lineColor: colors?.[0],
           itemBorderColor: colors?.[1],
@@ -234,7 +241,6 @@
   }
 
   .nodata-chart {
-    padding-top: 76px;
     font-size: 16px;
     display: flex;
     align-items: center;

@@ -4,7 +4,7 @@ import axios from 'axios';
 import qs from 'query-string';
 
 /**
- * 告警记录处理请求
+ * 告警事件处理请求
  */
 export interface AlarmEventHandleRequest {
   idList?: Array<number>;
@@ -14,14 +14,14 @@ export interface AlarmEventHandleRequest {
 }
 
 /**
- * 告警记录误报请求
+ * 告警事件误报请求
  */
 export interface AlarmEventFalseAlarmRequest {
   idList?: Array<number>;
 }
 
 /**
- * 告警记录查询请求
+ * 告警事件查询请求
  */
 export interface AlarmEventQueryRequest extends Pagination, OrderDirection {
   id?: number;
@@ -39,13 +39,13 @@ export interface AlarmEventQueryRequest extends Pagination, OrderDirection {
 }
 
 /**
- * 告警记录清理请求
+ * 告警事件清理请求
  */
 export interface AlarmEventClearRequest extends AlarmEventQueryRequest, ClearRequest {
 }
 
 /**
- * 告警记录查询响应
+ * 告警事件查询响应
  */
 export interface AlarmEventQueryResponse extends TableData {
   id: number;
@@ -75,7 +75,7 @@ export interface AlarmEventQueryResponse extends TableData {
 }
 
 /**
- * 处理告警记录
+ * 处理告警事件
  */
 export function handleAlarmEvent(request: AlarmEventHandleRequest) {
   return axios.post<number>('/monitor/alarm-event/handle', request);
@@ -89,28 +89,28 @@ export function setAlarmEventFalse(request: AlarmEventFalseAlarmRequest) {
 }
 
 /**
- * 分页查询告警记录
+ * 分页查询告警事件
  */
 export function getAlarmEventPage(request: AlarmEventQueryRequest) {
   return axios.post<DataGrid<AlarmEventQueryResponse>>('/monitor/alarm-event/query', request);
 }
 
 /**
- * 查询告警记录数量
+ * 查询告警事件数量
  */
 export function getAlarmEventCount(request: AlarmEventQueryRequest) {
   return axios.post<number>('/monitor/alarm-event/count', request);
 }
 
 /**
- * 删除告警记录
+ * 删除告警事件
  */
 export function deleteAlarmEvent(id: number) {
   return axios.delete<number>('/monitor/alarm-event/delete', { params: { id } });
 }
 
 /**
- * 批量删除告警记录
+ * 批量删除告警事件
  */
 export function batchDeleteAlarmEvent(idList: Array<number>) {
   return axios.delete<number>('/monitor/alarm-event/batch-delete', {
@@ -122,7 +122,7 @@ export function batchDeleteAlarmEvent(idList: Array<number>) {
 }
 
 /**
- * 清理告警记录
+ * 清理告警事件
  */
 export function clearMonitorAlarmEvent(request: AlarmEventClearRequest) {
   return axios.post<number>('/monitor/alarm-event/clear', request);

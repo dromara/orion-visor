@@ -25,7 +25,7 @@ package org.dromara.visor.module.monitor.convert;
 import org.dromara.visor.module.monitor.entity.domain.AlarmEventDO;
 import org.dromara.visor.module.monitor.entity.dto.AlarmEventTriggerDTO;
 import org.dromara.visor.module.monitor.entity.dto.AlarmPolicyAlarmCountDTO;
-import org.dromara.visor.module.monitor.entity.po.AlarmPolicyAlarmCountPO;
+import org.dromara.visor.module.monitor.entity.po.AlarmEventCountPO;
 import org.dromara.visor.module.monitor.entity.request.alarm.AlarmEventQueryRequest;
 import org.dromara.visor.module.monitor.entity.vo.AlarmEventVO;
 import org.mapstruct.Mapper;
@@ -34,7 +34,7 @@ import org.mapstruct.factory.Mappers;
 import java.util.List;
 
 /**
- * 监控告警记录 内部对象转换器
+ * 监控告警事件 内部对象转换器
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -51,7 +51,7 @@ public interface AlarmEventConvert {
 
     AlarmEventTriggerDTO toTrigger(AlarmEventDO domain);
 
-    AlarmPolicyAlarmCountDTO toCount(AlarmPolicyAlarmCountPO domain);
+    AlarmPolicyAlarmCountDTO toCount(AlarmEventCountPO domain);
 
     List<AlarmEventVO> to(List<AlarmEventDO> list);
 

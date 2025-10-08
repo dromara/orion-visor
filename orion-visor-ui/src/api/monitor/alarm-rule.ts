@@ -72,8 +72,8 @@ export function updateAlarmRuleSwitch(request: AlarmRuleUpdateRequest) {
 /**
  * 查询全部监控告警规则
  */
-export function getAlarmRuleList(policyId: number, metricsMeasurement: string = '') {
-  return axios.get<Array<AlarmRuleQueryResponse>>('/monitor/alarm-policy-rule/list', { params: { policyId, metricsMeasurement } });
+export function getAlarmRuleList(policyId: number, measurement: string = '') {
+  return axios.get<Array<AlarmRuleQueryResponse>>('/monitor/alarm-policy-rule/list', { params: { policyId, measurement } });
 }
 
 /**

@@ -46,7 +46,7 @@ public class MonitorHostQueryRequest extends BaseQueryRequest {
 
     @NotEmpty(groups = Key.class)
     @Schema(description = "agentKey")
-    private List<String> agentKeyList;
+    private List<String> agentKeys;
 
     @Schema(description = "搜索")
     private String searchValue;

@@ -28,7 +28,7 @@ export interface MonitorHostSwitchUpdateRequest {
  * 监控主机查询请求
  */
 export interface MonitorHostQueryRequest extends Pagination {
-  agentKeyList?: Array<string>;
+  agentKeys?: Array<string>;
   searchValue?: string;
   alarmSwitch?: number;
   policyId?: number;
@@ -41,6 +41,15 @@ export interface MonitorHostQueryRequest extends Pagination {
   agentOnlineStatus?: number;
   description?: string;
   tags?: Array<number>;
+}
+
+/**
+ * 监控主机标签查询请求
+ */
+export interface MonitorHostQueryTagRequest {
+  measurement?: string;
+  policyId?: number;
+  agentKeys?: Array<string>;
 }
 
 /**
@@ -147,12 +156,12 @@ export interface MonitorHostMetricsData {
 /**
  * 查询监控主机指标
  */
-export function getMonitorHostMetrics(agentKeyList: Array<string>) {
+export function getMonitorHostMetrics(agentKeys: Array<string>) {
   return axios.post<Array<MonitorHostMetricsData>>('/monitor/monitor-host/metrics', {
-    agentKeyList
+    agentKeys
   }, {
     promptBizErrorMessage: false,
-    promptRequestErrorMessage: false,
+    promptRequestErrorMessage: false
   });
 }
 
@@ -167,7 +176,9 @@ export function getMonitorHostOverride(agentKey: string) {
  * 查询监控主机图表
  */
 export function getMonitorHostChart(request: MonitorHostChartRequest) {
-  return axios.post<Array<TimeChartSeries>>('/monitor/monitor-host/chart', request);
+  return axios.post<Array<TimeChartSeries>>('/monitor/monitor-host/chart', request, {
+    timeout: 180000,
+  });
 }
 
 /**
@@ -175,6 +186,13 @@ export function getMonitorHostChart(request: MonitorHostChartRequest) {
  */
 export function getMonitorHostPage(request: MonitorHostQueryRequest) {
   return axios.post<DataGrid<MonitorHostQueryResponse>>('/monitor/monitor-host/query', request);
+}
+
+/**
+ * 查询监控主机标签
+ */
+export function getMonitorHostTags(request: MonitorHostQueryTagRequest) {
+  return axios.post<Array<string>>('/monitor/monitor-host/host-tags', request);
 }
 
 /**

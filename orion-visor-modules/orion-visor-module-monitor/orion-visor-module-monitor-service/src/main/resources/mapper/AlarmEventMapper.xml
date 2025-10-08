@@ -34,7 +34,7 @@
     </resultMap>
 
     <!-- 操作数量映射结果 -->
-    <resultMap id="CountResultMap" type="org.dromara.visor.module.monitor.entity.po.AlarmPolicyRuleCountPO">
+    <resultMap id="CountResultMap" type="org.dromara.visor.module.monitor.entity.po.AlarmEventCountPO">
         <result column="policy_id" property="policyId"/>
         <result column="total_count" property="count"/>
     </resultMap>
@@ -48,6 +48,7 @@
         SELECT policy_id, COUNT(1) total_count
         FROM monitor_alarm_event
         WHERE deleted = 0
+        AND false_alarm = 0
         AND policy_id IN
         <foreach collection="policyIdList" item="item" open="(" separator="," close=")">
             #{item}

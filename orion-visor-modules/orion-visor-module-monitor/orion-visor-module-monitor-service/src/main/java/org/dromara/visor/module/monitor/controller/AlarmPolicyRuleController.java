@@ -93,11 +93,11 @@ public class AlarmPolicyRuleController {
     @GetMapping("/list")
     @Operation(summary = "查询全部监控告警规则")
     @Parameter(name = "policyId", description = "policyId", required = true)
-    @Parameter(name = "metricsMeasurement", description = "metricsMeasurement")
+    @Parameter(name = "measurement", description = "measurement")
     @PreAuthorize("@ss.hasPermission('monitor:alarm-policy:query')")
     public List<AlarmPolicyRuleVO> getAlarmPolicyRuleList(@RequestParam("policyId") Long policyId,
-                                                          @RequestParam(value = "metricsMeasurement", required = false) String metricsMeasurement) {
-        return alarmPolicyRuleService.getAlarmPolicyRuleList(policyId, metricsMeasurement);
+                                                          @RequestParam(value = "measurement", required = false) String measurement) {
+        return alarmPolicyRuleService.getAlarmPolicyRuleList(policyId, measurement);
     }
 
     @DemoDisableApi

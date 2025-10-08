@@ -147,7 +147,7 @@ public class MonitorAgentEndpointServiceImpl implements MonitorAgentEndpointServ
                 }
                 monitorHostDAO.updateById(update);
             }
-            // 设置配置缓存
+            // 重新加载监控主机上下文
             if (newConfig != null) {
                 monitorContext.reloadMonitorHost(agentKey);
             }

@@ -38,7 +38,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * 监控告警记录 更新请求对象
+ * 监控告警事件 更新请求对象
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -48,7 +48,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(name = "AlarmEventUpdateRequest", description = "监控告警记录 更新请求对象")
+@Schema(name = "AlarmEventUpdateRequest", description = "监控告警事件 更新请求对象")
 public class AlarmEventHandleRequest implements Serializable {
 
     private static final long serialVersionUID = 1L;

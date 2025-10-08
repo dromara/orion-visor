@@ -20,36 +20,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.dromara.visor.module.monitor.entity.po;
+package org.dromara.visor.module.monitor.entity.request.host;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.EqualsAndHashCode;
+import org.dromara.visor.common.entity.BaseQueryRequest;
 
-import java.io.Serializable;
+import java.util.List;
 
 /**
- * 监控告警事件数量对象
+ * 监控主机标签 查询请求对象
  *
  * @author Jiahang Li
- * @version 1.0.8
- * @since 2024/5/11 18:15
+ * @version 1.0.0
+ * @since 2025-8-14 16:27
  */
 @Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-@Schema(name = "AlarmPolicyAlarmCountPO", description = "监控告警事件数量对象")
-public class AlarmPolicyAlarmCountPO implements Serializable {
+@EqualsAndHashCode(callSuper = true)
+@Schema(name = "MonitorHostQueryTagRequest", description = "监控主机标签 查询请求对象")
+public class MonitorHostQueryTagRequest extends BaseQueryRequest {
 
-    private static final long serialVersionUID = 1L;
+    @Schema(description = "数据集")
+    private String measurement;
 
-    @Schema(description = "policyId")
+    @Schema(description = "策略id")
     private Long policyId;
 
-    @Schema(description = "数量")
-    private Integer count;
+    @Schema(description = "agentKey")
+    private List<String> agentKeys;
 
 }

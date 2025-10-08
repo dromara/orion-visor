@@ -19,6 +19,10 @@ services:
       DEMO_MODE: false
     volumes:
       - /data/orion-visor-space/docker-volumes/service/root-orion:/root/orion
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
     healthcheck:
       test: [ "CMD", "curl", "http://127.0.0.1:9200/orion-visor/api/server/bootstrap/health" ]
       interval: 15s

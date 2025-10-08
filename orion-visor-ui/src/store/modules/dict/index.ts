@@ -3,8 +3,28 @@ import type { DictState } from './types';
 import type { Options } from '@/types/global';
 import { defineStore } from 'pinia';
 import { getDictValueList } from '@/api/system/dict-value';
+import { isArray } from '@/utils/is';
 
-export const ALL_OPTION: Options = { label: '全部', value: '' };
+const AllOption: Options = { label: '全部', value: '' };
+
+// 获取拼接的选项
+const getPrependOptions = (perpendOption: boolean | Options | Options[] | RadioOption | RadioOption[]): Options[] => {
+  if (!perpendOption) {
+    return [];
+  }
+  if (perpendOption === true) {
+    // 默认选项
+    return [{ ...AllOption }];
+  } else if (isArray(perpendOption)) {
+    // 数组选项
+    return perpendOption.map(s => {
+      return { ...s } as Options;
+    });
+  } else {
+    // 单一选项
+    return [{ ...perpendOption as Options }];
+  }
+};
 
 export default defineStore('dict', {
   state: (): DictState => ({}),
@@ -27,38 +47,30 @@ export default defineStore('dict', {
     },
 
     // 获取字典选项
-    toOptions(key: string, firstOption: boolean | Record<string, any> = false): Options[] {
-      if (firstOption === true) {
-        return [{ ...ALL_OPTION }, ...this.$state[key]];
-      } else if (firstOption) {
-        return [{ ...ALL_OPTION, ...firstOption }, ...this.$state[key]];
-      } else {
-        return this.$state[key];
-      }
+    toOptions(key: string, perpendOption: boolean | Options | Options[] = false): Options[] {
+      let perpendOptions = getPrependOptions(perpendOption);
+      const options = this.$state[key] ?? [];
+      return [...perpendOptions, ...options];
     },
 
     // 转为 unref 的字典选项
-    toUnrefOptions(key: string, firstOption: boolean | Record<string, any> = false): Options[] {
-      return this.toOptions(key, firstOption)
+    toUnrefOptions(key: string, perpendOption: boolean | Options | Options[] = false): Options[] {
+      return this.toOptions(key, perpendOption)
         .map(s => {
           return { ...s };
         });
     },
 
     // 获取字典选项
-    toRadioOptions(key: string, firstOption: boolean | Record<string, any> = false): RadioOption[] {
-      if (firstOption === true) {
-        return [{ ...ALL_OPTION }, ...this.$state[key]] as RadioOption[];
-      } else if (firstOption) {
-        return [{ ...ALL_OPTION, ...firstOption }, ...this.$state[key]] as RadioOption[];
-      } else {
-        return this.$state[key] as RadioOption[];
-      }
+    toRadioOptions(key: string, perpendOption: boolean | RadioOption | RadioOption[] = false): RadioOption[] {
+      let perpendOptions = getPrependOptions(perpendOption);
+      const options = this.$state[key] ?? [];
+      return [...perpendOptions, ...options] as RadioOption[];
     },
 
     // 转为 unref 的字典选项
-    toUnrefRadioOptions(key: string, firstOption: boolean | Record<string, any> = false): RadioOption[] {
-      return this.toRadioOptions(key, firstOption)
+    toUnrefRadioOptions(key: string, perpendOption: boolean | RadioOption | RadioOption[] = false): RadioOption[] {
+      return this.toRadioOptions(key, perpendOption)
         .map(s => {
           return { ...s };
         });

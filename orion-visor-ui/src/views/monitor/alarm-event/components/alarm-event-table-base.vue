@@ -6,7 +6,7 @@
       <div class="table-left-bar-handle">
         <!-- 标题 -->
         <div class="table-title">
-          告警记录列表
+          告警事件列表
         </div>
       </div>
       <!-- 右侧操作 -->
@@ -229,8 +229,8 @@
 
   // 获取指标名称
   const getMetricsField = (metricsId: number, field: string) => {
-    return (monitorMetrics as Array<MetricsQueryResponse>).find(m => m.id === metricsId)?.[field];
-  };
+    return (monitorMetrics as Array<MetricsQueryResponse> || []).find(m => m.id === metricsId)?.[field];
+ };
 
   // 提取标签
   const extraTags = (record: AlarmEventQueryResponse) => {

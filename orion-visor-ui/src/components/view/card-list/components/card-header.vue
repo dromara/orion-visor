@@ -179,7 +179,7 @@
     &-wrapper {
       background: var(--color-bg-2);
       padding: 0 12px;
-      border-radius: 4px;
+      border-radius: 8px;
 
       .card-list-info {
         height: var(--header-info-height);

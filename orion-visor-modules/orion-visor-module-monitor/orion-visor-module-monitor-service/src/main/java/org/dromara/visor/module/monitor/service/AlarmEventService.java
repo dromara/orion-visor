@@ -35,7 +35,7 @@ import org.dromara.visor.module.monitor.entity.vo.AlarmEventVO;
 import java.util.List;
 
 /**
- * 监控告警记录 服务类
+ * 监控告警事件 服务类
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -44,14 +44,14 @@ import java.util.List;
 public interface AlarmEventService {
 
     /**
-     * 创建监控告警记录
+     * 创建监控告警事件
      *
      * @param record record
      */
     void createAlarmEvent(AlarmEventDO record);
 
     /**
-     * 处理告警记录
+     * 处理告警事件
      *
      * @param request request
      * @return effect
@@ -67,7 +67,7 @@ public interface AlarmEventService {
     Integer setAlarmEventFalse(AlarmEventSetFalseRequest request);
 
     /**
-     * 分页查询监控告警记录
+     * 分页查询监控告警事件
      *
      * @param request request
      * @return rows
@@ -75,7 +75,7 @@ public interface AlarmEventService {
     DataGrid<AlarmEventVO> getAlarmEventPage(AlarmEventQueryRequest request);
 
     /**
-     * 查询监控告警记录数量
+     * 查询监控告警事件数量
      *
      * @param request request
      * @return count
@@ -83,7 +83,7 @@ public interface AlarmEventService {
     Long getAlarmEventCount(AlarmEventQueryRequest request);
 
     /**
-     * 删除监控告警记录
+     * 删除监控告警事件
      *
      * @param id id
      * @return effect
@@ -91,7 +91,7 @@ public interface AlarmEventService {
     Integer deleteAlarmEventById(Long id);
 
     /**
-     * 批量删除监控告警记录
+     * 批量删除监控告警事件
      *
      * @param idList idList
      * @return effect
@@ -99,7 +99,7 @@ public interface AlarmEventService {
     Integer deleteAlarmEventByIdList(List<Long> idList);
 
     /**
-     * 清理监控告警记录
+     * 清理监控告警事件
      *
      * @param request request
      * @return effect
@@ -107,7 +107,7 @@ public interface AlarmEventService {
     Integer clearAlarmEvent(AlarmEventClearRequest request);
 
     /**
-     * 获取策略告警记录数量
+     * 获取策略告警事件数量
      *
      * @param policyIdList policyIdList
      * @param startDay     startDay

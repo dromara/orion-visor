@@ -19,6 +19,7 @@ export interface MetricsChartOption {
   span?: number;
   legend?: boolean;
   background?: boolean;
+  smooth?: boolean;
   colors: Array<[string, string]>;
   aggregate: string;
   unit: MetricUnitType;

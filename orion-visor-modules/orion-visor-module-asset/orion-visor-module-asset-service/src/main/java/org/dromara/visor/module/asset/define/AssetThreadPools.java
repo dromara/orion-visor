@@ -22,12 +22,9 @@
  */
 package org.dromara.visor.module.asset.define;
 
-import cn.orionsec.kit.lang.define.thread.ExecutorBuilder;
-import cn.orionsec.kit.lang.utils.Systems;
-import org.dromara.visor.common.constant.Const;
+import org.dromara.visor.framework.executor.core.utils.ExecutorUtils;
 
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.Executor;
 
 /**
  * 执行线程池
@@ -41,13 +38,6 @@ public interface AssetThreadPools {
     /**
      * 批量执行主机命令线程池
      */
-    ThreadPoolExecutor AGENT_INSTALL = ExecutorBuilder.create()
-            .namedThreadFactory("agent-install-")
-            .corePoolSize(Systems.PROCESS_NUM)
-            .maxPoolSize(Systems.PROCESS_NUM)
-            .keepAliveTime(Const.MS_S_60)
-            .workQueue(new LinkedBlockingQueue<>())
-            .allowCoreThreadTimeout(true)
-            .build();
+    Executor AGENT_INSTALL = ExecutorUtils.getExecutor("agentInstallExecutor");
 
 }

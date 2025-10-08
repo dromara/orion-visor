@@ -40,7 +40,7 @@
       md: props.chartCompose ? 2 : 1,
       lg: props.chartCompose ? 2 : 1,
       xl: props.chartCompose ? 3 : 1,
-      xxl: props.chartCompose ? 3 : 1,
+      xxl: props.chartCompose ? 4 : 1,
     };
   });
 

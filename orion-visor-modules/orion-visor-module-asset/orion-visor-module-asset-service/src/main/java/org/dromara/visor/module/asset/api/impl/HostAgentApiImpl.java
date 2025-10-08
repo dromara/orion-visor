@@ -103,11 +103,11 @@ public class HostAgentApiImpl implements HostAgentApi {
     }
 
     @Override
-    public Map<String, String> getNameCacheByAgentKey(List<String> agentKeyList) {
+    public Map<String, String> getNameCacheByAgentKey(List<String> agentKeys) {
         Map<String, String> result = new HashMap<>();
         List<String> queryList = new ArrayList<>();
         // 查询缓存
-        for (String agentKey : agentKeyList) {
+        for (String agentKey : agentKeys) {
             HostBaseDTO host = AGENT_HOST_CACHE.get(agentKey);
             if (host != null) {
                 result.put(agentKey, host.getName());

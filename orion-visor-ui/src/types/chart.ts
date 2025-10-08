@@ -17,6 +17,7 @@ export interface TimeSeriesColor {
 export interface TimeSeriesOption {
   name: string;
   type: TimeSeriesType;
+  smooth: boolean;
   area: boolean;
   lineColor: string;
   itemBorderColor: string;
@@ -126,7 +127,7 @@ export const createTimeSeries = (option: Partial<TimeSeriesOption>): LineSeriesO
     name: option.name,
     data: option.data || [],
     type: option.type || 'line',
-    smooth: true,
+    smooth: option.smooth ?? true,
     symbol: 'circle',
     symbolSize: 10,
     itemStyle: {

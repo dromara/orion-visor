@@ -98,7 +98,7 @@
 
   :deep(.card) {
     padding: 16px 20px;
-    border-radius: 4px;
+    border-radius: 8px;
     background-color: var(--color-bg-2);
 
     &-title {

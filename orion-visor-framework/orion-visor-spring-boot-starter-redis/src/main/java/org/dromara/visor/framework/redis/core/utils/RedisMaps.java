@@ -315,6 +315,19 @@ public class RedisMaps extends RedisUtils {
     /**
      * 获取值 json
      *
+     * @param define  define
+     * @param key     key
+     * @param hashKey hashKey
+     * @param <V>     V
+     * @return value
+     */
+    public static <V> V getJson(String key, CacheKeyDefine define, Object hashKey) {
+        return getJson(key, hashKey, (Class<V>) define.getType());
+    }
+
+    /**
+     * 获取值 json
+     *
      * @param key     key
      * @param hashKey hashKey
      * @param clazz   clazz
@@ -355,9 +368,9 @@ public class RedisMaps extends RedisUtils {
     /**
      * 获取值 json
      *
-     * @param key       key
-     * @param hashKeys  hashKeys
-     * @param <V>       V
+     * @param key      key
+     * @param hashKeys hashKeys
+     * @param <V>      V
      * @return values
      */
     public static <V> List<V> multiGetJson(CacheKeyDefine key, List<?> hashKeys) {
@@ -367,10 +380,10 @@ public class RedisMaps extends RedisUtils {
     /**
      * 获取值 json
      *
-     * @param key       key
-     * @param hashKeys  hashKeys
-     * @param clazz     clazz
-     * @param <V>       V
+     * @param key      key
+     * @param hashKeys hashKeys
+     * @param clazz    clazz
+     * @param <V>      V
      * @return values
      */
     public static <V> List<V> multiGetJson(String key, List<?> hashKeys, Class<V> clazz) {

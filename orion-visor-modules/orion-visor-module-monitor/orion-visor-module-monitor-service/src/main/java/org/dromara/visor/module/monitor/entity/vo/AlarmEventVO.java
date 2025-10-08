@@ -33,7 +33,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 /**
- * 监控告警记录 视图响应对象
+ * 监控告警事件 视图响应对象
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -43,7 +43,7 @@ import java.util.Date;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(name = "AlarmEventVO", description = "监控告警记录 视图响应对象")
+@Schema(name = "AlarmEventVO", description = "监控告警事件 视图响应对象")
 public class AlarmEventVO implements Serializable {
 
     private static final long serialVersionUID = 1L;

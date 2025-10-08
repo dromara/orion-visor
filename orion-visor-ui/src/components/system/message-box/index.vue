@@ -1,5 +1,5 @@
 <template>
-  <div class="full">
+  <div v-if="render" class="full">
     <!-- 消息分类 -->
     <a-spin class="message-classify-container"
             :hide-icon="true"
@@ -90,6 +90,7 @@
   const classifyCount = ref<Record<string, number>>({});
   const messageList = ref<Array<MessageRecordResponse>>([]);
   const hasMore = ref(true);
+  const render = ref(false);
 
   // 重新加载消息
   const reloadAllMessage = async () => {
@@ -210,8 +211,9 @@
   };
 
   // 加载字典值
-  onMounted(() => {
-    loadKeys(dictKeys);
+  onMounted(async () => {
+    await loadKeys(dictKeys);
+    render.value = true;
   });
 
   // 获取消息

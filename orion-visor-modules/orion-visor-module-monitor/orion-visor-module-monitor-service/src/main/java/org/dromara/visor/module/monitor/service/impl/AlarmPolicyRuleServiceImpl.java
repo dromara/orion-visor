@@ -160,13 +160,13 @@ public class AlarmPolicyRuleServiceImpl implements AlarmPolicyRuleService {
     }
 
     @Override
-    public List<AlarmPolicyRuleVO> getAlarmPolicyRuleList(Long policyId, String metricsMeasurement) {
+    public List<AlarmPolicyRuleVO> getAlarmPolicyRuleList(Long policyId, String measurement) {
         // 查询
         return alarmPolicyRuleDAO.of()
                 .createWrapper()
                 .eq(AlarmPolicyRuleDO::getPolicyId, policyId)
-                .eq(Strings.isNotBlank(metricsMeasurement), AlarmPolicyRuleDO::getMetricsMeasurement, metricsMeasurement)
-                // 想同的指标在一起
+                .eq(Strings.isNotBlank(measurement), AlarmPolicyRuleDO::getMetricsMeasurement, measurement)
+                // 相同的指标在一起
                 .orderByAsc(AlarmPolicyRuleDO::getMetricsId)
                 // 通过 p0 > p1 排序
                 .orderByAsc(AlarmPolicyRuleDO::getLevel)

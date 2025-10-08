@@ -31,7 +31,7 @@ import javax.validation.constraints.Size;
 import java.util.Date;
 
 /**
- * 监控告警记录 查询请求对象
+ * 监控告警事件 查询请求对象
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -42,7 +42,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-@Schema(name = "AlarmEventQueryRequest", description = "监控告警记录 查询请求对象")
+@Schema(name = "AlarmEventQueryRequest", description = "监控告警事件 查询请求对象")
 public class AlarmEventQueryRequest extends BaseQueryRequest {
 
     @Schema(description = "id")

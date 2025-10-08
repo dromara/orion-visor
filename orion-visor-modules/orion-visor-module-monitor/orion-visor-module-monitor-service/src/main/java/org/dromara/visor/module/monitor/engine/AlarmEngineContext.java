@@ -125,6 +125,9 @@ public class AlarmEngineContext {
      * @return rules
      */
     private Map<Long, List<AlarmEngineRule>> getPolicyRules(List<AlarmPolicyRuleDO> list) {
+        if (Lists.isEmpty(list)) {
+            return new HashMap<>();
+        }
         // 转为 map
         Map<Long, List<AlarmEngineRule>> ruleMap = Lists.stream(list)
                 .map(s -> {
@@ -154,6 +157,9 @@ public class AlarmEngineContext {
      * @return id
      */
     private List<Long> getPolicyEngineNotifier(List<AlarmPolicyNotifyDO> list) {
+        if (Lists.isEmpty(list)) {
+            return new ArrayList<>();
+        }
         return list.stream()
                 .map(AlarmPolicyNotifyDO::getNotifyId)
                 .distinct()

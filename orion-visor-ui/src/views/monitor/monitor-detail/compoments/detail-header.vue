@@ -9,7 +9,7 @@
                 :hide-content="true">
           <a-tab-pane :key="TabKeys.OVERVIEW" title="主机概览" />
           <a-tab-pane :key="TabKeys.CHART" title="监控图表" />
-          <a-tab-pane :key="TabKeys.ALARM" title="告警记录" />
+          <a-tab-pane :key="TabKeys.ALARM" title="告警事件" />
         </a-tabs>
         <a-divider direction="vertical"
                    style="height: 22px; margin: 0 16px 0 8px;"
@@ -42,7 +42,7 @@
     </div>
     <!-- 右侧 -->
     <div class="header-right">
-      <!-- 告警记录标签 -->
+      <!-- 告警事件标签 -->
       <div v-if="activeKey === TabKeys.OVERVIEW" class="handle-wrapper">
         <a-tag v-if="overrideTimestamp">更新时间: {{ dateFormat(new Date(overrideTimestamp)) }}</a-tag>
       </div>

@@ -36,7 +36,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 /**
- * 监控告警记录 实体对象
+ * 监控告警事件 实体对象
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -48,7 +48,7 @@ import java.util.Date;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @TableName(value = "monitor_alarm_event", autoResultMap = true)
-@Schema(name = "AlarmEventDO", description = "监控告警记录 实体对象")
+@Schema(name = "AlarmEventDO", description = "监控告警事件 实体对象")
 public class AlarmEventDO extends BaseDO {
 
     private static final long serialVersionUID = 1L;

@@ -1,7 +1,7 @@
 spring:
   datasource:
     druid:
-      url: jdbc:mysql://${MYSQL_HOST:127.0.0.1}:${MYSQL_PORT:3306}/${MYSQL_DATABASE:orion_visor}?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=Asia/Shanghai&autoReconnect=true
+      url: jdbc:mysql://${MYSQL_HOST:127.0.0.1}:${MYSQL_PORT:3306}/${MYSQL_DATABASE:orion_visor}?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=Asia/Shanghai&autoReconnect=true&rewriteBatchedStatements=true&useServerPrepStmts=false
       username: ${MYSQL_USER:root}
       password: ${MYSQL_PASSWORD:Data@123456}
       # 初始连接数
@@ -84,9 +84,81 @@ orion:
     aes:
       # 加密密钥
       secret-key: ${SECRET_KEY:uQeacXV8b3isvKLK}
-  async:
-    executor:
+
+app:
+  executors:
+    # 默认异步线程池
+    asyncExecutor:
+      mdc: true
       core-pool-size: 8
       max-pool-size: 16
-      queue-capacity: 200
-      keep-alive-seconds: 300
+      queue-capacity: 100
+      allow-core-timeout: false
+      thread-name-prefix: async-executor-
+    # 指标存储异步线程池
+    metricsExecutor:
+      mdc: true
+      core-pool-size: 4
+      max-pool-size: 4
+      queue-capacity: 1000
+      allow-core-timeout: true
+      thread-name-prefix: metrics-task-
+    # 推送异步线程池
+    pushExecutor:
+      mdc: true
+      core-pool-size: 4
+      max-pool-size: 4
+      queue-capacity: 1000
+      allow-core-timeout: true
+      thread-name-prefix: message-push-
+    # 探针安装线程池
+    agentInstallExecutor:
+      allow-core-timeout: true
+      thread-name-prefix: agent-install-
+    # 终端标准输出线程池
+    terminalStdoutExecutor:
+      synchronous-queue: true
+      allow-core-timeout: true
+      thread-name-prefix: terminal-stdout-
+    # 终端操作线程池
+    terminalOperatorExecutor:
+      synchronous-queue: true
+      allow-core-timeout: true
+      thread-name-prefix: terminal-operator-
+    # 终端异步保存线程池
+    terminalAsyncSaverExecutor:
+      core-pool-size: 1
+      max-pool-size: 1
+      queue-capacity: 1000
+      allow-core-timeout: true
+      thread-name-prefix: terminal-watcher-
+    # 批量执行超时检查线程池
+    execTimeoutCheckExecutor:
+      synchronous-queue: true
+      allow-core-timeout: true
+      thread-name-prefix: timeout-check-
+    # 批量执行任务线程池
+    execTaskExecutor:
+      synchronous-queue: true
+      allow-core-timeout: true
+      thread-name-prefix: exec-task-
+    # 批量执行主机命令线程池
+    execHostCommandExecutor:
+      synchronous-queue: true
+      allow-core-timeout: true
+      thread-name-prefix: exec-host-
+    # 批量执行日志查看线程池
+    execLogViewExecutor:
+      synchronous-queue: true
+      allow-core-timeout: true
+      thread-name-prefix: exec-log-
+    # 批量上传任务线程池
+    uploadTaskExecutor:
+      synchronous-queue: true
+      allow-core-timeout: true
+      thread-name-prefix: upload-task-
+    # 批量上传主机线程池
+    uploadHostExecutor:
+      synchronous-queue: true
+      allow-core-timeout: true
+      thread-name-prefix: upload-host-
