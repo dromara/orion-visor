@@ -68,6 +68,11 @@
       },
       backgroundColor: 'transparent',
       animation: false,
+      dataZoom: [{
+        type: 'inside',
+        zoomOnMouseWheel: true,
+        moveOnMouseMove: true,
+      }],
       tooltip: {
         trigger: 'axis',
         appendToBody: true,

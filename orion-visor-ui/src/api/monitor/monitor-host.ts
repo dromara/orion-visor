@@ -176,7 +176,9 @@ export function getMonitorHostOverride(agentKey: string) {
  * 查询监控主机图表
  */
 export function getMonitorHostChart(request: MonitorHostChartRequest) {
-  return axios.post<Array<TimeChartSeries>>('/monitor/monitor-host/chart', request);
+  return axios.post<Array<TimeChartSeries>>('/monitor/monitor-host/chart', request, {
+    timeout: 180000,
+  });
 }
 
 /**
