@@ -12,7 +12,7 @@ export const encrypt = async (data: string | undefined): Promise<string | undefi
     return data;
   }
   // 获取公钥
-  const publicKey = (await useCacheStore().loadSystemSetting()).encrypt_publicKey;
+  const publicKey = (await useCacheStore().loadSystemSetting())['encrypt.public-key'];
   const encryptor = new JSEncrypt();
   encryptor.setPublicKey(publicKey);
 

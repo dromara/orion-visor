@@ -4,5 +4,5 @@ export const SystemSettingTypes = {
   ENCRYPT: 'encrypt',
   LOGIN: 'login',
   LOG: 'log',
-  AUTO_CLEAR: 'autoClear',
+  AUTO_CLEAR: 'auto-clear',
 };

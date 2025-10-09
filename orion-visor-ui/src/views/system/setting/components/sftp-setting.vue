@@ -9,11 +9,10 @@
             label-align="right"
             :auto-label-width="true">
       <!-- 重复文件备份 -->
-      <a-form-item field="sftp_uploadPresentBackup"
-                   label="重复文件备份"
+      <a-form-item label="重复文件备份"
                    :rules="[{required: true, message: '请选择此项'}]"
                    hide-asterisk>
-        <a-switch v-model="setting.sftp_uploadPresentBackup"
+        <a-switch v-model="setting['sftp.upload-present-backup']"
                   type="round"
                   checked-value="true"
                   unchecked-value="false"
@@ -24,11 +23,10 @@
         </template>
       </a-form-item>
       <!-- 备份文件名称 -->
-      <a-form-item field="sftp_uploadBackupFileName"
-                   label="备份文件名称"
+      <a-form-item label="备份文件名称"
                    :rules="[{required: true, message: '请输入备份文件名称'}]"
                    hide-asterisk>
-        <a-input v-model="setting.sftp_uploadBackupFileName"
+        <a-input v-model="setting['sftp.upload-backup-file-name']"
                  class="input-wrapper"
                  placeholder="请输入备份文件名称模板"
                  allow-clear />
@@ -37,11 +35,10 @@
         </template>
       </a-form-item>
       <!-- 文件预览大小 -->
-      <a-form-item field="sftp_previewSize"
-                   label="文件预览大小"
+      <a-form-item label="文件预览大小"
                    :rules="[{required: true, message: '请输入文件预览大小'}]"
                    hide-asterisk>
-        <a-input-number v-model="setting.sftp_previewSize"
+        <a-input-number v-model="setting['sftp.preview-size']"
                         class="input-wrapper"
                         :min="0"
                         :max="200"
@@ -116,7 +113,7 @@
       const { data } = await getSystemSetting(SystemSettingTypes.SFTP);
       setting.value = {
         ...data,
-        sftp_previewSize: toAnonymousNumber(data.sftp_previewSize),
+        'sftp.preview-size': toAnonymousNumber(data['sftp.preview-size']),
       };
     } catch (e) {
     } finally {
@@ -127,7 +124,4 @@
 </script>
 
 <style lang="less" scoped>
-  .input-wrapper {
-    width: 368px;
-  }
 </style>

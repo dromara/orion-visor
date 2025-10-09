@@ -9,11 +9,10 @@
             label-align="right"
             :auto-label-width="true">
       <!-- 自动清理执行记录 -->
-      <a-form-item field="autoClear_execLogEnabled"
-                   label="自动清理执行记录"
+      <a-form-item label="自动清理执行记录"
                    :rules="[{required: true, message: '请选择此项'}]"
                    hide-asterisk>
-        <a-switch v-model="setting.autoClear_execLogEnabled"
+        <a-switch v-model="setting['auto-clear.exec-log.enabled']"
                   type="round"
                   checked-value="true"
                   unchecked-value="false"
@@ -24,11 +23,10 @@
         </template>
       </a-form-item>
       <!-- 执行记录保留天数 -->
-      <a-form-item field="autoClear_execLogKeepDays"
-                   label="执行记录保留天数"
+      <a-form-item label="执行记录保留天数"
                    :rules="[{required: true, message: '请输入执行记录保留天数'}]"
                    hide-asterisk>
-        <a-input-number v-model="setting.autoClear_execLogKeepDays"
+        <a-input-number v-model="setting['auto-clear.exec-log.keep-days']"
                         class="input-wrapper"
                         :min="0"
                         :max="99999"
@@ -44,11 +42,10 @@
         </template>
       </a-form-item>
       <!-- 自动清理终端记录 -->
-      <a-form-item field="autoClear_terminalLogEnabled"
-                   label="自动清理终端记录"
+      <a-form-item label="自动清理终端记录"
                    :rules="[{required: true, message: '请选择此项'}]"
                    hide-asterisk>
-        <a-switch v-model="setting.autoClear_terminalLogEnabled"
+        <a-switch v-model="setting['auto-clear.terminal-log.enabled']"
                   type="round"
                   checked-value="true"
                   unchecked-value="false"
@@ -59,11 +56,10 @@
         </template>
       </a-form-item>
       <!-- 终端记录保留天数 -->
-      <a-form-item field="autoClear_terminalLogKeepDays"
-                   label="终端记录保留天数"
+      <a-form-item label="终端记录保留天数"
                    :rules="[{required: true, message: '请输入终端记录保留天数'}]"
                    hide-asterisk>
-        <a-input-number v-model="setting.autoClear_terminalLogKeepDays"
+        <a-input-number v-model="setting['auto-clear.terminal-log.keep-days']"
                         class="input-wrapper"
                         :min="0"
                         :max="99999"
@@ -138,8 +134,8 @@
       const { data } = await getSystemSetting(SystemSettingTypes.AUTO_CLEAR);
       setting.value = {
         ...data,
-        autoClear_execLogKeepDays: toAnonymousNumber(data.autoClear_execLogKeepDays),
-        autoClear_terminalLogKeepDays: toAnonymousNumber(data.autoClear_terminalLogKeepDays),
+        'auto-clear.exec-log.keep-days': toAnonymousNumber(data['auto-clear.exec-log.keep-days']),
+        'auto-clear.terminal-log.keep-days': toAnonymousNumber(data['auto-clear.terminal-log.keep-days']),
       };
     } catch (e) {
     } finally {
@@ -150,7 +146,4 @@
 </script>
 
 <style lang="less" scoped>
-  .input-wrapper {
-    width: 368px;
-  }
 </style>

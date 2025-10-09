@@ -9,11 +9,10 @@
             label-align="right"
             :auto-label-width="true">
       <!-- 允许多端登录 -->
-      <a-form-item field="login_allowMultiDevice"
-                   label="允许多端登录"
+      <a-form-item label="允许多端登录"
                    :rules="[{required: true, message: '请选择此项'}]"
                    hide-asterisk>
-        <a-switch v-model="setting.login_allowMultiDevice"
+        <a-switch v-model="setting['login.allow-multi-device']"
                   type="round"
                   checked-value="true"
                   unchecked-value="false"
@@ -24,11 +23,10 @@
         </template>
       </a-form-item>
       <!-- 允许凭证续签 -->
-      <a-form-item field="login_allowRefresh"
-                   label="允许凭证续签"
+      <a-form-item label="允许凭证续签"
                    :rules="[{required: true, message: '请选择此项'}]"
                    hide-asterisk>
-        <a-switch v-model="setting.login_allowRefresh"
+        <a-switch v-model="setting['login.allow-refresh']"
                   type="round"
                   checked-value="true"
                   unchecked-value="false"
@@ -39,11 +37,10 @@
         </template>
       </a-form-item>
       <!-- 登录失败锁定 -->
-      <a-form-item field="login_loginFailedLock"
-                   label="登录失败锁定"
+      <a-form-item label="登录失败锁定"
                    :rules="[{required: true, message: '请选择此项'}]"
                    hide-asterisk>
-        <a-switch v-model="setting.login_loginFailedLock"
+        <a-switch v-model="setting['login.login-failed-lock']"
                   type="round"
                   checked-value="true"
                   unchecked-value="false"
@@ -54,11 +51,10 @@
         </template>
       </a-form-item>
       <!-- 登录失败发信 -->
-      <a-form-item field="login_loginFailedSend"
-                   label="登录失败发信"
+      <a-form-item label="登录失败发信"
                    :rules="[{required: true, message: '请选择此项'}]"
                    hide-asterisk>
-        <a-switch v-model="setting.login_loginFailedSend"
+        <a-switch v-model="setting['login.login-failed-send']"
                   type="round"
                   checked-value="true"
                   unchecked-value="false"
@@ -69,11 +65,10 @@
         </template>
       </a-form-item>
       <!-- 凭证有效期 -->
-      <a-form-item field="login_loginSessionTime"
-                   label="凭证有效期"
+      <a-form-item label="凭证有效期"
                    :rules="[{required: true, message: '请输入凭证有效期'}]"
                    hide-asterisk>
-        <a-input-number v-model="setting.login_loginSessionTime"
+        <a-input-number v-model="setting['login.login-session-time']"
                         class="input-wrapper"
                         :min="1"
                         :max="99999"
@@ -89,11 +84,10 @@
         </template>
       </a-form-item>
       <!-- 凭证续签间隔 -->
-      <a-form-item field="login_refreshInterval"
-                   label="凭证续签间隔"
+      <a-form-item label="凭证续签间隔"
                    :rules="[{required: true, message: '请输入凭证续签间隔时间'}]"
                    hide-asterisk>
-        <a-input-number v-model="setting.login_refreshInterval"
+        <a-input-number v-model="setting['login.refresh-interval']"
                         class="input-wrapper"
                         :min="1"
                         :max="99999"
@@ -109,11 +103,10 @@
         </template>
       </a-form-item>
       <!-- 凭证续签最大次数 -->
-      <a-form-item field="login_maxRefreshCount"
-                   label="凭证续签最大次数"
+      <a-form-item label="凭证续签最大次数"
                    :rules="[{required: true, message: '请输入凭证续签最大次数'}]"
                    hide-asterisk>
-        <a-input-number v-model="setting.login_maxRefreshCount"
+        <a-input-number v-model="setting['login.max-refresh-count']"
                         class="input-wrapper"
                         :min="0"
                         :max="99999"
@@ -125,11 +118,10 @@
         </template>
       </a-form-item>
       <!-- 登录失败锁定阈值 -->
-      <a-form-item field="login_loginFailedLockThreshold"
-                   label="登录失败锁定阈值"
+      <a-form-item label="登录失败锁定阈值"
                    :rules="[{required: true, message: '请输入登录失败锁定阈值'}]"
                    hide-asterisk>
-        <a-input-number v-model="setting.login_loginFailedLockThreshold"
+        <a-input-number v-model="setting['login.login-failed-lock-threshold']"
                         class="input-wrapper"
                         :min="0"
                         :max="99999"
@@ -141,11 +133,10 @@
         </template>
       </a-form-item>
       <!-- 登录失败锁定时间 -->
-      <a-form-item field="login_loginFailedLockTime"
-                   label="登录失败锁定时间"
+      <a-form-item label="登录失败锁定时间"
                    :rules="[{required: true, message: '请输入登录失败锁定时间'}]"
                    hide-asterisk>
-        <a-input-number v-model="setting.login_loginFailedLockTime"
+        <a-input-number v-model="setting['login.login-failed-lock-time']"
                         class="input-wrapper"
                         :min="0"
                         :max="999999"
@@ -161,11 +152,10 @@
         </template>
       </a-form-item>
       <!-- 登录失败发信阈值 -->
-      <a-form-item field="login_loginFailedSendThreshold"
-                   label="登录失败发信阈值"
+      <a-form-item label="登录失败发信阈值"
                    :rules="[{required: true, message: '请输入登录失败发信阈值'}]"
                    hide-asterisk>
-        <a-input-number v-model="setting.login_loginFailedSendThreshold"
+        <a-input-number v-model="setting['login.login-failed-send-threshold']"
                         class="input-wrapper"
                         :min="0"
                         :max="99999"
@@ -236,12 +226,12 @@
       const { data } = await getSystemSetting(SystemSettingTypes.LOGIN);
       setting.value = {
         ...data,
-        login_loginSessionTime: toAnonymousNumber(data.login_loginSessionTime),
-        login_maxRefreshCount: toAnonymousNumber(data.login_maxRefreshCount),
-        login_refreshInterval: toAnonymousNumber(data.login_refreshInterval),
-        login_loginFailedLockThreshold: toAnonymousNumber(data.login_loginFailedLockThreshold),
-        login_loginFailedLockTime: toAnonymousNumber(data.login_loginFailedLockTime),
-        login_loginFailedSendThreshold: toAnonymousNumber(data.login_loginFailedSendThreshold),
+        'login.login-session-time': toAnonymousNumber(data['login.login-session-time']),
+        'login.max-refresh-count': toAnonymousNumber(data['login.max-refresh-count']),
+        'login.refresh-interval': toAnonymousNumber(data['login.refresh-interval']),
+        'login.login-failed-lock-threshold': toAnonymousNumber(data['login.login-failed-lock-threshold']),
+        'login.login-failed-lock-time': toAnonymousNumber(data['login.login-failed-lock-time']),
+        'login.login-failed-send-threshold': toAnonymousNumber(data['login.login-failed-send-threshold']),
       };
     } catch (e) {
     } finally {
@@ -252,7 +242,4 @@
 </script>
 
 <style lang="less" scoped>
-  .input-wrapper {
-    width: 368px;
-  }
 </style>

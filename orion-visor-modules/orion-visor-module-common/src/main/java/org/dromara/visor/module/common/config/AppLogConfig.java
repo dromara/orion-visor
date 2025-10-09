@@ -50,12 +50,12 @@ public class AppLogConfig {
     /**
      * 是否生成详细的执行日志
      */
-    private final ConfigRef<Boolean> execDetailLog;
+    private final ConfigRef<Boolean> execDetailEnabled;
 
     public AppLogConfig(ConfigStore configStore) {
         this.trackerLoadLines = configStore.int32(ConfigKeys.LOG_TRACKER_LOAD_LINES);
         this.trackerLoadInterval = configStore.int32(ConfigKeys.LOG_TRACKER_LOAD_INTERVAL);
-        this.execDetailLog = configStore.bool(ConfigKeys.LOG_EXEC_DETAIL_LOG);
+        this.execDetailEnabled = configStore.bool(ConfigKeys.LOG_EXEC_DETAIL_ENABLED);
     }
 
     public Integer getTrackerLoadLines() {
@@ -66,8 +66,8 @@ public class AppLogConfig {
         return trackerLoadInterval.value;
     }
 
-    public Boolean getExecDetailLog() {
-        return execDetailLog.value;
+    public Boolean getExecDetailEnabled() {
+        return execDetailEnabled.value;
     }
 
 }

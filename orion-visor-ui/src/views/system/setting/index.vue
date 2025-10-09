@@ -132,6 +132,10 @@
     .alert-href {
       text-decoration: none;
     }
+
+    .input-wrapper {
+      width: 368px;
+    }
   }
 
 </style>

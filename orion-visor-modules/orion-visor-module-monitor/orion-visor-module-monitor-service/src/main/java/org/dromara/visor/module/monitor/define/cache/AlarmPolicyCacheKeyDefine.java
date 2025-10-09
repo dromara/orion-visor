@@ -49,6 +49,7 @@ public interface AlarmPolicyCacheKeyDefine {
     CacheKeyDefine ALARM_RULE_SILENCE = new CacheKeyBuilder()
             .key("alarm:silence:{}:{}")
             .desc("告警规则沉默标志 ${agentKey} ${ruleId}")
+            .noPrefix()
             .type(Long.class)
             .struct(RedisCacheStruct.STRING)
             .build();

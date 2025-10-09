@@ -34,116 +34,116 @@ public interface ConfigKeys {
     /**
      * SFTP 文件预览大小
      */
-    String SFTP_PREVIEW_SIZE = "sftp_previewSize";
+    String SFTP_PREVIEW_SIZE = "sftp.preview-size";
 
     /**
      * SFTP 重复文件备份
      */
-    String SFTP_UPLOAD_PRESENT_BACKUP = "sftp_uploadPresentBackup";
+    String SFTP_UPLOAD_PRESENT_BACKUP = "sftp.upload-present-backup";
 
     /**
      * SFTP 备份文件名称
      */
-    String SFTP_UPLOAD_BACKUP_FILE_NAME = "sftp_uploadBackupFileName";
+    String SFTP_UPLOAD_BACKUP_FILE_NAME = "sftp.upload-backup-file-name";
 
     /**
      * 加密公钥
      */
-    String ENCRYPT_PUBLIC_KEY = "encrypt_publicKey";
+    String ENCRYPT_PUBLIC_KEY = "encrypt.public-key";
 
     /**
      * 加密私钥
      */
-    String ENCRYPT_PRIVATE_KEY = "encrypt_privateKey";
+    String ENCRYPT_PRIVATE_KEY = "encrypt.private-key";
 
     /**
      * 日志前端显示行数
      */
-    String LOG_WEB_SCROLL_LINES = "log_webScrollLines";
+    String LOG_WEB_SCROLL_LINES = "log.web-scroll-lines";
 
     /**
      * 日志加载偏移行
      */
-    String LOG_TRACKER_LOAD_LINES = "log_trackerLoadLines";
+    String LOG_TRACKER_LOAD_LINES = "log.tracker-load-lines";
 
     /**
      * 日志加载间隔毫秒
      */
-    String LOG_TRACKER_LOAD_INTERVAL = "log_trackerLoadInterval";
+    String LOG_TRACKER_LOAD_INTERVAL = "log.tracker-load-interval";
 
     /**
      * 是否生成详细的执行日志
      */
-    String LOG_EXEC_DETAIL_LOG = "log_execDetailLog";
+    String LOG_EXEC_DETAIL_ENABLED = "log.exec-detail.enabled";
 
     /**
-     * 凭证有效期分
+     * 凭证有效期 分
      */
-    String LOGIN_LOGIN_SESSION_TIME = "login_loginSessionTime";
+    String LOGIN_LOGIN_SESSION_TIME = "login.login-session-time";
 
     /**
      * 允许多端登录
      */
-    String LOGIN_ALLOW_MULTI_DEVICE = "login_allowMultiDevice";
+    String LOGIN_ALLOW_MULTI_DEVICE = "login.allow-multi-device";
 
     /**
      * 允许凭证续签
      */
-    String LOGIN_ALLOW_REFRESH = "login_allowRefresh";
+    String LOGIN_ALLOW_REFRESH = "login.allow-refresh";
 
     /**
      * 凭证续签最大次数
      */
-    String LOGIN_MAX_REFRESH_COUNT = "login_maxRefreshCount";
+    String LOGIN_MAX_REFRESH_COUNT = "login.max-refresh-count";
 
     /**
      * 凭证续签间隔分
      */
-    String LOGIN_REFRESH_INTERVAL = "login_refreshInterval";
+    String LOGIN_REFRESH_INTERVAL = "login.refresh-interval";
 
     /**
      * 登录失败锁定
      */
-    String LOGIN_LOGIN_FAILED_LOCK = "login_loginFailedLock";
+    String LOGIN_LOGIN_FAILED_LOCK = "login.login-failed-lock";
 
     /**
-     * 登录失败锁定阈值分
+     * 登录失败锁定阈值
      */
-    String LOGIN_LOGIN_FAILED_LOCK_THRESHOLD = "login_loginFailedLockThreshold";
+    String LOGIN_LOGIN_FAILED_LOCK_THRESHOLD = "login.login-failed-lock-threshold";
 
     /**
-     * 登录失败锁定时间分
+     * 登录失败锁定时间 分
      */
-    String LOGIN_LOGIN_FAILED_LOCK_TIME = "login_loginFailedLockTime";
+    String LOGIN_LOGIN_FAILED_LOCK_TIME = "login.login-failed-lock-time";
 
     /**
      * 登录失败发信
      */
-    String LOGIN_LOGIN_FAILED_SEND = "login_loginFailedSend";
+    String LOGIN_LOGIN_FAILED_SEND = "login.login-failed-send";
 
     /**
      * 登录失败发信阈值
      */
-    String LOGIN_LOGIN_FAILED_SEND_THRESHOLD = "login_loginFailedSendThreshold";
+    String LOGIN_LOGIN_FAILED_SEND_THRESHOLD = "login.login-failed-send-threshold";
 
     /**
      * 是否开启自动清理命令记录
      */
-    String AUTO_CLEAR_EXEC_LOG_ENABLED = "autoClear_execLogEnabled";
+    String AUTO_CLEAR_EXEC_LOG_ENABLED = "auto-clear.exec-log.enabled";
 
     /**
      * 自动清理命令记录保留天数
      */
-    String AUTO_CLEAR_EXEC_LOG_KEEP_DAYS = "autoClear_execLogKeepDays";
+    String AUTO_CLEAR_EXEC_LOG_KEEP_DAYS = "auto-clear.exec-log.keep-days";
 
     /**
      * 是否开启自动清理终端连接记录
      */
-    String AUTO_CLEAR_TERMINAL_LOG_ENABLED = "autoClear_terminalLogEnabled";
+    String AUTO_CLEAR_TERMINAL_LOG_ENABLED = "auto-clear.terminal-log.enabled";
 
     /**
      * 自动清理终端连接记录保留天数
      */
-    String AUTO_CLEAR_TERMINAL_LOG_KEEP_DAYS = "autoClear_terminalLogKeepDays";
+    String AUTO_CLEAR_TERMINAL_LOG_KEEP_DAYS = "auto-clear.terminal-log.keep-days";
 
 }
