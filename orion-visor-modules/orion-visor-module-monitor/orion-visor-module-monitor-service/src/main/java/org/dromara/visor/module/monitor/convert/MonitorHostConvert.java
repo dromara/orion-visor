@@ -22,6 +22,7 @@
  */
 package org.dromara.visor.module.monitor.convert;
 
+import org.dromara.visor.common.mapstruct.StringConversion;
 import org.dromara.visor.module.asset.entity.dto.host.HostDTO;
 import org.dromara.visor.module.asset.entity.dto.host.HostQueryDTO;
 import org.dromara.visor.module.monitor.entity.domain.MonitorHostDO;
@@ -40,7 +41,7 @@ import org.mapstruct.factory.Mappers;
  * @version 1.0.0
  * @since 2025-8-14 16:27
  */
-@Mapper
+@Mapper(uses = StringConversion.class)
 public interface MonitorHostConvert {
 
     MonitorHostConvert MAPPER = Mappers.getMapper(MonitorHostConvert.class);

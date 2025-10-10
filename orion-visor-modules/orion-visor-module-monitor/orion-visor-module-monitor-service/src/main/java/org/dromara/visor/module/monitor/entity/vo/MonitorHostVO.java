@@ -76,6 +76,9 @@ public class MonitorHostVO implements Serializable {
     @Schema(description = "主机地址")
     private String address;
 
+    @Schema(description = "主机类型")
+    private List<String> types;
+
     @Schema(description = "主机状态")
     private String status;
 
