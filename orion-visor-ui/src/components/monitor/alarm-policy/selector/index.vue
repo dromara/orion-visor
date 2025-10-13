@@ -19,6 +19,12 @@
   import { useCacheStore } from '@/store';
   import useLoading from '@/hooks/loading';
 
+  const props = withDefaults(defineProps<Partial<{
+    type?: string;
+  }>>(), {
+    type: 'all',
+  });
+
   const modelValue = defineModel({ type: Number });
 
   const { loading, setLoading } = useLoading();
@@ -30,7 +36,7 @@
   const initOptions = async () => {
     setLoading(true);
     try {
-      const values = await cacheStore.loadMonitorAlarmPolicy();
+      const values = await cacheStore.loadMonitorAlarmPolicy(props.type);
       optionData.value = values.map(s => {
         return {
           label: s.name,

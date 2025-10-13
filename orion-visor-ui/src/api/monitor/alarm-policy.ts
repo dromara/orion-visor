@@ -7,6 +7,7 @@ import axios from 'axios';
  */
 export interface AlarmPolicyCreateRequest {
   name?: string;
+  type?: string;
   description?: string;
   notifyIdList?: Array<number>;
 }
@@ -24,6 +25,7 @@ export interface AlarmPolicyUpdateRequest extends AlarmPolicyCreateRequest {
  */
 export interface AlarmPolicyQueryRequest extends Pagination, OrderDirection {
   id?: number;
+  type?: string;
   name?: string;
   description?: string;
 }
@@ -33,6 +35,7 @@ export interface AlarmPolicyQueryRequest extends Pagination, OrderDirection {
  */
 export interface AlarmPolicyQueryResponse extends TableData {
   id: number;
+  type: string;
   name: string;
   description: string;
   notifyIdList: Array<number>;
@@ -73,8 +76,8 @@ export function getAlarmPolicy(id: number) {
 /**
  * 查询全部监控告警策略
  */
-export function getAlarmPolicyList() {
-  return axios.get<Array<AlarmPolicyQueryResponse>>('/monitor/alarm-policy/list');
+export function getAlarmPolicyList(type: string) {
+  return axios.get<Array<AlarmPolicyQueryResponse>>('/monitor/alarm-policy/list', { params: { type } });
 }
 
 /**

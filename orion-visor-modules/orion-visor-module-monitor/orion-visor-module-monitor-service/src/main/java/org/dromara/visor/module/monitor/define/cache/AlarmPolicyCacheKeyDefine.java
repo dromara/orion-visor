@@ -39,8 +39,8 @@ import java.util.concurrent.TimeUnit;
 public interface AlarmPolicyCacheKeyDefine {
 
     CacheKeyDefine ALARM_POLICY = new CacheKeyBuilder()
-            .key("alarm:policy:list")
-            .desc("告警策略")
+            .key("alarm:policy:list:{}")
+            .desc("告警策略 ${type}")
             .type(AlarmPolicyCacheDTO.class)
             .struct(RedisCacheStruct.HASH)
             .timeout(8, TimeUnit.HOURS)

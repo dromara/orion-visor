@@ -48,6 +48,9 @@ public class AlarmEnginePolicy {
     @Schema(description = "策略id")
     private Long id;
 
+    @Schema(description = "策略类型")
+    private String type;
+
     @Schema(description = "策略名称")
     private String name;
 

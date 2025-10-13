@@ -48,6 +48,10 @@ public class AlarmPolicyCreateRequest implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @NotBlank
+    @Schema(description = "策略类型")
+    private String type;
+
+    @NotBlank
     @Size(max = 64)
     @Schema(description = "策略名称")
     private String name;

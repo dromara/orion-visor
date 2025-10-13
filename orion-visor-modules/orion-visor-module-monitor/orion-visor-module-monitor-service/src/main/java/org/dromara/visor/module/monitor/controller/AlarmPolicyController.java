@@ -104,9 +104,10 @@ public class AlarmPolicyController {
     @IgnoreLog(IgnoreLogMode.RET)
     @GetMapping("/list")
     @Operation(summary = "查询全部监控告警策略")
+    @Parameter(name = "type", description = "type", required = true)
     @PreAuthorize("@ss.hasPermission('monitor:alarm-policy:query')")
-    public List<AlarmPolicyVO> getAlarmPolicyList() {
-        return alarmPolicyService.getAlarmPolicyListByCache();
+    public List<AlarmPolicyVO> getAlarmPolicyList(@RequestParam("type") String type) {
+        return alarmPolicyService.getAlarmPolicyListByCache(type);
     }
 
     @IgnoreLog(IgnoreLogMode.RET)

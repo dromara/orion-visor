@@ -145,7 +145,7 @@
   import useLoading from '@/hooks/loading';
   import columns from '../types/table.columns';
   import { useRouter } from 'vue-router';
-  import { TableName } from '../types/const';
+  import { AlarmPolicyType, TableName } from '../types/const';
   import { useTablePagination, useTableColumns } from '@/hooks/table';
   import { useQueryOrder, ASC } from '@/hooks/query-order';
   import TableAdjust from '@/components/app/table-adjust/index.vue';
@@ -161,6 +161,7 @@
   const tableRenderData = ref<Array<AlarmPolicyQueryResponse>>([]);
   const formModel = reactive<AlarmPolicyQueryRequest>({
     id: undefined,
+    type: AlarmPolicyType.HOST,
     name: undefined,
     description: undefined,
   });

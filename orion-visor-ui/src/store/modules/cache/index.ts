@@ -177,8 +177,8 @@ export default defineStore('cache', {
     },
 
     // 查询监控告警策略列表
-    async loadMonitorAlarmPolicy(force = false) {
-      return await this.load('alarmPolicy', getAlarmPolicyList, ['monitor:alarm-policy:query'], force);
+    async loadMonitorAlarmPolicy(type: string = 'all', force = false) {
+      return await this.load(`alarmPolicy_${type}`, () => getAlarmPolicyList(type), ['monitor:alarm-policy:query'], force);
     },
 
     // 查询监控指标列表
