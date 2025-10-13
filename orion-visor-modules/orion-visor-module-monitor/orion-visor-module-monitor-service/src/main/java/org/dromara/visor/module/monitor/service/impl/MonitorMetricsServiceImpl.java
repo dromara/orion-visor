@@ -31,10 +31,10 @@ import org.dromara.visor.common.utils.Assert;
 import org.dromara.visor.framework.biz.operator.log.core.utils.OperatorLogs;
 import org.dromara.visor.framework.redis.core.utils.RedisMaps;
 import org.dromara.visor.framework.redis.core.utils.barrier.CacheBarriers;
+import org.dromara.visor.module.monitor.context.MonitorMetricsContext;
 import org.dromara.visor.module.monitor.convert.MonitorMetricsConvert;
 import org.dromara.visor.module.monitor.dao.MonitorMetricsDAO;
 import org.dromara.visor.module.monitor.define.cache.MonitorMetricsCacheKeyDefine;
-import org.dromara.visor.module.monitor.engine.MonitorContext;
 import org.dromara.visor.module.monitor.entity.domain.MonitorMetricsDO;
 import org.dromara.visor.module.monitor.entity.dto.MonitorMetricsCacheDTO;
 import org.dromara.visor.module.monitor.entity.dto.MonitorMetricsContextDTO;
@@ -70,7 +70,7 @@ public class MonitorMetricsServiceImpl implements MonitorMetricsService {
     private AlarmPolicyRuleService alarmPolicyRuleService;
 
     @Resource
-    private MonitorContext monitorContext;
+    private MonitorMetricsContext monitorMetricsContext;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -88,7 +88,7 @@ public class MonitorMetricsServiceImpl implements MonitorMetricsService {
         // 设置日志参数
         OperatorLogs.add(OperatorLogs.ID, id);
         // 重新加载本地缓存
-        monitorContext.reloadMonitorMetrics(id);
+        monitorMetricsContext.reloadMonitorMetrics(id);
         log.info("MonitorMetricsService-createMonitorMetrics id: {}, effect: {}", id, effect);
         return id;
     }
@@ -112,7 +112,7 @@ public class MonitorMetricsServiceImpl implements MonitorMetricsService {
         // 删除缓存
         RedisMaps.delete(MonitorMetricsCacheKeyDefine.MONITOR_METRICS);
         // 重新加载本地缓存
-        monitorContext.reloadMonitorMetrics(id);
+        monitorMetricsContext.reloadMonitorMetrics(id);
         return effect;
     }
 
@@ -151,7 +151,7 @@ public class MonitorMetricsServiceImpl implements MonitorMetricsService {
 
     @Override
     public String getMetricName(String measurement, String value) {
-        MonitorMetricsContextDTO metrics = monitorContext.getMonitorMetrics(measurement, value);
+        MonitorMetricsContextDTO metrics = monitorMetricsContext.getMonitorMetrics(measurement, value);
         if (metrics == null) {
             return value;
         }
@@ -172,7 +172,7 @@ public class MonitorMetricsServiceImpl implements MonitorMetricsService {
         // 删除缓存
         RedisMaps.delete(MonitorMetricsCacheKeyDefine.MONITOR_METRICS, id);
         // 重新加载本地缓存
-        monitorContext.reloadMonitorMetrics(id);
+        monitorMetricsContext.reloadMonitorMetrics(id);
         // 设置日志参数
         OperatorLogs.add(OperatorLogs.NAME, record.getName());
         log.info("MonitorMetricsService-deleteMonitorMetricsById id: {}, effect: {}", id, effect);

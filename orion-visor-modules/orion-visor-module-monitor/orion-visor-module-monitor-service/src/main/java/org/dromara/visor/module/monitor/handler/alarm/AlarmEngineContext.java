@@ -20,7 +20,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.dromara.visor.module.monitor.engine;
+package org.dromara.visor.module.monitor.handler.alarm;
 
 import cn.orionsec.kit.lang.utils.Strings;
 import cn.orionsec.kit.lang.utils.collect.Lists;
@@ -37,6 +37,8 @@ import org.dromara.visor.module.monitor.entity.domain.AlarmPolicyDO;
 import org.dromara.visor.module.monitor.entity.domain.AlarmPolicyNotifyDO;
 import org.dromara.visor.module.monitor.entity.domain.AlarmPolicyRuleDO;
 import org.dromara.visor.module.monitor.enums.AlarmSwitchEnum;
+import org.dromara.visor.module.monitor.handler.alarm.model.AlarmEnginePolicy;
+import org.dromara.visor.module.monitor.handler.alarm.model.AlarmEngineRule;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;

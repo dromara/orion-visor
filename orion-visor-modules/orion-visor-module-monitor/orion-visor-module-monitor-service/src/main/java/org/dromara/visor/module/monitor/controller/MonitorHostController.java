@@ -35,8 +35,8 @@ import org.dromara.visor.framework.log.core.annotation.IgnoreLog;
 import org.dromara.visor.framework.log.core.enums.IgnoreLogMode;
 import org.dromara.visor.framework.web.core.annotation.DemoDisableApi;
 import org.dromara.visor.framework.web.core.annotation.RestWrapper;
+import org.dromara.visor.module.monitor.context.MonitorAgentContext;
 import org.dromara.visor.module.monitor.define.operator.MonitorHostOperatorType;
-import org.dromara.visor.module.monitor.engine.MonitorContext;
 import org.dromara.visor.module.monitor.entity.dto.AgentMetricsDataDTO;
 import org.dromara.visor.module.monitor.entity.request.host.*;
 import org.dromara.visor.module.monitor.entity.vo.MonitorHostMetricsDataVO;
@@ -68,7 +68,7 @@ public class MonitorHostController {
     private MonitorHostService monitorHostService;
 
     @Resource
-    private MonitorContext monitorContext;
+    private MonitorAgentContext monitorAgentContext;
 
     @IgnoreLog(IgnoreLogMode.RET)
     @PostMapping("/query")
@@ -84,7 +84,7 @@ public class MonitorHostController {
     @Parameter(name = "agentKey", description = "agentKey", required = true)
     @PreAuthorize("@ss.hasPermission('monitor:monitor-host:query')")
     public AgentMetricsDataDTO getMonitorHostOverride(@RequestParam("agentKey") String agentKey) {
-        return monitorContext.getAgentMetrics(agentKey);
+        return monitorAgentContext.getAgentMetrics(agentKey);
     }
 
     @IgnoreLog(IgnoreLogMode.RET)

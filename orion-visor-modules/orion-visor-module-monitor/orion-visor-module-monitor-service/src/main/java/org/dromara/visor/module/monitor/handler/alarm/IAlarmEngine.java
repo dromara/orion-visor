@@ -20,40 +20,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.dromara.visor.module.monitor.engine;
+package org.dromara.visor.module.monitor.handler.alarm;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import org.dromara.visor.module.monitor.entity.dto.AgentMetricsDataDTO;
 
 /**
- * 告警触发状态 - 轻量级缓存对象
- * 用于减少内存占用，只保存必要的触发状态信息
+ * 告警引擎
  *
  * @author Jiahang Li
  * @version 1.0.0
- * @since 2024/6/3 18:00
+ * @since 2025/10/13 10:22
  */
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class AlarmTriggerState {
+public interface IAlarmEngine {
 
     /**
-     * 时间戳
+     * 检查并且告警
+     *
+     * @param agentKey    agentKey
+     * @param prevMetrics prevMetrics
+     * @param newMetrics  newMetrics
      */
-    private Long timestamp;
-
-    /**
-     * 是否触发告警
-     */
-    private Boolean triggered;
-
-    /**
-     * 规则键
-     */
-    private String ruleKey;
+    void checkAndAlarm(String agentKey,
+                       AgentMetricsDataDTO prevMetrics,
+                       AgentMetricsDataDTO newMetrics);
 
 }

@@ -48,10 +48,10 @@ import org.dromara.visor.module.asset.entity.dto.host.HostQueryDTO;
 import org.dromara.visor.module.asset.enums.AgentOnlineStatusEnum;
 import org.dromara.visor.module.infra.api.SystemUserApi;
 import org.dromara.visor.module.monitor.constant.MetricsConst;
+import org.dromara.visor.module.monitor.context.MonitorAgentContext;
 import org.dromara.visor.module.monitor.convert.MonitorHostConvert;
 import org.dromara.visor.module.monitor.dao.AlarmPolicyDAO;
 import org.dromara.visor.module.monitor.dao.MonitorHostDAO;
-import org.dromara.visor.module.monitor.engine.MonitorContext;
 import org.dromara.visor.module.monitor.entity.domain.AlarmPolicyDO;
 import org.dromara.visor.module.monitor.entity.domain.MonitorHostDO;
 import org.dromara.visor.module.monitor.entity.dto.*;
@@ -102,7 +102,7 @@ public class MonitorHostServiceImpl implements MonitorHostService {
     private MonitorMetricsService monitorMetricsService;
 
     @Resource
-    private MonitorContext monitorContext;
+    private MonitorAgentContext monitorAgentContext;
 
     @Override
     public DataGrid<MonitorHostVO> getMonitorHostPage(MonitorHostQueryRequest request) {
@@ -308,7 +308,7 @@ public class MonitorHostServiceImpl implements MonitorHostService {
             monitorHostDAO.setPolicyIdWithNullById(id);
         }
         // 重新加载监控主机上下文
-        monitorContext.reloadMonitorHost(host.getAgentKey());
+        monitorAgentContext.reloadMonitorHost(host.getAgentKey());
         log.info("MonitorHostService-updateMonitorHostById effect: {}", effect);
         return effect;
     }
@@ -334,7 +334,7 @@ public class MonitorHostServiceImpl implements MonitorHostService {
         log.info("MonitorHostService-updateMonitorHostAlarmSwitch effect: {}", effect);
         // 更新缓存
         for (HostDTO host : hostList) {
-            monitorContext.reloadMonitorHost(host.getAgentKey());
+            monitorAgentContext.reloadMonitorHost(host.getAgentKey());
         }
         return effect;
     }
@@ -350,7 +350,7 @@ public class MonitorHostServiceImpl implements MonitorHostService {
         // 删除
         int effect = monitorHostDAO.deleteByHostIdList(hostIdList);
         // 删除缓存
-        hosts.forEach(s -> monitorContext.removeMonitorHost(s.getAgentKey()));
+        hosts.forEach(s -> monitorAgentContext.removeMonitorHost(s.getAgentKey()));
         log.info("MonitorHostService.deleteByHostIdList finish effect: {}", effect);
         return effect;
     }
@@ -394,7 +394,7 @@ public class MonitorHostServiceImpl implements MonitorHostService {
         List<String> fields = request.getFields();
         // 获取配置信息
         List<MonitorHostConfigDTO> configList = agentKeys.stream()
-                .map(monitorContext::getMonitorHost)
+                .map(monitorAgentContext::getMonitorHost)
                 .map(MonitorHostContextDTO::getConfig)
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
@@ -446,7 +446,7 @@ public class MonitorHostServiceImpl implements MonitorHostService {
      * @return data
      */
     public MonitorHostMetricsDataVO getHostMetricsData(String agentKey, MonitorHostConfigDTO config) {
-        AgentMetricsDataDTO metrics = monitorContext.getAgentMetrics(agentKey);
+        AgentMetricsDataDTO metrics = monitorAgentContext.getAgentMetrics(agentKey);
         // 无数据
         if (metrics == null) {
             return MonitorHostMetricsDataVO.noData(agentKey);
@@ -454,7 +454,7 @@ public class MonitorHostServiceImpl implements MonitorHostService {
         // 从缓存中获取配置
         if (config == null) {
             config = Optional.of(agentKey)
-                    .map(monitorContext::getMonitorHost)
+                    .map(monitorAgentContext::getMonitorHost)
                     .map(MonitorHostContextDTO::getConfig)
                     .orElse(null);
         }

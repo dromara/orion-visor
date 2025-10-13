@@ -35,7 +35,6 @@ import org.dromara.visor.module.monitor.convert.AlarmPolicyRuleConvert;
 import org.dromara.visor.module.monitor.dao.AlarmPolicyDAO;
 import org.dromara.visor.module.monitor.dao.AlarmPolicyRuleDAO;
 import org.dromara.visor.module.monitor.dao.MonitorMetricsDAO;
-import org.dromara.visor.module.monitor.engine.AlarmEngineContext;
 import org.dromara.visor.module.monitor.entity.domain.AlarmPolicyDO;
 import org.dromara.visor.module.monitor.entity.domain.AlarmPolicyRuleDO;
 import org.dromara.visor.module.monitor.entity.domain.MonitorMetricsDO;
@@ -44,6 +43,7 @@ import org.dromara.visor.module.monitor.entity.request.alarm.AlarmPolicyRuleUpda
 import org.dromara.visor.module.monitor.entity.request.alarm.AlarmPolicyRuleUpdateSwitchRequest;
 import org.dromara.visor.module.monitor.entity.vo.AlarmPolicyRuleVO;
 import org.dromara.visor.module.monitor.enums.AlarmSwitchEnum;
+import org.dromara.visor.module.monitor.handler.alarm.AlarmEngineContext;
 import org.dromara.visor.module.monitor.service.AlarmPolicyRuleService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

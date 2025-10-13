@@ -23,6 +23,7 @@
 package org.dromara.visor.module.monitor.service.impl;
 
 import cn.orionsec.kit.lang.able.Executable;
+import cn.orionsec.kit.lang.annotation.Keep;
 import cn.orionsec.kit.lang.utils.Strings;
 import cn.orionsec.kit.lang.utils.collect.Lists;
 import cn.orionsec.kit.lang.utils.collect.Maps;
@@ -38,14 +39,14 @@ import org.dromara.visor.framework.influxdb.core.utils.InfluxdbUtils;
 import org.dromara.visor.module.asset.api.HostApi;
 import org.dromara.visor.module.asset.entity.dto.host.HostDTO;
 import org.dromara.visor.module.infra.api.SystemUserApi;
+import org.dromara.visor.module.monitor.context.MonitorAgentContext;
 import org.dromara.visor.module.monitor.dao.MonitorHostDAO;
-import org.dromara.visor.module.monitor.engine.AlarmEngine;
-import org.dromara.visor.module.monitor.engine.MonitorContext;
 import org.dromara.visor.module.monitor.entity.domain.MonitorHostDO;
 import org.dromara.visor.module.monitor.entity.dto.AgentMetricsDataDTO;
 import org.dromara.visor.module.monitor.entity.dto.HostMetaDTO;
 import org.dromara.visor.module.monitor.entity.dto.MonitorHostConfigDTO;
 import org.dromara.visor.module.monitor.enums.AlarmSwitchEnum;
+import org.dromara.visor.module.monitor.handler.alarm.IAlarmEngine;
 import org.dromara.visor.module.monitor.service.MonitorAgentEndpointService;
 import org.dromara.visor.module.monitor.utils.MetricsUtils;
 import org.springframework.scheduling.annotation.Async;
@@ -79,18 +80,19 @@ public class MonitorAgentEndpointServiceImpl implements MonitorAgentEndpointServ
     private SystemUserApi systemUserApi;
 
     @Resource
-    private MonitorContext monitorContext;
+    private MonitorAgentContext monitorAgentContext;
 
+    @Keep
     @Resource
-    private AlarmEngine alarmEngine;
+    private IAlarmEngine metricsAlarmEngine;
 
     @Override
     @Async("metricsExecutor")
     public void addMetrics(String agentKey, AgentMetricsDataDTO newMetrics) {
         log.info("MonitorAgentEndpointService.addMetrics start agentKey: {}", agentKey);
         // 设置数据缓存
-        AgentMetricsDataDTO prevMetrics = monitorContext.getAgentMetrics(agentKey);
-        monitorContext.setAgentMetrics(agentKey, newMetrics);
+        AgentMetricsDataDTO prevMetrics = monitorAgentContext.getAgentMetrics(agentKey);
+        monitorAgentContext.setAgentMetrics(agentKey, newMetrics);
         // 数据点
         List<Point> points = newMetrics.getMetrics()
                 .stream()
@@ -102,7 +104,7 @@ public class MonitorAgentEndpointServiceImpl implements MonitorAgentEndpointServ
         // 写入数据点
         InfluxdbUtils.writePoints(points);
         // 告警
-        alarmEngine.checkAndAlarm(agentKey, prevMetrics, newMetrics);
+        metricsAlarmEngine.checkAndAlarm(agentKey, prevMetrics, newMetrics);
     }
 
     @Override
@@ -149,7 +151,7 @@ public class MonitorAgentEndpointServiceImpl implements MonitorAgentEndpointServ
             }
             // 重新加载监控主机上下文
             if (newConfig != null) {
-                monitorContext.reloadMonitorHost(agentKey);
+                monitorAgentContext.reloadMonitorHost(agentKey);
             }
         };
         // 获取锁并执行同步逻辑
