@@ -31,10 +31,12 @@ import org.dromara.visor.module.asset.entity.dto.host.HostBaseDTO;
 import org.dromara.visor.module.monitor.convert.AlarmEventConvert;
 import org.dromara.visor.module.monitor.entity.domain.AlarmEventDO;
 import org.dromara.visor.module.monitor.entity.dto.*;
+import org.dromara.visor.module.monitor.enums.AlarmEventSourceTypeEnum;
 import org.dromara.visor.module.monitor.enums.AlarmHandleStatusEnum;
 import org.dromara.visor.module.monitor.enums.AlarmSwitchEnum;
 import org.dromara.visor.module.monitor.enums.MetricsUnitEnum;
 import org.dromara.visor.module.monitor.handler.alarm.model.AlarmEngineRule;
+import org.dromara.visor.module.monitor.handler.alarm.model.HostAlarmSourceInfo;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -98,9 +100,14 @@ public class MetricsAlarmEngine extends BaseAlarmEngine {
         Map<String, String> tags = agentMetrics.getTags();
         AlarmEventDO alarmEvent = AlarmEventDO.builder()
                 .agentKey(agentKey)
-                .hostId(host.getId())
-                .hostName(host.getName())
-                .hostAddress(host.getAddress())
+                .sourceType(AlarmEventSourceTypeEnum.HOST.name())
+                .sourceId(host.getId())
+                .sourceInfo(HostAlarmSourceInfo.builder()
+                        .name(host.getName())
+                        .code(host.getCode())
+                        .address(host.getAddress())
+                        .build()
+                        .toJsonString())
                 .policyId(rule.getPolicyId())
                 .policyRuleId(rule.getId())
                 .metricsId(rule.getMetricsId())
@@ -124,6 +131,15 @@ public class MetricsAlarmEngine extends BaseAlarmEngine {
         alarmEventService.createAlarmEvent(alarmEvent);
         // 填充其他参数
         return AlarmEventConvert.MAPPER.toTrigger(alarmEvent);
+    }
+
+    @Override
+    protected void setExtraAlarmPushParams(Map<String, Object> params, AlarmEventTriggerDTO event) {
+        HostAlarmSourceInfo sourceInfo = JSON.parseObject(event.getAlarmInfo(), HostAlarmSourceInfo.class);
+        params.put("hostId", event.getSourceId());
+        params.put("hostName", sourceInfo.getName());
+        params.put("hostCode", sourceInfo.getCode());
+        params.put("hostAddress", sourceInfo.getAddress());
     }
 
 }

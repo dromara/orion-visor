@@ -491,38 +491,41 @@ public abstract class BaseAlarmEngine implements IAlarmEngine {
         // 构建参数
         List<Map<String, Object>> paramsList = new ArrayList<>();
         for (AlarmEventTriggerDTO event : alarmEvents) {
-            MonitorMetricsContextDTO metrics = monitorMetricsContext.getMonitorMetrics(event.getMetricsId());
-            MetricsUnitEnum unit = MetricsUnitEnum.of(metrics.getUnit());
-            AlarmLevelEnum level = AlarmLevelEnum.of(event.getAlarmLevel());
-            AlarmTriggerConditionEnum triggerCondition = AlarmTriggerConditionEnum.of(event.getTriggerCondition());
+            try {
+                MonitorMetricsContextDTO metrics = monitorMetricsContext.getMonitorMetrics(event.getMetricsId());
+                MetricsUnitEnum unit = MetricsUnitEnum.of(metrics.getUnit());
+                AlarmLevelEnum level = AlarmLevelEnum.of(event.getAlarmLevel());
+                AlarmTriggerConditionEnum triggerCondition = AlarmTriggerConditionEnum.of(event.getTriggerCondition());
 
-            // 告警事件参数
-            Map<String, Object> params = new HashMap<>();
-            params.put("id", event.getId());
-            params.put("relKey", event.getId());
-            params.put("policyId", policy.getId());
-            params.put("policyName", policy.getName());
-            params.put("ruleId", event.getPolicyRuleId());
-            params.put("hostId", event.getHostId());
-            params.put("hostName", event.getHostName());
-            params.put("hostAddress", event.getHostAddress());
-            params.put("metrics", metrics.getMeasurement() + "." + metrics.getValue());
-            params.put("metricsId", metrics.getId());
-            params.put("metricsName", metrics.getName());
-            params.put("metricsField", metrics.getValue());
-            params.put("metricsMeasurement", metrics.getMeasurement());
-            params.put("tags", event.getAlarmTags());
-            params.put("level", level.name());
-            params.put("levelLabel", level.getLabel());
-            params.put("levelSeverity", level.getSeverity());
-            params.put("levelColor", level.getColor());
-            params.put("consecutiveCount", event.getConsecutiveCount());
-            params.put("triggerCondition", triggerCondition.getCondition());
-            params.put("alarmInfo", event.getAlarmInfo());
-            params.put("alarmValue", unit.format(event.getAlarmValue(), new MetricsUnitEnum.FormatOptions(2, metrics.getSuffix())));
-            params.put("alarmThreshold", unit.format(event.getAlarmThreshold(), new MetricsUnitEnum.FormatOptions(4, metrics.getSuffix())));
-            params.put("alarmTime", Dates.format(event.getCreateTime()));
-            paramsList.add(params);
+                // 告警事件参数
+                Map<String, Object> params = new HashMap<>();
+                params.put("id", event.getId());
+                params.put("relKey", event.getId());
+                params.put("policyId", policy.getId());
+                params.put("policyName", policy.getName());
+                params.put("ruleId", event.getPolicyRuleId());
+                params.put("metrics", metrics.getMeasurement() + "." + metrics.getValue());
+                params.put("metricsId", metrics.getId());
+                params.put("metricsName", metrics.getName());
+                params.put("metricsField", metrics.getValue());
+                params.put("metricsMeasurement", metrics.getMeasurement());
+                params.put("tags", event.getAlarmTags());
+                params.put("level", level.name());
+                params.put("levelLabel", level.getLabel());
+                params.put("levelSeverity", level.getSeverity());
+                params.put("levelColor", level.getColor());
+                params.put("consecutiveCount", event.getConsecutiveCount());
+                params.put("triggerCondition", triggerCondition.getCondition());
+                params.put("alarmInfo", event.getAlarmInfo());
+                params.put("alarmValue", unit.format(event.getAlarmValue(), new MetricsUnitEnum.FormatOptions(2, metrics.getSuffix())));
+                params.put("alarmThreshold", unit.format(event.getAlarmThreshold(), new MetricsUnitEnum.FormatOptions(4, metrics.getSuffix())));
+                params.put("alarmTime", Dates.format(event.getCreateTime()));
+                // 设置额外告警推送参数
+                this.setExtraAlarmPushParams(params, event);
+                paramsList.add(params);
+            } catch (Exception e) {
+                log.info("AlarmEngine-setAlarmParams error", e);
+            }
         }
         // 推送消息
         for (Map<String, Object> params : paramsList) {
@@ -531,5 +534,13 @@ public abstract class BaseAlarmEngine implements IAlarmEngine {
             }
         }
     }
+
+    /**
+     * 设置告警推送参数
+     *
+     * @param params params
+     * @param event  event
+     */
+    protected abstract void setExtraAlarmPushParams(Map<String, Object> params, AlarmEventTriggerDTO event);
 
 }

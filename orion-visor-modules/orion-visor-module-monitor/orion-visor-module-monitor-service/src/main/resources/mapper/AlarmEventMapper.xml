@@ -5,9 +5,9 @@
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="org.dromara.visor.module.monitor.entity.domain.AlarmEventDO">
         <id column="id" property="id"/>
-        <result column="host_id" property="hostId"/>
-        <result column="host_name" property="hostName"/>
-        <result column="host_address" property="hostAddress"/>
+        <result column="source_type" property="sourceType"/>
+        <result column="source_id" property="sourceId"/>
+        <result column="source_info" property="sourceInfo"/>
         <result column="agent_key" property="agentKey"/>
         <result column="policy_id" property="policyId"/>
         <result column="policy_rule_id" property="policyRuleId"/>
@@ -41,7 +41,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, host_id, host_name, host_address, agent_key, policy_id, policy_rule_id, metrics_id, metrics_measurement, alarm_tags, alarm_value, alarm_threshold, alarm_info, alarm_level, trigger_condition, consecutive_count, false_alarm, handle_status, handle_time, handle_remark, handle_user_id, handle_username, create_time, update_time, creator, updater, deleted
+        id, event_source, source_id, source_info, agent_key, policy_id, policy_rule_id, metrics_id, metrics_measurement, alarm_tags, alarm_value, alarm_threshold, alarm_info, alarm_level, trigger_condition, consecutive_count, false_alarm, handle_status, handle_time, handle_remark, handle_user_id, handle_username, create_time, update_time, creator, updater, deleted
     </sql>
 
     <select id="selectPolicyEventCount" resultMap="CountResultMap">
