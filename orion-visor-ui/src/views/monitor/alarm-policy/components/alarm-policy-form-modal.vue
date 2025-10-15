@@ -26,9 +26,10 @@
         </a-form-item>
         <!-- 策略描述 -->
         <a-form-item field="description" label="策略描述">
-          <a-input v-model="formModel.description"
-                   placeholder="请输入策略描述"
-                   allow-clear />
+          <a-textarea v-model="formModel.description"
+                      placeholder="请输入策略描述"
+                      :auto-size="{ minRows: 3, maxRows: 3}"
+                      allow-clear />
         </a-form-item>
         <!-- 通知渠道 -->
         <a-form-item field="notifyIdList" label="通知渠道">

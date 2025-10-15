@@ -9,9 +9,6 @@ const rules = {
     message: '策略名称长度不能大于64位'
   }],
   description: [{
-    required: true,
-    message: '请输入策略描述'
-  }, {
     maxLength: 255,
     message: '策略描述长度不能大于255位'
   }],

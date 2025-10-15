@@ -59,4 +59,13 @@ public interface AlarmPolicyRuleDAO extends IMapper<AlarmPolicyRuleDO> {
         return this.selectList(Conditions.eq(AlarmPolicyRuleDO::getPolicyId, policyId));
     }
 
+    /**
+     * 通过 policyId 删除
+     *
+     * @param policyId policyId
+     */
+    default void deleteByPolicyId(Long policyId) {
+        this.delete(Conditions.eq(AlarmPolicyRuleDO::getPolicyId, policyId));
+    }
+
 }

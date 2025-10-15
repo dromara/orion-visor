@@ -266,7 +266,7 @@ public class AlarmPolicyServiceImpl implements AlarmPolicyService {
         // 删除策略通知
         alarmPolicyNotifyDAO.deleteByPolicyId(id);
         // 删除策略规则
-        alarmPolicyRuleService.deleteByPolicyId(id);
+        alarmPolicyRuleDAO.deleteByPolicyId(id);
         // 删除缓存
         alarmEngineContext.reloadPolicy(id);
         log.info("AlarmPolicyService-deleteAlarmPolicyById effect: {}", effect);
