@@ -5,6 +5,7 @@ import { useUserStore } from '@/store';
 import { getToken } from '@/utils/auth';
 import { httpBaseUrl } from '@/utils/env';
 import { reLoginTipsKey } from '@/types/symbol';
+import { ApiError } from '@/api/error';
 
 axios.defaults.timeout = 15000;
 axios.defaults.setAuthorization = true;
@@ -72,7 +73,7 @@ axios.interceptors.response.use(
         });
       }
     }
-    return Promise.reject(new Error(res.msg || 'Error'));
+    return Promise.reject(new ApiError(res.msg || 'Error', res));
   },
   (error) => {
     // 判断是否弹出请求错误信息
