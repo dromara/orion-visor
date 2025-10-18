@@ -11,6 +11,12 @@ export const FalseAlarm = {
   FALSE: 0,
 };
 
+// 告警来源类型
+export const AlarmSourceType = {
+  HOST: 'HOST',
+  UPTIME: 'UPTIME',
+};
+
 // 告警条件 字典项
 export const TriggerConditionKey = 'alarmTriggerCondition';
 

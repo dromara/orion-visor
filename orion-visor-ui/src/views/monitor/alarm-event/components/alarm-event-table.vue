@@ -13,12 +13,13 @@
                   placeholder="请选择处理状态"
                   allow-clear />
       </a-form-item>
-      <!-- 告警主机 -->
-      <a-form-item field="hostId" label="告警主机">
-        <host-selector v-model="formModel.hostId"
-                       placeholder="请选择告警主机"
-                       hide-button
-                       allow-clear />
+      <!-- 告警来源 -->
+      <a-form-item field="agentKey" label="告警来源">
+        <!-- 选择告警来源 -->
+        <monitor-host-selector v-if="sourceType === AlarmSourceType.HOST"
+                               v-model="formModel.agentKey"
+                               placeholder="请选择告警来源"
+                               allow-clear />
       </a-form-item>
       <!-- 告警级别 -->
       <a-form-item field="alarmLevel" label="告警级别">
@@ -75,12 +76,6 @@
                         hide-button
                         allow-clear />
       </a-form-item>
-      <!-- agentKey -->
-      <a-form-item field="agentKey" label="agentKey">
-        <a-input v-model="formModel.agentKey"
-                 placeholder="请输入agentKey"
-                 allow-clear />
-      </a-form-item>
       <!-- 告警时间 -->
       <a-form-item field="createTimeRange" label="告警时间">
         <a-range-picker v-model="formModel.createTimeRange"
@@ -92,7 +87,7 @@
     </query-header>
   </a-card>
   <!-- 表格 -->
-  <alarm-event-table-base ref="eventTable"
+  <alarm-event-table-base :source-type="sourceType"
                           :table-name="TableName"
                           :columns="columns"
                           :table-data="tableRenderData"
@@ -100,9 +95,8 @@
                           :form-model="formModel"
                           :pagination="pagination"
                           :show-clear-button="true"
-                          @open-handle="emits('openHandle', $event)"
-                          @open-clear="emits('openClear', formModel)"
                           @set-loading="setLoading"
+                          @reload="reload"
                           @query="fetchTableData" />
 </template>
 
@@ -113,25 +107,26 @@
 </script>
 
 <script lang="ts" setup>
-  import type { AlarmEventQueryRequest, AlarmEventQueryResponse, AlarmEventHandleRequest } from '@/api/monitor/alarm-event';
+  import type { AlarmEventQueryRequest, AlarmEventQueryResponse } from '@/api/monitor/alarm-event';
   import { reactive, ref, onMounted } from 'vue';
   import { getAlarmEventPage } from '@/api/monitor/alarm-event';
   import useLoading from '@/hooks/loading';
   import columns from '../types/table.columns';
-  import { TableName, FalseAlarm, HandleStatusKey, FalseAlarmKey, MetricsMeasurementKey, AlarmLevelKey } from '../types/const';
+  import { TableName, FalseAlarm, HandleStatusKey, FalseAlarmKey, MetricsMeasurementKey, AlarmLevelKey, AlarmSourceType } from '../types/const';
   import { useTablePagination } from '@/hooks/table';
   import { useRoute } from 'vue-router';
-  import { useDictStore } from '@/store';
+  import { useDictStore, useUserStore } from '@/store';
   import { useQueryOrder, DESC } from '@/hooks/query-order';
   import UserSelector from '@/components/user/user/selector/index.vue';
-  import HostSelector from '@/components/asset/host/selector/index.vue';
   import MonitorMetricsSelector from '@/components/monitor/metrics/selector/index.vue';
   import AlarmPolicySelector from '@/components/monitor/alarm-policy/selector/index.vue';
   import AlarmEventTableBase from './alarm-event-table-base.vue';
+  import MonitorHostSelector from '@/components/monitor/host/selector/index.vue';
 
-  const emits = defineEmits(['openHandle', 'openClear']);
+  const props = defineProps<{
+    sourceType: string;
+  }>();
 
-  const eventTable = ref();
   const pagination = useTablePagination();
   const { toOptions } = useDictStore();
   const { loading, setLoading } = useLoading();
@@ -139,8 +134,8 @@
   const tableRenderData = ref<Array<AlarmEventQueryResponse>>([]);
   const formModel = reactive<AlarmEventQueryRequest>({
     id: undefined,
+    sourceType: props.sourceType,
     agentKey: undefined,
-    hostId: undefined,
     policyId: undefined,
     metricsId: undefined,
     metricsMeasurement: undefined,
@@ -158,12 +153,7 @@
     fetchTableData();
   };
 
-  // 告警处理回调
-  const alarmHandled = (request: Required<AlarmEventHandleRequest>) => {
-    eventTable.value.alarmHandled(request);
-  };
-
-  defineExpose({ reload, alarmHandled });
+  defineExpose({ reload });
 
   // 加载数据
   const doFetchTableData = async (request: AlarmEventQueryRequest) => {
@@ -186,10 +176,17 @@
   };
 
   onMounted(() => {
-    const key = useRoute().query.key as string;
+    const route = useRoute();
+    const key = route.query.key as string;
     if (key) {
       formModel.id = Number.parseInt(key);
     }
+    // 当前用户
+    const action = route.query.action as string;
+    if (action === 'self') {
+      formModel.handleUserId = useUserStore().id;
+    }
+    // 查询数据
     fetchTableData();
   });
 

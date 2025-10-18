@@ -11,9 +11,9 @@ const columns = [
     fixed: 'left',
     default: true,
   }, {
-    title: '主机信息',
-    dataIndex: 'hostInfo',
-    slotName: 'hostInfo',
+    title: '来源信息',
+    dataIndex: 'sourceInfo',
+    slotName: 'sourceInfo',
     width: 248,
     align: 'left',
     fixed: 'left',

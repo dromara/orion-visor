@@ -8,14 +8,15 @@
     <!-- 主机身份表格 -->
     <a-table v-model:selected-keys="selectedKeys"
              row-key="id"
-             class="host-identity-main-table"
+             class="table-resize host-identity-main-table"
              :columns="hostIdentityColumns"
              :row-selection="rowSelection"
              row-class="pointer"
-             :sticky-header="true"
              :data="hostIdentities"
+             :sticky-header="true"
              :pagination="false"
              :bordered="false"
+             :column-resizable="true"
              @row-click="clickRow">
       <!-- 类型 -->
       <template #type="{ record }">

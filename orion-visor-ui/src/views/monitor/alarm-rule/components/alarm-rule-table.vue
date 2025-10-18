@@ -52,11 +52,13 @@
       <!-- table -->
       <a-table row-key="id"
                ref="tableRef"
+               class="table-resize"
                :loading="loading"
                :columns="tableColumns"
                :data="tableRenderData"
                :pagination="false"
-               :bordered="false">
+               :bordered="false"
+               :column-resizable="true">
         <!-- 指标标签 -->
         <template #tags="{ record }">
           <a-tag v-if="record.allEffect === 1">
@@ -165,7 +167,7 @@
 
   const { loading, setLoading } = useLoading();
   const { hasPermission } = usePermission();
-  const { monitorMetrics } = useCacheStore();
+  const cacheStore = useCacheStore();
   const { toOptions, getDictValue } = useDictStore();
   const { tableColumns, columnsHook } = useTableColumns(TableName, columns);
 
@@ -203,7 +205,7 @@
 
   // 获取指标名称
   const getMetricsField = (metricsId: number, field: string) => {
-    return (monitorMetrics as Array<MetricsQueryResponse> || []).find(m => m.id === metricsId)?.[field];
+    return (cacheStore.monitorMetrics as Array<MetricsQueryResponse> || []).find(m => m.id === metricsId)?.[field];
   };
 
   // 切换规则开关

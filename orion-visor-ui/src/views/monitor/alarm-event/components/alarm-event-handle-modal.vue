@@ -10,7 +10,7 @@
            ok-text="处理"
            :ok-button-props="{ disabled: loading }"
            :cancel-button-props="{ disabled: loading }"
-           :on-before-ok="handlerOk"
+           :on-before-ok="handleOk"
            @close="handleClose">
     <a-spin class="full" :loading="loading">
       <a-form ref="formRef"
@@ -90,7 +90,7 @@
   defineExpose({ open });
 
   // 确定
-  const handlerOk = async () => {
+  const handleOk = async () => {
     setLoading(true);
     try {
       // 验证参数
@@ -102,8 +102,7 @@
       await handleAlarmEvent(formModel.value);
       Message.success('已处理');
       emits('handled', { ...formModel.value });
-      // 清空
-      handlerClear();
+      handleClose();
       return true;
     } catch (e) {
       return false;
@@ -114,13 +113,13 @@
 
   // 关闭
   const handleClose = () => {
-    handlerClear();
+    handleClear();
+    setVisible(false);
   };
 
   // 清空
-  const handlerClear = () => {
+  const handleClear = () => {
     setLoading(false);
-    setVisible(false);
   };
 
 </script>

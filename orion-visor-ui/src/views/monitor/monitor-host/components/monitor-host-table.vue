@@ -121,6 +121,7 @@
     <a-table v-model:selected-keys="selectedKeys"
              row-key="hostId"
              ref="tableRef"
+             class="table-resize"
              :loading="loading"
              :columns="tableColumns"
              :data="tableRenderData"
@@ -128,6 +129,7 @@
              :row-class="setRowClassName"
              :row-selection="rowSelection"
              :bordered="false"
+             :column-resizable="true"
              @page-change="(page: number) => fetchTableData(page, pagination.pageSize)"
              @page-size-change="(size: number) => fetchTableData(1, size)">
       <!-- 主机信息 -->

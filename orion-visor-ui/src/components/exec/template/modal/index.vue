@@ -45,11 +45,13 @@
       <!-- table -->
       <a-table row-key="id"
                ref="tableRef"
+               class="table-resize"
                :loading="loading"
                :columns="columns"
                :data="tableRenderData"
                :pagination="pagination"
                :bordered="false"
+               :column-resizable="true"
                :scroll="{ x: '100%', y: '60vh' }"
                @page-change="(page: number) => fetchTableData(page, pagination.pageSize)"
                @page-size-change="(size: number) => fetchTableData(1, size)">

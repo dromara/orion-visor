@@ -214,7 +214,7 @@
 
   const { visible, setVisible } = useVisible();
   const { loading, setLoading } = useLoading();
-  const { monitorMetrics } = useCacheStore();
+  const cacheStore = useCacheStore();
   const { getDictValue, toOptions } = useDictStore();
 
   const title = ref<string>();
@@ -250,7 +250,7 @@
       return;
     }
     // 获取数据集
-    const measurementValue = (monitorMetrics as Array<MetricsQueryResponse> || []).find(m => m.id === metricsId)?.measurement;
+    const measurementValue = (cacheStore.monitorMetrics as Array<MetricsQueryResponse> || []).find(m => m.id === metricsId)?.measurement;
     if (!measurementValue) {
       hasTags.value = false;
       return;
@@ -321,7 +321,7 @@
       return '';
     }
     // 读取指标单位
-    const unit = (monitorMetrics as Array<MetricsQueryResponse> || []).find(m => m.id === metricsId)?.unit;
+    const unit = (cacheStore.monitorMetrics as Array<MetricsQueryResponse> || []).find(m => m.id === metricsId)?.unit;
     if (!unit) {
       return '';
     }

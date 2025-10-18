@@ -53,11 +53,13 @@
     <!-- table -->
     <a-table row-key="id"
              ref="tableRef"
+             class="table-resize"
              :loading="loading"
              :columns="columns"
              :data="tableRenderData"
              :pagination="false"
-             :bordered="false">
+             :bordered="false"
+             :column-resizable="true">
       <!-- 连接用户 -->
       <template #username="{ record }">
         {{ record.username }}

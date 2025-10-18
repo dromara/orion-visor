@@ -5,7 +5,7 @@
           :loading="loading"
           :bordered="false"
           :header-style="{ height: '48px', padding: '8px 16px 0 16px', borderBottom: 'none' }"
-          :body-style="{ padding: '0 0 0 16px', height: 'calc(100% - 48px)', position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }">
+          :body-style="{ padding: '0', height: 'calc(100% - 48px)', position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }">
     <!-- 标题 -->
     <template #title>
       <div class="chart-title">
@@ -61,7 +61,7 @@
     }
     return {
       grid: {
-        left: 64,
+        left: 68,
         right: 24,
         top: 28,
         bottom: 32,
@@ -73,6 +73,14 @@
         zoomOnMouseWheel: true,
         moveOnMouseMove: true,
       }],
+      legend: {
+        show: props.option.legend === true,
+        type: 'scroll',
+        padding: [4, 8, 8, 8],
+        textStyle: {
+          color: themeTextColor,
+        }
+      },
       tooltip: {
         trigger: 'axis',
         appendToBody: true,
@@ -181,13 +189,6 @@
             color: themeLineColor,
           },
         },
-      },
-      legend: {
-        show: props.option.legend === true,
-        type: 'scroll',
-        textStyle: {
-          color: themeTextColor,
-        }
       },
       series: series.value.map((s, index) => {
         let colors = props.option.colors[index];

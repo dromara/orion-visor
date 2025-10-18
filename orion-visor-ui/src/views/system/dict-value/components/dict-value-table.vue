@@ -76,16 +76,18 @@
     <a-table v-model:selected-keys="selectedKeys"
              row-key="id"
              ref="tableRef"
+             class="table-resize"
              :loading="loading"
              :columns="tableColumns"
              :row-selection="rowSelection"
              :data="tableRenderData"
              :pagination="pagination"
              :bordered="false"
+             :column-resizable="true"
              @page-change="(page: number) => fetchTableData(page, pagination.pageSize)"
              @page-size-change="(size: number) => fetchTableData(1, size)">
       <!-- 配置项 -->
-      <template #keyName="{record}">
+      <template #keyName="{ record }">
         {{ record.keyName }}<span style="margin: 0 4px;">-</span>{{ record.keyDescription }}
       </template>
       <!-- 配置值 -->

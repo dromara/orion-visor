@@ -106,6 +106,7 @@
     <a-table v-model:selected-keys="selectedKeys"
              row-key="id"
              ref="tableRef"
+             class="table-resize"
              :loading="loading"
              :columns="tableColumns"
              :row-selection="rowSelection"
@@ -113,14 +114,15 @@
              :data="tableRenderData"
              :pagination="pagination"
              :bordered="false"
+             :column-resizable="true"
              @page-change="(page: number) => fetchTableData(page, pagination.pageSize)"
              @page-size-change="(size: number) => fetchTableData(1, size)"
              @expand="loadExecHost">
       <!-- 展开表格 -->
       <template #expand-row="{ record }">
         <exec-command-host-log-table :row="record"
-                                     @view-command="s => emits('viewCommand', s)"
-                                     @view-params="s => emits('viewParams', s)"
+                                     @view-command="(s: any) => emits('viewCommand', s)"
+                                     @view-params="(s: any) => emits('viewParams', s)"
                                      @refresh-host="refreshExecHost" />
       </template>
       <!-- 执行命令 -->

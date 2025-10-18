@@ -1,14 +1,16 @@
 <template>
-  <a-table row-key="id"
+  <a-table v-model:selected-keys="selectedKeysValue"
+           row-key="id"
            ref="tableRef"
+           class="table-resize"
            :columns="columns"
-           v-model:selected-keys="selectedKeysValue"
            :row-selection="rowSelection"
            row-class="pointer"
            :data="hostList"
            :scroll="{ y: '100%' }"
            :pagination="false"
            :bordered="true"
+           :column-resizable="true"
            @row-click="clickRow">
     <!-- 空 -->
     <template #empty>

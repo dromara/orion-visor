@@ -13,11 +13,13 @@
       <div class="card-body">
         <!-- 表格 -->
         <a-table row-key="id"
+                 class="table-resize"
                  :loading="loading"
                  :columns="batchExecColumns"
                  :data="data.exec?.execLogList || []"
                  :pagination="false"
                  :bordered="false"
+                 :column-resizable="true"
                  :scroll="{ y: 258 }">
           <!-- 空状态 -->
           <template #empty>
