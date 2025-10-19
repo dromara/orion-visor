@@ -14,11 +14,11 @@
     <url>https://github.com/dromara/orion-visor</url>
 
     <properties>
-        <revision>2.5.3</revision>
+        <revision>2.5.4</revision>
         <spring.boot.version>2.7.17</spring.boot.version>
         <spring.boot.admin.version>2.7.15</spring.boot.admin.version>
         <flatten.maven.plugin.version>1.5.0</flatten.maven.plugin.version>
-        <orion.kit.version>2.0.4</orion.kit.version>
+        <orion.kit.version>2.0.5</orion.kit.version>
         <aspectj.version>1.9.7</aspectj.version>
         <lombok.version>1.18.26</lombok.version>
         <springdoc.version>1.6.15</springdoc.version>

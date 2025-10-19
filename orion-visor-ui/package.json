@@ -1,7 +1,7 @@
 {
   "name": "orion-visor-ui",
   "description": "Orion Visor UI",
-  "version": "2.5.3",
+  "version": "2.5.4",
   "private": true,
   "author": "Jiahang Li",
   "license": "Apache 2.0",

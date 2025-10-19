@@ -36,7 +36,7 @@ public interface AppConst extends OrionConst {
     /**
      * 同 ${orion.version} 迭代时候需要手动更改
      */
-    String VERSION = "2.5.3";
+    String VERSION = "2.5.4";
 
     /**
      * 同 ${spring.application.name}

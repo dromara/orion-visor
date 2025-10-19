@@ -135,7 +135,7 @@ public class MetricsAlarmEngine extends BaseAlarmEngine {
 
     @Override
     protected void setExtraAlarmPushParams(Map<String, Object> params, AlarmEventTriggerDTO event) {
-        HostAlarmSourceInfo sourceInfo = JSON.parseObject(event.getAlarmInfo(), HostAlarmSourceInfo.class);
+        HostAlarmSourceInfo sourceInfo = JSON.parseObject(event.getSourceInfo(), HostAlarmSourceInfo.class);
         params.put("hostId", event.getSourceId());
         params.put("hostName", sourceInfo.getName());
         params.put("hostCode", sourceInfo.getCode());

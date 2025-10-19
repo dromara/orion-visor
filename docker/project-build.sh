@@ -4,7 +4,7 @@ set -e
 # DockerContext: orion-visor
 
 # 版本号
-version=2.5.3
+version=2.5.4
 # 是否构建 service
 export build_service=false
 # 是否构建 ui
