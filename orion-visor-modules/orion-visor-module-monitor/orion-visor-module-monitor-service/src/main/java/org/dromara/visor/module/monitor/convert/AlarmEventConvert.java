@@ -22,6 +22,7 @@
  */
 package org.dromara.visor.module.monitor.convert;
 
+import org.dromara.visor.common.mapstruct.JsonConversion;
 import org.dromara.visor.module.monitor.entity.domain.AlarmEventDO;
 import org.dromara.visor.module.monitor.entity.dto.AlarmEventTriggerDTO;
 import org.dromara.visor.module.monitor.entity.dto.AlarmPolicyAlarmCountDTO;
@@ -40,7 +41,7 @@ import java.util.List;
  * @version 1.0.0
  * @since 2025-9-17 21:31
  */
-@Mapper
+@Mapper(uses = JsonConversion.class)
 public interface AlarmEventConvert {
 
     AlarmEventConvert MAPPER = Mappers.getMapper(AlarmEventConvert.class);

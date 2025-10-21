@@ -8,7 +8,7 @@
     <!-- 主机密钥表格 -->
     <a-table v-model:selected-keys="selectedKeys"
              row-key="id"
-             class="host-key-main-table"
+             class="table-resize host-key-main-table"
              :columns="hostKeyColumns"
              :row-selection="rowSelection"
              row-class="pointer"
@@ -16,6 +16,7 @@
              :data="hostKeys"
              :pagination="false"
              :bordered="false"
+             :column-resizable="true"
              @row-click="clickRow" />
   </grant-layout>
 </template>

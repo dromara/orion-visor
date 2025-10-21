@@ -16,7 +16,7 @@
           <a-button v-if="showClearButton"
                     v-permission="['monitor:alarm-event:management:clear']"
                     status="danger"
-                    @click="$emit('openClear', formModel)">
+                    @click="openClear">
             清理
             <template #icon>
               <icon-close />
@@ -26,7 +26,7 @@
           <a-button v-permission="['monitor:alarm-event:handle']"
                     type="primary"
                     :disabled="selectedKeys.length === 0"
-                    @click="$emit('openHandle', selectedKeys)">
+                    @click="openHandle(selectedKeys)">
             处理告警
             <template #icon>
               <icon-play-arrow-fill />
@@ -65,32 +65,36 @@
     <a-table v-model:selected-keys="selectedKeys"
              row-key="id"
              ref="tableRef"
+             class="table-resize"
              :loading="loading"
              :columns="tableColumns"
              :row-selection="rowSelection"
              :data="tableData"
              :pagination="pagination"
              :bordered="false"
+             :column-resizable="true"
              :scroll="{ x: 'auto' }"
              @page-change="(page: number) => $emit('query', page, pagination.pageSize)"
              @page-size-change="(size: number) => $emit('query', 1, size)">
-      <!-- 主机信息 -->
-      <template #hostInfo="{ record }">
+      <!-- 来源信息 -->
+      <template #sourceInfo="{ record }">
         <div class="info-wrapper">
-          <div class="info-item">
+          <!-- 主机名称 -->
+          <div v-if="record.sourceType === AlarmSourceType.HOST && record.sourceInfo?.name" class="info-item">
             <span class="info-label">主机名称</span>
             <span class="info-value text-copy text-ellipsis"
-                  :title="record.hostName"
-                  @click="copy(record.hostName, true)">
-              {{ record.hostName }}
+                  :title="record.sourceInfo.name"
+                  @click="copy(record.sourceInfo.name, true)">
+              {{ record.sourceInfo.name }}
             </span>
           </div>
-          <div class="info-item">
+          <!-- 主机地址 -->
+          <div v-if="record.sourceType === AlarmSourceType.HOST && record.sourceInfo?.address" class="info-item">
             <span class="info-label">主机地址</span>
             <span class="info-value span-blue text-copy text-ellipsis"
-                  :title="record.hostAddress"
-                  @click="copy(record.hostAddress, true)">
-              {{ record.hostAddress }}
+                  :title="record.sourceInfo.address"
+                  @click="copy(record.sourceInfo.address, true)">
+              {{ record.sourceInfo.address }}
             </span>
           </div>
         </div>
@@ -147,7 +151,7 @@
           <a-button v-permission="['monitor:alarm-event:handle']"
                     type="text"
                     size="mini"
-                    @click="$emit('openHandle', [record.id])">
+                    @click="openHandle([record.id])">
             处理
           </a-button>
           <!-- 更多 -->
@@ -171,6 +175,13 @@
         </div>
       </template>
     </a-table>
+    <!-- 处理模态框-->
+    <alarm-event-handle-modal ref="handleModal"
+                              @handled="alarmHandled" />
+    <!-- 清理模态框-->
+    <alarm-event-clear-modal ref="clearModal"
+                             :source-type="sourceType"
+                             @clear="emits('reload')" />
   </a-card>
 </template>
 
@@ -181,28 +192,33 @@
 </script>
 
 <script lang="ts" setup>
+  import type { PaginationProps } from '@arco-design/web-vue';
   import type { MetricsQueryResponse } from '@/api/monitor/metrics';
   import type { AlarmEventQueryRequest, AlarmEventQueryResponse, AlarmEventHandleRequest } from '@/api/monitor/alarm-event';
   import { h, ref } from 'vue';
   import { batchDeleteAlarmEvent, setAlarmEventFalse } from '@/api/monitor/alarm-event';
-  import { Message, Modal, Space, Tag, type PaginationProps } from '@arco-design/web-vue';
+  import { Message, Modal, Space, Tag } from '@arco-design/web-vue';
   import {
     FalseAlarm,
     HandleStatusKey,
     FalseAlarmKey,
     MetricsMeasurementKey,
     AlarmLevelKey,
-    TriggerConditionKey
-  } from '@/views/monitor/alarm-event/types/const';
+    TriggerConditionKey,
+    AlarmSourceType
+  } from '../types/const';
   import { useRowSelection, useTableColumns } from '@/hooks/table';
   import { copy } from '@/hooks/copy';
   import { useQueryOrder, DESC } from '@/hooks/query-order';
   import { useDictStore, useCacheStore, useUserStore } from '@/store';
   import { MetricsUnit, MetricUnitFormatter } from '@/utils/metrics';
   import TableAdjust from '@/components/app/table-adjust/index.vue';
+  import AlarmEventClearModal from './alarm-event-clear-modal.vue';
+  import AlarmEventHandleModal from './alarm-event-handle-modal.vue';
 
   const props = defineProps<{
     tableName: string;
+    sourceType: string;
     columns: any[];
     tableData: AlarmEventQueryResponse[];
     loading: boolean;
@@ -212,25 +228,38 @@
   }>();
 
   const emits = defineEmits<{
-    openHandle: [ids: number[]];
-    openClear: [formData: AlarmEventQueryRequest];
+    reload: [];
     setLoading: [loading: boolean];
     query: [page?: number, pageSize?: number];
   }>();
 
   const rowSelection = useRowSelection();
   const userStore = useUserStore();
+  const cacheStore = useCacheStore();
   const queryOrder = useQueryOrder(props.tableName, DESC);
   const { tableColumns, columnsHook } = useTableColumns(props.tableName, props.columns);
-  const { monitorMetrics } = useCacheStore();
   const { getDictValue } = useDictStore();
 
+  const handleModal = ref();
+  const clearModal = ref();
   const selectedKeys = ref<Array<number>>([]);
+
+  // 告警处理回调
+  const alarmHandled = (request: Required<AlarmEventHandleRequest>) => {
+    props.tableData.filter(s => (request.idList || []).includes(s.id)).forEach(s => {
+      s.handleTime = request.handleTime;
+      s.handleStatus = request.handleStatus;
+      s.handleRemark = request.handleRemark;
+      s.handleUserId = userStore.id as number;
+      s.handleUsername = userStore.username as string;
+    });
+    selectedKeys.value = [];
+  };
 
   // 获取指标名称
   const getMetricsField = (metricsId: number, field: string) => {
-    return (monitorMetrics as Array<MetricsQueryResponse> || []).find(m => m.id === metricsId)?.[field];
- };
+    return (cacheStore.monitorMetrics as Array<MetricsQueryResponse> || []).find(m => m.id === metricsId)?.[field];
+  };
 
   // 提取标签
   const extraTags = (record: AlarmEventQueryResponse) => {
@@ -303,19 +332,15 @@
     });
   };
 
-  // 告警处理回调
-  const alarmHandled = (request: Required<AlarmEventHandleRequest>) => {
-    props.tableData.filter(s => (request.idList || []).includes(s.id)).forEach(s => {
-      s.handleTime = request.handleTime;
-      s.handleStatus = request.handleStatus;
-      s.handleRemark = request.handleRemark;
-      s.handleUserId = userStore.id as number;
-      s.handleUsername = userStore.username as string;
-    });
-    selectedKeys.value = [];
+  // 打开处理
+  const openHandle = (idList: Array<number>) => {
+    handleModal.value.open(idList);
   };
 
-  defineExpose({ alarmHandled });
+  // 打开清理
+  const openClear = () => {
+    clearModal.value.open(props.formModel);
+  };
 
 </script>
 

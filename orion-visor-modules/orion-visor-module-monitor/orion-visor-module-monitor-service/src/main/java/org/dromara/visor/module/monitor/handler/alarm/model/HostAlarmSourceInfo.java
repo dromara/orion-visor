@@ -20,40 +20,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.dromara.visor.module.monitor.engine;
+package org.dromara.visor.module.monitor.handler.alarm.model;
 
+import cn.orionsec.kit.lang.able.IJsonObject;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * 告警触发状态 - 轻量级缓存对象
- * 用于减少内存占用，只保存必要的触发状态信息
+ * 主机告警源信息
  *
  * @author Jiahang Li
  * @version 1.0.0
- * @since 2024/6/3 18:00
+ * @since 2025/10/13 22:09
  */
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class AlarmTriggerState {
+@Schema(name = "HostAlarmSourceInfo", description = "主机告警源信息")
+public class HostAlarmSourceInfo implements IJsonObject {
 
-    /**
-     * 时间戳
-     */
-    private Long timestamp;
+    @Schema(description = "主机名称")
+    private String name;
 
-    /**
-     * 是否触发告警
-     */
-    private Boolean triggered;
+    @Schema(description = "主机编码")
+    private String code;
 
-    /**
-     * 规则键
-     */
-    private String ruleKey;
+    @Schema(description = "主机地址")
+    private String address;
 
 }

@@ -5,6 +5,7 @@
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="org.dromara.visor.module.monitor.entity.domain.AlarmPolicyDO">
         <id column="id" property="id"/>
+        <result column="type" property="type"/>
         <result column="name" property="name"/>
         <result column="description" property="description"/>
         <result column="create_time" property="createTime"/>
@@ -16,7 +17,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, name, description, create_time, update_time, creator, updater, deleted
+        id, type, name, description, create_time, update_time, creator, updater, deleted
     </sql>
 
 </mapper>

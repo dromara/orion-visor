@@ -56,14 +56,14 @@ public class AlarmEventTriggerDTO extends BaseDO {
     @Schema(description = "agentKey")
     private String agentKey;
 
-    @Schema(description = "主机id")
-    private Long hostId;
+    @Schema(description = "事件来源")
+    private String sourceType;
 
-    @Schema(description = "主机名称")
-    private String hostName;
+    @Schema(description = "事件来源id")
+    private Long sourceId;
 
-    @Schema(description = "主机地址")
-    private String hostAddress;
+    @Schema(description = "事件来源id")
+    private String sourceInfo;
 
     @Schema(description = "策略id")
     private Long policyId;

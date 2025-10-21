@@ -55,8 +55,8 @@
     execLog.value = { ...record };
     currentHostExecId.value = record.hosts[0].id;
     // 获取最大显示行数
-    const { log_webScrollLines } = await useCacheStore().loadSystemSetting();
-    const scrollLines = toAnonymousNumber(log_webScrollLines) || 1000;
+    const { 'log.web-scroll-lines': webScrollLines } = await useCacheStore().loadSystemSetting();
+    const scrollLines = toAnonymousNumber(webScrollLines) || 1000;
     // 创建 appender
     appender.value = markRaw(new LogAppender({
       id: record.id,

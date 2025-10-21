@@ -54,12 +54,14 @@
     <a-table v-model:selected-keys="selectedKeys"
              row-key="id"
              ref="tableRef"
+             class="table-resize"
              :loading="loading"
              :row-selection="rowSelection"
              :columns="tableColumns"
              :data="tableRenderData"
              :pagination="pagination"
              :bordered="false"
+             :column-resizable="true"
              @page-change="(page: number) => fetchTableData(page, pagination.pageSize)"
              @page-size-change="(size: number) => fetchTableData(1, size)">
       <!-- 操作模块 -->

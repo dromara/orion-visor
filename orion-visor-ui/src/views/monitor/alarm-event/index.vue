@@ -1,15 +1,7 @@
 <template>
   <div class="layout-container" v-if="render">
     <!-- 列表-表格 -->
-    <alarm-event-table ref="table"
-                       @open-handle="(e: any) => handleModal.open(e)"
-                       @open-clear="(e: any) => clearModal.open(e)" />
-    <!-- 处理模态框-->
-    <alarm-event-handle-modal ref="handleModal"
-                              @handled="(e: any) => table.alarmHandled(e)" />
-    <!-- 清理模态框-->
-    <alarm-event-clear-modal ref="clearModal"
-                             @clear="() => table.reload()" />
+    <alarm-event-table :source-type="AlarmSourceType.HOST" />
   </div>
 </template>
 
@@ -22,20 +14,18 @@
 <script lang="ts" setup>
   import { ref, onBeforeMount } from 'vue';
   import { useDictStore, useCacheStore } from '@/store';
-  import { dictKeys } from './types/const';
+  import { dictKeys, AlarmSourceType } from './types/const';
   import AlarmEventTable from './components/alarm-event-table.vue';
-  import AlarmEventClearModal from './components/alarm-event-clear-modal.vue';
-  import AlarmEventHandleModal from './components/alarm-event-handle-modal.vue';
 
   const render = ref(false);
-  const table = ref();
-  const handleModal = ref();
-  const clearModal = ref();
 
   onBeforeMount(async () => {
     const cacheStore = useCacheStore();
+    // 加载告警策略
     await cacheStore.loadMonitorAlarmPolicy();
+    // 加载指标列表
     await cacheStore.loadMonitorMetricsList();
+    // 加载字典值
     const dictStore = useDictStore();
     await dictStore.loadKeys(dictKeys);
     render.value = true;

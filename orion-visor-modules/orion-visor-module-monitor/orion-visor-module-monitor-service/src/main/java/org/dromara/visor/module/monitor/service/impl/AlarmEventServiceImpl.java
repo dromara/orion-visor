@@ -223,7 +223,8 @@ public class AlarmEventServiceImpl implements AlarmEventService {
     public LambdaQueryWrapper<AlarmEventDO> buildQueryWrapper(AlarmEventQueryRequest request) {
         return alarmEventDAO.wrapper()
                 .eq(AlarmEventDO::getId, request.getId())
-                .eq(AlarmEventDO::getHostId, request.getHostId())
+                .eq(AlarmEventDO::getSourceType, request.getSourceType())
+                .eq(AlarmEventDO::getSourceId, request.getSourceId())
                 .eq(AlarmEventDO::getAgentKey, request.getAgentKey())
                 .eq(AlarmEventDO::getPolicyId, request.getPolicyId())
                 .eq(AlarmEventDO::getMetricsId, request.getMetricsId())

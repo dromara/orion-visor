@@ -26,9 +26,10 @@
         </a-form-item>
         <!-- 策略描述 -->
         <a-form-item field="description" label="策略描述">
-          <a-input v-model="formModel.description"
-                   placeholder="请输入策略描述"
-                   allow-clear />
+          <a-textarea v-model="formModel.description"
+                      placeholder="请输入策略描述"
+                      :auto-size="{ minRows: 3, maxRows: 3}"
+                      allow-clear />
         </a-form-item>
         <!-- 通知渠道 -->
         <a-form-item field="notifyIdList" label="通知渠道">
@@ -57,8 +58,9 @@
   import formRules from '../types/form.rules';
   import { assignOmitRecord } from '@/utils';
   import { createAlarmPolicy, updateAlarmPolicy, copyAlarmPolicy, getAlarmPolicy } from '@/api/monitor/alarm-policy';
-  import { Message } from '@arco-design/web-vue';
   import { useToggle } from '@vueuse/core';
+  import { Message } from '@arco-design/web-vue';
+  import { AlarmPolicyType } from '../types/const';
   import NotifyTemplateSelector from '@/components/system/notify-template/selector/index.vue';
 
   const emits = defineEmits(['added', 'updated']);
@@ -75,6 +77,7 @@
   const defaultForm = (): AlarmPolicyUpdateRequest => {
     return {
       id: undefined,
+      type: AlarmPolicyType.HOST,
       name: undefined,
       description: undefined,
       notifyIdList: [],

@@ -44,46 +44,70 @@
     <div class="header-right">
       <!-- 告警事件标签 -->
       <div v-if="activeKey === TabKeys.OVERVIEW" class="handle-wrapper">
+        <!-- 单协议连接 -->
+        <a-tag v-if="host.types?.length === 1"
+               v-permission="['terminal:terminal:access']"
+               class="pointer"
+               @click="openNewRoute({ name: 'terminal', query: { connect: host.id, type: host.types[0] } })">
+          连接终端
+        </a-tag>
+        <!-- 多协议连接 -->
+        <a-popover v-if="(host.types?.length || 0) > 1"
+                   :title="undefined"
+                   :content-style="{ padding: '8px' }">
+          <a-tag v-permission="['terminal:terminal:access']"
+                 class="pointer">
+            连接终端
+          </a-tag>
+          <template #content>
+            <a-space>
+              <a-button v-for="type in host.types"
+                        :key="type"
+                        size="mini"
+                        @click="openNewRoute({ name: 'terminal', query: { connect: host.id, type }})">
+                {{ type }}
+              </a-button>
+            </a-space>
+          </template>
+        </a-popover>
+        <!-- 更新时间 -->
         <a-tag v-if="overrideTimestamp">更新时间: {{ dateFormat(new Date(overrideTimestamp)) }}</a-tag>
       </div>
       <!-- 监控图表操作 -->
       <div v-else-if="activeKey === TabKeys.CHART" class="handle-wrapper">
-        <a-space>
-          <!-- 表格时间区间 -->
-          <a-select v-model="chartRange"
-                    style="width: 138px;"
-                    :options="toOptions(ChartRangeKey)"
-                    @change="(s: any) => changeChartRange(s)">
-            <template #prefix>
-              区间
-            </template>
-          </a-select>
-          <!-- 表格窗口 -->
-          <a-select v-model="chartWindow"
-                    style="width: 138px;"
-                    :options="chartWindowOptions">
-            <template #prefix>
-              窗口
-            </template>
-          </a-select>
-          <!-- 刷新 -->
-          <a-button class="fs16"
-                    title="刷新"
-                    @click="reloadChart">
-            <template #icon>
-              <icon-refresh />
-            </template>
-          </a-button>
-          <!-- 切换视图 -->
-          <a-button class="fs16"
-                    title="切换视图"
-                    @click="chartCompose = !chartCompose">
-            <template #icon>
-              <icon-menu v-if="chartCompose" />
-              <icon-apps v-else />
-            </template>
-          </a-button>
-        </a-space>
+        <!-- 表格时间区间 -->
+        <a-select v-model="chartRange"
+                  style="width: 138px;"
+                  :options="toOptions(ChartRangeKey)">
+          <template #prefix>
+            区间
+          </template>
+        </a-select>
+        <!-- 表格窗口 -->
+        <a-select v-model="chartWindow"
+                  style="width: 138px;"
+                  :options="chartWindowOptions">
+          <template #prefix>
+            窗口
+          </template>
+        </a-select>
+        <!-- 刷新 -->
+        <a-button class="fs16"
+                  title="刷新"
+                  @click="reloadChart">
+          <template #icon>
+            <icon-refresh />
+          </template>
+        </a-button>
+        <!-- 切换视图 -->
+        <a-button class="fs16"
+                  title="切换视图"
+                  @click="chartCompose = !chartCompose">
+          <template #icon>
+            <icon-menu v-if="chartCompose" />
+            <icon-apps v-else />
+          </template>
+        </a-button>
       </div>
     </div>
   </div>
@@ -102,6 +126,7 @@
   import { copy } from '@/hooks/copy';
   import { useDictStore } from '@/store';
   import { dateFormat } from '@/utils';
+  import { openNewRoute } from '@/router';
   import { TabKeys, ChartRangeKey } from '../types/const';
   import { OnlineStatusKey } from '@/views/monitor/monitor-host/types/const';
   import { parseWindowUnit, WindowUnitFormatter } from '@/utils/metrics';
@@ -209,6 +234,7 @@
 
     .handle-wrapper {
       display: flex;
+      gap: 8px;
     }
   }
 

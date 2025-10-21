@@ -66,6 +66,17 @@
   }
 }
 
+// 可调节列宽
+.table-resize .arco-table-th:not(.arco-table-th-expand):not(.arco-table-operation)::after {
+  content: '';
+  position: absolute;
+  top: 25%;
+  right: 0;
+  width: 1px;
+  height: 50%;
+  background-color: var(--color-neutral-3);
+}
+
 // 垂直滚动
 .arco-scrollbar-track-direction-vertical {
   width: 10px;

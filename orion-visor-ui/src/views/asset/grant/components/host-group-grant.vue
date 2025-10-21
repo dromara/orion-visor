@@ -17,14 +17,15 @@
                      @on-selected="clickGroup" />
     <a-divider direction="vertical" />
     <!-- 主机表格 -->
-    <a-table class="group-main-hosts"
-             row-key="id"
+    <a-table row-key="id"
+             class="group-main-hosts table-resize"
              :sticky-header="true"
              :loading="loading"
              :columns="hostColumns"
              :data="selectedGroupHosts"
              :pagination="false"
-             :bordered="false">
+             :bordered="false"
+             :column-resizable="true">
       <!-- 空状态 -->
       <template #empty>
         <a-empty style="margin: 32px 0;" description="当前分组内无主机" />

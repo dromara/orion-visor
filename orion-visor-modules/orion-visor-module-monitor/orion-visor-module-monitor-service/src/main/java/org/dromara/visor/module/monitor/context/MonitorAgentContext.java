@@ -20,7 +20,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.dromara.visor.module.monitor.engine;
+package org.dromara.visor.module.monitor.context;
 
 import cn.orionsec.kit.lang.define.cache.TimedCache;
 import cn.orionsec.kit.lang.define.cache.TimedCacheBuilder;
@@ -29,15 +29,11 @@ import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.visor.common.constant.Const;
 import org.dromara.visor.module.monitor.convert.MonitorHostConvert;
-import org.dromara.visor.module.monitor.convert.MonitorMetricsConvert;
 import org.dromara.visor.module.monitor.dao.MonitorHostDAO;
-import org.dromara.visor.module.monitor.dao.MonitorMetricsDAO;
 import org.dromara.visor.module.monitor.entity.domain.MonitorHostDO;
-import org.dromara.visor.module.monitor.entity.domain.MonitorMetricsDO;
 import org.dromara.visor.module.monitor.entity.dto.AgentMetricsDataDTO;
 import org.dromara.visor.module.monitor.entity.dto.MonitorHostConfigDTO;
 import org.dromara.visor.module.monitor.entity.dto.MonitorHostContextDTO;
-import org.dromara.visor.module.monitor.entity.dto.MonitorMetricsContextDTO;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -47,7 +43,7 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * 监控上下文
+ * 监控探针上下文
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -55,22 +51,12 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 @Slf4j
 @Component
-public class MonitorContext {
+public class MonitorAgentContext {
 
     /**
      * 监控主机缓存
      */
     private static final ConcurrentHashMap<String, MonitorHostContextDTO> MONITOR_HOST_CACHE = new ConcurrentHashMap<>();
-
-    /**
-     * 监控指标缓存
-     */
-    private static final ConcurrentHashMap<Long, MonitorMetricsContextDTO> MONITOR_METRICS_CACHE = new ConcurrentHashMap<>();
-
-    /**
-     * 监控指标引用缓存
-     */
-    private static final ConcurrentHashMap<String, Long> MONITOR_METRICS_KEY_REL = new ConcurrentHashMap<>();
 
     /**
      * 最后心跳时间缓存 3min
@@ -89,9 +75,6 @@ public class MonitorContext {
             .build();
 
     @Resource
-    private MonitorMetricsDAO monitorMetricsDAO;
-
-    @Resource
     private MonitorHostDAO monitorHostDAO;
 
     /**
@@ -103,10 +86,6 @@ public class MonitorContext {
         log.info("MonitorContext-init hosts start.");
         this.loadMonitorHost();
         log.info("MonitorContext-init hosts end.");
-        // 初始化监控指标
-        log.info("MonitorContext-init metrics start.");
-        this.loadMonitorMetrics();
-        log.info("MonitorContext-init metrics end.");
     }
 
     @PreDestroy
@@ -126,17 +105,6 @@ public class MonitorContext {
         for (MonitorHostDO host : hosts) {
             this.setMonitorHost(host.getAgentKey(), host);
         }
-    }
-
-    /**
-     * 加载监控指标
-     */
-    public void loadMonitorMetrics() {
-        MONITOR_METRICS_CACHE.clear();
-        // 查询全部指标
-        List<MonitorMetricsDO> metrics = monitorMetricsDAO.selectList(null);
-        metrics.forEach(s -> MONITOR_METRICS_CACHE.put(s.getId(), MonitorMetricsConvert.MAPPER.toContext(s)));
-        metrics.forEach(s -> MONITOR_METRICS_KEY_REL.put(this.getMonitorMetricsKey(s.getMeasurement(), s.getValue()), s.getId()));
     }
 
     // ----------------------- 监控主机 ----------------------
@@ -194,7 +162,7 @@ public class MonitorContext {
      * @param metrics  指标
      */
     public void setAgentMetrics(String agentKey, AgentMetricsDataDTO metrics) {
-        // 设置指标数据 
+        // 设置指标数据
         LATEST_METRICS_CACHE.put(agentKey, metrics);
         // 更新心跳时间
         AGENT_LAST_ACTIVE_TIME.put(agentKey, System.currentTimeMillis());
@@ -235,74 +203,6 @@ public class MonitorContext {
             return false;
         }
         return AGENT_LAST_ACTIVE_TIME.get(agentKey) != null;
-    }
-
-    // ----------------------- 监控指标 ----------------------
-
-    /**
-     * 重新加载监控指标
-     *
-     * @param id id
-     */
-    public void reloadMonitorMetrics(Long id) {
-        // 删除指标缓存
-        MONITOR_METRICS_CACHE.remove(id);
-        // 删除指标引用
-        MONITOR_METRICS_KEY_REL.entrySet().removeIf(entry -> entry.getValue().equals(id));
-        // 重新加载指标
-        MonitorMetricsDO metrics = monitorMetricsDAO.selectById(id);
-        if (metrics == null) {
-            return;
-        }
-        MONITOR_METRICS_CACHE.put(metrics.getId(), MonitorMetricsConvert.MAPPER.toContext(metrics));
-        MONITOR_METRICS_KEY_REL.put(this.getMonitorMetricsKey(metrics.getMeasurement(), metrics.getValue()), metrics.getId());
-    }
-
-    /**
-     * 获取监控指标
-     *
-     * @param id id
-     * @return cache
-     */
-    public MonitorMetricsContextDTO getMonitorMetrics(Long id) {
-        return MONITOR_METRICS_CACHE.get(id);
-    }
-
-    /**
-     * 获取监控指标
-     *
-     * @param measurement measurement
-     * @param field       field
-     * @return cache
-     */
-    public MonitorMetricsContextDTO getMonitorMetrics(String measurement, String field) {
-        Long id = MONITOR_METRICS_KEY_REL.get(this.getMonitorMetricsKey(measurement, field));
-        if (id == null) {
-            return null;
-        }
-        return MONITOR_METRICS_CACHE.get(id);
-    }
-
-    /**
-     * 获取监控指标 id
-     *
-     * @param measurement measurement
-     * @param field       field
-     * @return id
-     */
-    public Long getMonitorMetricsId(String measurement, String field) {
-        return MONITOR_METRICS_KEY_REL.get(this.getMonitorMetricsKey(measurement, field));
-    }
-
-    /**
-     * 获取监控指标 key
-     *
-     * @param measurement measurement
-     * @param field       field
-     * @return key
-     */
-    private String getMonitorMetricsKey(String measurement, String field) {
-        return measurement + "_" + field;
     }
 
 }

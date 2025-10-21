@@ -45,53 +45,53 @@ export type SystemSetting = SftpSetting
  * SFTP 设置
  */
 export interface SftpSetting {
-  sftp_previewSize: number;
-  sftp_uploadPresentBackup: string;
-  sftp_uploadBackupFileName: string;
+  ['sftp.preview-size']: number;
+  ['sftp.upload-present-backup']: string;
+  ['sftp.upload-backup-file-name']: string;
 }
 
 /**
  * 登录设置
  */
 export interface LoginSetting {
-  login_allowMultiDevice: string;
-  login_allowRefresh: string;
-  login_maxRefreshCount: number;
-  login_refreshInterval: number;
-  login_loginFailedLock: string;
-  login_loginFailedLockThreshold: number;
-  login_loginFailedLockTime: number;
-  login_loginFailedSend: string;
-  login_loginFailedSendThreshold: number;
-  login_loginSessionTime: number;
+  ['login.allow-multi-device']: string;
+  ['login.allow-refresh']: string;
+  ['login.max-refresh-count']: number;
+  ['login.refresh-interval']: number;
+  ['login.login-failed-lock']: string;
+  ['login.login-failed-lock-threshold']: number;
+  ['login.login-failed-lock-time']: number;
+  ['login.login-failed-send']: string;
+  ['login.login-failed-send-threshold']: number;
+  ['login.login-session-time']: number;
 }
 
 /**
  * 加密设置
  */
 export interface EncryptSetting {
-  encrypt_publicKey: string;
-  encrypt_privateKey: string;
+  ['encrypt.public-key']: string;
+  ['encrypt.private-key']: string;
 }
 
 /**
  * 日志设置
  */
 export interface LogSetting {
-  log_webScrollLines: number;
-  log_trackerLoadLines: number;
-  log_trackerLoadInterval: number;
-  log_execDetailLog: string;
+  ['log.web-scroll-lines']: number;
+  ['log.tracker-load-lines']: number;
+  ['log.tracker-load-interval']: number;
+  ['log.exec-detail.enabled']: string;
 }
 
 /**
  * 自动清理设置
  */
 export interface AutoClearSetting {
-  autoClear_execLogEnabled: string;
-  autoClear_execLogKeepDays: number;
-  autoClear_terminalLogEnabled: string;
-  autoClear_terminalLogKeepDays: number;
+  ['auto-clear.exec-log.enabled']: string;
+  ['auto-clear.exec-log.keep-days']: number;
+  ['auto-clear.terminal-log.enabled']: string;
+  ['auto-clear.terminal-log.keep-days']: number;
 }
 
 /**

@@ -96,6 +96,7 @@ export interface MonitorHostQueryResponse extends TableData {
   code: string;
   address: string;
   status: string;
+  types: Array<string>;
   agentKey: string;
   agentVersion: string;
   latestVersion: string;

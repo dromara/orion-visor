@@ -10,7 +10,7 @@
            ok-text="清理"
            :ok-button-props="{ disabled: loading }"
            :cancel-button-props="{ disabled: loading }"
-           :on-before-ok="handlerOk"
+           :on-before-ok="handleOk"
            @close="handleClose">
     <a-spin class="full" :loading="loading">
       <a-form :model="formModel"
@@ -23,12 +23,13 @@
                     placeholder="请选择处理状态"
                     allow-clear />
         </a-form-item>
-        <!-- 告警主机 -->
-        <a-form-item field="hostId" label="告警主机">
-          <host-selector v-model="formModel.hostId"
-                         placeholder="请选择告警主机"
-                         hide-button
-                         allow-clear />
+        <!-- 告警来源 -->
+        <a-form-item field="agentKey" label="告警来源">
+          <!-- 选择告警来源 -->
+          <monitor-host-selector v-if="sourceType === AlarmSourceType.HOST"
+                                 v-model="formModel.agentKey"
+                                 placeholder="请选择告警来源"
+                                 allow-clear />
         </a-form-item>
         <!-- 告警级别 -->
         <a-form-item field="alarmLevel" label="告警级别">
@@ -58,7 +59,7 @@
                                  allow-clear />
         </a-form-item>
         <!-- 数据集 -->
-        <a-form-item field="metricsId" label="数据集">
+        <a-form-item field="metricsMeasurement" label="数据集">
           <a-select v-model="formModel.metricsMeasurement"
                     :options="toOptions(MetricsMeasurementKey)"
                     placeholder="数据集"
@@ -84,12 +85,6 @@
                           placeholder="请输入id"
                           hide-button
                           allow-clear />
-        </a-form-item>
-        <!-- agentKey -->
-        <a-form-item field="agentKey" label="agentKey">
-          <a-input v-model="formModel.agentKey"
-                   placeholder="请输入agentKey"
-                   allow-clear />
         </a-form-item>
         <!-- 告警时间 -->
         <a-form-item field="createTimeRange" label="告警时间">
@@ -118,21 +113,25 @@
   import useVisible from '@/hooks/visible';
   import { Message, Modal } from '@arco-design/web-vue';
   import { useDictStore } from '@/store';
-  import { maxClearLimit, HandleStatusKey, AlarmLevelKey, MetricsMeasurementKey, FalseAlarmKey } from '../types/const';
+  import { maxClearLimit, HandleStatusKey, AlarmLevelKey, MetricsMeasurementKey, FalseAlarmKey, AlarmSourceType } from '../types/const';
   import { assignOmitRecord } from '@/utils';
   import UserSelector from '@/components/user/user/selector/index.vue';
-  import HostSelector from '@/components/asset/host/selector/index.vue';
   import MonitorMetricsSelector from '@/components/monitor/metrics/selector/index.vue';
   import AlarmPolicySelector from '@/components/monitor/alarm-policy/selector/index.vue';
+  import MonitorHostSelector from '@/components/monitor/host/selector/index.vue';
 
   const { toOptions } = useDictStore();
   const { visible, setVisible } = useVisible();
   const { loading, setLoading } = useLoading();
 
+  const props = defineProps<{
+    sourceType: string;
+  }>();
+
   const defaultForm = (): AlarmEventQueryRequest => {
     return {
       id: undefined,
-      hostId: undefined,
+      sourceType: undefined,
       agentKey: undefined,
       policyId: undefined,
       metricsId: undefined,
@@ -160,7 +159,7 @@
   defineExpose({ open });
 
   // 确定
-  const handlerOk = async () => {
+  const handleOk = async () => {
     if (!formModel.value.limit) {
       Message.error('请输入数量限制');
       return false;
@@ -170,7 +169,7 @@
       // 获取总数量
       const { data } = await getAlarmEventCount(formModel.value);
       if (data) {
-        // 清理
+        // 清空
         doClear(data);
       } else {
         // 无数据
@@ -195,9 +194,7 @@
           const { data } = await clearMonitorAlarmEvent(formModel.value);
           Message.success(`已成功清理 ${data} 条数据`);
           emits('clear');
-          // 清空
-          setVisible(false);
-          handlerClear();
+          handleClose();
         } catch (e) {
         } finally {
           setLoading(false);
@@ -208,11 +205,12 @@
 
   // 关闭
   const handleClose = () => {
-    handlerClear();
+    handleClear();
+    setVisible(false);
   };
 
   // 清空
-  const handlerClear = () => {
+  const handleClear = () => {
     setLoading(false);
   };
 

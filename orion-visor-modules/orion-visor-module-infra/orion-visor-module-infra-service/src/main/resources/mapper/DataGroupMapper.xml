@@ -22,19 +22,27 @@
         id, parent_id, type, user_id, name, sort, create_time, update_time, creator, updater, deleted
     </sql>
 
-    <update id="updateSort">
-        UPDATE data_group
-        SET sort = sort + #{addition}
-        WHERE parent_id = #{parentId}
-          AND sort ${condition} #{referSort}
-    </update>
-
     <select id="selectMaxSort" resultType="java.lang.Integer">
         SELECT IFNULL(MAX(sort), 0)
         FROM data_group
         WHERE deleted = 0
-          AND type = #{type}
-          AND parent_id = #{parentId}
+        AND type = #{type}
+        AND parent_id = #{parentId}
+        <if test="userId != null">
+            AND user_id = #{userId}
+        </if>
     </select>
+
+    <update id="updateSort">
+        UPDATE data_group
+        SET sort = sort + #{addition}
+        WHERE deleted = 0
+        AND type = #{type}
+        AND parent_id = #{parentId}
+        AND sort ${condition} #{referSort}
+        <if test="userId != null">
+            AND user_id = #{userId}
+        </if>
+    </update>
 
 </mapper>

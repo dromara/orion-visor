@@ -31,6 +31,7 @@
         <!-- 告警策略 -->
         <a-form-item field="policyId" label="告警策略">
           <alarm-policy-selector v-model="formModel.policyId"
+                                 type="HOST"
                                  placeholder="请选择告警策略"
                                  allow-clear />
         </a-form-item>

@@ -22,11 +22,11 @@
  */
 package org.dromara.visor.module.monitor.convert;
 
-import org.dromara.visor.module.monitor.engine.AlarmEngineRule;
 import org.dromara.visor.module.monitor.entity.domain.AlarmPolicyRuleDO;
 import org.dromara.visor.module.monitor.entity.request.alarm.AlarmPolicyRuleCreateRequest;
 import org.dromara.visor.module.monitor.entity.request.alarm.AlarmPolicyRuleUpdateRequest;
 import org.dromara.visor.module.monitor.entity.vo.AlarmPolicyRuleVO;
+import org.dromara.visor.module.monitor.handler.alarm.model.AlarmEngineRule;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;

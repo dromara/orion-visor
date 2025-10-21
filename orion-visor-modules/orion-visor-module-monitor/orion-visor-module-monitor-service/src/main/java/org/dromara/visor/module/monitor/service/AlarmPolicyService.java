@@ -77,9 +77,10 @@ public interface AlarmPolicyService {
     /**
      * 通过缓存查询监控告警策略
      *
+     * @param type type
      * @return rows
      */
-    List<AlarmPolicyVO> getAlarmPolicyListByCache();
+    List<AlarmPolicyVO> getAlarmPolicyListByCache(String type);
 
     /**
      * 分页查询监控告警策略

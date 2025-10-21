@@ -83,13 +83,14 @@
   <!-- 表格 -->
   <a-card class="general-card table-card">
     <a-table row-key="id"
-             class="table-wrapper-16"
              ref="tableRef"
+             class="table-wrapper-16 table-resize"
              :loading="fetchLoading"
              :pagination="false"
              :columns="columns"
              :data="tableRenderData"
-             :bordered="false">
+             :bordered="false"
+             :column-resizable="true">
       <!-- 菜单名称 -->
       <template #menuName="{ record }">
         <span class="ml8">{{ record.name }}</span>

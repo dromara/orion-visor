@@ -101,12 +101,14 @@
     <a-table v-model:selected-keys="selectedKeys"
              row-key="id"
              ref="tableRef"
+             class="table-resize"
              :loading="loading"
              :columns="tableColumns"
              :row-selection="rowSelection"
              :data="tableRenderData"
              :pagination="pagination"
              :bordered="false"
+             :column-resizable="true"
              @page-change="(page: number) => fetchTableData(page, pagination.pageSize)"
              @page-size-change="(size: number) => fetchTableData(1, size)">
       <!-- 用户名 -->
@@ -126,7 +128,7 @@
                   :unchecked-text="getDictValue(userStatusKey, UserStatus.DISABLED)"
                   :checked-value="UserStatus.ENABLED"
                   :unchecked-value="UserStatus.DISABLED"
-                  :before-change="(s) => updateStatus(record.id, s as number)" />
+                  :before-change="(s: any) => updateStatus(record.id, s as number)" />
         <!-- 无修改权限 -->
         <span v-else>
           <span class="circle" :style="{

@@ -59,6 +59,7 @@ public interface UserCacheKeyDefine {
     CacheKeyDefine LOGIN_FAILED_COUNT = new CacheKeyBuilder()
             .key("user:login-failed:{}")
             .desc("用户登录失败次数 ${username}")
+            .noPrefix()
             .type(Integer.class)
             .struct(RedisCacheStruct.STRING)
             .build();

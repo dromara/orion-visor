@@ -57,17 +57,17 @@ public class AlarmEventDO extends BaseDO {
     @TableField("agent_key")
     private String agentKey;
 
-    @Schema(description = "主机id")
-    @TableField("host_id")
-    private Long hostId;
+    @Schema(description = "事件来源")
+    @TableField("source_type")
+    private String sourceType;
 
-    @Schema(description = "主机名称")
-    @TableField("host_name")
-    private String hostName;
+    @Schema(description = "事件来源id")
+    @TableField("source_id")
+    private Long sourceId;
 
-    @Schema(description = "主机地址")
-    @TableField("host_address")
-    private String hostAddress;
+    @Schema(description = "事件来源id")
+    @TableField("source_info")
+    private String sourceInfo;
 
     @Schema(description = "策略id")
     @TableField("policy_id")

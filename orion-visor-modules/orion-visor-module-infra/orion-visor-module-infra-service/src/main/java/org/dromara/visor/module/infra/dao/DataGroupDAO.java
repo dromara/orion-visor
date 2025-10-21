@@ -45,20 +45,27 @@ public interface DataGroupDAO extends IMapper<DataGroupDO> {
      *
      * @param parentId parentId
      * @param type     type
+     * @param userId   userId
      * @return max(sort)
      */
-    Integer selectMaxSort(@Param("parentId") Long parentId, @Param("type") String type);
+    Integer selectMaxSort(@Param("parentId") Long parentId,
+                          @Param("type") String type,
+                          @Param("userId") Long userId);
 
     /**
      * 修改排序
      *
      * @param parentId  parentId
+     * @param type      type
+     * @param userId    userId
      * @param condition 条件
      * @param referSort 对比值
      * @param addition  自增步长
      * @return effect
      */
     Integer updateSort(@Param("parentId") Long parentId,
+                       @Param("type") String type,
+                       @Param("userId") Long userId,
                        @Param("condition") String condition,
                        @Param("referSort") Integer referSort,
                        @Param("addition") Integer addition);

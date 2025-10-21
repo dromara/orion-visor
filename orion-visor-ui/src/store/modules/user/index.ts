@@ -7,6 +7,7 @@ import { clearToken, setToken } from '@/utils/auth';
 import { removeRouteListener } from '@/utils/route-listener';
 import { getUserAggregateInfo } from '@/api/user/user-aggregate';
 import { useAppStore, useCacheStore, useMenuStore, useTabBarStore, useTipsStore } from '@/store';
+import { ApiError } from '@/api/error';
 
 const CHECK_APP_VERSION_KEY = 'check-app-version';
 
@@ -67,9 +68,13 @@ export default defineStore('user', {
 
     // 获取用户信息
     async getUserInfo() {
-      const { data: { data }, headers } = await getUserAggregateInfo();
+      const resp = await getUserAggregateInfo();
+      const { data: { code, msg, data }, headers } = resp;
       // 检查版本更新
       checkForVersionUpdate(headers?.['x-app-version']);
+      if (code !== 200) {
+        throw new ApiError(msg, resp);
+      }
       // 设置用户信息
       this.setUserInfo({
         id: data.user.id,

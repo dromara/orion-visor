@@ -22,6 +22,7 @@
  */
 package org.dromara.visor.module.monitor.entity.vo;
 
+import com.alibaba.fastjson.JSONObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -51,14 +52,14 @@ public class AlarmEventVO implements Serializable {
     @Schema(description = "id")
     private Long id;
 
-    @Schema(description = "主机名称")
-    private Long hostId;
+    @Schema(description = "事件来源")
+    private String sourceType;
 
-    @Schema(description = "主机名称")
-    private String hostName;
+    @Schema(description = "事件来源id")
+    private Long sourceId;
 
-    @Schema(description = "主机地址")
-    private String hostAddress;
+    @Schema(description = "事件来源id")
+    private JSONObject sourceInfo;
 
     @Schema(description = "agentKey")
     private String agentKey;

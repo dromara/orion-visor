@@ -50,6 +50,10 @@ public class AlarmPolicyDO extends BaseDO {
 
     private static final long serialVersionUID = 1L;
 
+    @Schema(description = "策略类型")
+    @TableField("type")
+    private String type;
+
     @Schema(description = "策略名称")
     @TableField("name")
     private String name;

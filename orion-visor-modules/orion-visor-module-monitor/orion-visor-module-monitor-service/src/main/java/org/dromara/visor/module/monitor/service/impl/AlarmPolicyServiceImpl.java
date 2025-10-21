@@ -27,6 +27,7 @@ import cn.orionsec.kit.lang.utils.Booleans;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import lombok.extern.slf4j.Slf4j;
+import org.dromara.visor.common.constant.Const;
 import org.dromara.visor.common.constant.ErrorMessage;
 import org.dromara.visor.common.utils.Assert;
 import org.dromara.visor.framework.biz.operator.log.core.utils.OperatorLogs;
@@ -38,7 +39,6 @@ import org.dromara.visor.module.monitor.dao.AlarmPolicyNotifyDAO;
 import org.dromara.visor.module.monitor.dao.AlarmPolicyRuleDAO;
 import org.dromara.visor.module.monitor.dao.MonitorHostDAO;
 import org.dromara.visor.module.monitor.define.cache.AlarmPolicyCacheKeyDefine;
-import org.dromara.visor.module.monitor.engine.AlarmEngineContext;
 import org.dromara.visor.module.monitor.entity.domain.AlarmPolicyDO;
 import org.dromara.visor.module.monitor.entity.dto.AlarmPolicyAlarmCountDTO;
 import org.dromara.visor.module.monitor.entity.dto.AlarmPolicyCacheDTO;
@@ -49,6 +49,7 @@ import org.dromara.visor.module.monitor.entity.request.alarm.AlarmPolicyCreateRe
 import org.dromara.visor.module.monitor.entity.request.alarm.AlarmPolicyQueryRequest;
 import org.dromara.visor.module.monitor.entity.request.alarm.AlarmPolicyUpdateRequest;
 import org.dromara.visor.module.monitor.entity.vo.AlarmPolicyVO;
+import org.dromara.visor.module.monitor.handler.alarm.AlarmEngineContext;
 import org.dromara.visor.module.monitor.service.AlarmEventService;
 import org.dromara.visor.module.monitor.service.AlarmPolicyNotifyService;
 import org.dromara.visor.module.monitor.service.AlarmPolicyRuleService;
@@ -110,8 +111,11 @@ public class AlarmPolicyServiceImpl implements AlarmPolicyService {
         Long id = record.getId();
         // 设置告警通知
         alarmPolicyNotifyService.setAlarmPolicyNotify(id, request.getNotifyIdList());
-        // 删除缓存
+        // 重新加载上下文
         alarmEngineContext.reloadPolicy(id);
+        // 删除缓存
+        RedisMaps.delete(AlarmPolicyCacheKeyDefine.ALARM_POLICY.format(record.getType()),
+                AlarmPolicyCacheKeyDefine.ALARM_POLICY.format(Const.ALL));
         // 设置日志参数
         OperatorLogs.add(OperatorLogs.ID, id);
         log.info("AlarmPolicyService-createAlarmPolicy id: {}, effect: {}", id, effect);
@@ -130,6 +134,11 @@ public class AlarmPolicyServiceImpl implements AlarmPolicyService {
         Long newId = this.createAlarmPolicy(request);
         // 复制策略规则
         alarmPolicyRuleService.copyAlarmPolicyRule(id, newId);
+        // 重新加载上下文
+        alarmEngineContext.reloadPolicy(id);
+        // 删除缓存
+        RedisMaps.delete(AlarmPolicyCacheKeyDefine.ALARM_POLICY.format(record.getType()),
+                AlarmPolicyCacheKeyDefine.ALARM_POLICY.format(Const.ALL));
         return newId;
     }
 
@@ -143,6 +152,7 @@ public class AlarmPolicyServiceImpl implements AlarmPolicyService {
         Assert.notNull(record, ErrorMessage.DATA_ABSENT);
         // 转换
         AlarmPolicyDO updateRecord = AlarmPolicyConvert.MAPPER.to(request);
+        updateRecord.setType(record.getType());
         // 查询数据是否冲突
         this.checkAlarmPolicyPresent(updateRecord);
         // 更新
@@ -152,8 +162,11 @@ public class AlarmPolicyServiceImpl implements AlarmPolicyService {
             alarmPolicyNotifyService.setAlarmPolicyNotify(id, request.getNotifyIdList());
         }
         log.info("AlarmPolicyService-updateAlarmPolicyById effect: {}", effect);
-        // 删除缓存
+        // 重新加载上下文
         alarmEngineContext.reloadPolicy(id);
+        // 删除缓存
+        RedisMaps.delete(AlarmPolicyCacheKeyDefine.ALARM_POLICY.format(record.getType()),
+                AlarmPolicyCacheKeyDefine.ALARM_POLICY.format(Const.ALL));
         return effect;
     }
 
@@ -171,16 +184,21 @@ public class AlarmPolicyServiceImpl implements AlarmPolicyService {
     }
 
     @Override
-    public List<AlarmPolicyVO> getAlarmPolicyListByCache() {
+    public List<AlarmPolicyVO> getAlarmPolicyListByCache(String type) {
+        String cacheKey = AlarmPolicyCacheKeyDefine.ALARM_POLICY.format(type);
         // 查询缓存
-        List<AlarmPolicyCacheDTO> list = RedisMaps.valuesJson(AlarmPolicyCacheKeyDefine.ALARM_POLICY);
+        List<AlarmPolicyCacheDTO> list = RedisMaps.valuesJson(cacheKey, AlarmPolicyCacheKeyDefine.ALARM_POLICY);
         if (list.isEmpty()) {
             // 查询数据库
-            list = alarmPolicyDAO.of().list(AlarmPolicyConvert.MAPPER::toCache);
+            list = alarmPolicyDAO.of()
+                    .createWrapper()
+                    .eq(!Const.ALL.equals(type), AlarmPolicyDO::getType, type)
+                    .then()
+                    .list(AlarmPolicyConvert.MAPPER::toCache);
             // 设置屏障 防止穿透
             CacheBarriers.checkBarrier(list, AlarmPolicyCacheDTO::new);
             // 设置缓存
-            RedisMaps.putAllJson(AlarmPolicyCacheKeyDefine.ALARM_POLICY, s -> s.getId().toString(), list);
+            RedisMaps.putAllJson(cacheKey, AlarmPolicyCacheKeyDefine.ALARM_POLICY, s -> s.getId().toString(), list);
         }
         // 删除屏障
         CacheBarriers.removeBarrier(list);
@@ -248,7 +266,7 @@ public class AlarmPolicyServiceImpl implements AlarmPolicyService {
         // 删除策略通知
         alarmPolicyNotifyDAO.deleteByPolicyId(id);
         // 删除策略规则
-        alarmPolicyRuleService.deleteByPolicyId(id);
+        alarmPolicyRuleDAO.deleteByPolicyId(id);
         // 删除缓存
         alarmEngineContext.reloadPolicy(id);
         log.info("AlarmPolicyService-deleteAlarmPolicyById effect: {}", effect);
@@ -259,6 +277,7 @@ public class AlarmPolicyServiceImpl implements AlarmPolicyService {
     public LambdaQueryWrapper<AlarmPolicyDO> buildQueryWrapper(AlarmPolicyQueryRequest request) {
         return alarmPolicyDAO.wrapper()
                 .eq(AlarmPolicyDO::getId, request.getId())
+                .eq(AlarmPolicyDO::getType, request.getType())
                 .like(AlarmPolicyDO::getName, request.getName())
                 .like(AlarmPolicyDO::getDescription, request.getDescription());
     }
@@ -274,6 +293,7 @@ public class AlarmPolicyServiceImpl implements AlarmPolicyService {
                 // 更新时忽略当前记录
                 .ne(AlarmPolicyDO::getId, domain.getId())
                 // 用其他字段做重复校验
+                .eq(AlarmPolicyDO::getType, domain.getType())
                 .eq(AlarmPolicyDO::getName, domain.getName());
         // 检查是否存在
         boolean present = alarmPolicyDAO.of(wrapper).present();

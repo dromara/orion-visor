@@ -23,7 +23,7 @@
 package org.dromara.visor.module.monitor.listener;
 
 import org.dromara.visor.module.asset.entity.event.AgentOfflineEvent;
-import org.dromara.visor.module.monitor.engine.MonitorContext;
+import org.dromara.visor.module.monitor.context.MonitorAgentContext;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
@@ -41,13 +41,13 @@ import java.util.List;
 public class AgentOfflineEventListener implements ApplicationListener<AgentOfflineEvent> {
 
     @Resource
-    private MonitorContext monitorContext;
+    private MonitorAgentContext monitorAgentContext;
 
     @SuppressWarnings("unchecked")
     @Override
     public void onApplicationEvent(AgentOfflineEvent event) {
         List<String> agentKeys = (List<String>) event.getSource();
-        agentKeys.forEach(monitorContext::setAgentOffline);
+        agentKeys.forEach(monitorAgentContext::setAgentOffline);
     }
 
 }

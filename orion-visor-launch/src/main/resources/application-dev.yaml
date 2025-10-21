@@ -14,7 +14,7 @@ spring:
     port: ${REDIS_PORT:6379}
     password: ${REDIS_PASSWORD:Data@123456}
     database: ${REDIS_DATABASE:1}
-    data-version: ${REDIS_DATA_VERSION:1}
+    data-version: ${REDIS_DATA_VERSION:2}
     mock: false
   redisson:
     threads: 2

@@ -2,13 +2,15 @@
   <!-- table -->
   <a-table row-key="id"
            ref="tableRef"
+           class="table-resize"
            :loading="loading"
            :columns="hostColumns"
            :data="row.hosts"
            :expandable="expandable"
            :scroll="{ y: '100%' }"
            :pagination="false"
-           :bordered="false">
+           :bordered="false"
+           :column-resizable="true">
     <!-- 执行主机 -->
     <template #hostName="{ record }">
       <span class="table-cell-value span-blue">

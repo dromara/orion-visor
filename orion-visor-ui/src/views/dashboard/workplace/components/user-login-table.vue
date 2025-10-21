@@ -12,11 +12,13 @@
       </div>
       <div class="card-body">
         <a-table row-key="id"
+                 class="table-resize"
                  :loading="loading"
                  :columns="userLoginColumns"
                  :data="data.infra?.loginHistoryList || []"
                  :pagination="false"
                  :bordered="false"
+                 :column-resizable="true"
                  :scroll="{ y: 388 }">
           <!-- 登录设备 -->
           <template #content="{ record }">

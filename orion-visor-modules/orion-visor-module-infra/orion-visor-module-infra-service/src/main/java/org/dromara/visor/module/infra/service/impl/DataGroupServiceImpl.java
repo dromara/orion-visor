@@ -82,7 +82,7 @@ public class DataGroupServiceImpl implements DataGroupService {
         // 查询数据是否冲突
         this.checkDataGroupPresent(record);
         // 查询最大排序
-        Integer sort = dataGroupDAO.selectMaxSort(request.getParentId(), request.getType());
+        Integer sort = dataGroupDAO.selectMaxSort(request.getParentId(), request.getType(), request.getUserId());
         record.setSort(sort + Const.DEFAULT_SORT);
         // 插入
         int effect = dataGroupDAO.insert(record);
@@ -130,14 +130,19 @@ public class DataGroupServiceImpl implements DataGroupService {
         Assert.notNull(targetRecord, ErrorMessage.GROUP_ABSENT);
         // 更新
         String type = moveRecord.getType();
+        Long userId = moveRecord.getUserId();
         Long targetParentId = targetRecord.getParentId();
         int effect = 0;
         // 修改排序
         if (MovePosition.TOP.equals(position)) {
             // 移动到元素上 将大于等于 targetRecord 的排序都加 10
-            dataGroupDAO.updateSort(targetParentId, ">=",
-                    targetRecord.getSort(), Const.DEFAULT_SORT);
-            // 修改 parentId sort
+            dataGroupDAO.updateSort(targetParentId,
+                    type,
+                    userId,
+                    ">=",
+                    targetRecord.getSort(),
+                    Const.DEFAULT_SORT);
+            // 修改关联以及排序
             DataGroupDO update = DataGroupDO.builder()
                     .id(id)
                     .parentId(targetParentId)
@@ -146,8 +151,8 @@ public class DataGroupServiceImpl implements DataGroupService {
             effect = dataGroupDAO.updateById(update);
         } else if (MovePosition.IN.equals(position)) {
             // 移动到元素中 获取最大排序
-            Integer newSort = dataGroupDAO.selectMaxSort(targetId, type) + Const.DEFAULT_SORT;
-            // 修改 parentId sort
+            Integer newSort = dataGroupDAO.selectMaxSort(targetId, type, userId) + Const.DEFAULT_SORT;
+            // 修改关联以及排序
             DataGroupDO update = DataGroupDO.builder()
                     .id(id)
                     .parentId(targetId)
@@ -156,9 +161,13 @@ public class DataGroupServiceImpl implements DataGroupService {
             effect = dataGroupDAO.updateById(update);
         } else if (MovePosition.BOTTOM.equals(position)) {
             // 移动到元素下 将大于 targetRecord 的排序都加 10
-            dataGroupDAO.updateSort(targetParentId, ">",
-                    targetRecord.getSort(), Const.DEFAULT_SORT);
-            // 修改 parentId sort
+            dataGroupDAO.updateSort(targetParentId,
+                    type,
+                    userId,
+                    ">",
+                    targetRecord.getSort(),
+                    Const.DEFAULT_SORT);
+            // 修改关联以及排序
             DataGroupDO update = DataGroupDO.builder()
                     .id(id)
                     .parentId(targetParentId)
@@ -167,7 +176,7 @@ public class DataGroupServiceImpl implements DataGroupService {
             effect = dataGroupDAO.updateById(update);
         }
         // 删除缓存
-        this.deleteCache(type, moveRecord.getUserId());
+        this.deleteCache(type, userId);
         // 添加日志参数
         OperatorLogs.add(OperatorLogs.SOURCE, moveRecord.getName());
         OperatorLogs.add(OperatorLogs.TARGET, targetRecord.getName());

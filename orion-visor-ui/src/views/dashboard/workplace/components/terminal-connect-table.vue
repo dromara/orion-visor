@@ -13,11 +13,13 @@
       <div class="card-body">
         <!-- 表格 -->
         <a-table row-key="id"
+                 class="table-resize"
                  :loading="loading"
                  :columns="terminalLogColumns"
                  :data="data.terminal?.terminalConnectList || []"
                  :pagination="false"
                  :bordered="false"
+                 :column-resizable="true"
                  :scroll="{ y: 258 }">
           <!-- 空状态 -->
           <template #empty>

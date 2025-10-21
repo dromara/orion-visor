@@ -66,11 +66,13 @@
     <!-- table -->
     <a-table row-key="id"
              ref="tableRef"
+             class="table-resize"
              :loading="loading"
              :columns="tableColumns"
              :data="tableRenderData"
              :pagination="pagination"
              :bordered="false"
+             :column-resizable="true"
              @page-change="(page: number) => fetchTableData(page, pagination.pageSize)"
              @page-size-change="(size: number) => fetchTableData(1, size)">
       <!-- 数据集 -->
@@ -81,7 +83,7 @@
       </template>
       <!-- 指标项 -->
       <template #value="{ record }">
-        <span class="span-blue text-copy" @click="copy(record.measurement, true)">
+        <span class="span-blue text-copy" @click="copy(record.value, true)">
           {{ record.value }}
         </span>
       </template>

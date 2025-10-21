@@ -20,41 +20,44 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.dromara.visor.module.monitor.engine;
+package org.dromara.visor.module.monitor.enums;
 
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-import java.util.List;
-import java.util.Map;
+import lombok.Getter;
 
 /**
- * 告警引擎策略对象
+ * 告警事件来源
  *
  * @author Jiahang Li
  * @version 1.0.0
- * @since 2025/9/19 15:53
+ * @since 2025/10/13 22:03
  */
-@Data
-@Builder
-@NoArgsConstructor
+@Getter
 @AllArgsConstructor
-@Schema(name = "AlarmEnginePolicy", description = "告警引擎策略对象")
-public class AlarmEnginePolicy {
+public enum AlarmEventSourceTypeEnum {
 
-    @Schema(description = "策略id")
-    private Long id;
+    /**
+     * 主机告警
+     */
+    HOST,
 
-    @Schema(description = "策略名称")
-    private String name;
+    /**
+     * 拨测告警
+     */
+    UPTIME,
 
-    @Schema(description = "策略规则 metricsId:rules")
-    private Map<Long, List<AlarmEngineRule>> rules;
+    ;
 
-    @Schema(description = "策略推送渠道")
-    private List<Long> notifyIdList;
+    public static AlarmEventSourceTypeEnum of(String value) {
+        if (value == null) {
+            return null;
+        }
+        for (AlarmEventSourceTypeEnum item : values()) {
+            if (item.name().equals(value)) {
+                return item;
+            }
+        }
+        return null;
+    }
 
 }

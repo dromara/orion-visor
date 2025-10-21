@@ -20,7 +20,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.dromara.visor.module.monitor.engine;
+package org.dromara.visor.module.monitor.handler.alarm;
 
 import cn.orionsec.kit.lang.define.cache.TimedCache;
 import cn.orionsec.kit.lang.define.cache.TimedCacheBuilder;
@@ -32,23 +32,23 @@ import cn.orionsec.kit.lang.utils.collect.Lists;
 import cn.orionsec.kit.lang.utils.collect.Maps;
 import cn.orionsec.kit.lang.utils.io.Streams;
 import cn.orionsec.kit.lang.utils.time.Dates;
-import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.visor.common.constant.Const;
 import org.dromara.visor.common.entity.PushUser;
 import org.dromara.visor.common.enums.BooleanBit;
 import org.dromara.visor.framework.biz.push.core.utils.PushUtils;
 import org.dromara.visor.framework.redis.core.utils.RedisStrings;
-import org.dromara.visor.module.asset.api.HostAgentApi;
-import org.dromara.visor.module.asset.entity.dto.host.HostBaseDTO;
 import org.dromara.visor.module.infra.api.SystemUserApi;
-import org.dromara.visor.module.monitor.convert.AlarmEventConvert;
+import org.dromara.visor.module.monitor.context.MonitorAgentContext;
+import org.dromara.visor.module.monitor.context.MonitorMetricsContext;
 import org.dromara.visor.module.monitor.define.cache.AlarmPolicyCacheKeyDefine;
-import org.dromara.visor.module.monitor.entity.domain.AlarmEventDO;
 import org.dromara.visor.module.monitor.entity.dto.*;
-import org.dromara.visor.module.monitor.enums.*;
+import org.dromara.visor.module.monitor.enums.AlarmLevelEnum;
+import org.dromara.visor.module.monitor.enums.AlarmTriggerConditionEnum;
+import org.dromara.visor.module.monitor.enums.MetricsUnitEnum;
+import org.dromara.visor.module.monitor.handler.alarm.model.AlarmEnginePolicy;
+import org.dromara.visor.module.monitor.handler.alarm.model.AlarmEngineRule;
 import org.dromara.visor.module.monitor.service.AlarmEventService;
-import org.springframework.stereotype.Component;
 
 import javax.annotation.PreDestroy;
 import javax.annotation.Resource;
@@ -57,62 +57,50 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
- * 告警引擎
+ * 告警引擎基类
  *
  * @author Jiahang Li
  * @version 1.0.0
- * @since 2025/8/21 17:26
+ * @since 2025/10/13 10:12
  */
 @Slf4j
-@Component
-public class AlarmEngine {
+public abstract class BaseAlarmEngine implements IAlarmEngine {
 
     /**
      * 告警触发状态缓存 10min
      */
-    private static final TimedCache<AlarmTriggerStateDTO> TRIGGER_STATE_CACHE = TimedCacheBuilder.<AlarmTriggerStateDTO>create()
+    protected static final TimedCache<AlarmTriggerStateDTO> TRIGGER_STATE_CACHE = TimedCacheBuilder.<AlarmTriggerStateDTO>create()
             .expireAfter(10 * Const.MS_S_60)
             .checkInterval(Const.MS_S_60)
             .build();
 
     @Resource
-    private AlarmEngineContext alarmEngineContext;
+    protected AlarmEngineContext alarmEngineContext;
 
     @Resource
-    private MonitorContext monitorContext;
+    protected MonitorAgentContext monitorAgentContext;
 
     @Resource
-    private AlarmEventService alarmEventService;
+    protected MonitorMetricsContext monitorMetricsContext;
 
     @Resource
-    private HostAgentApi hostAgentApi;
+    protected AlarmEventService alarmEventService;
 
     @Resource
-    private SystemUserApi systemUserApi;
+    protected SystemUserApi systemUserApi;
 
     @PreDestroy
     public void destroyTimedCache() {
         Streams.close(TRIGGER_STATE_CACHE);
     }
 
-    /**
-     * 检查并且告警
-     *
-     * @param agentKey    agentKey
-     * @param prevMetrics prevMetrics
-     * @param newMetrics  newMetrics
-     */
+    @Override
     public void checkAndAlarm(String agentKey,
                               AgentMetricsDataDTO prevMetrics,
                               AgentMetricsDataDTO newMetrics) {
-        // 获取主机信息
-        MonitorHostContextDTO monitorHost = monitorContext.getMonitorHost(agentKey);
-        if (monitorHost == null) {
-            return;
-        }
-        // 检查策略是否开启
-        Long policyId = monitorHost.getPolicyId();
-        if (policyId == null || AlarmSwitchEnum.isOff(monitorHost.getAlarmSwitch())) {
+        // 获取告警策略
+        Long policyId = this.getAlarmPolicyId(agentKey);
+        if (policyId == null) {
             return;
         }
         // 获取对应的策略
@@ -132,7 +120,7 @@ public class AlarmEngine {
                     // 检查指标
                     AlarmEventTriggerDTO event = this.checkAndAlarm(agentKey,
                             prevMetrics, newMetrics, agentMetrics, metricsField,
-                            policy, monitorHost);
+                            policy);
                     if (event != null) {
                         alarmEvents.add(event);
                     }
@@ -148,6 +136,14 @@ public class AlarmEngine {
     }
 
     /**
+     * 获取告警策略 id
+     *
+     * @param agentKey agentKey
+     * @return policyId
+     */
+    protected abstract Long getAlarmPolicyId(String agentKey);
+
+    /**
      * 检查并且告警
      *
      * @param agentKey     agentKey
@@ -156,25 +152,22 @@ public class AlarmEngine {
      * @param agentMetrics agentMetrics
      * @param metricsField metricsField
      * @param policy       policy
-     * @param monitorHost  monitorHost
      * @return event
      */
-    private AlarmEventTriggerDTO checkAndAlarm(String agentKey,
-                                               AgentMetricsDataDTO prevMetrics,
-                                               AgentMetricsDataDTO newMetrics,
-                                               AgentMetricsDTO agentMetrics,
-                                               String metricsField,
-                                               AlarmEnginePolicy policy,
-                                               MonitorHostContextDTO monitorHost) {
-        Long timestamp = newMetrics.getTimestamp();
+    protected AlarmEventTriggerDTO checkAndAlarm(String agentKey,
+                                                 AgentMetricsDataDTO prevMetrics,
+                                                 AgentMetricsDataDTO newMetrics,
+                                                 AgentMetricsDTO agentMetrics,
+                                                 String metricsField,
+                                                 AlarmEnginePolicy policy) {
+        Long alarmTimestamp = newMetrics.getTimestamp();
         // 指标id
-        Long metricsId = monitorContext.getMonitorMetricsId(agentMetrics.getType(), metricsField);
+        Long metricsId = monitorMetricsContext.getMonitorMetricsId(agentMetrics.getType(), metricsField);
         if (metricsId == null) {
             return null;
         }
         // 指标值
-        BigDecimal metricsValue;
-        metricsValue = agentMetrics.getValues().getBigDecimal(metricsField);
+        BigDecimal metricsValue = agentMetrics.getValues().getBigDecimal(metricsField);
         if (metricsValue == null) {
             return null;
         }
@@ -200,13 +193,29 @@ public class AlarmEngine {
             return null;
         }
         // 检查是否在静默期
-        boolean inSilence = this.checkAndSetInSilencePeriod(agentKey, timestamp, matchedRule);
+        boolean inSilence = this.checkAndSetInSilencePeriod(agentKey, alarmTimestamp, matchedRule);
         if (inSilence) {
             return null;
         }
         // 创建告警事件
-        return this.createAlarmEvent(agentKey, monitorHost, timestamp, agentMetrics, metricsValue, matchedRule);
+        return this.createAlarmEvent(agentKey, alarmTimestamp, agentMetrics, metricsValue, matchedRule);
     }
+
+    /**
+     * 创建告警事件
+     *
+     * @param agentKey       agentKey
+     * @param alarmTimestamp alarmTimestamp
+     * @param agentMetrics   agentMetrics
+     * @param metricsValue   metricsValue
+     * @param rule           rule
+     * @return event
+     */
+    protected abstract AlarmEventTriggerDTO createAlarmEvent(String agentKey,
+                                                             Long alarmTimestamp,
+                                                             AgentMetricsDTO agentMetrics,
+                                                             BigDecimal metricsValue,
+                                                             AlarmEngineRule rule);
 
     /**
      * 获取到第一个匹配到达阈值的规则 包含 tag
@@ -216,9 +225,9 @@ public class AlarmEngine {
      * @param metricsValue metricsValue
      * @return rule
      */
-    private AlarmEngineRule matchTaggedAgentMetricsRule(List<AlarmEngineRule> rules,
-                                                        Map<String, String> metricsTags,
-                                                        BigDecimal metricsValue) {
+    protected AlarmEngineRule matchTaggedAgentMetricsRule(List<AlarmEngineRule> rules,
+                                                          Map<String, String> metricsTags,
+                                                          BigDecimal metricsValue) {
         AlarmEngineRule matchedRule = null;
         // context 根据 level 排序了
         for (AlarmEngineRule rule : rules) {
@@ -265,7 +274,7 @@ public class AlarmEngine {
      * @param metricsValue metricsValue
      * @return rule
      */
-    private AlarmEngineRule matchAgentMetricsRule(List<AlarmEngineRule> rules, BigDecimal metricsValue) {
+    protected AlarmEngineRule matchAgentMetricsRule(List<AlarmEngineRule> rules, BigDecimal metricsValue) {
         AlarmEngineRule matchedRule = null;
         // context 根据 level 排序了
         for (AlarmEngineRule rule : rules) {
@@ -289,13 +298,13 @@ public class AlarmEngine {
      * @param rule        rule
      * @param metricValue metricValue
      */
-    private boolean checkAlarmCondition(AlarmEngineRule rule, BigDecimal metricValue) {
+    protected boolean checkAlarmCondition(AlarmEngineRule rule, BigDecimal metricValue) {
         // 获取指标值
         if (metricValue == null) {
             return false;
         }
         // 获取指标单位
-        MonitorMetricsContextDTO metrics = monitorContext.getMonitorMetrics(rule.getMetricsId());
+        MonitorMetricsContextDTO metrics = monitorMetricsContext.getMonitorMetrics(rule.getMetricsId());
         MetricsUnitEnum unit = Optional.ofNullable(metrics)
                 .map(MonitorMetricsContextDTO::getUnit)
                 .map(MetricsUnitEnum::of)
@@ -310,13 +319,8 @@ public class AlarmEngine {
         }
         // 将阈值转换为原始值
         threshold = unit.getThresholdOriginalValue(threshold);
-        // 触发条件
-        AlarmTriggerConditionEnum condition = AlarmTriggerConditionEnum.of(rule.getTriggerCondition());
-        if (condition == null) {
-            return false;
-        }
         // 判断是否达到触发条件
-        return this.evaluateCondition(condition, metricValue, threshold);
+        return this.evaluateCondition(rule.getTriggerCondition(), metricValue, threshold);
     }
 
     /**
@@ -327,10 +331,12 @@ public class AlarmEngine {
      * @param threshold   threshold
      * @return eval
      */
-    private boolean evaluateCondition(AlarmTriggerConditionEnum condition,
-                                      BigDecimal metricValue,
-                                      BigDecimal threshold) {
-        switch (condition) {
+    protected boolean evaluateCondition(String condition,
+                                        BigDecimal metricValue,
+                                        BigDecimal threshold) {
+        // 触发条件
+        AlarmTriggerConditionEnum triggerCondition = AlarmTriggerConditionEnum.of(condition);
+        switch (triggerCondition) {
             case GT:
                 return metricValue.compareTo(threshold) > 0;
             case GE:
@@ -356,10 +362,10 @@ public class AlarmEngine {
      * @param rule        rule
      * @return result
      */
-    private boolean checkConsecutiveCount(String agentKey,
-                                          AgentMetricsDataDTO prevMetrics,
-                                          AgentMetricsDataDTO newMetrics,
-                                          AlarmEngineRule rule) {
+    protected boolean checkConsecutiveCount(String agentKey,
+                                            AgentMetricsDataDTO prevMetrics,
+                                            AgentMetricsDataDTO newMetrics,
+                                            AlarmEngineRule rule) {
         // 获取规则连续触发次数
         Integer ruleConsecutiveCount = Objects1.def(rule.getConsecutiveCount(), 1);
         // 获取指标连续触发次数
@@ -393,8 +399,8 @@ public class AlarmEngine {
      * @param prevMetrics  prevMetrics
      * @return isConsecutiveTrigger
      */
-    private boolean isConsecutiveTrigger(AlarmTriggerStateDTO triggerState,
-                                         AgentMetricsDataDTO prevMetrics) {
+    protected boolean isConsecutiveTrigger(AlarmTriggerStateDTO triggerState,
+                                           AgentMetricsDataDTO prevMetrics) {
         if (prevMetrics == null || triggerState == null) {
             return false;
         }
@@ -404,14 +410,14 @@ public class AlarmEngine {
     /**
      * 检查并且设置静默期
      *
-     * @param agentKey  agentKey
-     * @param timestamp timestamp
-     * @param rule      rule
+     * @param agentKey       agentKey
+     * @param alarmTimestamp alarmTimestamp
+     * @param rule           rule
      * @return inSilence
      */
-    private boolean checkAndSetInSilencePeriod(String agentKey,
-                                               Long timestamp,
-                                               AlarmEngineRule rule) {
+    protected boolean checkAndSetInSilencePeriod(String agentKey,
+                                                 Long alarmTimestamp,
+                                                 AlarmEngineRule rule) {
         Integer silencePeriod = Objects1.def(rule.getSilencePeriod(), 0);
         // 无静默期则触发
         if (silencePeriod <= 0) {
@@ -427,73 +433,9 @@ public class AlarmEngine {
                     .noPrefix()
                     .timeout(silencePeriod, TimeUnit.MINUTES)
                     .build();
-            RedisStrings.set(key, timestamp);
+            RedisStrings.set(key, alarmTimestamp);
         }
         return inSilence;
-    }
-
-    /**
-     * 创建告警事件
-     *
-     * @param agentKey     agentKey
-     * @param monitorHost  monitorHost
-     * @param timestamp    timestamp
-     * @param agentMetrics agentMetrics
-     * @param metricsValue metricsValue
-     * @param rule         rule
-     * @return event
-     */
-    private AlarmEventTriggerDTO createAlarmEvent(String agentKey,
-                                                  MonitorHostContextDTO monitorHost,
-                                                  Long timestamp,
-                                                  AgentMetricsDTO agentMetrics,
-                                                  BigDecimal metricsValue,
-                                                  AlarmEngineRule rule) {
-        // 查询主机信息
-        HostBaseDTO host = hostAgentApi.getHostCacheByAgentKey(agentKey);
-        if (host == null) {
-            host = new HostBaseDTO();
-        }
-        // 获取指标
-        MonitorMetricsContextDTO metrics = monitorContext.getMonitorMetrics(rule.getMetricsId());
-        // 指标单位
-        MetricsUnitEnum unit = MetricsUnitEnum.of(metrics.getUnit());
-        // 获取连续触发次数
-        Integer consecutiveCount = Optional.ofNullable(TRIGGER_STATE_CACHE.get(this.getTriggerStateCacheKey(agentKey, rule)))
-                .map(AlarmTriggerStateDTO::getConsecutiveCount)
-                .orElse(1);
-        // 构建告警信息
-        String alarmInfo = this.buildAlarmInfo(metrics, rule, unit, metricsValue, consecutiveCount);
-        // 创建告警事件记录
-        Map<String, String> tags = agentMetrics.getTags();
-        AlarmEventDO alarmEvent = AlarmEventDO.builder()
-                .agentKey(agentKey)
-                .hostId(host.getId())
-                .hostName(host.getName())
-                .hostAddress(host.getAddress())
-                .policyId(rule.getPolicyId())
-                .policyRuleId(rule.getId())
-                .metricsId(rule.getMetricsId())
-                .metricsMeasurement(metrics.getMeasurement())
-                .alarmTags(tags == null ? Const.EMPTY_OBJECT : JSON.toJSONString(tags))
-                .alarmValue(metricsValue)
-                .alarmThreshold(unit.getThresholdOriginalValue(rule.getThreshold()))
-                .alarmInfo(alarmInfo)
-                .alarmLevel(rule.getLevel())
-                .triggerCondition(rule.getTriggerCondition())
-                .consecutiveCount(consecutiveCount)
-                .falseAlarm(BooleanBit.FALSE.getValue())
-                .handleStatus(AlarmHandleStatusEnum.NEW.name())
-                .handleUserId(monitorHost.getOwnerUserId())
-                .handleUsername(monitorHost.getOwnerUsername())
-                .createTime(new Date(timestamp))
-                .updateTime(new Date(timestamp))
-                .build();
-
-        // 保存告警事件
-        alarmEventService.createAlarmEvent(alarmEvent);
-        // 填充其他参数
-        return AlarmEventConvert.MAPPER.toTrigger(alarmEvent);
     }
 
     /**
@@ -506,11 +448,11 @@ public class AlarmEngine {
      * @param consecutiveCount consecutiveCount
      * @return alarmInfo
      */
-    private String buildAlarmInfo(MonitorMetricsContextDTO metrics,
-                                  AlarmEngineRule rule,
-                                  MetricsUnitEnum unit,
-                                  BigDecimal metricsValue,
-                                  Integer consecutiveCount) {
+    protected String buildAlarmInfo(MonitorMetricsContextDTO metrics,
+                                    AlarmEngineRule rule,
+                                    MetricsUnitEnum unit,
+                                    BigDecimal metricsValue,
+                                    Integer consecutiveCount) {
         return metrics.getName()
                 + Const.SPACE + AlarmTriggerConditionEnum.of(rule.getTriggerCondition()).getCondition()
                 + Const.SPACE + unit.format(rule.getThreshold(), new MetricsUnitEnum.FormatOptions(2, metrics.getSuffix()))
@@ -525,7 +467,7 @@ public class AlarmEngine {
      * @param rule     rule
      * @return cacheKey
      */
-    private String getTriggerStateCacheKey(String agentKey, AlarmEngineRule rule) {
+    protected String getTriggerStateCacheKey(String agentKey, AlarmEngineRule rule) {
         return agentKey + ":" + rule.getId();
     }
 
@@ -535,7 +477,7 @@ public class AlarmEngine {
      * @param policy      policy
      * @param alarmEvents alarmEvents
      */
-    private void notifyAlarmPolicyChannels(AlarmEnginePolicy policy, List<AlarmEventTriggerDTO> alarmEvents) {
+    protected void notifyAlarmPolicyChannels(AlarmEnginePolicy policy, List<AlarmEventTriggerDTO> alarmEvents) {
         List<Long> notifyIdList = policy.getNotifyIdList();
         if (Lists.isEmpty(notifyIdList)) {
             return;
@@ -549,38 +491,41 @@ public class AlarmEngine {
         // 构建参数
         List<Map<String, Object>> paramsList = new ArrayList<>();
         for (AlarmEventTriggerDTO event : alarmEvents) {
-            MonitorMetricsContextDTO metrics = monitorContext.getMonitorMetrics(event.getMetricsId());
-            MetricsUnitEnum unit = MetricsUnitEnum.of(metrics.getUnit());
-            AlarmLevelEnum level = AlarmLevelEnum.of(event.getAlarmLevel());
-            AlarmTriggerConditionEnum triggerCondition = AlarmTriggerConditionEnum.of(event.getTriggerCondition());
+            try {
+                MonitorMetricsContextDTO metrics = monitorMetricsContext.getMonitorMetrics(event.getMetricsId());
+                MetricsUnitEnum unit = MetricsUnitEnum.of(metrics.getUnit());
+                AlarmLevelEnum level = AlarmLevelEnum.of(event.getAlarmLevel());
+                AlarmTriggerConditionEnum triggerCondition = AlarmTriggerConditionEnum.of(event.getTriggerCondition());
 
-            // 告警事件参数
-            Map<String, Object> params = new HashMap<>();
-            params.put("id", event.getId());
-            params.put("relKey", event.getId());
-            params.put("policyId", policy.getId());
-            params.put("policyName", policy.getName());
-            params.put("ruleId", event.getPolicyRuleId());
-            params.put("hostId", event.getHostId());
-            params.put("hostName", event.getHostName());
-            params.put("hostAddress", event.getHostAddress());
-            params.put("metrics", metrics.getMeasurement() + "." + metrics.getValue());
-            params.put("metricsId", metrics.getId());
-            params.put("metricsName", metrics.getName());
-            params.put("metricsField", metrics.getValue());
-            params.put("metricsMeasurement", metrics.getMeasurement());
-            params.put("tags", event.getAlarmTags());
-            params.put("level", level.name());
-            params.put("levelLabel", level.getLabel());
-            params.put("levelSeverity", level.getSeverity());
-            params.put("levelColor", level.getColor());
-            params.put("consecutiveCount", event.getConsecutiveCount());
-            params.put("triggerCondition", triggerCondition.getCondition());
-            params.put("alarmInfo", event.getAlarmInfo());
-            params.put("alarmValue", unit.format(event.getAlarmValue(), new MetricsUnitEnum.FormatOptions(2, metrics.getSuffix())));
-            params.put("alarmThreshold", unit.format(event.getAlarmThreshold(), new MetricsUnitEnum.FormatOptions(4, metrics.getSuffix())));
-            params.put("alarmTime", Dates.format(event.getCreateTime()));
-            paramsList.add(params);
+                // 告警事件参数
+                Map<String, Object> params = new HashMap<>();
+                params.put("id", event.getId());
+                params.put("relKey", event.getId());
+                params.put("policyId", policy.getId());
+                params.put("policyName", policy.getName());
+                params.put("ruleId", event.getPolicyRuleId());
+                params.put("metrics", metrics.getMeasurement() + "." + metrics.getValue());
+                params.put("metricsId", metrics.getId());
+                params.put("metricsName", metrics.getName());
+                params.put("metricsField", metrics.getValue());
+                params.put("metricsMeasurement", metrics.getMeasurement());
+                params.put("tags", event.getAlarmTags());
+                params.put("level", level.name());
+                params.put("levelLabel", level.getLabel());
+                params.put("levelSeverity", level.getSeverity());
+                params.put("levelColor", level.getColor());
+                params.put("consecutiveCount", event.getConsecutiveCount());
+                params.put("triggerCondition", triggerCondition.getCondition());
+                params.put("alarmInfo", event.getAlarmInfo());
+                params.put("alarmValue", unit.format(event.getAlarmValue(), new MetricsUnitEnum.FormatOptions(2, metrics.getSuffix())));
+                params.put("alarmThreshold", unit.format(event.getAlarmThreshold(), new MetricsUnitEnum.FormatOptions(4, metrics.getSuffix())));
+                params.put("alarmTime", Dates.format(event.getCreateTime()));
+                // 设置额外告警推送参数
+                this.setExtraAlarmPushParams(params, event);
+                paramsList.add(params);
+            } catch (Exception e) {
+                log.info("AlarmEngine-setAlarmParams error", e);
+            }
         }
         // 推送消息
         for (Map<String, Object> params : paramsList) {
@@ -589,5 +534,13 @@ public class AlarmEngine {
             }
         }
     }
+
+    /**
+     * 设置告警推送参数
+     *
+     * @param params params
+     * @param event  event
+     */
+    protected abstract void setExtraAlarmPushParams(Map<String, Object> params, AlarmEventTriggerDTO event);
 
 }

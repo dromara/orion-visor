@@ -41,7 +41,7 @@
                                allow-clear />
       </a-form-item>
       <!-- 数据集 -->
-      <a-form-item field="metricsMeasurement" label="数据集">
+      <a-form-item field="metricsId" label="数据集">
         <a-select v-model="formModel.metricsMeasurement"
                   :options="toOptions(MetricsMeasurementKey)"
                   placeholder="数据集"
@@ -79,7 +79,7 @@
     </query-header>
   </a-card>
   <!-- 表格 -->
-  <alarm-event-table-base ref="eventTable"
+  <alarm-event-table-base :source-type="AlarmSourceType.HOST"
                           :table-name="TableName"
                           :columns="originColumns"
                           :table-data="tableRenderData"
@@ -87,12 +87,9 @@
                           :form-model="formModel"
                           :pagination="pagination"
                           :show-clear-button="false"
-                          @open-handle="handleModal.open($event)"
                           @set-loading="setLoading"
+                          @reload="reload"
                           @query="fetchTableData" />
-  <!-- 处理模态框-->
-  <alarm-event-handle-modal ref="handleModal"
-                            @handled="(e: any) => eventTable.alarmHandled(e)" />
 </template>
 
 <script lang="ts">
@@ -102,33 +99,30 @@
 </script>
 
 <script lang="ts" setup>
-  import type { AlarmEventQueryRequest, AlarmEventQueryResponse, AlarmEventHandleRequest } from '@/api/monitor/alarm-event';
+  import type { AlarmEventQueryRequest, AlarmEventQueryResponse } from '@/api/monitor/alarm-event';
   import { reactive, ref, onMounted } from 'vue';
   import { getAlarmEventPage } from '@/api/monitor/alarm-event';
   import useLoading from '@/hooks/loading';
   import columns from '../../alarm-event/types/table.columns';
-  import { FalseAlarm, HandleStatusKey, FalseAlarmKey, MetricsMeasurementKey, AlarmLevelKey } from '../../alarm-event/types/const';
+  import { FalseAlarm, HandleStatusKey, FalseAlarmKey, MetricsMeasurementKey, AlarmLevelKey, AlarmSourceType } from '../../alarm-event/types/const';
   import { TableName } from '../types/const';
   import { useTablePagination } from '@/hooks/table';
-  import { useDictStore } from '@/store';
+  import { useDictStore, useCacheStore } from '@/store';
   import { useQueryOrder, DESC } from '@/hooks/query-order';
   import UserSelector from '@/components/user/user/selector/index.vue';
   import MonitorMetricsSelector from '@/components/monitor/metrics/selector/index.vue';
   import AlarmPolicySelector from '@/components/monitor/alarm-policy/selector/index.vue';
   import AlarmEventTableBase from '@/views/monitor/alarm-event/components/alarm-event-table-base.vue';
-  import AlarmEventHandleModal from '@/views/monitor/alarm-event/components/alarm-event-handle-modal.vue';
 
   const props = defineProps<{
     agentKey: string;
   }>();
 
-  const eventTable = ref();
-  const handleModal = ref();
   const pagination = useTablePagination();
   const queryOrder = useQueryOrder(TableName, DESC);
   const { loading, setLoading } = useLoading();
   const { toOptions } = useDictStore();
-  const originColumns = columns.filter(s => s.dataIndex !== 'hostInfo');
+  const originColumns = columns.filter(s => s.dataIndex !== 'sourceInfo');
 
   const tableRenderData = ref<Array<AlarmEventQueryResponse>>([]);
   const formModel = reactive<AlarmEventQueryRequest>({
@@ -151,12 +145,7 @@
     fetchTableData();
   };
 
-  // 告警处理回调
-  const alarmHandled = (request: Required<AlarmEventHandleRequest>) => {
-    eventTable.value.alarmHandled(request);
-  };
-
-  defineExpose({ reload, alarmHandled });
+  defineExpose({ reload });
 
   // 加载数据
   const doFetchTableData = async (request: AlarmEventQueryRequest) => {
@@ -178,7 +167,12 @@
     doFetchTableData({ page, limit, ...form });
   };
 
-  onMounted(reload);
+  onMounted(async () => {
+    // 加载规则
+    await useCacheStore().loadMonitorMetricsList();
+    // 重新加载列表
+    reload();
+  });
 
 </script>
 

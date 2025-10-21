@@ -31,7 +31,10 @@ export default function setupUserLoginInfoGuard(router: Router) {
             next();
           }
         } catch (error) {
-          Message.error('获取用户信息失败');
+          // 登录过期
+          if ((error as any)?.data?.data?.code !== 401) {
+            Message.error('获取用户信息失败');
+          }
           // 获取失败退出登录
           await userStore.logout();
           next({

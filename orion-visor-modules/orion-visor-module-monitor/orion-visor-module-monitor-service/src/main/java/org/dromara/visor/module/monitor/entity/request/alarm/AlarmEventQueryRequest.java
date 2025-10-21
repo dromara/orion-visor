@@ -48,12 +48,15 @@ public class AlarmEventQueryRequest extends BaseQueryRequest {
     @Schema(description = "id")
     private Long id;
 
-    @Schema(description = "主机名称")
-    private Long hostId;
-
     @Size(max = 32)
     @Schema(description = "agentKey")
     private String agentKey;
+
+    @Schema(description = "事件来源")
+    private String sourceType;
+
+    @Schema(description = "事件来源id")
+    private Long sourceId;
 
     @Schema(description = "策略id")
     private Long policyId;

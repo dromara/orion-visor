@@ -35,7 +35,9 @@
   };
 
   onBeforeMount(async () => {
+    // 加载规则列表
     await useCacheStore().loadMonitorMetricsList();
+    // 加载字典值
     const dictStore = useDictStore();
     await dictStore.loadKeys(dictKeys);
     render.value = true;

@@ -20,7 +20,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.dromara.visor.module.monitor.engine;
+package org.dromara.visor.module.monitor.handler.alarm.model;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -28,55 +28,36 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
 /**
- * 告警引擎策略规则对象
+ * 告警引擎策略对象
  *
  * @author Jiahang Li
  * @version 1.0.0
- * @since 2025/9/19 15:52
+ * @since 2025/9/19 15:53
  */
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(name = "AlarmEngineRule", description = "告警引擎策略规则对象")
-public class AlarmEngineRule {
-
-    @Schema(description = "规则id")
-    private Long id;
+@Schema(name = "AlarmEnginePolicy", description = "告警引擎策略对象")
+public class AlarmEnginePolicy {
 
     @Schema(description = "策略id")
-    private Long policyId;
+    private Long id;
 
-    @Schema(description = "指标id")
-    private Long metricsId;
+    @Schema(description = "策略类型")
+    private String type;
 
-    @Schema(description = "指标标签")
-    private Map<String, List<String>> tags;
+    @Schema(description = "策略名称")
+    private String name;
 
-    @Schema(description = "规则开关")
-    private Integer ruleSwitch;
+    @Schema(description = "策略规则 metricsId:rules")
+    private Map<Long, List<AlarmEngineRule>> rules;
 
-    @Schema(description = "告警级别")
-    private Integer level;
-
-    @Schema(description = "全部生效")
-    private Integer allEffect;
-
-    @Schema(description = "告警条件")
-    private String triggerCondition;
-
-    @Schema(description = "触发阈值")
-    private BigDecimal threshold;
-
-    @Schema(description = "静默时间")
-    private Integer silencePeriod;
-
-    @Schema(description = "连续触发次数")
-    private Integer consecutiveCount;
+    @Schema(description = "策略推送渠道")
+    private List<Long> notifyIdList;
 
 }

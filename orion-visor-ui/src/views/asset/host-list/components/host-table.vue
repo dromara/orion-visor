@@ -146,12 +146,14 @@
     <a-table v-model:selected-keys="selectedKeys"
              row-key="id"
              ref="tableRef"
+             class="table-resize"
              :loading="loading"
              :columns="tableColumns"
              :row-selection="rowSelection"
              :data="tableRenderData"
              :pagination="pagination"
              :bordered="false"
+             :column-resizable="true"
              @page-change="(page: number) => fetchTableData(page, pagination.pageSize)"
              @page-size-change="(size: number) => fetchTableData(1, size)">
       <!-- 主机信息 -->
@@ -275,7 +277,7 @@
                 <a-button v-for="type in record.types"
                           :key="type"
                           size="mini"
-                          @click="openNewRoute({ name: 'terminal', query: { connect: record.id, type} })">
+                          @click="openNewRoute({ name: 'terminal', query: { connect: record.id, type }})">
                   {{ type }}
                 </a-button>
               </a-space>

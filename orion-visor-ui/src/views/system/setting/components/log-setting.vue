@@ -9,11 +9,10 @@
             label-align="right"
             :auto-label-width="true">
       <!-- 执行详细日志 -->
-      <a-form-item field="log_execDetailLog"
-                   label="执行详细日志"
+      <a-form-item label="执行详细日志"
                    :rules="[{required: true, message: '请选择此项'}]"
                    hide-asterisk>
-        <a-switch v-model="setting.log_execDetailLog"
+        <a-switch v-model="setting['log.exec-detail.enabled']"
                   type="round"
                   checked-value="true"
                   unchecked-value="false"
@@ -24,11 +23,10 @@
         </template>
       </a-form-item>
       <!-- 最大显示行数 -->
-      <a-form-item field="log_webScrollLines"
-                   label="最大显示行数"
+      <a-form-item label="最大显示行数"
                    :rules="[{required: true, message: '请输入日志最大显示行数'}]"
                    hide-asterisk>
-        <a-input-number v-model="setting.log_webScrollLines"
+        <a-input-number v-model="setting['log.web-scroll-lines']"
                         class="input-wrapper"
                         :min="0"
                         :max="999999"
@@ -44,11 +42,10 @@
         </template>
       </a-form-item>
       <!-- 日志加载行数 -->
-      <a-form-item field="log_trackerLoadLines"
-                   label="日志加载行数"
+      <a-form-item label="日志加载行数"
                    :rules="[{required: true, message: '请输入日志加载行数'}]"
                    hide-asterisk>
-        <a-input-number v-model="setting.log_trackerLoadLines"
+        <a-input-number v-model="setting['log.tracker-load-lines']"
                         class="input-wrapper"
                         :min="0"
                         :max="99999"
@@ -64,11 +61,10 @@
         </template>
       </a-form-item>
       <!-- 日志监听间隔 -->
-      <a-form-item field="log_trackerLoadInterval"
-                   label="日志监听间隔"
+      <a-form-item label="日志监听间隔"
                    :rules="[{required: true, message: '请输入日志监听间隔'}]"
                    hide-asterisk>
-        <a-input-number v-model="setting.log_trackerLoadInterval"
+        <a-input-number v-model="setting['log.tracker-load-interval']"
                         class="input-wrapper"
                         :min="0"
                         :max="99999"
@@ -143,9 +139,9 @@
       const { data } = await getSystemSetting(SystemSettingTypes.LOG);
       setting.value = {
         ...data,
-        log_webScrollLines: toAnonymousNumber(data.log_webScrollLines),
-        log_trackerLoadInterval: toAnonymousNumber(data.log_trackerLoadInterval),
-        log_trackerLoadLines: toAnonymousNumber(data.log_trackerLoadLines),
+        'log.web-scroll-lines': toAnonymousNumber(data['log.web-scroll-lines']),
+        'log.tracker-load-interval': toAnonymousNumber(data['log.tracker-load-interval']),
+        'log.tracker-load-lines': toAnonymousNumber(data['log.tracker-load-lines']),
       };
     } catch (e) {
     } finally {
@@ -156,7 +152,4 @@
 </script>
 
 <style lang="less" scoped>
-  .input-wrapper {
-    width: 368px;
-  }
 </style>

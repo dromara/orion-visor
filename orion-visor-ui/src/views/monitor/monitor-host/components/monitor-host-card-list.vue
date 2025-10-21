@@ -270,43 +270,62 @@
             <!-- 修改 -->
             <a-doption v-if="record.agentInstallStatus === AgentInstallStatus.INSTALLED"
                        v-permission="['monitor:monitor-host:update']"
-                       type="text"
-                       size="mini"
                        @click="emits('openUpdate', record)">
               <span class="more-doption normal">修改配置</span>
             </a-doption>
             <!-- 复制 Key -->
-            <a-doption type="text"
-                       size="mini"
-                       @click="copy(record.agentKey)">
+            <a-doption @click="copy(record.agentKey)">
               <span class="more-doption normal">复制 Key</span>
             </a-doption>
             <!-- 安装探针 -->
             <a-doption v-permission="['asset:host:install-agent']"
                        :disabled="record.installLog?.status === AgentLogStatus.WAIT || record.installLog?.status === AgentLogStatus.RUNNING"
-                       type="text"
-                       size="mini"
                        @click="installAgent([record.hostId])">
               <span class="more-doption normal">安装探针</span>
             </a-doption>
             <!-- 安装成功 -->
             <a-doption v-if="record.installLog?.id && record.installLog?.status !== AgentLogStatus.SUCCESS"
                        v-permission="['asset:host:install-agent']"
-                       type="text"
-                       size="mini"
                        @click="setInstallSuccess(record.installLog)">
               <span class="more-doption normal">安装成功</span>
             </a-doption>
             <!-- 告警开关 -->
             <a-doption v-if="record.id"
                        v-permission="['monitor:monitor-host:update', 'monitor:monitor-host:update-switch']"
-                       type="text"
-                       size="mini"
                        @click="toggleAlarmSwitch(record)">
               <span class="more-doption normal">
                 {{ toggleDictValue(AlarmSwitchKey, record.alarmSwitch, 'label') + '告警' }}
               </span>
             </a-doption>
+            <!-- 连接终端 单协议连接 -->
+            <a-doption v-if="record.types?.length === 1"
+                       v-permission="['terminal:terminal:access']"
+                       @click="openNewRoute({ name: 'terminal', query: { connect: record.hostId, type: record.types[0] } })">
+                <span class="more-doption normal">
+                  连接终端
+                </span>
+            </a-doption>
+            <!-- 连接终端 多协议连接 -->
+            <a-popover v-if="(record.types?.length || 0) > 1"
+                       :title="undefined"
+                       position="left"
+                       :content-style="{ padding: '8px' }">
+              <a-doption v-permission="['terminal:terminal:access']">
+                  <span class="more-doption normal">
+                    连接终端
+                  </span>
+              </a-doption>
+              <template #content>
+                <a-space direction="vertical">
+                  <a-button v-for="type in record.types"
+                            :key="type"
+                            size="mini"
+                            @click="openNewRoute({ name: 'terminal', query: { connect: record.hostId, type }})">
+                    {{ type }}
+                  </a-button>
+                </a-space>
+              </template>
+            </a-popover>
           </template>
         </a-dropdown>
       </a-space>
@@ -333,6 +352,7 @@
   import { AgentInstallStatus, tagColor } from '@/views/asset/host-list/types/const';
   import { copy } from '@/hooks/copy';
   import { getFileSize } from '@/utils/file';
+  import { openNewRoute } from '@/router';
   import { getPercentProgressColor } from '@/utils/charts';
   import useMonitorHostList from '../types/use-monitor-host-list';
   import MonitorCell from './monitor-cell.vue';

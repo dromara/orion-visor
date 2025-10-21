@@ -26,6 +26,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import org.dromara.visor.common.entity.BaseQueryRequest;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 /**
@@ -45,6 +46,10 @@ public class AlarmPolicyQueryRequest extends BaseQueryRequest {
 
     @Schema(description = "id")
     private Long id;
+
+    @NotBlank
+    @Schema(description = "策略类型")
+    private String type;
 
     @Size(max = 64)
     @Schema(description = "策略名称")

@@ -25,7 +25,8 @@ export interface AlarmEventFalseAlarmRequest {
  */
 export interface AlarmEventQueryRequest extends Pagination, OrderDirection {
   id?: number;
-  hostId?: number;
+  sourceType?: string;
+  sourceId?: number;
   agentKey?: string;
   policyId?: number;
   metricsId?: number;
@@ -49,7 +50,9 @@ export interface AlarmEventClearRequest extends AlarmEventQueryRequest, ClearReq
  */
 export interface AlarmEventQueryResponse extends TableData {
   id: number;
-  hostId: number;
+  sourceType: string;
+  sourceId: number;
+  sourceInfo: Record<string, any>;
   hostName: string;
   hostAddress: string;
   agentKey: string;
