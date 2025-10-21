@@ -1,6 +1,7 @@
 -- 默认管理员账号
 -- 账号: admin 密码: admin
-INSERT INTO `system_user` VALUES (1, 'admin', 'c3284d0f94606de1fd2af172aba15bf3', '管理员', NULL, NULL, NULL, 1, 1, 'NEW', NULL, NULL, NULL, NOW(), NOW(), 'admin', 'admin', 0);
+INSERT INTO `system_user` (id, username, password, nickname, avatar, mobile, email, status, update_password_status, update_password_reason, update_password_time, last_login_time, description, create_time, update_time, creator, updater, deleted)
+VALUES (1, 'admin', 'c3284d0f94606de1fd2af172aba15bf3', '管理员', NULL, NULL, NULL, 1, 1, 'NEW', NULL, NULL, null, NOW(), NOW(), 'admin', 'admin', 0);
 
 -- 角色配置
 INSERT INTO `system_role` VALUES (1, '管理员', 'admin', 1, NULL, NOW(), NOW(), 'admin', 'admin', 0);
@@ -9,29 +10,29 @@ INSERT INTO `system_role` VALUES (1, '管理员', 'admin', 1, NULL, NOW(), NOW()
 INSERT INTO `system_user_role` VALUES (1, 1, 1, NOW(), NOW(), 'admin', 'admin', 0);
 
 -- 系统设置
-INSERT INTO `system_setting` VALUES (6, 'sftp', 'sftp_previewSize', '2', '2025-02-10 22:19:46', '2025-02-10 22:19:46', 'admin', 'admin', 0);
-INSERT INTO `system_setting` VALUES (7, 'sftp', 'sftp_uploadPresentBackup', 'true', '2025-02-10 22:19:46', '2025-02-10 22:19:46', 'admin', 'admin', 0);
-INSERT INTO `system_setting` VALUES (8, 'sftp', 'sftp_uploadBackupFileName', 'bk_${fileName}_${timestamp}', '2025-02-10 22:19:46', '2025-02-10 22:19:46', 'admin', 'admin', 0);
-INSERT INTO `system_setting` VALUES (9, 'login', 'login_loginSessionTime', '1440', '2025-02-10 22:20:59', '2025-02-10 22:20:59', 'admin', 'admin', 0);
-INSERT INTO `system_setting` VALUES (10, 'login', 'login_maxRefreshCount', '3', '2025-02-10 22:20:59', '2025-02-10 22:20:59', 'admin', 'admin', 0);
-INSERT INTO `system_setting` VALUES (11, 'login', 'login_refreshInterval', '480', '2025-02-10 22:20:59', '2025-02-10 22:20:59', 'admin', 'admin', 0);
-INSERT INTO `system_setting` VALUES (12, 'login', 'login_loginFailedLockThreshold', '5', '2025-02-10 22:20:59', '2025-02-10 22:20:59', 'admin', 'admin', 0);
-INSERT INTO `system_setting` VALUES (13, 'login', 'login_loginFailedLockTime', '30', '2025-02-10 22:20:59', '2025-02-10 22:20:59', 'admin', 'admin', 0);
-INSERT INTO `system_setting` VALUES (14, 'login', 'login_loginFailedSendThreshold', '5', '2025-02-10 22:20:59', '2025-02-10 22:20:59', 'admin', 'admin', 0);
-INSERT INTO `system_setting` VALUES (15, 'login', 'login_allowMultiDevice', 'true', '2025-02-10 22:20:59', '2025-02-10 22:20:59', 'admin', 'admin', 0);
-INSERT INTO `system_setting` VALUES (16, 'login', 'login_allowRefresh', 'true', '2025-02-10 22:20:59', '2025-02-10 22:20:59', 'admin', 'admin', 0);
-INSERT INTO `system_setting` VALUES (17, 'login', 'login_loginFailedLock', 'true', '2025-02-10 22:20:59', '2025-02-10 22:20:59', 'admin', 'admin', 0);
-INSERT INTO `system_setting` VALUES (18, 'login', 'login_loginFailedSend', 'true', '2025-02-10 22:20:59', '2025-02-10 22:20:59', 'admin', 'admin', 0);
-INSERT INTO `system_setting` VALUES (21, 'encrypt', 'encrypt_publicKey', 'MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC6++dxyeNdij6ZfM2I9ojLQ1tzmqyuL3rkectm9uXJsXOFiN0aFi4glsoGVZO5hMH5/pppdSQnYz3rSV9b0qjFTRMv5u1BHHzuzoOkI43WqXCX96f8diHIZsEu9fZ+AkxVck/kDPfmR2dVjwo8ZBuJ7drsP8fDbs8N3vtEwPSotwIDAQAB', '2025-02-10 22:21:11', '2025-02-10 22:21:11', 'admin', 'admin', 0);
-INSERT INTO `system_setting` VALUES (22, 'encrypt', 'encrypt_privateKey', 'MIICdwIBADANBgkqhkiG9w0BAQEFAASCAmEwggJdAgEAAoGBALr753HJ412KPpl8zYj2iMtDW3OarK4veuR5y2b25cmxc4WI3RoWLiCWygZVk7mEwfn+mml1JCdjPetJX1vSqMVNEy/m7UEcfO7Og6QjjdapcJf3p/x2IchmwS719n4CTFVyT+QM9+ZHZ1WPCjxkG4nt2uw/x8Nuzw3e+0TA9Ki3AgMBAAECgYA+sD3ENH952ONr6h+uj5kFLKv4ch76twhomTzMZHJd0JR+bIhUOqN0YZmRzhcc15mBCw8R1Cgu3GLiA1NpIZNbH6ujsGzwOGn9E+1TIgRAfgOV1JmMIJ4sVa2zb5+seZ4TkU2MfpKjToa/cX1kovoiNR8gPV+HCE8HUBXgOziF4QJBAOf2LGTjjKSag8WBQjgy2OCi6l0260jGSCGBJYCG884feeH/msTbTdvo44iYyd3P9txxBmmnpdJLvPgJWCu01q0CQQDOXH8yPkSCBL+ZvFizBHayhoO0FN/YFyrYf1wewt43mCDHbx4fzwXtc2CLrSt+nqgwTA4M73Sf2DAOW9pk9T1zAkBIT1d7g+v+DCTz1t2bw04UiPTiZhJmt1kZCLd2H5u1L97A8vt+Tpcw7KKxnF+hhAkCo0FKgnaQ3gdkkxUnWtJpAkEAoA4v/bk8C5hBP61NIrRQmBEq767NG16Etdy6h4VfM8GDkwvFUqiQkWZOuKc8t/24t5UVxMSpMR1N0KU/k9R+rwJBALjw7SzSeqWV2VLUZVqtWPu9nZvX79SWZWMp0gtmYYgzKa1dttzdJsXY5i/cfKH6RO2hwicO1rVBpiZ5zMggljo=', '2025-02-10 22:21:11', '2025-02-10 22:21:11', 'admin', 'admin', 0);
-INSERT INTO `system_setting` VALUES (23, 'log', 'log_webScrollLines', '1500', '2025-02-10 22:21:54', '2025-02-10 22:21:54', 'admin', 'admin', 0);
-INSERT INTO `system_setting` VALUES (24, 'log', 'log_trackerLoadInterval', '100', '2025-02-10 22:21:54', '2025-02-10 22:21:54', 'admin', 'admin', 0);
-INSERT INTO `system_setting` VALUES (25, 'log', 'log_trackerLoadLines', '300', '2025-02-10 22:21:54', '2025-02-10 22:21:54', 'admin', 'admin', 0);
-INSERT INTO `system_setting` VALUES (26, 'log', 'log_execDetailLog', 'true', '2025-02-10 22:21:54', '2025-02-10 22:21:54', 'admin', 'admin', 0);
-INSERT INTO `system_setting` VALUES (27, 'autoClear', 'autoClear_execLogKeepDays', '30', '2025-02-10 22:22:00', '2025-02-10 22:22:00', 'admin', 'admin', 0);
-INSERT INTO `system_setting` VALUES (28, 'autoClear', 'autoClear_terminalLogKeepDays', '30', '2025-02-10 22:22:00', '2025-02-10 22:22:00', 'admin', 'admin', 0);
-INSERT INTO `system_setting` VALUES (29, 'autoClear', 'autoClear_execLogEnabled', 'true', '2025-02-10 22:22:00', '2025-02-10 22:22:00', 'admin', 'admin', 0);
-INSERT INTO `system_setting` VALUES (30, 'autoClear', 'autoClear_terminalLogEnabled', 'true', '2025-02-10 22:22:00', '2025-02-10 22:22:00', 'admin', 'admin', 0);
+INSERT INTO `system_setting` VALUES (6, 'sftp', 'sftp.preview-size', '2', '2025-02-10 22:19:46', '2025-02-10 22:19:46', 'admin', 'admin', 0);
+INSERT INTO `system_setting` VALUES (7, 'sftp', 'sftp.upload-present-backup', 'true', '2025-02-10 22:19:46', '2025-02-10 22:19:46', 'admin', 'admin', 0);
+INSERT INTO `system_setting` VALUES (8, 'sftp', 'sftp.upload-backup-file-name', 'bk_${fileName}_${timestamp}', '2025-02-10 22:19:46', '2025-02-10 22:19:46', 'admin', 'admin', 0);
+INSERT INTO `system_setting` VALUES (9, 'login', 'login.login-session-time', '1440', '2025-02-10 22:20:59', '2025-02-10 22:20:59', 'admin', 'admin', 0);
+INSERT INTO `system_setting` VALUES (10, 'login', 'login.max-refresh-count', '3', '2025-02-10 22:20:59', '2025-02-10 22:20:59', 'admin', 'admin', 0);
+INSERT INTO `system_setting` VALUES (11, 'login', 'login.refresh-interval', '480', '2025-02-10 22:20:59', '2025-02-10 22:20:59', 'admin', 'admin', 0);
+INSERT INTO `system_setting` VALUES (12, 'login', 'login.login-failed-lock-threshold', '5', '2025-02-10 22:20:59', '2025-02-10 22:20:59', 'admin', 'admin', 0);
+INSERT INTO `system_setting` VALUES (13, 'login', 'login.login-failed-lock-time', '30', '2025-02-10 22:20:59', '2025-02-10 22:20:59', 'admin', 'admin', 0);
+INSERT INTO `system_setting` VALUES (14, 'login', 'login.login-failed-send-threshold', '5', '2025-02-10 22:20:59', '2025-02-10 22:20:59', 'admin', 'admin', 0);
+INSERT INTO `system_setting` VALUES (15, 'login', 'login.allow-multi-device', 'true', '2025-02-10 22:20:59', '2025-02-10 22:20:59', 'admin', 'admin', 0);
+INSERT INTO `system_setting` VALUES (16, 'login', 'login.allow-refresh', 'true', '2025-02-10 22:20:59', '2025-02-10 22:20:59', 'admin', 'admin', 0);
+INSERT INTO `system_setting` VALUES (17, 'login', 'login.login-failed-lock', 'true', '2025-02-10 22:20:59', '2025-02-10 22:20:59', 'admin', 'admin', 0);
+INSERT INTO `system_setting` VALUES (18, 'login', 'login.login-failed-send', 'true', '2025-02-10 22:20:59', '2025-02-10 22:20:59', 'admin', 'admin', 0);
+INSERT INTO `system_setting` VALUES (21, 'encrypt', 'encrypt.public-key', 'MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC6++dxyeNdij6ZfM2I9ojLQ1tzmqyuL3rkectm9uXJsXOFiN0aFi4glsoGVZO5hMH5/pppdSQnYz3rSV9b0qjFTRMv5u1BHHzuzoOkI43WqXCX96f8diHIZsEu9fZ+AkxVck/kDPfmR2dVjwo8ZBuJ7drsP8fDbs8N3vtEwPSotwIDAQAB', '2025-02-10 22:21:11', '2025-02-10 22:21:11', 'admin', 'admin', 0);
+INSERT INTO `system_setting` VALUES (22, 'encrypt', 'encrypt.private-key', 'MIICdwIBADANBgkqhkiG9w0BAQEFAASCAmEwggJdAgEAAoGBALr753HJ412KPpl8zYj2iMtDW3OarK4veuR5y2b25cmxc4WI3RoWLiCWygZVk7mEwfn+mml1JCdjPetJX1vSqMVNEy/m7UEcfO7Og6QjjdapcJf3p/x2IchmwS719n4CTFVyT+QM9+ZHZ1WPCjxkG4nt2uw/x8Nuzw3e+0TA9Ki3AgMBAAECgYA+sD3ENH952ONr6h+uj5kFLKv4ch76twhomTzMZHJd0JR+bIhUOqN0YZmRzhcc15mBCw8R1Cgu3GLiA1NpIZNbH6ujsGzwOGn9E+1TIgRAfgOV1JmMIJ4sVa2zb5+seZ4TkU2MfpKjToa/cX1kovoiNR8gPV+HCE8HUBXgOziF4QJBAOf2LGTjjKSag8WBQjgy2OCi6l0260jGSCGBJYCG884feeH/msTbTdvo44iYyd3P9txxBmmnpdJLvPgJWCu01q0CQQDOXH8yPkSCBL+ZvFizBHayhoO0FN/YFyrYf1wewt43mCDHbx4fzwXtc2CLrSt+nqgwTA4M73Sf2DAOW9pk9T1zAkBIT1d7g+v+DCTz1t2bw04UiPTiZhJmt1kZCLd2H5u1L97A8vt+Tpcw7KKxnF+hhAkCo0FKgnaQ3gdkkxUnWtJpAkEAoA4v/bk8C5hBP61NIrRQmBEq767NG16Etdy6h4VfM8GDkwvFUqiQkWZOuKc8t/24t5UVxMSpMR1N0KU/k9R+rwJBALjw7SzSeqWV2VLUZVqtWPu9nZvX79SWZWMp0gtmYYgzKa1dttzdJsXY5i/cfKH6RO2hwicO1rVBpiZ5zMggljo=', '2025-02-10 22:21:11', '2025-02-10 22:21:11', 'admin', 'admin', 0);
+INSERT INTO `system_setting` VALUES (23, 'log', 'log.web-scroll-lines', '1500', '2025-02-10 22:21:54', '2025-02-10 22:21:54', 'admin', 'admin', 0);
+INSERT INTO `system_setting` VALUES (24, 'log', 'log.tracker-load-interval', '100', '2025-02-10 22:21:54', '2025-02-10 22:21:54', 'admin', 'admin', 0);
+INSERT INTO `system_setting` VALUES (25, 'log', 'log.tracker-load-lines', '300', '2025-02-10 22:21:54', '2025-02-10 22:21:54', 'admin', 'admin', 0);
+INSERT INTO `system_setting` VALUES (26, 'log', 'log.exec-detail.enabled', 'true', '2025-02-10 22:21:54', '2025-02-10 22:21:54', 'admin', 'admin', 0);
+INSERT INTO `system_setting` VALUES (27, 'auto-clear', 'auto-clear.exec-log.keep-days', '30', '2025-02-10 22:22:00', '2025-02-10 22:22:00', 'admin', 'admin', 0);
+INSERT INTO `system_setting` VALUES (28, 'auto-clear', 'auto-clear.terminal-log.keep-days', '30', '2025-02-10 22:22:00', '2025-02-10 22:22:00', 'admin', 'admin', 0);
+INSERT INTO `system_setting` VALUES (29, 'auto-clear', 'auto-clear.exec-log.enabled', 'true', '2025-02-10 22:22:00', '2025-02-10 22:22:00', 'admin', 'admin', 0);
+INSERT INTO `system_setting` VALUES (30, 'auto-clear', 'auto-clear.terminal-log.enabled', 'true', '2025-02-10 22:22:00', '2025-02-10 22:22:00', 'admin', 'admin', 0);
 
 -- 监控指标
 INSERT INTO `monitor_metrics` VALUES (1, 'CPU用户利用率', 'cpu', 'cpu_user_seconds_total', 'PER', NULL, '用户态使用时间', '2025-08-12 23:51:16', '2025-09-06 17:09:02', 'admin', 'admin', 0);
@@ -146,6 +147,8 @@ INSERT INTO `dict_key` VALUES (89, 'alarmLevel', 'INTEGER', '[{\"name\": \"level
 INSERT INTO `dict_key` VALUES (90, 'alarmEventHandleStatus', 'STRING', '[{\"name\": \"color\", \"type\": \"STRING\"}]', '告警事件处理状态', '2025-09-17 16:20:03', '2025-10-07 08:15:15', 'admin', 'admin', 0);
 INSERT INTO `dict_key` VALUES (92, 'falseAlarm', 'INTEGER', '[]', '是否为误报', '2025-09-17 16:20:03', '2025-09-17 16:20:03', 'admin', 'admin', 0);
 INSERT INTO `dict_key` VALUES (95, 'metricsChartUnit', 'STRING', '[]', '指标图表单位', '2025-10-05 01:56:57', '2025-10-05 02:01:28', 'admin', 'admin', 0);
+INSERT INTO `dict_key` VALUES (99, 'alarmPolicyType', 'STRING', '[]', '告警策略类型', '2025-10-13 21:23:35', '2025-10-13 21:23:35', 'admin', 'admin', 0);
+INSERT INTO `dict_key` VALUES (101, 'monitorSourceType', 'STRING', '[]', '监控数据来源', '2025-10-19 22:18:01', '2025-10-19 22:18:01', 'admin', 'admin', 0);
 
 -- 字典值
 INSERT INTO `dict_value` VALUES (3, 4, 'systemMenuType', '1', '父菜单', '{}', 10, '2023-10-26 15:58:59', '2023-10-26 15:58:59', 'admin', 'admin', 0);
@@ -218,7 +221,7 @@ INSERT INTO `dict_value` VALUES (102, 15, 'operatorLogResult', '1', '成功', '{
 INSERT INTO `dict_value` VALUES (103, 16, 'operatorRiskLevel', 'L', '低风险', '{\"color\": \"arcoblue\"}', 10, '2023-11-01 16:04:10', '2023-11-01 16:04:10', 'admin', 'admin', 0);
 INSERT INTO `dict_value` VALUES (104, 16, 'operatorRiskLevel', 'M', '中风险', '{\"color\": \"orangered\"}', 20, '2023-11-01 16:04:24', '2023-11-01 16:04:24', 'admin', 'admin', 0);
 INSERT INTO `dict_value` VALUES (105, 16, 'operatorRiskLevel', 'H', '高风险', '{\"color\": \"red\"}', 30, '2023-11-01 16:04:41', '2023-11-01 16:04:41', 'admin', 'admin', 0);
-INSERT INTO `dict_value` VALUES (106, 2, 'operatorLogType', 'system-user:offline', '下线用户会话', '{}', 10, '2023-11-02 11:32:39', '2023-11-02 11:32:39', 'admin', 'admin', 0);
+INSERT INTO `dict_value` VALUES (106, 2, 'operatorLogType', 'system-user:offline', '下线用户会话', '{}', 70, '2023-11-02 11:32:39', '2025-10-08 22:35:35', 'admin', 'admin', 0);
 INSERT INTO `dict_value` VALUES (107, 1, 'operatorLogModule', 'asset:host-group', '主机分组', '{}', 2040, '2023-11-13 18:26:13', '2024-04-11 23:34:46', 'admin', 'admin', 0);
 INSERT INTO `dict_value` VALUES (108, 2, 'operatorLogType', 'host-group:create', '创建主机分组', '{}', 10, '2023-11-13 18:27:05', '2023-11-13 18:27:28', 'admin', 'admin', 0);
 INSERT INTO `dict_value` VALUES (109, 2, 'operatorLogType', 'host-group:rename', '重命名主机分组', '{}', 20, '2023-11-13 18:27:51', '2023-11-13 18:27:51', 'admin', 'admin', 0);
@@ -593,6 +596,9 @@ INSERT INTO `dict_value` VALUES (634, 95, 'metricsChartUnit', 's', '秒', '{}', 
 INSERT INTO `dict_value` VALUES (635, 95, 'metricsChartUnit', 'm', '分钟', '{}', 20, '2025-10-05 01:58:08', '2025-10-07 00:53:09', 'admin', 'admin', 0);
 INSERT INTO `dict_value` VALUES (636, 95, 'metricsChartUnit', 'h', '小时', '{}', 30, '2025-10-05 01:58:22', '2025-10-07 00:53:05', 'admin', 'admin', 0);
 INSERT INTO `dict_value` VALUES (637, 95, 'metricsChartUnit', 'd', '天', '{}', 40, '2025-10-05 01:59:03', '2025-10-07 00:52:59', 'admin', 'admin', 0);
+INSERT INTO `dict_value` VALUES (663, 99, 'alarmPolicyType', 'HOST', '主机告警', '{}', 10, '2025-10-13 21:23:58', '2025-10-13 21:23:58', 'admin', 'admin', 0);
+INSERT INTO `dict_value` VALUES (672, 101, 'monitorSourceType', 'HOST', '主机数据', '{}', 10, '2025-10-19 22:18:19', '2025-10-19 22:18:19', 'admin', 'admin', 0);
+INSERT INTO `dict_value` VALUES (673, 101, 'monitorSourceType', 'UPTIME', '拨测数据', '{}', 20, '2025-10-19 22:18:37', '2025-10-19 22:18:37', 'admin', 'admin', 0);
 
 -- 菜单配置
 INSERT INTO `system_menu` VALUES (1, 0, '工作台', NULL, 1, 10, 1, 1, 1, 0, 'IconComputer', NULL, 'workplace', '2023-07-28 10:51:50', '2024-08-11 00:05:44', 'admin', 'admin', 0);
@@ -726,20 +732,20 @@ INSERT INTO `system_menu` VALUES (290, 288, '修改监控主机', 'monitor:monit
 INSERT INTO `system_menu` VALUES (292, 288, '修改告警开关', 'monitor:monitor-host:update-switch', 3, 30, 1, 1, 1, 0, NULL, NULL, NULL, '2025-08-23 17:02:02', '2025-08-23 17:04:31', 'admin', 'admin', 0);
 INSERT INTO `system_menu` VALUES (293, 64, '安装探针', 'asset:host:install-agent', 3, 110, 1, 1, 1, 0, NULL, NULL, NULL, '2025-08-31 20:18:14', '2025-08-31 20:18:14', 'admin', 'admin', 0);
 INSERT INTO `system_menu` VALUES (294, 282, '主机监控详情', NULL, 2, 31, 0, 1, 1, 0, 'IconComputer', '', 'monitorDetail', '2025-09-03 23:03:20', '2025-09-28 08:23:15', 'admin', 'admin', 0);
-INSERT INTO `system_menu` VALUES (295, 12, '通知模板', NULL, 2, 40, 1, 1, 1, 0, 'IconEmail', NULL, 'notifyTemplate', '2025-09-13 13:35:07', '2025-09-21 08:08:13', 'admin', 'admin', 0);
+INSERT INTO `system_menu` VALUES (295, 12, '通知模板', NULL, 2, 40, 1, 1, 1, 0, 'IconEmail', NULL, 'notifyTemplate', '2025-09-13 13:35:07', '2025-10-08 22:21:18', 'admin', 'admin', 0);
 INSERT INTO `system_menu` VALUES (296, 295, '查询通知模板', 'infra:notify-template:query', 3, 10, 1, 1, 1, 0, NULL, NULL, NULL, '2025-09-13 13:35:07', '2025-09-21 08:09:02', 'admin', 'admin', 0);
 INSERT INTO `system_menu` VALUES (297, 295, '创建通知模板', 'infra:notify-template:create', 3, 20, 1, 1, 1, 0, NULL, NULL, NULL, '2025-09-13 13:35:07', '2025-09-21 08:09:05', 'admin', 'admin', 0);
 INSERT INTO `system_menu` VALUES (298, 295, '修改通知模板', 'infra:notify-template:update', 3, 30, 1, 1, 1, 0, NULL, NULL, NULL, '2025-09-13 13:35:07', '2025-09-21 08:09:08', 'admin', 'admin', 0);
 INSERT INTO `system_menu` VALUES (299, 295, '删除通知模板', 'infra:notify-template:delete', 3, 40, 1, 1, 1, 0, NULL, NULL, NULL, '2025-09-13 13:35:07', '2025-09-21 08:09:12', 'admin', 'admin', 0);
-INSERT INTO `system_menu` VALUES (300, 282, '告警策略', NULL, 2, 40, 1, 1, 1, 0, 'IconExperiment', NULL, 'alarmPolicy', '2025-09-13 16:13:36', '2025-09-28 08:23:15', 'admin', 'admin', 0);
+INSERT INTO `system_menu` VALUES (300, 282, '告警策略', NULL, 2, 60, 1, 1, 1, 0, 'IconExperiment', NULL, 'alarmPolicy', '2025-09-13 16:13:36', '2025-10-15 13:14:23', 'admin', 'admin', 0);
 INSERT INTO `system_menu` VALUES (301, 300, '查询告警策略', 'monitor:alarm-policy:query', 3, 10, 1, 1, 1, 0, NULL, NULL, NULL, '2025-09-13 16:13:36', '2025-09-13 17:10:59', 'admin', 'admin', 0);
 INSERT INTO `system_menu` VALUES (302, 300, '创建告警策略', 'monitor:alarm-policy:create', 3, 20, 1, 1, 1, 0, NULL, NULL, NULL, '2025-09-13 16:13:36', '2025-09-13 17:10:53', 'admin', 'admin', 0);
 INSERT INTO `system_menu` VALUES (303, 300, '修改告警策略', 'monitor:alarm-policy:update', 3, 30, 1, 1, 1, 0, NULL, NULL, NULL, '2025-09-13 16:13:36', '2025-09-13 17:10:48', 'admin', 'admin', 0);
 INSERT INTO `system_menu` VALUES (304, 300, '复制告警策略', 'monitor:alarm-policy:copy', 3, 40, 1, 1, 1, 0, NULL, NULL, NULL, '2025-09-13 16:13:36', '2025-09-13 17:10:08', 'admin', 'admin', 0);
 INSERT INTO `system_menu` VALUES (305, 300, '删除告警策略', 'monitor:alarm-policy:delete', 3, 50, 1, 1, 1, 0, NULL, NULL, NULL, '2025-09-13 16:13:36', '2025-09-13 17:10:41', 'admin', 'admin', 0);
 INSERT INTO `system_menu` VALUES (306, 300, '修改告警规则', 'monitor:alarm-policy:update-rule', 3, 60, 1, 1, 1, 0, NULL, NULL, NULL, '2025-09-14 14:34:25', '2025-09-14 14:34:25', 'admin', 'admin', 0);
-INSERT INTO `system_menu` VALUES (307, 282, '告警规则', NULL, 2, 41, 0, 1, 1, 0, 'IconExperiment', NULL, 'alarmRule', '2025-09-15 00:01:55', '2025-09-28 08:23:15', 'admin', 'admin', 0);
-INSERT INTO `system_menu` VALUES (308, 282, '告警事件', NULL, 2, 50, 1, 1, 1, 0, 'IconNotification', NULL, 'alarmEvent', '2025-09-17 16:06:34', '2025-10-07 08:14:48', 'admin', 'admin', 0);
+INSERT INTO `system_menu` VALUES (307, 282, '告警规则', NULL, 2, 61, 0, 1, 1, 0, 'IconExperiment', NULL, 'alarmRule', '2025-09-15 00:01:55', '2025-10-15 13:14:26', 'admin', 'admin', 0);
+INSERT INTO `system_menu` VALUES (308, 282, '主机告警事件', NULL, 2, 70, 1, 1, 1, 0, 'IconNotification', NULL, 'alarmEvent', '2025-09-17 16:06:34', '2025-10-19 23:55:25', 'admin', 'admin', 0);
 INSERT INTO `system_menu` VALUES (309, 308, '查询告警事件', 'monitor:alarm-event:query', 3, 10, 1, 1, 1, 0, NULL, NULL, NULL, '2025-09-17 16:06:34', '2025-10-07 08:14:48', 'admin', 'admin', 0);
 INSERT INTO `system_menu` VALUES (310, 308, '处理告警事件', 'monitor:alarm-event:handle', 3, 20, 1, 1, 1, 0, NULL, NULL, NULL, '2025-09-17 16:06:34', '2025-10-07 08:14:48', 'admin', 'admin', 0);
 INSERT INTO `system_menu` VALUES (311, 308, '删除告警事件', 'monitor:alarm-event:delete', 3, 30, 1, 1, 1, 0, NULL, NULL, NULL, '2025-09-17 16:06:34', '2025-10-07 08:14:48', 'admin', 'admin', 0);
