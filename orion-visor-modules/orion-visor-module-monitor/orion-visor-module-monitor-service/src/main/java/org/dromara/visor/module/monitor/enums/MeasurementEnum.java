@@ -23,9 +23,9 @@
 package org.dromara.visor.module.monitor.enums;
 
 import lombok.Getter;
-import org.apache.commons.collections4.map.HashedMap;
 import org.dromara.visor.module.monitor.constant.MetricsConst;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -129,7 +129,7 @@ public enum MeasurementEnum {
     MeasurementEnum(String measurement, boolean hasTags, Consumer<BiConsumer<String, Class<?>>> register) {
         this.measurement = measurement;
         this.hasTags = hasTags;
-        this.fields = new HashedMap<>();
+        this.fields = new HashMap<>();
         register.accept(this.fields::put);
     }
 
