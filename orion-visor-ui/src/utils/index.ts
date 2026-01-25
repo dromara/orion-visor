@@ -78,7 +78,7 @@ export function dateFormat(date = new Date(), pattern = YMD_HMS) {
     let reg = new RegExp('(' + k + ')');
     if (reg.test(pattern)) {
       const match = reg.exec(pattern)![1];
-      let value = o[k as keyof typeof o];
+      const value = o[k as keyof typeof o];
       pattern = pattern.replace(match, match.length === 1 ? String(value) : ('00' + value).slice(-match.length));
     }
   }
