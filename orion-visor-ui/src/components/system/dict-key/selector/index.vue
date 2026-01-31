@@ -6,7 +6,22 @@
             :disabled="loading"
             :filter-option="labelFilter"
             :allow-create="allowCreate"
-            placeholder="请选择配置项" />
+            placeholder="请选择配置项">
+    <!-- label -->
+    <template #label="{ data }">
+      <span class="option-wrapper">
+        <span class="label">{{ data.label }}</span>
+        <span class="code">{{ data.value }}</span>
+      </span>
+    </template>
+    <!-- 选项 -->
+    <template #option="{ data }">
+      <span class="option-wrapper">
+        <span class="label">{{ data.label }}</span>
+        <span class="code">{{ data.value }}</span>
+      </span>
+    </template>
+  </a-select>
 </template>
 
 <script lang="ts">
@@ -82,5 +97,18 @@
 </script>
 
 <style lang="less" scoped>
+  .option-wrapper {
+    display: flex;
+    align-items: center;
+    width: 100%;
 
+    .label {
+      margin-right: 8px;
+    }
+
+    .code {
+      font-size: 12px;
+      color: var(--color-text-3);
+    }
+  }
 </style>
