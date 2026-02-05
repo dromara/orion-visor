@@ -73,6 +73,8 @@
       // 清空
       handlerClear();
       return true;
+    } catch (e) {
+      return false;
     } finally {
       setLoading(false);
     }
