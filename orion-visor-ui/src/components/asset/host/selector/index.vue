@@ -4,7 +4,8 @@
             :loading="loading"
             :multiple="multiple"
             placeholder="请选择主机"
-            allow-clear />
+            allow-clear
+            allow-search />
 </template>
 
 <script lang="ts">
