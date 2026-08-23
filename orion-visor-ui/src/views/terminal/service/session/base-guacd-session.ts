@@ -11,6 +11,8 @@ import type { OutputPayload } from '@/views/terminal/types/protocol';
 import { InputProtocol } from '@/views/terminal/types/protocol';
 import { TerminalCloseCode, TerminalMessages } from '@/views/terminal/types/const';
 import { screenshot } from '@/views/terminal/types/utils';
+import { getSystemSetting } from '@/api/system/setting';
+import { SystemSettingTypes } from '@/views/system/setting/types/const';
 import Guacamole from 'guacamole-common-js';
 import BaseSession from './base-session';
 import GuacdSessionClipboardHandler from '../handler/guacd-session-clipboard-handler';
@@ -181,7 +183,22 @@ export default abstract class BaseGuacdSession extends BaseSession<GuacdReactive
 
   // 截屏
   async screenshot() {
-    await screenshot(this.client?.getDisplay()?.getElement() as HTMLElement);
+    const option = await this.loadWatermarkOption();
+    await screenshot(this.client?.getDisplay()?.getElement() as HTMLElement, option);
+  }
+
+  // 加载终端水印配置
+  private async loadWatermarkOption() {
+    try {
+      const { data } = await getSystemSetting(SystemSettingTypes.WATERMARK);
+      return {
+        enabled: data['watermark.terminal.enabled'] !== 'false',
+        fontSize: Number(data['watermark.terminal.font-size']) || 14,
+        alpha: Number(data['watermark.terminal.alpha']) || 0.1,
+      };
+    } catch (e) {
+      return { enabled: true, fontSize: 14, alpha: 0.1 };
+    }
   }
 
   // 断开连接

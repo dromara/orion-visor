@@ -35,6 +35,12 @@
                   title="自动清理">
         <auto-clear-setting />
       </a-tab-pane>
+      <!-- 水印设置 -->
+      <a-tab-pane v-permission="['infra:system-setting:update']"
+                  key="watermark"
+                  title="水印设置">
+        <watermark-setting />
+      </a-tab-pane>
       <!-- 关于 -->
       <a-tab-pane key="about" title="关于">
         <about-setting />
@@ -58,6 +64,7 @@
   import EncryptSetting from './components/encrypt-setting.vue';
   import LogSetting from './components/log-setting.vue';
   import AutoClearSetting from './components/auto-clear-setting.vue';
+  import WatermarkSetting from './components/watermark-setting.vue';
   import AboutSetting from './components/about-setting.vue';
 
   const route = useRoute();

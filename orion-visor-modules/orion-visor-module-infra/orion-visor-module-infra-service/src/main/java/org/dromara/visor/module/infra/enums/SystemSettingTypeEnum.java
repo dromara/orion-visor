@@ -61,6 +61,11 @@ public enum SystemSettingTypeEnum {
      */
     AUTO_CLEAR("autoClear"),
 
+    /**
+     * 水印设置
+     */
+    WATERMARK("watermark"),
+
     ;
 
     private final String type;

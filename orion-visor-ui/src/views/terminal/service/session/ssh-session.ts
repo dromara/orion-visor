@@ -18,6 +18,8 @@ import { WebglAddon } from '@xterm/addon-webgl';
 import { playBell } from '@/utils/bell';
 import { addEventListen } from '@/utils/event';
 import { screenshot } from '@/views/terminal/types/utils';
+import { getSystemSetting } from '@/api/system/setting';
+import { SystemSettingTypes } from '@/views/system/setting/types/const';
 import BaseSession from './base-session';
 import SshChannel from '../channel/ssh-channel';
 import SshSessionHandler from '../handler/ssh-session-handler';
@@ -260,7 +262,22 @@ export default class SshSession extends BaseSession<ReactiveSessionState, ISshCh
 
   // 截屏
   async screenshot() {
-    await screenshot(this.inst.element as HTMLElement);
+    const option = await this.loadWatermarkOption();
+    await screenshot(this.inst.element as HTMLElement, option);
+  }
+
+  // 加载终端水印配置
+  private async loadWatermarkOption() {
+    try {
+      const { data } = await getSystemSetting(SystemSettingTypes.WATERMARK);
+      return {
+        enabled: data['watermark.terminal.enabled'] !== 'false',
+        fontSize: Number(data['watermark.terminal.font-size']) || 14,
+        alpha: Number(data['watermark.terminal.alpha']) || 0.1,
+      };
+    } catch (e) {
+      return { enabled: true, fontSize: 14, alpha: 0.1 };
+    }
   }
 
   // 查找
