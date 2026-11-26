@@ -1,16 +1,15 @@
-FROM --platform=$TARGETPLATFORM nginx:alpine
+FROM --platform=$TARGETPLATFORM nginx:1.31.10
 
 # 系统时区
 ARG TZ=Asia/Shanghai
 
-# 添加包 & 设置时区
+# 设置时区 & 清理默认配置
 RUN \
-  sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories && \
-  apk update && \
-  apk add --no-cache tzdata && \
+  apt-get update && \
+  DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends tzdata && \
   ln -sf /usr/share/zoneinfo/${TZ} /etc/localtime && \
   echo "${TZ}" > /etc/timezone && \
-  rm -rf /var/cache/apk/* && \
+  rm -rf /var/lib/apt/lists/* && \
   rm -rf /etc/nginx/nginx.conf && \
   rm -rf /etc/nginx/conf.d/*
 
