@@ -25,6 +25,7 @@ package org.dromara.visor.module.infra.service.impl;
 import cn.orionsec.kit.lang.define.wrapper.DataGrid;
 import cn.orionsec.kit.lang.utils.Strings;
 import cn.orionsec.kit.lang.utils.collect.Lists;
+import cn.orionsec.kit.lang.utils.collect.Sets;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -112,21 +113,22 @@ public class DictValueServiceImpl implements DictValueService {
         Long id = Assert.notNull(request.getId(), ErrorMessage.ID_MISSING);
         DictValueDO record = dictValueDAO.selectById(id);
         Assert.notNull(record, ErrorMessage.CONFIG_ABSENT);
-        // 查询 dictKey 是否存在
-        DictKeyDO dictKey = dictKeyDAO.selectById(request.getKeyId());
-        String key = Assert.notNull(dictKey, ErrorMessage.CONFIG_ABSENT).getKeyName();
+        // 查询 key 是否存在
+        DictKeyDO oldDictKey = dictKeyDAO.selectById(record.getKeyId());
+        DictKeyDO newDictKey = dictKeyDAO.selectById(request.getKeyId());
+        String key = Assert.notNull(newDictKey, ErrorMessage.CONFIG_ABSENT).getKeyName();
         // 转换
         DictValueDO updateRecord = DictValueConvert.MAPPER.to(request);
         // 查询数据是否冲突
         this.checkDictValuePresent(updateRecord);
         // 更新
-        OperatorLogs.add(OperatorLogs.KEY_NAME, dictKey.getKeyName());
+        OperatorLogs.add(OperatorLogs.KEY_NAME, newDictKey.getKeyName());
         OperatorLogs.add(OperatorLogs.VALUE, this.getDictValueJson(updateRecord));
         updateRecord.setKeyName(key);
         int effect = dictValueDAO.updateById(updateRecord);
         log.info("DictValueService-updateDictValueById effect: {}", effect);
         // 删除缓存
-        RedisStrings.delete(DictCacheKeyDefine.DICT_VALUE.format(key));
+        RedisStrings.delete(Sets.of(DictCacheKeyDefine.DICT_VALUE.format(key), DictCacheKeyDefine.DICT_VALUE.format(oldDictKey.getKeyName())));
         // 记录历史归档
         this.checkRecordHistory(updateRecord, record);
         return effect;

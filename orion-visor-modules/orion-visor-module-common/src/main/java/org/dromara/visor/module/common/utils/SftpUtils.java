@@ -24,6 +24,7 @@ package org.dromara.visor.module.common.utils;
 
 import cn.orionsec.kit.lang.utils.Booleans;
 import cn.orionsec.kit.lang.utils.Strings;
+import cn.orionsec.kit.lang.utils.io.Files1;
 import cn.orionsec.kit.net.host.sftp.SftpExecutor;
 import cn.orionsec.kit.net.host.sftp.SftpFile;
 import cn.orionsec.kit.spring.SpringHolder;
@@ -62,6 +63,10 @@ public class SftpUtils {
             // 文件存在则备份
             SftpFileBackupDTO backupParams = new SftpFileBackupDTO(file.getName());
             String target = Strings.format(appSftpConfig.getUploadBackupFileName(), JSON.parseObject(JSON.toJSONString(backupParams)));
+            // 相对路径 (便于创建目标父目录)
+            if (target.charAt(0) != '/') {
+                target = Files1.getPath(Files1.normalize(Files1.getPath(path + "/../" + target)));
+            }
             // 移动
             executor.move(path, target);
         }

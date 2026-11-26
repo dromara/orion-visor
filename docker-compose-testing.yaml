@@ -14,6 +14,7 @@ services:
       REDIS_HOST: redis
       REDIS_PASSWORD: Data@123456
       SECRET_KEY: uQeacXV8b3isvKLK
+      API_EXPOSE_TOKEN: pmqeHOyZaumHm0Wt
       DEMO_MODE: false
     volumes:
       - /data/orion-visor-space/docker-volumes/service/root-orion:/root/orion

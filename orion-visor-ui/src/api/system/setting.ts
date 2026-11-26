@@ -39,7 +39,7 @@ export interface RsaKeyPairResponse {
  */
 export type SystemSetting = SftpSetting
   & LoginSetting & EncryptSetting
-  & LogSetting & AutoClearSetting;
+  & LogSetting & AutoClearSetting & WatermarkSetting;
 
 /**
  * SFTP 设置
@@ -92,6 +92,19 @@ export interface AutoClearSetting {
   ['auto-clear.exec-log.keep-days']: number;
   ['auto-clear.terminal-log.enabled']: string;
   ['auto-clear.terminal-log.keep-days']: number;
+}
+
+/**
+ * 水印设置
+ */
+export interface WatermarkSetting {
+  ['watermark.page.enabled']: string;
+  ['watermark.page.font-size']: number;
+  ['watermark.page.grayscale']: string;
+  ['watermark.page.alpha']: number;
+  ['watermark.terminal.enabled']: string;
+  ['watermark.terminal.font-size']: number;
+  ['watermark.terminal.alpha']: number;
 }
 
 /**

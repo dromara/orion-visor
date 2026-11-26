@@ -5,4 +5,5 @@ export const SystemSettingTypes = {
   LOGIN: 'login',
   LOG: 'log',
   AUTO_CLEAR: 'auto-clear',
+  WATERMARK: 'watermark',
 };

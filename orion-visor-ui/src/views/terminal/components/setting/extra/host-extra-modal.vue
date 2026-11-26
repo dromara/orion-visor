@@ -127,6 +127,8 @@
         extra: value as string
       });
       Message.success('保存成功');
+    } catch (e) {
+      return false;
     } finally {
       setLoading(false);
     }

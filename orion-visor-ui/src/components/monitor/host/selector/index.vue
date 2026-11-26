@@ -4,7 +4,8 @@
             :loading="loading"
             :multiple="multiple"
             placeholder="请选择监控项"
-            allow-clear />
+            allow-clear
+            allow-search />
 </template>
 
 <script lang="ts">
@@ -38,7 +39,7 @@
 
   // 初始化选项
   const initOptions = async () => {
-   setLoading(true);
+    setLoading(true);
     try {
       const hosts = await cacheStore.loadHosts(props.type);
       optionData.value = hosts.filter(s => !props.status || s.status === props.status)

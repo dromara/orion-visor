@@ -126,6 +126,8 @@
       }
       handleClose();
       return true;
+    } catch (e) {
+      return false;
     } finally {
       setLoading(false);
     }

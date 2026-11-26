@@ -225,6 +225,8 @@
       Message.success('已开始执行');
       // 清空
       handlerClear();
+    } catch (e) {
+      return false;
     } finally {
       setLoading(false);
     }
