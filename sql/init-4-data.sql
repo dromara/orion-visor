@@ -33,13 +33,13 @@ INSERT INTO `system_setting` VALUES (27, 'auto-clear', 'auto-clear.exec-log.keep
 INSERT INTO `system_setting` VALUES (28, 'auto-clear', 'auto-clear.terminal-log.keep-days', '30', '2025-02-10 22:22:00', '2025-02-10 22:22:00', 'admin', 'admin', 0);
 INSERT INTO `system_setting` VALUES (29, 'auto-clear', 'auto-clear.exec-log.enabled', 'true', '2025-02-10 22:22:00', '2025-02-10 22:22:00', 'admin', 'admin', 0);
 INSERT INTO `system_setting` VALUES (30, 'auto-clear', 'auto-clear.terminal-log.enabled', 'true', '2025-02-10 22:22:00', '2025-02-10 22:22:00', 'admin', 'admin', 0);
-INSERT INTO `system_setting` VALUES (31, 'watermark', 'watermark.page.enabled', 'true', '2025-02-10 22:22:00', '2025-02-10 22:22:00', 'admin', 'admin', 0);
-INSERT INTO `system_setting` VALUES (32, 'watermark', 'watermark.page.font-size', '16', '2025-02-10 22:22:00', '2025-02-10 22:22:00', 'admin', 'admin', 0);
-INSERT INTO `system_setting` VALUES (33, 'watermark', 'watermark.page.grayscale', 'true', '2025-02-10 22:22:00', '2025-02-10 22:22:00', 'admin', 'admin', 0);
-INSERT INTO `system_setting` VALUES (34, 'watermark', 'watermark.page.alpha', '0.6', '2025-02-10 22:22:00', '2025-02-10 22:22:00', 'admin', 'admin', 0);
-INSERT INTO `system_setting` VALUES (35, 'watermark', 'watermark.terminal.enabled', 'true', '2025-02-10 22:22:00', '2025-02-10 22:22:00', 'admin', 'admin', 0);
-INSERT INTO `system_setting` VALUES (36, 'watermark', 'watermark.terminal.font-size', '14', '2025-02-10 22:22:00', '2025-02-10 22:22:00', 'admin', 'admin', 0);
-INSERT INTO `system_setting` VALUES (37, 'watermark', 'watermark.terminal.alpha', '0.1', '2025-02-10 22:22:00', '2025-02-10 22:22:00', 'admin', 'admin', 0);
+INSERT INTO `system_setting` VALUES (31, 'watermark', 'watermark.page.enabled', 'true', '2026-11-26 22:22:00', '2026-11-26 22:22:00', 'admin', 'admin', 0);
+INSERT INTO `system_setting` VALUES (32, 'watermark', 'watermark.page.font-size', '16', '2026-11-26 22:22:00', '2026-11-26 22:22:00', 'admin', 'admin', 0);
+INSERT INTO `system_setting` VALUES (33, 'watermark', 'watermark.page.grayscale', 'true', '2026-11-26 22:22:00', '2026-11-26 22:22:00', 'admin', 'admin', 0);
+INSERT INTO `system_setting` VALUES (34, 'watermark', 'watermark.page.alpha', '0.6', '2026-11-26 22:22:00', '2026-11-26 22:22:00', 'admin', 'admin', 0);
+INSERT INTO `system_setting` VALUES (35, 'watermark', 'watermark.terminal.enabled', 'true', '2026-11-26 22:22:00', '2026-11-26 22:22:00', 'admin', 'admin', 0);
+INSERT INTO `system_setting` VALUES (36, 'watermark', 'watermark.terminal.font-size', '14', '2026-11-26 22:22:00', '2026-11-26 22:22:00', 'admin', 'admin', 0);
+INSERT INTO `system_setting` VALUES (37, 'watermark', 'watermark.terminal.alpha', '0.1', '2026-11-26 22:22:00', '2026-11-26 22:22:00', 'admin', 'admin', 0);
 
 -- 监控指标
 INSERT INTO `monitor_metrics` VALUES (1, 'CPU用户利用率', 'cpu', 'cpu_user_seconds_total', 'PER', NULL, '用户态使用时间', '2025-08-12 23:51:16', '2025-09-06 17:09:02', 'admin', 'admin', 0);
