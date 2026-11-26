@@ -112,10 +112,5 @@
   },
   "engines": {
     "node": ">=14.0.0"
-  },
-  "resolutions": {
-    "bin-wrapper": "npm:bin-wrapper-china",
-    "rollup": "^2.56.3",
-    "gifsicle": "5.2.0"
   }
 }
