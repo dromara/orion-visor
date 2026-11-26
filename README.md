@@ -72,8 +72,9 @@ git clone --depth=1 https://github.com/dromara/orion-visor
 cd orion-visor
 # 复制配置
 cp .env.example .env
-# 修改配置
-vim .env
+# 生成 16 位随机密钥
+sed -i "s/^SECRET_KEY=.*/SECRET_KEY=$(openssl rand -hex 8)/" .env
+sed -i "s/^API_EXPOSE_TOKEN=.*/API_EXPOSE_TOKEN=$(openssl rand -hex 8)/" .env
 # 启动
 docker compose up -d
 # 等待后端服务启动后 (2min±) 访问 http://localhost:1081/

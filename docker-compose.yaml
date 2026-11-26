@@ -45,8 +45,10 @@ services:
       GUACD_HOST: ${GUACD_HOST:-guacd}
       GUACD_PORT: ${GUACD_PORT:-4822}
       GUACD_DRIVE_PATH: ${GUACD_DRIVE_PATH:-/drive}
-      SECRET_KEY: ${SECRET_KEY:-uQeacXV8b3isvKLK}
-      API_EXPOSE_TOKEN: ${API_EXPOSE_TOKEN:-pmqeHOyZaumHm0Wt}
+      # 加密密钥 (必须设置为 16 位随机字符串, openssl rand -hex 8)
+      SECRET_KEY: ${SECRET_KEY:?}
+      # API 密钥 (必须设置为 16 位随机字符串, openssl rand -hex 8)
+      API_EXPOSE_TOKEN: ${API_EXPOSE_TOKEN:?}
       API_IP_HEADERS: ${API_IP_HEADERS:-X-Forwarded-For,X-Real-IP}
       # 这里需要改为具体的服务地址 (宿主机ip)
       API_HOST: ${API_HOST:-0.0.0.0}

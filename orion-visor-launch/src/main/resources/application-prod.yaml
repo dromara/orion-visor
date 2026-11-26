@@ -83,14 +83,14 @@ orion:
     # 对外服务
     expose:
       # 暴露接口请求头值
-      token: ${API_EXPOSE_TOKEN:pmqeHOyZaumHm0Wt}
+      token: ${API_EXPOSE_TOKEN}
   logging:
     printer:
       mode: PRETTY
   encrypt:
     aes:
       # 加密密钥
-      secret-key: ${SECRET_KEY:uQeacXV8b3isvKLK}
+      secret-key: ${SECRET_KEY}
 
 app:
   executors:
