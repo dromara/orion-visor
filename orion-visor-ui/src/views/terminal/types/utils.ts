@@ -16,8 +16,15 @@ export const getDisplaySize = (size: string, tips: boolean = false): [number, nu
   throw new Error('Invalid size');
 };
 
+// 终端水印配置
+export interface TerminalWatermarkOption {
+  enabled: boolean;
+  fontSize: number;
+  alpha: number;
+}
+
 // 截屏
-export const screenshot = async (el: HTMLElement) => {
+export const screenshot = async (el: HTMLElement, option?: TerminalWatermarkOption) => {
   if (!el) {
     return;
   }
@@ -28,28 +35,33 @@ export const screenshot = async (el: HTMLElement) => {
       backgroundColor: 'transparent',
     });
     // 绘制水印
-    const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
-    const wPx = canvas.style.width;
-    const hPx = canvas.style.height;
-    const w = Number.parseInt(wPx.substring(0, wPx.length - 2));
-    const h = Number.parseInt(hPx.substring(0, hPx.length - 2));
-    const fontSize = 14;
-    ctx.fillStyle = useTerminalStore().preference.sshTheme.dark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
-    ctx.font = `${fontSize}px Arial`;
-    ctx.rotate(-24 * Math.PI / 180);
-    // 水印内容
-    const watermark = useUserStore().username || '';
-    const time = '(' + dateFormat() + ')';
-    const textWidth = ctx.measureText(time.length > watermark.length ? time : watermark).width * 1.5;
-    const textHeight = (textWidth / 4 * 3) * 1.5;
-    // 绘制文本
-    for (let yi = -1; yi < h / textHeight + 2; yi++) {
-      for (let xi = -1; xi < w / textWidth + 2; xi++) {
-        if ((xi % 2 === 0 && yi % 2 === 0) || (xi % 2 !== 0 && yi % 2 !== 0)) {
-          continue;
+    if (option?.enabled !== false) {
+      const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
+      const wPx = canvas.style.width;
+      const hPx = canvas.style.height;
+      const w = Number.parseInt(wPx.substring(0, wPx.length - 2));
+      const h = Number.parseInt(hPx.substring(0, hPx.length - 2));
+      const fontSize = option?.fontSize || 14;
+      const alpha = option?.alpha || 0.1;
+      ctx.fillStyle = useTerminalStore().preference.sshTheme.dark
+        ? `rgba(255, 255, 255, ${alpha})`
+        : `rgba(0, 0, 0, ${alpha})`;
+      ctx.font = `${fontSize}px Arial`;
+      ctx.rotate(-24 * Math.PI / 180);
+      // 水印内容
+      const watermark = useUserStore().username || '';
+      const time = '(' + dateFormat() + ')';
+      const textWidth = ctx.measureText(time.length > watermark.length ? time : watermark).width * 1.5;
+      const textHeight = (textWidth / 4 * 3) * 1.5;
+      // 绘制文本
+      for (let yi = -1; yi < h / textHeight + 2; yi++) {
+        for (let xi = -1; xi < w / textWidth + 2; xi++) {
+          if ((xi % 2 === 0 && yi % 2 === 0) || (xi % 2 !== 0 && yi % 2 !== 0)) {
+            continue;
+          }
+          ctx.fillText(watermark, textWidth * (xi - 1), textHeight * (yi + 1));
+          ctx.fillText(time, textWidth * (xi - 1), textHeight * (yi + 1) + fontSize * 1.12);
         }
-        ctx.fillText(watermark, textWidth * (xi - 1), textHeight * (yi + 1));
-        ctx.fillText(time, textWidth * (xi - 1), textHeight * (yi + 1) + fontSize * 1.12);
       }
     }
     // 保存图片
