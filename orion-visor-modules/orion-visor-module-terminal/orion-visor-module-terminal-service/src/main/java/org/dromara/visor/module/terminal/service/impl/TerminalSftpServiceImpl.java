@@ -54,7 +54,6 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.Optional;
 
 /**
@@ -120,7 +119,6 @@ public class TerminalSftpServiceImpl implements TerminalSftpService {
         // 写入文件内容
         SessionStore sessionStore = null;
         SftpExecutor executor = null;
-        OutputStream out = null;
         InputStream in = null;
         try {
             // 获取终端连接信息
@@ -129,15 +127,13 @@ public class TerminalSftpServiceImpl implements TerminalSftpService {
             executor = sessionStore.getSftpExecutor(connectConfig.getFileNameCharset());
             executor.connect();
             // 写入文件
-            out = executor.openOutputStream(cache.getPath());
-            Streams.transfer(in = file.getInputStream(), out);
+            executor.write(cache.getPath(), in = file.getInputStream());
         } catch (Exception e) {
             throw Exceptions.app(ErrorMessage.OPERATE_ERROR);
         } finally {
+            Streams.close(in);
             Streams.close(executor);
             Streams.close(sessionStore);
-            Streams.close(out);
-            Streams.close(in);
         }
     }
 
