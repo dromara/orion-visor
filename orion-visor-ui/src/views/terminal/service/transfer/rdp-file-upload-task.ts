@@ -15,12 +15,16 @@ export default class RdpFileUploadTask extends BaseFileTransferTask implements I
   private stream?: Guacamole.OutputStream;
   private currentPart: number;
   private readonly totalPart: number;
+  private ackPermit: number;
+  private sendingPart: boolean;
 
   constructor(session: IRdpSession, fileItem: FileTransferItem) {
     super(TransferType.UPLOAD, TransferSource.RDP, session.info.hostId, session.sessionKey, fileItem, {});
     this.session = session;
     this.currentPart = 0;
     this.totalPart = Math.ceil(fileItem.size / PART_SIZE);
+    this.ackPermit = 0;
+    this.sendingPart = false;
   }
 
   // 开始上传
@@ -32,11 +36,12 @@ export default class RdpFileUploadTask extends BaseFileTransferTask implements I
       // 创建文件流
       this.stream = client.createFileStream(file.type, file.name);
       this.writer = new Guacamole.ArrayBufferWriter(this.stream);
-      // 分片上传完成回调
+      // 分片上传完成回调 (guacd 在流创建时会先回一个初始 ack, 由 ack 驱动上传)
       this.writer.onack = ({ code, message }) => {
         // 成功继续上传分片
         if (code === Guacamole.Status.Code.SUCCESS) {
-          this.onNextPart();
+          this.ackPermit++;
+          void this.onNextPart();
           return;
         }
         // 失败关闭流
@@ -46,8 +51,6 @@ export default class RdpFileUploadTask extends BaseFileTransferTask implements I
         // 响应错误
         this.onError(message);
       };
-      // 开始上传分片
-      this.onNextPart();
     } catch (e) {
       this.onError(TerminalMessages.fileTransferError);
     }
@@ -70,20 +73,33 @@ export default class RdpFileUploadTask extends BaseFileTransferTask implements I
 
   // 上传下一个分片
   async onNextPart() {
-    // 完成或者中断直接跳过
-    if (this.state.aborted || this.state.finished) {
+    // 完成、中断或正在发送直接跳过
+    if (this.state.aborted || this.state.finished || this.sendingPart) {
       return;
     }
-    if (this.hasNextPart()) {
-      try {
-        // 有下一个分片则上传
-        await this.uploadNextPart();
-      } catch (e) {
-        // 读取文件失败
-        this.error();
-      }
-    } else {
+    // 无 ack 许可直接跳过
+    if (this.ackPermit <= 0) {
+      return;
+    }
+    if (!this.hasNextPart()) {
       this.finish();
+      return;
+    }
+    this.sendingPart = true;
+    this.ackPermit--;
+    try {
+      // 有下一个分片则上传
+      await this.uploadNextPart();
+    } catch (e) {
+      // 读取文件失败
+      this.error();
+      return;
+    } finally {
+      this.sendingPart = false;
+    }
+    // 消费读取期间累积的 ack 许可
+    if (!this.state.aborted && !this.state.finished) {
+      void this.onNextPart();
     }
   }
 
