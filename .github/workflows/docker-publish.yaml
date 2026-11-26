@@ -128,6 +128,8 @@ jobs:
           context: ./docker
           file: ./docker/${{ matrix.service }}/Dockerfile
           push: true
+          provenance: false
+          sbom: false
           cache-from: type=gha
           cache-to: type=gha,mode=max
           platforms: linux/amd64,linux/arm64
